@@ -1,8 +1,8 @@
 # 第13章 レスポンシブデザイン：ルール
 
-- ガイドラインのバージョン: 0.76.0（2026-10-22 生成）
-- ルールの数: 42
-- 本文: 約13万字
+- ガイドラインのバージョン: 0.77.0（2026-10-22 生成）
+- ルールの数: 43
+- 本文: 約13.1万字
 - 読む条件: @media、@container、ブレイクポイント、画面幅やコンテナの幅による切り替え、ナビゲーションの折りたたみ、safe-area
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
@@ -14,7 +14,7 @@
 
 - `responsive` 第13章 レスポンシブデザイン（約8,400字）https://t-arai-pnrm.github.io/recss-guideline/responsive/
 - `responsive/escalation` 13-1 検討する順番（約8,500字）https://t-arai-pnrm.github.io/recss-guideline/responsive/escalation/
-- `responsive/breakpoints` 13-2 ブレイクポイントの決め方（約1.6万字）https://t-arai-pnrm.github.io/recss-guideline/responsive/breakpoints/
+- `responsive/breakpoints` 13-2 ブレイクポイントの決め方（約1.7万字）https://t-arai-pnrm.github.io/recss-guideline/responsive/breakpoints/
 - `responsive/container-size-queries` 13-3 コンテナサイズクエリ（約2.2万字）https://t-arai-pnrm.github.io/recss-guideline/responsive/container-size-queries/
 - `responsive/container-units-and-side-effects` 13-4 コンテナの副作用とコンテナ単位（約1.5万字）https://t-arai-pnrm.github.io/recss-guideline/responsive/container-units-and-side-effects/
 - `responsive/media-queries` 13-5 メディアクエリ（約1.4万字）https://t-arai-pnrm.github.io/recss-guideline/responsive/media-queries/
@@ -56,8 +56,12 @@ https://t-arai-pnrm.github.io/recss-guideline/responsive/breakpoints/
   - 理由: 案件の中でブレイクポイントの値がばらばらになるのを防ぐため。
   - 補足: Sass の変数や Tailwind CSS の設定のように、ビルド時に値へ展開される変数が対象です。CSS のカスタムプロパティは、メディアクエリの条件では使えません（`no-var-in-query`）。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/responsive/breakpoints/#rule-framework-breakpoint-variables
-- 【必須・仕様にもとづく制約】ブレイクポイントは rem で指定し、`calc(640 / 16 * 1rem)` のようにピクセル値からの変換を式で書く。（`breakpoint-in-rem`）
-  - 理由: 文字サイズを大きくしているユーザーは実質的に使える幅が狭くなるので、rem で指定すれば切り替えもそれに追従するため。式にすれば、元のピクセル値も読み取れる。
+- 【必須・仕様にもとづく制約】既定の文字サイズで必要な幅が変わるレイアウトでは、メディアクエリの閾値を px で書かず、文字サイズに追従する単位で書く。（`breakpoint-follows-font-size`）
+  - 理由: メディアクエリの中の rem と em はブラウザの既定の文字サイズを基準に計算されるが、px は計算されない。文字サイズを大きくしているユーザーは、rem で組んだ中身にとって使える幅が狭くなるので、閾値が追従しないと、中身が収まらない幅でも広い画面のレイアウトのままになる。
+  - 補足: 必要な幅が文字サイズに左右されないレイアウト（画像の大きさだけで決まる並びなど）では、px の閾値でも表示は崩れません。本書では、どちらの場合も表記を rem にそろえます（`breakpoint-in-rem`）。
+  - 詳細: https://t-arai-pnrm.github.io/recss-guideline/responsive/breakpoints/#rule-breakpoint-follows-font-size
+- 【必須・本書の規約】ブレイクポイントは rem で指定し、`calc(640 / 16 * 1rem)` のようにピクセル値からの変換を式で書く。（`breakpoint-in-rem`）
+  - 理由: 閾値の表記を1つにそろえれば、文字サイズに追従するかをレイアウトごとに判断せずに済み、式から元のピクセル値も読み取れるため。メディアクエリでは em も rem と同じ基準で計算されるので、em を選んでも挙動は変わらない。本書は `calc(N / 16 * 1rem)` の式に統一するために rem を選んでいる。
   - 補足: 閾値の式に px で指定した `gap` や `padding` を含めるときは、その項だけ rem へ換算せず、px のまま足します（`threshold-as-formula`）。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/responsive/breakpoints/#rule-breakpoint-in-rem
 - 【推奨・実装上の判断】クエリの閾値は、「列の最小幅×列数＋隙間×隙間の数」や「中身の幅＋`padding`＋`border`」のように、レイアウトが成り立つ条件を `calc()` の式で書く。（`threshold-as-formula`）

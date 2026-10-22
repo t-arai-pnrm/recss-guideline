@@ -64,11 +64,21 @@
   page: responsive/breakpoints
   since: 0.3.0
 
-- id: breakpoint-in-rem
+- id: breakpoint-follows-font-size
   level: 必須
   kind: spec
+  rule: 既定の文字サイズで必要な幅が変わるレイアウトでは、メディアクエリの閾値を px で書かず、文字サイズに追従する単位で書く。
+  reason: メディアクエリの中の rem と em はブラウザの既定の文字サイズを基準に計算されるが、px は計算されない。文字サイズを大きくしているユーザーは、rem で組んだ中身にとって使える幅が狭くなるので、閾値が追従しないと、中身が収まらない幅でも広い画面のレイアウトのままになる。
+  note: '必要な幅が文字サイズに左右されないレイアウト（画像の大きさだけで決まる並びなど）では、px の閾値でも表示は崩れません。本書では、どちらの場合も表記を rem にそろえます（`breakpoint-in-rem`）。'
+  aiProne: true
+  page: responsive/breakpoints
+  since: 0.77.0
+
+- id: breakpoint-in-rem
+  level: 必須
+  kind: convention
   rule: ブレイクポイントは rem で指定し、`calc(640 / 16 * 1rem)` のようにピクセル値からの変換を式で書く。
-  reason: 文字サイズを大きくしているユーザーは実質的に使える幅が狭くなるので、rem で指定すれば切り替えもそれに追従するため。式にすれば、元のピクセル値も読み取れる。
+  reason: 閾値の表記を1つにそろえれば、文字サイズに追従するかをレイアウトごとに判断せずに済み、式から元のピクセル値も読み取れるため。メディアクエリでは em も rem と同じ基準で計算されるので、em を選んでも挙動は変わらない。本書は `calc(N / 16 * 1rem)` の式に統一するために rem を選んでいる。
   note: '閾値の式に px で指定した `gap` や `padding` を含めるときは、その項だけ rem へ換算せず、px のまま足します（`threshold-as-formula`）。'
   aiProne: true
   page: responsive/breakpoints

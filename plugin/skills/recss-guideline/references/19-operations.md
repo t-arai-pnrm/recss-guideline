@@ -1,8 +1,8 @@
 # 第19章 実務での運用：ルール
 
-- ガイドラインのバージョン: 0.76.0（2026-10-22 生成）
+- ガイドラインのバージョン: 0.77.0（2026-10-22 生成）
 - ルールの数: 29
-- 本文: 約7.1万字
+- 本文: 約7.2万字
 - 読む条件: Stylelint、レビュー、CMSの本文エリアやWYSIWYG、既存のサイトへの導入
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
@@ -12,10 +12,10 @@
 
 ## この章の節
 
-- `operations` 第19章 実務での運用（約6,900字）https://t-arai-pnrm.github.io/recss-guideline/operations/
+- `operations` 第19章 実務での運用（約7,000字）https://t-arai-pnrm.github.io/recss-guideline/operations/
 - `operations/stylelint` 19-1 Stylelintでルールを守る（約1.5万字）https://t-arai-pnrm.github.io/recss-guideline/operations/stylelint/
 - `operations/review` 19-2 レビューの進め方（約4,700字）https://t-arai-pnrm.github.io/recss-guideline/operations/review/
-- `operations/verification` 19-3 表示と操作を確かめる（約1.4万字）https://t-arai-pnrm.github.io/recss-guideline/operations/verification/
+- `operations/verification` 19-3 表示と操作を確かめる（約1.5万字）https://t-arai-pnrm.github.io/recss-guideline/operations/verification/
 - `operations/devtools` 19-4 表示の崩れを開発者ツールで調べる（約9,600字）https://t-arai-pnrm.github.io/recss-guideline/operations/devtools/
 - `operations/wysiwyg` 19-5 CMSのWYSIWYG本文にスタイルを当てる（約8,500字）https://t-arai-pnrm.github.io/recss-guideline/operations/wysiwyg/
 - `operations/adoption` 19-6 既存のサイトに段階的に導入する（約1.2万字）https://t-arai-pnrm.github.io/recss-guideline/operations/adoption/
@@ -90,6 +90,7 @@ https://t-arai-pnrm.github.io/recss-guideline/operations/verification/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/operations/verification/#rule-verify-worst-case-content
 - 【必須・仕様にもとづく制約】ブラウザのズームと文字サイズの設定をそれぞれ200%にしても、内容が欠けず、操作できることを確かめる。（`verify-text-resize-200`）
   - 理由: WCAGの達成基準1.4.4が、支援技術なしで文字を200%まで拡大しても内容や機能が失われないことを求めているため。
+  - 補足: WCAGの達成基準は、ブラウザの拡大の手段のどれか1つで200%にできれば満たせます。ページ全体のズーム、既定の文字サイズの変更、文字だけのズームをそれぞれ確かめるのは、操作ごとに見つかる崩れが違うために本書が加えた手順です。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/operations/verification/#rule-verify-text-resize-200
 - 【必須・仕様にもとづく制約】幅1280 CSS pxのウィンドウでページを400%に拡大し、ページ全体に横スクロールが出ず、固定した部品が本文やフォーカスした要素を覆わないことを確かめる。（`verify-reflow-400`）
   - 理由: WCAGの達成基準1.4.10が、幅320 CSS px相当で2方向のスクロールなしに内容と機能を使えることを求めており、ズームでは高さも縮むので、幅を狭めただけでは固定した部品の覆い方を再現できないため。

@@ -118,7 +118,7 @@ sidebar:
 | よく見かける書き方 | 本書の書き方 | 理由 | ルール | AI |
 | --- | --- | --- | --- | --- |
 | `@media (min-width: 48rem)` | `@media (width >= calc(768 / 16 * 1rem))` | 本書の方針 | [`query-range-syntax`](/responsive/media-queries/#rule-query-range-syntax) | AI |
-| `@media (width >= 768px)` のようにpxで書いた条件 | `@media (width >= calc(768 / 16 * 1rem))` | 挙動：ブラウザの文字サイズを大きくしても、切り替わる幅が変わらない | [`breakpoint-in-rem`](/responsive/breakpoints/#rule-breakpoint-in-rem) | AI |
+| `@media (width >= 768px)` のようにpxで書いた条件 | `@media (width >= calc(768 / 16 * 1rem))` | 挙動：ブラウザの文字サイズを大きくしても、切り替わる幅が変わらない | [`breakpoint-follows-font-size`](/responsive/breakpoints/#rule-breakpoint-follows-font-size)、[`breakpoint-in-rem`](/responsive/breakpoints/#rule-breakpoint-in-rem) | AI |
 | `calc((560 + 240 + 32) / 16 * 1rem)` のように、pxで指定した隙間まで換算した閾値 | `calc(560 / 16 * 1rem + 240 / 16 * 1rem + 32px)` のように、各項を宣言した単位で足す | 挙動：文字サイズを大きくすると、閾値の中の隙間だけが広がり、実際に並べられる幅とずれる | [`threshold-as-formula`](/responsive/breakpoints/#rule-threshold-as-formula) | AI |
 | `sp`、`pc` のブレイクポイント名、`.sp-only` | デバイスの名前を使わず、表示を変える条件をセレクタの中に書く | 本書の方針 | [`no-device-names`](/responsive/breakpoints/#rule-no-device-names) | AI |
 | `@media (width >= var(--bp-md))` | 条件にはリテラルの値を書く | 挙動：メディアクエリでは `var()` を参照できず、条件が無効になる | [`no-var-in-query`](/responsive/breakpoints/#rule-no-var-in-query) | AI |

@@ -50,6 +50,16 @@ AIは、検証が通ってから `[x]` を付けます。検証の前に印を�
 
 スタイルクエリは、問い合わせる要素自身ではなく、祖先の要素のカスタムプロパティを調べます。`._card` の `--_density` は `--spacious` に切り替わっていますが、`._card` のスタイルクエリが調べるのは親の一覧のルートの値で、ルートには `--_density` がありません。条件が成り立たないので、`padding` の宣言は適用されません。
 
+このような誤りは、lintでは見つかりません。宣言が適用されているかは、ブラウザの計算値で確かめます（`verify-applied-styles`）。開発者ツールのコンソールか、Playwright MCPの `browser_evaluate` で、次のように読みます。
+
+```js title="計算値を読む"
+const card = document.querySelector('#wide .article-cards ._card');
+getComputedStyle(card).getPropertyValue('--_density'); // '--spacious'
+getComputedStyle(card).paddingBlockStart; // '0px'（対応表では 16px）
+```
+
+フラグは `--spacious` なのに、`padding` は0のままです。計算値と対応表が食い違えば、AIはどの宣言が勝ったかを調べます。調べ方は「[20-3 MCPサーバーを役割で使い分ける](/ai-coding/mcp-servers/)」（Chrome DevTools MCPの `get_css_styles` で、勝った宣言と負けた宣言を確かめる）で説明しています。
+
 ```css title="🙆‍♂ Recommended: 要素自身の値はコンテナサイズクエリの中に書き、子孫がフラグを問い合わせる"
 @scope (.scoped.article-cards) to (.scoped) {
   :scope {
@@ -76,17 +86,7 @@ AIは、検証が通ってから `[x]` を付けます。検証の前に印を�
 }
 ```
 
-フラグを宣言した要素自身の値は、フラグを切り替えるコンテナサイズクエリの中に書き、子孫の `h3` がフラグを問い合わせます。この書き方は「[10-6 スタイルクエリで状態を伝える](/components/style-queries/)」で説明しています。
-
-このような誤りは、lintでは見つかりません。宣言が適用されているかは、ブラウザの計算値で確かめます（`verify-applied-styles`）。開発者ツールのコンソールか、Playwright MCPの `browser_evaluate` で、次のように読みます。
-
-```js title="計算値を読む"
-const card = document.querySelector('#wide .article-cards ._card');
-getComputedStyle(card).getPropertyValue('--_density'); // '--spacious'
-getComputedStyle(card).paddingBlockStart; // '0px'（対応表では 16px）
-```
-
-フラグは `--spacious` なのに、`padding` は0のままです。計算値と対応表が食い違えば、AIはどの宣言が勝ったかを調べます。調べ方は「[20-3 MCPサーバーを役割で使い分ける](/ai-coding/mcp-servers/)」（Chrome DevTools MCPの `get_css_styles` で、勝った宣言と負けた宣言を確かめる）で説明しています。
+フラグを宣言した要素自身の値は、フラグを切り替えるコンテナサイズクエリの中に書き、子孫の `h3` がフラグを問い合わせます。この書き方は「[10-6 スタイルクエリで状態を伝える](/components/style-queries/)」で説明しています。直した後に同じ計算値を読むと、`paddingBlockStart` は対応表と同じ `'16px'` になります。
 
 ## 値の対応表をテストにする
 
