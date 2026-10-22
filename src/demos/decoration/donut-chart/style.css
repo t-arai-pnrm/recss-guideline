@@ -1,3 +1,9 @@
+/**
+ * 割合を輪の長さと中心の数値で示すドーナツグラフ。輪はマスクで描き、ページを開いたときに0%から数え上げる。
+ *
+ * @prop {percentage} --donut-chart--value      [0%]                        - 割合（100%を超える値は100%として扱う）
+ * @prop {color}      --donut-chart--foreground [var(--color--accent--500)] - 輪と中心の数値の色
+ */
 @layer tokens {
   :root {
     --color--neutral--200: oklch(92.2% 0 0deg);

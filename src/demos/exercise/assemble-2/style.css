@@ -262,8 +262,10 @@
       --_hit-size: max(24px, 24 / 16 * 1rem);
       --_background: var(--background--inverse);
       --_background--hocus: color-mix(in oklab, var(--background--inverse) 80%, var(--background--base));
-      --_shadow: var(--shadow--button);
       --_hocus: --false;
+
+      /* 文字色で塗った主ボタン。上の縁に光を入れ、紺の淡い影を落とす */
+      --_shadow: inset 0 1px 0 0 oklch(100% 0 none / 16%), 0 1px 2px 0 oklch(0% 0 none / 12%), 0 4px 12px -2px oklch(26% 0.05 265deg / 30%);
 
       display: inline flex;
       gap: 8px;
@@ -333,6 +335,11 @@
    */
   @scope (.scoped.cta-band) to (.scoped) {
     :scope {
+      /* 紺の面ににじませるティールの光。帯の配色を暗くした紺の背景に重ねる */
+      --_glow:
+        radial-gradient(120% 90% at 85% 0%, oklch(53% 0.09 192deg / 55%), transparent 60%),
+        radial-gradient(80% 70% at 0% 100%, oklch(37% 0.05 265deg / 60%), transparent 70%);
+
       display: block grid;
       gap: 24px;
       justify-items: center;
@@ -340,7 +347,7 @@
       padding-inline: 24px;
       border-radius: var(--rounded--lg);
       color-scheme: dark;
-      background-image: var(--background-image--brand-glow);
+      background-image: var(--_glow);
       background-color: var(--background--base);
       color: var(--foreground--base);
       text-align: center;
@@ -866,13 +873,13 @@
   /* セクションの見出し */
   .section-heading {
     /* 幅360pxで32px、幅1024pxで display（48px）になるよう、2つの幅から傾きと切片を求める */
-    --_min: 32;
-    --_slope: calc((var(--text--display--font-size) - var(--_min)) / (1024 - 360));
+    --_p--min: 32;
+    --_p--slope: calc((var(--text--display--font-size) - var(--_p--min)) / (1024 - 360));
 
     font-feature-settings: "palt";
     font-size: clamp(
-      calc(var(--_min) / 16 * 1rem),
-      calc((var(--_min) - 360 * var(--_slope)) / 16 * 1rem + var(--_slope) * 100svi),
+      calc(var(--_p--min) / 16 * 1rem),
+      calc((var(--_p--min) - 360 * var(--_p--slope)) / 16 * 1rem + var(--_p--slope) * 100svi),
       calc(var(--text--display--font-size) / 16 * 1rem)
     );
     font-kerning: normal;

@@ -1,3 +1,8 @@
+/**
+ * 角丸を、対応している環境だけなめらかな曲線にするユーティリティ。半径に応じて、corner-shape の曲線と半径の倍率を選ぶ。
+ *
+ * @prop {length} --corner-squircle--radius [24px] - 角丸の半径
+ */
 @layer components {
   @scope (.scoped.squircle-radius-demo) to (.scoped) {
     ._box {

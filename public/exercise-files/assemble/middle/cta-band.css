@@ -5,6 +5,11 @@
 @layer components {
   @scope (.scoped.cta-band) to (.scoped) {
     :scope {
+      /* 紺の面ににじませるティールの光。帯の配色を暗くした紺の背景に重ねる */
+      --_glow:
+        radial-gradient(120% 90% at 85% 0%, oklch(53% 0.09 192deg / 55%), transparent 60%),
+        radial-gradient(80% 70% at 0% 100%, oklch(37% 0.05 265deg / 60%), transparent 70%);
+
       display: block grid;
       gap: 24px;
       justify-items: center;
@@ -12,7 +17,7 @@
       padding-inline: 24px;
       border-radius: var(--rounded--lg);
       color-scheme: dark;
-      background-image: var(--background-image--brand-glow);
+      background-image: var(--_glow);
       background-color: var(--background--base);
       color: var(--foreground--base);
       text-align: center;

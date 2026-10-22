@@ -74,17 +74,9 @@
   --rounded--lg: 28px;
 
   /*
-   * 影。共通トークンの --shadow--* は縁取りの線を含むので、線を border で別に引くカードには、線のない影を使う。
+   * 影。共通トークンの --shadow--* は縁取りの線を含むので、線を border で別に引くカードやパネルには、線のない影を使う。
    * 強制カラーモードでは影が消えるので、カードの境目は border で残す。
+   * ホバーで動かす影は box-shadow では描かないので、ここには置かない（記事のカードの drop-shadow() は article-cards の内部プロパティ）。
    */
   --shadow--card: 0 1px 2px 0 oklch(0% 0 none / 4%), 0 8px 24px -8px color-mix(in oklab, var(--color--navy--900) 14%, transparent);
-  --shadow--card-hover: 0 2px 4px 0 oklch(0% 0 none / 5%), 0 16px 40px -12px color-mix(in oklab, var(--color--navy--900) 24%, transparent);
-
-  /* 文字色で塗った主ボタン。上の縁に光を入れ、紺の淡い影を落とす */
-  --shadow--button: inset 0 1px 0 0 oklch(100% 0 none / 16%), 0 1px 2px 0 oklch(0% 0 none / 12%), 0 4px 12px -2px color-mix(in oklab, var(--color--navy--900) 30%, transparent);
-
-  /* 紺の面ににじませる光。誘導の帯のように、ブランドを見せる紺の面に重ねる */
-  --background-image--brand-glow:
-    radial-gradient(120% 90% at 85% 0%, color-mix(in oklab, var(--color--teal--600) 55%, transparent), transparent 60%),
-    radial-gradient(80% 70% at 0% 100%, color-mix(in oklab, var(--color--navy--700) 60%, transparent), transparent 70%);
 }

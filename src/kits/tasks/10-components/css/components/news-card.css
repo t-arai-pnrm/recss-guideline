@@ -2,7 +2,7 @@
  * お知らせのカード。
  * 一覧としての並べ方は、置く側のレイアウトが受け持つ。
  *
- * @prop {color}  --news-card--accent  [var(--foreground--accent)]       - 見出しの色
+ * @prop {color}  --news-card--accent  [var(--foreground--base)]         - 見出しの色
  * @prop {length} --news-card--padding [calc(var(--spacing--md) * 1px)] - 内側の余白
  *
  * @example
@@ -13,7 +13,7 @@
 
 @scope (.scoped.news-card) to (.scoped) {
   :scope {
-    --_accent: var(--news-card--accent, var(--foreground--accent));
+    --_accent: var(--news-card--accent, var(--foreground--base));
     --_padding: var(--news-card--padding, calc(var(--spacing--md) * 1px));
 
     display: block grid;

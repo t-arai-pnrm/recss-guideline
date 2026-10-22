@@ -1,3 +1,8 @@
+/**
+ * 押すと、コピーのアイコンをチェックのアイコンに、ぼかしながら入れ替えるボタン。
+ *
+ * @prop {length} --copy-button--blur [4px] - 入れ替わる途中のアイコンのぼかしの大きさ
+ */
 @layer pages {
   @scope (.scoped.crossfade-demo) to (.scoped) {
     ._example {

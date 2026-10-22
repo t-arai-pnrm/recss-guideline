@@ -1,19 +1,26 @@
+/**
+ * grid と switcher のコンポジションと、2つの列の決め方を比べる例。
+ *
+ * @prop {keyword} --grid--mode             [auto-fill]             - repeat() のキーワード（auto-fill | auto-fit）
+ * @prop {length}  --grid--column-min-width [calc(320 / 16 * 1rem)] - 列の最小幅（これより狭くなると列が減る）
+ * @prop {integer} --grid--column-max-count [5]                     - 列の最大数
+ * @prop {length}  --grid--gap              [0px]                   - 行と列の間隔（一括）
+ * @prop {length}  --grid--row-gap          [0px]                   - 行の間隔
+ * @prop {length}  --grid--column-gap       [0px]                   - 列の間隔（単位を付けて渡す）
+ *
+ * @prop {integer} --switcher--column-count     [3]                     - 横に並べるときの列数
+ * @prop {length}  --switcher--column-min-width [calc(320 / 16 * 1rem)] - 列の最小幅（閾値の計算に使う）
+ * @prop {length}  --switcher--gap              [0px]                   - 行と列の間隔（一括）
+ * @prop {length}  --switcher--row-gap          [0px]                   - 行の間隔
+ * @prop {length}  --switcher--column-gap       [0px]                   - 列の間隔
+ *
+ * @example
+ * <ul class="grid" style="--grid--column-min-width: calc(240 / 16 * 1rem); --grid--column-max-count: 3">
+ *   <li>…</li>
+ * </ul>
+ */
 @layer compositions {
-  /*
-   * 列の最小幅と最大数から、列の数を自動で決める。
-   *
-   * @prop {keyword} --grid--mode             [auto-fill]             - repeat() のキーワード（auto-fill | auto-fit）
-   * @prop {length}  --grid--column-min-width [calc(320 / 16 * 1rem)] - 列の最小幅（これより狭くなると列が減る）
-   * @prop {integer} --grid--column-max-count [5]                     - 列の最大数
-   * @prop {length}  --grid--gap              [0px]                   - 行と列の間隔（一括）
-   * @prop {length}  --grid--row-gap          [0px]                   - 行の間隔
-   * @prop {length}  --grid--column-gap       [0px]                   - 列の間隔（単位を付けて渡す）
-   *
-   * @example
-   * <ul class="grid" style="--grid--column-min-width: calc(240 / 16 * 1rem); --grid--column-max-count: 3">
-   *   <li>…</li>
-   * </ul>
-   */
+  /* 列の最小幅と最大数から、列の数を自動で決める。 */
   .grid {
     --_c--mode: var(--grid--mode, auto-fill);
     --_c--row-gap: var(--grid--gap, var(--grid--row-gap, 0px));
@@ -32,15 +39,7 @@
     gap: var(--_c--row-gap) var(--_c--column-gap);
   }
 
-  /*
-   * 幅が閾値以上なら指定の列数で並べ、閾値を下回ったら 1 列にする。
-   *
-   * @prop {integer} --switcher--column-count     [3]                     - 横に並べるときの列数
-   * @prop {length}  --switcher--column-min-width [calc(320 / 16 * 1rem)] - 列の最小幅（閾値の計算に使う）
-   * @prop {length}  --switcher--gap              [0px]                   - 行と列の間隔（一括）
-   * @prop {length}  --switcher--row-gap          [0px]                   - 行の間隔
-   * @prop {length}  --switcher--column-gap       [0px]                   - 列の間隔
-   */
+  /* 幅が閾値以上なら指定の列数で並べ、閾値を下回ったら 1 列にする。 */
   .switcher {
     --_c--row-gap: var(--switcher--gap, var(--switcher--row-gap, 0px));
     --_c--column-gap: var(--switcher--gap, var(--switcher--column-gap, 0px));

@@ -23,9 +23,9 @@
 - id: no-motion-on-focus-visible
   level: 禁止
   kind: judgment
-  rule: キーボード操作によるフォーカスの移動にトランジションやアニメーションを掛けない。
+  rule: キーボードでフォーカスを受けた要素の見た目は、トランジションやアニメーションを掛けずに一度で切り替える。
   reason: 入力と表示の変化がずれて、反応が遅く感じられるため。
-  note: 'トランジションは `&:not(:focus-visible)` の中に書き、`:focus-visible` のときは一度で切り替えます。'
+  note: 'トランジションは `&:not(:focus-visible)` の中に書き、`:focus-visible` のときは一度で切り替えます。フォーカスが離れて元の見た目に戻る変化は、`:not(:focus-visible)` のトランジションで動いてかまいません。'
   page: interaction/states-and-focus
   since: 0.1.0
 
@@ -175,7 +175,7 @@
   kind: judgment
   rule: 背景のクリックで閉じるモーダルは `closedby="any"` で作り、クリックの位置を判定する処理を自作しない。
   reason: Esc キーと背景のクリックによる閉じる操作を、ブラウザの標準の振る舞いにそろえられるため。
-  note: 対応していないブラウザでも、Esc キーと閉じるボタンでは閉じられます。
+  note: 'Safari などの対応していないブラウザでも、Esc キーと閉じるボタンでは閉じられます。背景のクリックでも閉じる必要があるときは、ポリフィル（`dialog-closedby-polyfill`）を読み込みます。'
   page: interaction/disclosure
   since: 0.1.0
 

@@ -57,6 +57,10 @@
       line-height: var(--text--body-compact--leading);
       text-decoration-line: none;
 
+      &:focus-visible {
+        background-color: var(--background--hover);
+      }
+
       &:any-link:hover {
         @media (any-hover) {
           background-color: var(--background--hover);
@@ -89,6 +93,10 @@
         visibility: hidden;
       }
 
+      &:focus-visible {
+        background-color: color-mix(in oklab, var(--background--inverse) 80%, var(--background--base));
+      }
+
       &:any-link:hover {
         @media (any-hover) {
           background-color: color-mix(in oklab, var(--background--inverse) 80%, var(--background--base));
@@ -107,6 +115,10 @@
 
       @container style(--_overflowing: --false) {
         visibility: hidden;
+      }
+
+      &:focus-visible {
+        background-color: var(--background--hover);
       }
 
       &:enabled:hover {

@@ -1,3 +1,8 @@
+/**
+ * キャンペーンのセクション。
+ *
+ * @prop {length} --campaign-section--padding-block-start [48px] - 上の余白
+ */
 @layer components {
   /* 2つのページを比べるための枠のラベル */
   @scope (.scoped.section-join-demo) to (.scoped) {
@@ -18,11 +23,6 @@
     }
   }
 
-  /*
-   * キャンペーンのセクション。
-   *
-   * @prop {length} --campaign-section--padding-block-start [48px] - 上の余白
-   */
   @scope (.scoped.campaign-section) to (.scoped) {
     :scope {
       --_padding-block-start: var(--campaign-section--padding-block-start, 48px);

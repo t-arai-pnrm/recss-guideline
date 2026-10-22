@@ -1,3 +1,8 @@
+/**
+ * 補正の前と後の画像を重ね、つまみの位置を境に左右で見せ分ける比較スライダー。
+ *
+ * @prop {percentage} --comparison-slider--position [50%] - 境界の位置（スクリプトがつまみの値を書き込む）
+ */
 @layer components {
   @scope (.scoped.comparison-slider) to (.scoped) {
     :scope {

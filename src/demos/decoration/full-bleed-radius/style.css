@@ -1,3 +1,8 @@
+/**
+ * 画面の幅いっぱいに近づくと角丸をなくすカード。最大幅と中央寄せは、置く側が決める。
+ *
+ * @prop {length} --hero-card--radius [40px] - 画面の幅より狭いときの角丸の半径
+ */
 @layer pages {
   @scope (.scoped.page-demo) to (.scoped) {
     /* カードを置く側が、最大幅と中央寄せを決める */

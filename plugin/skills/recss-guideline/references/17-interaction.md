@@ -1,6 +1,6 @@
 # 第17章 インタラクション：ルール
 
-- ガイドラインのバージョン: 0.75.1（2026-10-16 生成）
+- ガイドラインのバージョン: 0.76.0（2026-10-22 生成）
 - ルールの数: 40
 - 本文: 約14.2万字
 - 読む条件: ホバー、フォーカス、押せる範囲、タッチ操作、user-select、状態を表す属性（ARIA属性、data-*属性）、カード全体のリンク、開閉するUI（details、dialog、popover）、フォーム部品、カルーセル
@@ -33,9 +33,9 @@ https://t-arai-pnrm.github.io/recss-guideline/interaction/states-and-focus/
 - 【必須・実装上の判断】ホバーで変える見た目は、`:focus-visible` にも同じように指定する。（`hover-with-focus-visible`）
   - 理由: キーボードで操作するユーザーにも同じ手がかりを示せ、フォーカスリングが見えにくい場面の補いにもなるため。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/interaction/states-and-focus/#rule-hover-with-focus-visible
-- 【禁止・実装上の判断】キーボード操作によるフォーカスの移動にトランジションやアニメーションを掛けない。（`no-motion-on-focus-visible`）
+- 【禁止・実装上の判断】キーボードでフォーカスを受けた要素の見た目は、トランジションやアニメーションを掛けずに一度で切り替える。（`no-motion-on-focus-visible`）
   - 理由: 入力と表示の変化がずれて、反応が遅く感じられるため。
-  - 補足: トランジションは `&:not(:focus-visible)` の中に書き、`:focus-visible` のときは一度で切り替えます。
+  - 補足: トランジションは `&:not(:focus-visible)` の中に書き、`:focus-visible` のときは一度で切り替えます。フォーカスが離れて元の見た目に戻る変化は、`:not(:focus-visible)` のトランジションで動いてかまいません。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/interaction/states-and-focus/#rule-no-motion-on-focus-visible
 - 【非推奨・実装上の判断】ホバーやフォーカスの変化を `opacity` で表さない。（`no-opacity-for-hover`）
   - 理由: 文字まで透けてコントラストが下がり、「なぜ透けるのか」という意図もコードから読み取れないため。
@@ -121,7 +121,7 @@ https://t-arai-pnrm.github.io/recss-guideline/interaction/disclosure/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/interaction/disclosure/#rule-dialog-command-attributes
 - 【推奨・実装上の判断】背景のクリックで閉じるモーダルは `closedby="any"` で作り、クリックの位置を判定する処理を自作しない。（`dialog-closedby-any`）
   - 理由: Esc キーと背景のクリックによる閉じる操作を、ブラウザの標準の振る舞いにそろえられるため。
-  - 補足: 対応していないブラウザでも、Esc キーと閉じるボタンでは閉じられます。
+  - 補足: Safari などの対応していないブラウザでも、Esc キーと閉じるボタンでは閉じられます。背景のクリックでも閉じる必要があるときは、ポリフィル（`dialog-closedby-polyfill`）を読み込みます。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/interaction/disclosure/#rule-dialog-closedby-any
 - 【禁止・実装上の判断】モーダルに、独自のフォーカストラップを実装しない。（`no-custom-focus-trap`）
   - 理由: `showModal()` で開いたダイアログは背面を操作できない状態にするので不要であり、ブラウザのツールバーへの移動まで妨げてしまうため。

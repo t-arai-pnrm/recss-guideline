@@ -1,17 +1,17 @@
+/**
+ * 子要素を通常フローのまま縦に並べ、2つ目以降の子の前に間隔を空ける。
+ * 間隔は子要素の側で解決されるので、子ごとに値を上書きできる。
+ *
+ * @prop {length} --prose--space [0] - その子要素の前の間隔。ルートに渡すと全体の値に、子に渡すとその子の前だけの値になる
+ *
+ * @example
+ * <div class="prose" style="--prose--space: calc(var(--spacing--sm) / 16 * 1rem)">
+ *   <p>...</p>
+ *   <h2 style="--prose--space: calc(var(--spacing--xl) / 16 * 1rem)">...</h2>
+ *   <p>...</p>
+ * </div>
+ */
 @layer compositions {
-  /*
-   * 子要素を通常フローのまま縦に並べ、2つ目以降の子の前に間隔を空ける。
-   * 間隔は子要素の側で解決されるので、子ごとに値を上書きできる。
-   *
-   * @prop {length} --prose--space [0] - その子要素の前の間隔。ルートに渡すと全体の値に、子に渡すとその子の前だけの値になる
-   *
-   * @example
-   * <div class="prose" style="--prose--space: calc(var(--spacing--sm) / 16 * 1rem)">
-   *   <p>...</p>
-   *   <h2 style="--prose--space: calc(var(--spacing--xl) / 16 * 1rem)">...</h2>
-   *   <p>...</p>
-   * </div>
-   */
   .prose {
     & > * + * {
       margin-block-start: var(--prose--space, 0);

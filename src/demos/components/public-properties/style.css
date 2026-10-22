@@ -1,3 +1,9 @@
+/**
+ * 情報カード。
+ *
+ * @prop {color}  --info-card--accent [var(--foreground--muted)] - 枠線と見出しの色
+ * @prop {length} --info-card--radius [8px]                      - 角丸の半径
+ */
 @layer components {
   @scope (.scoped.card-section) to (.scoped) {
     :scope {
@@ -20,7 +26,7 @@
 
     ul {
       /* 中に置くカードすべてに、継承で届ける */
-      --info-card--accent: var(--foreground--accent);
+      --info-card--accent: var(--foreground--base);
 
       display: block grid;
       grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(200 / 16 * 1rem)), 1fr));
@@ -32,12 +38,6 @@
     }
   }
 
-  /*
-   * 情報カード。
-   *
-   * @prop {color}  --info-card--accent [var(--foreground--muted)]   - 枠線と見出しの色
-   * @prop {length} --info-card--radius [8px]                         - 角丸の半径
-   */
   @scope (.scoped.info-card) to (.scoped) {
     :scope {
       --_accent: var(--info-card--accent, var(--foreground--muted));

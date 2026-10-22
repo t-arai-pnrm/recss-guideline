@@ -330,7 +330,7 @@ CMSで記事の登録が始まり、カンプになかった記事が入って�
 - [`state-by-pseudo-class-or-aria`](/interaction/state-attributes/#rule-state-by-pseudo-class-or-aria)：状態のスタイルは、状態クラスではなく、擬似クラスやARIA属性で選びます。
 - [`design-for-content-changes`](/layout-practice/defensive/#rule-design-for-content-changes)：テキストが2倍の長さになったら、画像がなかったらと考え、そのパターンで表示を確かめます。
 - [`min-block-size-over-fixed-height`](/layout-practice/defensive/#rule-min-block-size-over-fixed-height)：要素の高さは `block-size` で固定しません。
-- [`isolation-for-relative-z-index`](/components/boundaries/#rule-isolation-for-relative-z-index)：内部の要素で相対的な `z-index` を使うコンポーネントは、ルートに `isolation: isolate` を指定します。
+- [`isolation-for-relative-z-index`](/components/boundaries/#rule-isolation-for-relative-z-index)：内部の要素で相対的な `z-index` を使うコンポーネントは、重なりを閉じ込めるルートか内部の区画に `isolation: isolate` を指定します。
 - [`z-index-tokens-only`](/components/boundaries/#rule-z-index-tokens-only)：`z-index` の値は、数値を直接書かずにトークンで指定します。
 - [`no-gaps-between-hover-items`](/interaction/hit-area-and-touch/#rule-no-gaps-between-hover-items)：ホバーで背景が付く項目の間を `gap` で空けず、背景の帯を離して見せるときは擬似要素を `inset` で内側に寄せます。
 - [`hit-area-min-size`](/interaction/hit-area-and-touch/#rule-hit-area-min-size)：操作する要素には24px相当の大きさを確保し、指で操作する環境では44px相当にします。

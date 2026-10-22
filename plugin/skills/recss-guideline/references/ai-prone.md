@@ -1,6 +1,6 @@
 # AIが誤りやすいルール
 
-- ガイドラインのバージョン: 0.75.1（2026-10-16 生成）
+- ガイドラインのバージョン: 0.76.0（2026-10-22 生成）
 - ルールの数: 296
 
 AIが生成するコードで特に誤りやすいルールです。CSSを書く前とレビューの前に、必ず確認してください。1件1行で、強度とルールの本文と ID だけを並べています。理由と補足は、章ごとのファイル（`references/<章>.md`）を ID で検索して読んでください。
@@ -153,7 +153,7 @@ AIが生成するコードで特に誤りやすいルールです。CSSを書く
 - 【推奨】子要素のクラスの下にある要素を、子孫結合子のタイプセレクタ（`._summary p`）で選ばない。同じ種類の要素を領域ごとに変えたいときは、その要素にクラスを付ける。（`no-type-under-child-class`）
 - 【禁止】ほかのコンポーネントのルートや内部の要素を、セレクタで選んで見た目を上書きしない。（`no-other-component-internals`）
 - 【必須】z-index の値は、数値を直接書かずにトークンで指定する。（`z-index-tokens-only`）
-- 【必須】内部の要素で相対的な z-index を使うコンポーネントは、ルートに `isolation: isolate` を指定する。（`isolation-for-relative-z-index`）
+- 【必須】内部の要素で相対的な z-index を使うコンポーネントは、その重なりを閉じ込める要素に `isolation: isolate` を指定する。閉じ込める要素は、コンポーネントのルートか、z-index を使う要素をすべて含む内部の区画にする。（`isolation-for-relative-z-index`）
 - 【推奨】パターンには、重ねるコンポーネントが指定しないプロパティだけを書き、コンポーネントの側で変える値は `--<パターン>--<プロパティ>` の公開プロパティで受け取る。（`pattern-leaves-component-properties`）
 - 【必須】トークンは `--<分類>--<名前>` の形で名付ける（例：`--color--neutral--500`、`--spacing--md`）。（`token-naming-category-first`）
 - 【推奨】トークンとして定義されている値は、数値や色を直接書かずにトークンを参照する。（`use-defined-tokens`）
@@ -227,7 +227,7 @@ AIが生成するコードで特に誤りやすいルールです。CSSを書く
 - 【推奨】`primary-layout` の子の幅は、子に最大幅や負の `margin` を書かず、`full-column` などのクラスか `grid-column: --wide` のような線の名前で選ぶ。（`primary-layout-width-by-line-names`）
 - 【必須】中央の列の最大幅は、コンテンツ幅の最大値から、その両側に足す列の上限を2本分引いて求める（`var(--_c--content-max-width) - var(--_c--narrow-reduction) * 2`）。（`primary-layout-center-column-subtract-both-sides`）
 - 【推奨】子を折り返さずに横へ並べてスクロールさせる一覧は、Flexbox で子に `flex-shrink: 0` を付けて組まず、`reel`（Grid の `grid-auto-flow: column`）で並べ、項目の幅を親の `grid-auto-columns` で決める。（`reel-grid-auto-columns`）
-- 【推奨】項目にフォーカスできる要素がない横スクロールの一覧には、`role="region"`、見出しを指す `aria-labelledby`、`tabindex="0"` を付ける。（`reel-region-without-focusable-items`）
+- 【推奨】項目にフォーカスできる要素がない横スクロールの一覧は、スクロールする要素に `tabindex="0"` と、見出しを指す `aria-labelledby` を付ける。（`reel-focusable-without-focusable-items`）
 - 【推奨】`prose` の中で特定の間だけ間隔を変えるときは、`margin` を足さず、その間の後ろにある子に `--prose--space` を渡す。（`prose-space-on-following-child`）
 - 【必須】`prose` の `--prose--space` はルートで内部プロパティに受け直さず、子要素の `margin-block-start` の `var()` で直接参照する。（`prose-no-internal-property`）
 

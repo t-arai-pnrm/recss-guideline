@@ -1,23 +1,28 @@
+/**
+ * primary-layout と reel のコンポジションと、reel の両端の余白をページのガターにそろえる例。
+ *
+ * @prop {length} --primary-layout--content-max-width [calc(1680 / 16 * 1rem)] - コンテンツ幅の最大値
+ * @prop {length} --primary-layout--gutter            [20px]                   - 左右のガターの最小幅
+ * @prop {length} --primary-layout--narrow-reduction  [20px]                   - ナロー幅とコンテンツ幅の片側の差（上限）
+ * @prop {length} --primary-layout--wide-increase     [60px]                   - コンテンツ幅とワイド幅の片側の差（上限）
+ * @prop {length} --primary-layout--ex-wide-increase  [40px]                   - ワイド幅と超ワイド幅の片側の差（上限）
+ * @prop {length} --primary-layout--row-gap           [0px]                    - 行の間隔
+ *
+ * @prop {length} --reel--item-size [max-content] - 項目の幅（grid-auto-columns）
+ * @prop {length} --reel--gap       [0]           - 項目の間隔
+ * @prop {length} --reel--inset     [0]           - 両端の余白と、スナップで止まる位置の内側の余白
+ *
+ * @example
+ * <div class="primary-layout">
+ *   <p>コンテンツ幅（デフォルト）</p>
+ *   <div class="narrow-column">ナロー幅</div>
+ *   <div class="wide-column">ワイド幅</div>
+ *   <div class="ex-wide-column">超ワイド幅</div>
+ *   <div class="full-column">フル幅</div>
+ * </div>
+ */
 @layer compositions {
-  /*
-   * 左右のガターと5段階の幅の列を持つグリッド。子はデフォルトでコンテンツ幅に置き、クラスで幅を選ぶ。
-   *
-   * @prop {length} --primary-layout--content-max-width          [calc(1680 / 16 * 1rem)]    - コンテンツ幅の最大値
-   * @prop {length} --primary-layout--gutter                      [20px]                      - 左右のガターの最小幅
-   * @prop {length} --primary-layout--narrow-reduction            [20px]                      - ナロー幅とコンテンツ幅の片側の差（上限）
-   * @prop {length} --primary-layout--wide-increase               [60px]                      - コンテンツ幅とワイド幅の片側の差（上限）
-   * @prop {length} --primary-layout--ex-wide-increase            [40px]                      - ワイド幅と超ワイド幅の片側の差（上限）
-   * @prop {length} --primary-layout--row-gap                     [0px]                       - 行の間隔
-   *
-   * @example
-   * <div class="primary-layout">
-   *   <p>コンテンツ幅（デフォルト）</p>
-   *   <div class="narrow-column">ナロー幅</div>
-   *   <div class="wide-column">ワイド幅</div>
-   *   <div class="ex-wide-column">超ワイド幅</div>
-   *   <div class="full-column">フル幅</div>
-   * </div>
-   */
+  /* 左右のガターと5段階の幅の列を持つグリッド。子はデフォルトでコンテンツ幅に置き、クラスで幅を選ぶ。 */
   .primary-layout {
     --_c--content-max-width: var(--primary-layout--content-max-width, calc(1680 / 16 * 1rem));
     --_c--gutter: var(--primary-layout--gutter, 20px);
@@ -102,6 +107,7 @@
     }
   }
 
+  /* 子要素をインライン方向に1列に並べ、入りきらない分を横にスクロールさせる。 */
   .reel {
     display: block grid;
     grid-auto-columns: var(--reel--item-size, max-content);

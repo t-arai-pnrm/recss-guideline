@@ -1,3 +1,8 @@
+/**
+ * 下の端が外側へ反り返るタブのナビゲーション。対応している環境だけ、corner-shape の scoop で反り返りを付ける。
+ *
+ * @prop {length} --category-navigation--radius [12px] - タブの角丸と、下の端の反り返りの半径
+ */
 @layer components {
   @scope (.scoped.category-navigation) to (.scoped) {
     ul {

@@ -1,3 +1,8 @@
+/**
+ * 商品カードと、それを置く特集の区画。置く側は、カードが1枚だけのとき公開プロパティで特集を伝える。
+ *
+ * @prop {ident} --product-card--featured [--false] - 特集として置くときに --true
+ */
 @layer components {
   @scope (.scoped.pickup-section) to (.scoped) {
     :scope {

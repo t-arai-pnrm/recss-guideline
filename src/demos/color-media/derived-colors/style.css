@@ -1,9 +1,9 @@
+/**
+ * 元の色から背景、枠線、バッジ、ホバーの色を作るカード。
+ *
+ * @prop {color} --derived-card--accent [oklch(50% 0.16 250deg)] - 元の色
+ */
 @layer components {
-  /*
-   * 元の色から背景、枠線、バッジ、ホバーの色を作るカード。
-   *
-   * @prop {color} --derived-card--accent [oklch(50% 0.16 250deg)] - 元の色
-   */
   @scope (.scoped.derived-card) to (.scoped) {
     :scope {
       --_accent: var(--derived-card--accent, oklch(50% 0.16 250deg));

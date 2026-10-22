@@ -1,3 +1,10 @@
+/**
+ * 縦にスクロールする間、画像の列を枠の上端に留め、右から左へ流す区画。動かさない環境では、横にスクロールして見る。
+ *
+ * @prop {length}  --horizontal-pin--column-width [min(calc(640 / 16 * 1rem), 100cqi)] - 列の幅
+ * @prop {integer} --horizontal-pin--column-count [6]                                  - 列の数（中の列の数と一致させる）
+ * @prop {length}  --horizontal-pin--column-gap   [24px]                               - 列の間隔
+ */
 @layer base {
   /* --translate-from と対になる。もとの位置から、渡した値まで動かす */
   @keyframes --translate-to {

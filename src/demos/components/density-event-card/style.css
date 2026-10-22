@@ -16,8 +16,8 @@
       box-shadow: var(--shadow--xs);
       background-color: var(--background--surface);
 
-      /* 日付の列 80px 相当・隙間 24px・本文の最小幅 240px 相当が並ぶ幅 */
-      @container --scoped (inline-size >= calc(80 / 16 * 1rem + 24px + 240 / 16 * 1rem)) {
+      /* 日付の列 80px 相当・隙間 24px・本文の最小幅 240px 相当に、切り替えた後の左右の padding 24px を足した幅 */
+      @container --scoped (inline-size >= calc(80 / 16 * 1rem + 24px + 240 / 16 * 1rem + 24px * 2)) {
         --_density: --spacious;
 
         /* フラグを宣言した要素自身の見た目は、同じクエリの中で変える */
@@ -35,7 +35,7 @@
       display: block flex;
       column-gap: 4px;
       align-items: baseline;
-      color: var(--foreground--accent);
+      color: var(--foreground--muted);
       font-weight: var(--font-weight--bold);
 
       @container style(--_density: --spacious) {

@@ -1,10 +1,10 @@
+/**
+ * ポップオーバーで開くメニュー。
+ * 開閉は popover 属性で動き、カスタム要素の JavaScript はホバーで開く処理などを足すだけにする。
+ *
+ * @prop {color} --popover-menu--accent [var(--foreground--accent)] - メニューを開いている間のボタンの枠線の色
+ */
 @layer components {
-  /*
-   * ポップオーバーで開くメニュー。
-   * 開閉は popover 属性で動き、カスタム要素の JavaScript はホバーで開く処理などを足すだけにする。
-   *
-   * @prop {color} --popover-menu--accent [var(--foreground--accent)] - メニューを開いている間のボタンの枠線の色
-   */
   @scope (popover-menu.scoped) to (.scoped) {
     :scope {
       --_accent: var(--popover-menu--accent, var(--foreground--accent));

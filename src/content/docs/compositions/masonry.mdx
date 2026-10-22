@@ -131,12 +131,13 @@ import masonryCss from '../../../demos/compositions/masonry/style.css?raw';
 ```css title="🙆‍♂ Recommended: コンポーネントは項目の見た目だけを受け持つ"
 @scope (.scoped.post-list) to (.scoped) {
   li {
-    padding: 16px;
-    border: 1px solid oklch(85% 0 0deg);
+    padding: calc(var(--spacing--sm) * 1px);
+    border: 1px solid var(--border--base);
+    border-radius: var(--rounded--md);
   }
 
   ._number {
-    color: oklch(45% 0.15 260deg);
+    color: var(--foreground--muted);
   }
 }
 ```

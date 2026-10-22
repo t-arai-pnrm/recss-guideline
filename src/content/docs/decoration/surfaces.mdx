@@ -129,15 +129,21 @@ import frostedCss from '../../../demos/decoration/frosted-header/style.css?raw';
   :scope {
     box-shadow: var(--shadow--xs);
     filter: var(--drop-shadow--sm);
-    transition-duration: var(--duration--base);
     transition-property: filter;
-    transition-timing-function: var(--ease--out-quint);
 
-    /* 強制カラーモードでは影が消えるので、縁を outline で描く。フォーカスリングは上書きしない */
+    /* キーボードのフォーカスでは一度で持ち上げるので、トランジションはフォーカスリングのないときだけ掛ける */
     &:not(:focus-visible) {
+      transition-duration: var(--duration--base);
+      transition-timing-function: var(--ease--out-quint);
+
+      /* 強制カラーモードでは影が消えるので、縁を outline で描く。フォーカスリングは上書きしない */
       @media (forced-colors: active) {
         outline: 1px solid;
       }
+    }
+
+    &:focus-visible {
+      filter: var(--drop-shadow--md);
     }
 
     &:any-link:hover {
@@ -151,7 +157,7 @@ import frostedCss from '../../../demos/decoration/frosted-header/style.css?raw';
 
 <Demo title="box-shadow を動かすカードと、drop-shadow() を動かすカード" html={shadowLiftHtml} css={shadowLiftCss} />
 
-デモの上の段は、左のカードが `box-shadow` を、右のカードが `filter` の `drop-shadow()` を動かします。どちらのカードも、ポインターを重ねると、影が `sm` の段階から `md` の段階へ変わり、面が持ち上がったように見えます。見た目の変化はほぼ同じで、違うのは動いている間の描き直しの量です。下の段は、持ち上げた後の影を止めたまま並べたものです。右の `drop-shadow()` の影は、左の `box-shadow` の影より少し濃く、左右にもわずかに広がります。この違いは、後の段落で説明します。
+デモの上の段は、左のカードが `box-shadow` を、右のカードが `filter` の `drop-shadow()` を動かします。どちらのカードも、ポインターを重ねると、影が `sm` の段階から `md` の段階へ変わり、面が持ち上がったように見えます。キーボードでフォーカスしたときも同じ影にしますが、トランジションは `&:not(:focus-visible)` の中に書いてあるので、一度で切り替わります（「[17-1 ホバーとフォーカスを表す](/interaction/states-and-focus/)」）。見た目の変化はほぼ同じで、違うのは動いている間の描き直しの量です。下の段は、持ち上げた後の影を止めたまま並べたものです。右の `drop-shadow()` の影は、左の `box-shadow` の影より少し濃く、左右にもわずかに広がります。この違いは、後の段落で説明します。
 
 Chromeで、2つの例のトランジションを1秒に延ばし、パフォーマンスのトレースで比べました。ここでいう描き直しは、DevToolsのPaintの記録です。`box-shadow` の例は毎フレーム描き直され、`drop-shadow()` の例は、ホバーした直後を除いて描き直されませんでした。一方、トランジションの進行は、どちらの例もメインスレッドで計算されます。Chromeは、`drop-shadow()` のように画素を動かすフィルターのアニメーションをコンポジタに移さないので、メインスレッドが詰まると影の変化も止まります。描き直しがなくなっても、GPUでフィルターを当てる処理の負荷は残ります。ほかのブラウザでは確かめていないので、ブラウザ共通の振る舞いとしては扱いません（「[18-10 動きの負荷を抑える](/motion/performance/)」）。{/* 要検証: ブラウザ。Firefox と Safari で、drop-shadow() のトランジションが描き直しなしで処理されるか */}
 

@@ -320,12 +320,12 @@
   page: compositions/reel
   since: 0.69.0
 
-- id: reel-region-without-focusable-items
+- id: reel-focusable-without-focusable-items
   level: 推奨
   kind: spec
-  rule: '項目にフォーカスできる要素がない横スクロールの一覧には、`role="region"`、見出しを指す `aria-labelledby`、`tabindex="0"` を付ける。'
+  rule: '項目にフォーカスできる要素がない横スクロールの一覧は、スクロールする要素に `tabindex="0"` と、見出しを指す `aria-labelledby` を付ける。'
   reason: スクロールコンテナにキーボードでフォーカスできるかはブラウザによって違い、フォーカスできる要素がないと、キーボードでは画面の外の項目を見られないため。
-  note: '項目にリンクやボタンがあれば、Tab キーで移ったときにブラウザがその位置までスクロールするので、付けません。表を包む要素も同じ付け方をします（第11章のルール `table-min-size-with-scroller`）。'
+  note: '項目にリンクやボタンがあれば、Tab キーで移ったときにブラウザがその位置までスクロールするので、付けません。一覧が `ul` や `ol` なら `role` を付けず、リストの意味を残します（HTML の仕様で、`ul` と `ol` に `region` のロールは許されていません）。意味を持たない `div` で包む表には、`role="region"` も付けます（第11章のルール `table-min-size-with-scroller`）。'
   aiProne: true
   page: compositions/reel
   since: 0.69.0

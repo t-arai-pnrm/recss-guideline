@@ -1,12 +1,12 @@
+/**
+ * 列の最小幅と最大数から、列の数を自動で決める（12-7 grid）。
+ *
+ * @prop {keyword} --grid--mode             [auto-fill]             - repeat() のキーワード（auto-fill | auto-fit）
+ * @prop {length}  --grid--column-min-width [calc(320 / 16 * 1rem)] - 列の最小幅（これより狭くなると列が減る）
+ * @prop {integer} --grid--column-max-count [5]                     - 列の最大数
+ * @prop {length}  --grid--gap              [0px]                   - 行と列の間隔（一括）
+ */
 @layer compositions {
-  /*
-   * 列の最小幅と最大数から、列の数を自動で決める（12-7 grid）。
-   *
-   * @prop {keyword} --grid--mode             [auto-fill]             - repeat() のキーワード（auto-fill | auto-fit）
-   * @prop {length}  --grid--column-min-width [calc(320 / 16 * 1rem)] - 列の最小幅（これより狭くなると列が減る）
-   * @prop {integer} --grid--column-max-count [5]                     - 列の最大数
-   * @prop {length}  --grid--gap              [0px]                   - 行と列の間隔（一括）
-   */
   .grid {
     --_c--mode: var(--grid--mode, auto-fill);
     --_c--row-gap: var(--grid--gap, var(--grid--row-gap, 0px));

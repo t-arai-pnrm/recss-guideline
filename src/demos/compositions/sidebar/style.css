@@ -1,30 +1,29 @@
+/**
+ * stack と sidebar のコンポジションと、メインとサイドを並べる例。
+ *
+ * @prop {length} --stack--gap [0] - 子要素の間隔
+ *
+ * @prop {length} --sidebar--main-min-width [calc(480 / 16 * 1rem)] - メインの最小幅（これを確保できないと縦に積む）
+ * @prop {length} --sidebar--side-width     [calc(320 / 16 * 1rem)] - 横に並べたときのサイドの幅
+ * @prop {length} --sidebar--gap            [0px]                   - 行と列の間隔（一括）
+ * @prop {length} --sidebar--row-gap        [0px]                   - 縦に積んだときの間隔
+ * @prop {length} --sidebar--column-gap     [0px]                   - 横に並べたときの間隔
+ *
+ * @example
+ * <div class="sidebar" style="--sidebar--side-width: calc(240 / 16 * 1rem)">
+ *   <article class="main-column">...</article>
+ *   <aside class="side-column">...</aside>
+ * </div>
+ */
 @layer compositions {
-  /*
-   * 子要素を縦に積む。
-   *
-   * @prop {length} --stack--gap [0] - 子要素の間隔
-   */
+  /* 子要素を縦に積む。 */
   .stack {
     display: block flex;
     flex-direction: column;
     gap: var(--stack--gap, 0);
   }
 
-  /*
-   * メインとサイドの 2 カラムに並べ、メインが最小幅を確保できなければ縦に積む。
-   *
-   * @prop {length} --sidebar--main-min-width [calc(480 / 16 * 1rem)] - メインの最小幅（これを確保できないと縦に積む）
-   * @prop {length} --sidebar--side-width     [calc(320 / 16 * 1rem)] - 横に並べたときのサイドの幅
-   * @prop {length} --sidebar--gap            [0px]                   - 行と列の間隔（一括）
-   * @prop {length} --sidebar--row-gap        [0px]                   - 縦に積んだときの間隔
-   * @prop {length} --sidebar--column-gap     [0px]                   - 横に並べたときの間隔
-   *
-   * @example
-   * <div class="sidebar" style="--sidebar--side-width: calc(240 / 16 * 1rem)">
-   *   <article class="main-column">...</article>
-   *   <aside class="side-column">...</aside>
-   * </div>
-   */
+  /* メインとサイドの 2 カラムに並べ、メインが最小幅を確保できなければ縦に積む。 */
   .sidebar {
     --_c--row-gap: var(--sidebar--gap, var(--sidebar--row-gap, 0px));
     --_c--column-gap: var(--sidebar--gap, var(--sidebar--column-gap, 0px));

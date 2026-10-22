@@ -78,7 +78,7 @@ import buttonsChangedCss from '../../../demos/exercise/buttons-2/style.css?raw';
   :scope {
     --_background: var(--background--inverse);
     --_background--hocus: color-mix(in oklab, var(--background--inverse) 80%, var(--background--base));
-    --_shadow: var(--shadow--button);
+    --_shadow: inset 0 1px 0 0 oklch(100% 0 none / 16%), 0 1px 2px 0 oklch(0% 0 none / 12%), 0 4px 12px -2px oklch(26% 0.05 265deg / 30%);
 
     border: 1px solid transparent;
     box-shadow: var(--_shadow);
@@ -108,6 +108,8 @@ import buttonsChangedCss from '../../../demos/exercise/buttons-2/style.css?raw';
 ```
 
 種類ごとに書き換えるのは、背景と影の内部プロパティと、枠線と文字の色だけです。ホバーとフォーカスの背景は、どの種類でも `--_background--hocus` を読むので、状態のセレクタを種類ごとに書き分ける必要がありません。主ボタンにも透明な1pxの枠線を置いておき、副ボタンでは色だけを変えて描きます。そうしておけば、2つの種類の高さがそろいます。
+
+主ボタンの影は、上の縁に入れる光と、紺の淡い影を重ねたものです。この影は `action-control` でしか使わないので、サイトのトークンにせず、ルートの内部プロパティ `--_shadow` に値を書きます（`no-single-use-token`）。影の色は、配色を暗くした面に置いても変えないので、`light-dark()` を含むトークンを通さずに書いています。
 
 文字のリンクの色は、リンクを表す `--foreground--accent` で指定します。小見出しも同じティールに見えますが、こちらは操作できない飾りなので、ブランドの色の `--foreground--brand` を使います（「[21-1 題材と準備](/exercise/setup/#カンプとトークンの対応)」）。
 
@@ -178,13 +180,13 @@ import buttonsChangedCss from '../../../demos/exercise/buttons-2/style.css?raw';
 
   .section-heading {
     /* 幅360pxで32px、幅1024pxで display（48px）になるよう、2つの幅から傾きと切片を求める */
-    --_min: 32;
-    --_slope: calc((var(--text--display--font-size) - var(--_min)) / (1024 - 360));
+    --_p--min: 32;
+    --_p--slope: calc((var(--text--display--font-size) - var(--_p--min)) / (1024 - 360));
 
     font-feature-settings: "palt";
     font-size: clamp(
-      calc(var(--_min) / 16 * 1rem),
-      calc((var(--_min) - 360 * var(--_slope)) / 16 * 1rem + var(--_slope) * 100svi),
+      calc(var(--_p--min) / 16 * 1rem),
+      calc((var(--_p--min) - 360 * var(--_p--slope)) / 16 * 1rem + var(--_p--slope) * 100svi),
       calc(var(--text--display--font-size) / 16 * 1rem)
     );
     font-kerning: normal;
@@ -243,6 +245,10 @@ import buttonsChangedCss from '../../../demos/exercise/buttons-2/style.css?raw';
 ```css title="🙆‍♂ Recommended: 帯のルートで配色を暗くし、文字色と背景色を指定し直す" use="diff" from="exercise/buttons-2"
 @scope (.scoped.cta-band) to (.scoped) {
   :scope {
+    --_glow:
+      radial-gradient(120% 90% at 85% 0%, oklch(53% 0.09 192deg / 55%), transparent 60%),
+      radial-gradient(80% 70% at 0% 100%, oklch(37% 0.05 265deg / 60%), transparent 70%);
+
     display: block grid;
     gap: 24px;
     justify-items: center;
@@ -250,7 +256,7 @@ import buttonsChangedCss from '../../../demos/exercise/buttons-2/style.css?raw';
     padding-inline: 24px;
     border-radius: var(--rounded--lg);
     color-scheme: dark;
-    background-image: var(--background-image--brand-glow);
+    background-image: var(--_glow);
     background-color: var(--background--base);
     color: var(--foreground--base);
     text-align: center;
@@ -260,11 +266,11 @@ import buttonsChangedCss from '../../../demos/exercise/buttons-2/style.css?raw';
 
 演習のトークンは、セマンティクスの値を `light-dark()` で持っています。サイト全体はライトの配色に固定していますが、トークンのダークの値には、紺の面で使う色を入れてあります。登録していないカスタムプロパティは、`var()` で参照した要素の配色で値が決まります。そのため、帯の中の `action-control` が参照する `--background--inverse` は白に、`--foreground--inverse` は紺になります。小見出しの `--foreground--brand` も、明るいティールに切り替わります。
 
-帯の背景を `--background--base` にしたのも、同じ仕組みによるものです。ページの背景のトークンは、帯の中ではダークの値の紺になります。その上に、ティールの光を描いたグラデーションのトークン `--background-image--brand-glow` を重ねます。小見出しは文字の幅のラベルなので、見出しを包む `._heading` でも `justify-items: center` を指定し、帯の中央にそろえます。帯は新しいコンポーネントとして `cta-band.css` に書き、帯とセクションの間の64pxは、置く側の `page-demo.css` の `gap` で空けます。
+帯の背景を `--background--base` にしたのも、同じ仕組みによるものです。ページの背景のトークンは、帯の中ではダークの値の紺になります。その上に、ティールの光を描いたグラデーションを重ねます。この光は誘導の帯でしか使わないので、サイトのトークンにせず、帯のルートの内部プロパティ `--_glow` にします（[`no-single-use-token`](/components/design-tokens/#rule-no-single-use-token)）。小見出しは文字の幅のラベルなので、見出しを包む `._heading` でも `justify-items: center` を指定し、帯の中央にそろえます。帯は新しいコンポーネントとして `cta-band.css` に書き、帯とセクションの間の64pxは、置く側の `page-demo.css` の `gap` で空けます。
 
 ## 振り返り
 
-直したのは、新しく作った `cta-band.css` と帯のHTML、そして帯との間隔を足した `page-demo.css` です。直さずに済んだのは、`action-control.css` と、2つのパターンです。ボタンは色をセマンティクスのトークンだけで指定し、色の値を直接書いていなかったので、置かれた面の配色に合わせて色が変わりました。
+直したのは、新しく作った `cta-band.css` と帯のHTML、そして帯との間隔を足した `page-demo.css` です。直さずに済んだのは、`action-control.css` と、2つのパターンです。ボタンは、背景、文字、枠線の色をセマンティクスのトークンだけで指定し、色の値を直接書いていなかったので、置かれた面の配色に合わせて色が変わりました。
 
 紺の面に置くことは、ボタンが知る必要のない情報です。面の配色を決めるのは面の側で、ボタンは「主ボタンは文字色で塗る」という役割だけを持っています。21-5のフッターも紺の面なので、同じように `color-scheme: dark` を指定すれば、ボタンやリンクの色を書き分けずに済みます。
 
@@ -313,10 +319,11 @@ import buttonsChangedCss from '../../../demos/exercise/buttons-2/style.css?raw';
 - [`hover-target-stays-still`](/interaction/states-and-focus/#rule-hover-target-stays-still)：ホバーで動かすのは、ホバーを受ける要素ではなく、子要素か擬似要素です。
 - [`hocus-via-style-query`](/components/style-queries/#rule-hocus-via-style-query)：ホバーとフォーカスで子要素を変えるときは、`--_hocus` を立ててスタイルクエリで読みます。
 - [`hit-area-min-size`](/interaction/hit-area-and-touch/#rule-hit-area-min-size)：操作する要素には24px相当の大きさを確保し、指で操作する環境では44px相当にします。
-- [`no-motion-on-focus-visible`](/interaction/states-and-focus/#rule-no-motion-on-focus-visible)：キーボード操作によるフォーカスの移動に、トランジションを掛けません。
+- [`no-motion-on-focus-visible`](/interaction/states-and-focus/#rule-no-motion-on-focus-visible)：キーボードでフォーカスを受けた要素の見た目は、トランジションを掛けずに一度で切り替えます。
 - [`palt-for-headings`](/typography/japanese-typesetting/#rule-palt-for-headings)：見出しには `font-kerning: normal` を指定し、日本語では `palt` で詰めます。
 - [`auto-phrase-for-headings`](/typography/size-and-line-breaks/#rule-auto-phrase-for-headings)：和文の見出しには、`word-break: auto-phrase` と `text-wrap: balance` を指定します。
 - [`parent-owns-child-placement`](/components/boundaries/#rule-parent-owns-child-placement)：子のコンポーネントの配置と外側の余白は、親の `gap` などで指定します。
 - [`no-other-component-internals`](/components/boundaries/#rule-no-other-component-internals)：ほかのコンポーネントのルートや内部の要素を、セレクタで選んで上書きしません。
 - [`redeclare-colors-with-color-scheme`](/color-media/dark-mode/#rule-redeclare-colors-with-color-scheme)：`color-scheme` を指定した要素では、`color` と `background-color` をトークンで指定し直します。
 - [`light-dark-in-semantic-tokens`](/color-media/dark-mode/#rule-light-dark-in-semantic-tokens)：暗い配色の色は、セマンティクスのトークンに `light-dark()` で持たせます。
+- [`no-single-use-token`](/components/design-tokens/#rule-no-single-use-token)：1回しか使わない値や、特定のコンポーネントだけで使う値を、グローバルなトークンにしません。

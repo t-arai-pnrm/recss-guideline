@@ -1,3 +1,9 @@
+/**
+ * ポインターの位置に光を当てるカード。光の位置は、スクリプトがポインターの位置から書き込む。
+ *
+ * @prop {length} --spotlight--x [0] - 光の中心の、カードの左端からの位置
+ * @prop {length} --spotlight--y [0] - 光の中心の、カードの上端からの位置
+ */
 @property --spotlight--x {
   syntax: "<length>";
   inherits: false;

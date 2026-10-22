@@ -1,3 +1,10 @@
+/**
+ * グラデーションの枠線を持つ枠。枠線は擬似要素に描き、マスクの合成で内側をくり抜くので、どの環境でもグラデーションになる。
+ *
+ * @prop {length} --gradient-frame--border-width [2px]                - 枠線の幅
+ * @prop {length} --gradient-frame--radius       [var(--rounded--lg)] - 角丸の半径
+ * @prop {image}  --gradient-frame--gradient     [linear-gradient(in oklch 90deg, var(--color--accent--500), var(--color--accent--700))] - 枠線のグラデーション
+ */
 @layer tokens {
   :root {
     --color--accent--500: oklch(62% 0.19 250deg);

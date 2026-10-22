@@ -1,21 +1,21 @@
+/**
+ * 直下のリストを、上から下へ読む順番のまま段に分ける。
+ * 構造は「.columns > リスト > 項目」で、段組みはリストに、項目の間隔は項目に付ける。
+ *
+ * @prop {length}  --columns--column-width     [calc(240 / 16 * 1rem)] - 段の最小幅（これより狭くなると段が減る）
+ * @prop {integer} --columns--column-max-count [5]                     - 段の最大数
+ * @prop {length}  --columns--row-gap          [0px]                   - 項目の間隔
+ * @prop {length}  --columns--column-gap       [0px]                   - 段の間隔
+ *
+ * @example
+ * <div class="columns" style="--columns--column-width: calc(320 / 16 * 1rem); --columns--column-max-count: 3">
+ *   <ul>
+ *     <li>Item 1</li>
+ *     <li>Item 2</li>
+ *   </ul>
+ * </div>
+ */
 @layer compositions {
-  /*
-   * 直下のリストを、上から下へ読む順番のまま段に分ける。
-   * 構造は「.columns > リスト > 項目」で、段組みはリストに、項目の間隔は項目に付ける。
-   *
-   * @prop {length}  --columns--column-width     [calc(240 / 16 * 1rem)] - 段の最小幅（これより狭くなると段が減る）
-   * @prop {integer} --columns--column-max-count [5]                     - 段の最大数
-   * @prop {length}  --columns--row-gap          [0px]                   - 項目の間隔
-   * @prop {length}  --columns--column-gap       [0px]                   - 段の間隔
-   *
-   * @example
-   * <div class="columns" style="--columns--column-width: calc(320 / 16 * 1rem); --columns--column-max-count: 3">
-   *   <ul>
-   *     <li>Item 1</li>
-   *     <li>Item 2</li>
-   *   </ul>
-   * </div>
-   */
   .columns {
     --_c--column-width: var(--columns--column-width, calc(240 / 16 * 1rem));
     --_c--column-max-count: var(--columns--column-max-count, 5);

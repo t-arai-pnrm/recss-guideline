@@ -23,11 +23,13 @@
       color: var(--foreground--base);
       text-decoration: none;
       filter: var(--_filter);
-      transition-duration: var(--duration--base);
-      transition-timing-function: var(--ease--out-quint);
 
-      /* 強制カラーモードでは影が消えるので、縁を outline で描く。フォーカスリングは上書きしない */
+      /* キーボードのフォーカスでは一度で持ち上げるので、トランジションはフォーカスリングのないときだけ掛ける */
       &:not(:focus-visible) {
+        transition-duration: var(--duration--base);
+        transition-timing-function: var(--ease--out-quint);
+
+        /* 強制カラーモードでは影が消えるので、縁を outline で描く。フォーカスリングは上書きしない */
         @media (forced-colors: active) {
           outline: 1px solid;
         }
@@ -50,6 +52,11 @@
         --_filter-raised: var(--drop-shadow--md);
 
         transition-property: filter;
+      }
+
+      &:focus-visible {
+        box-shadow: var(--_box-shadow-raised);
+        filter: var(--_filter-raised);
       }
 
       &:any-link:hover {

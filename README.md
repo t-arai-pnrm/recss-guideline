@@ -8,7 +8,7 @@ https://t-arai-pnrm.github.io/recss-guideline/
 
 `pnpm gen:samples`で、本書と同じ版の最小構成、実務用のViteの構成、デモ、演習、共通トークン、AI向けの設定をZIPにまとめます。依存関係とファイルのSHA-256はmanifestに記録します。`pnpm build`はサンプルの生成も行います。
 
-ZIPとmanifestは`public/sample-files/`に版別に保存します。展開先と補足サイトの一覧はビルド時に作ります。紙への変換と参照の規則は[書籍版のREADME](./packages/book/README.md)、レビューへの対応と刊行前に残る確認は[対応記録](./BOOK_REVIEW_RESPONSE.md)にあります。
+ZIPとmanifestは`public/sample-files/`に版別に保存します。展開先と補足サイトの一覧はビルド時に作ります。紙への変換と参照の規則は[書籍版のREADME](./packages/book/README.md)にあります。
 
 ## AI ツールで使う
 

@@ -1,3 +1,8 @@
+/**
+ * 下の端が外側へ反り返るタブのナビゲーション。反り返りを含むタブの輪郭を、擬似要素1つの shape() で描く。
+ *
+ * @prop {length} --category-navigation--radius [12px] - タブの角丸と、下の端の反り返りの半径（輪郭の座標はすべてここから計算する）
+ */
 @layer components {
   @scope (.scoped.category-navigation) to (.scoped) {
     ul {

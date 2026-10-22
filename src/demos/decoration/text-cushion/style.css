@@ -1,3 +1,11 @@
+/**
+ * 見出しの中のインラインの要素に、行ごとの座布団（背景と枠線）を敷く。
+ * 改行する位置は .-br の span で決め、座布団の要素はその内側に置く。中に子要素を置かない。
+ *
+ * @prop {length} --text-cushion--space        [8px]   - 行の間隔を決める式で、座布団の上下に足す長さ。見えるすき間はこの2倍から、内容領域と 1cap の差を引いた長さになる
+ * @prop {length} --text-cushion--padding      [0.5em] - 座布団の内側の余白
+ * @prop {length} --text-cushion--border-width [2px]   - 座布団の枠線の幅
+ */
 @layer components {
   @scope (.scoped.text-cushion) to (.scoped) {
     :scope {

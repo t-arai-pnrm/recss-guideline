@@ -1,3 +1,14 @@
+/**
+ * しっぽの付いた吹き出し。本体としっぽの輪郭を1つの shape() で描き、clip-path と border-shape で共有する。
+ *
+ * @prop {length}            --balloon--padding-block  [24px]                  - ブロック方向の内側の余白（しっぽの高さは別に足す）
+ * @prop {length-percentage} --balloon--padding-inline [clamp(16px, 5%, 32px)] - インライン方向の内側の余白
+ * @prop {length}            --balloon--border-width   [4px]                   - 枠線の幅
+ * @prop {color}             --balloon--border-color   [var(--border--strong)] - 枠線の色
+ * @prop {length}            --balloon--radius         [var(--rounded--lg)]    - 角丸の半径
+ * @prop {length}            --balloon--arrow-width    [24px]                  - しっぽの底辺の幅（高さは正三角形になるように決まる）
+ * @prop {length-percentage} --balloon--arrow-position [50%]                   - しっぽの中心の、左端からの位置
+ */
 @layer components {
   @scope (.scoped.balloon) to (.scoped) {
     :scope {

@@ -144,12 +144,12 @@ Gridなら、親が `grid-auto-flow: column` で子を列として並べ、`grid
 
 項目にリンクやボタンがあれば、キーボードで操作するために足す指定はありません。Tabキーで画面の外の項目にフォーカスが移ると、ブラウザがその項目の位置まで一覧をスクロールします。Chromeで、上のデモのリンクをTabキーでたどり、5枚目のカードまで一覧が送られることを確かめました。{/* 要検証: ブラウザ。Safari と Firefox で、Tab キーで画面外の項目のリンクにフォーカスしたとき、reel がその位置までスクロールすること */}
 
-項目が画像だけでフォーカスできる要素がないときは、キーボードでは一覧をスクロールできません。スクロールコンテナにキーボードでフォーカスできるかは、ブラウザによって違うからです。この場合は、`reel` を付けた要素に `tabindex="0"` を付けて、Tabキーで一覧にフォーカスし、矢印キーで送れるようにします。フォーカスできる要素には名前が要るので、`role="region"` を付け、見出しから `aria-labelledby` で名前を借ります。表を横にスクロールさせる枠と同じ付け方です（「[11-15 表を組む](/layout-practice/tables/)」）。
+項目が画像だけでフォーカスできる要素がないときは、キーボードでは一覧をスクロールできません。スクロールコンテナにキーボードでフォーカスできるかは、ブラウザによって違うからです。この場合は、`reel` を付けた要素に `tabindex="0"` を付けて、Tabキーで一覧にフォーカスし、矢印キーで送れるようにします。フォーカスできる要素には名前が要るので、見出しから `aria-labelledby` で名前を借ります。`ul` には `role="region"` を付けません。HTMLの仕様では `ul` で使えるロールの中に `region` がなく、付けるとリストの意味と項目の数が伝わらなくなるからです。表を横にスクロールさせる枠は、意味を持たない `div` なので `role="region"` を付けます（「[11-15 表を組む](/layout-practice/tables/)」）。
 
-```html title="🙆‍♂ Recommended: フォーカスできる要素のない一覧は、一覧そのものにフォーカスさせる"
+```html title="🙆‍♂ Recommended: フォーカスできる要素のない一覧は、リストの意味を残したまま一覧にフォーカスさせる"
 <h2 id="gallery-heading">作例</h2>
-<ul class="reel" role="region" aria-labelledby="gallery-heading" tabindex="0">
-  <li><img src="…" alt="…"></li>
+<ul class="reel" aria-labelledby="gallery-heading" tabindex="0">
+  <li><img src="…" alt="…" width="320" height="240"></li>
   …
 </ul>
 ```
@@ -184,3 +184,4 @@ Gridなら、親が `grid-auto-flow: column` で子を列として並べ、`grid
 - [CSS スクロールスナップ - CSS | MDN](https://developer.mozilla.org/ja/docs/Web/CSS/CSS_scroll_snap)
 - [overscroll-behavior - CSS | MDN](https://developer.mozilla.org/ja/docs/Web/CSS/overscroll-behavior)
 - [The Reel](https://every-layout.dev/layouts/reel/)（Every Layout）
+- [ARIA in HTML: ul](https://www.w3.org/TR/html-aria/#el-ul)（W3C）

@@ -118,6 +118,14 @@
       --grid--column-max-count: 2;
       --grid--gap: 24px;
 
+      /*
+       * カードの影。ホバーとフォーカスで動かすので、box-shadow ではなく filter の drop-shadow() で描く（16-5）。
+       * drop-shadow() は広がりを持たないので、box-shadow の負の広がりで絞っていた影を、
+       * オフセット、ぼかし、濃さを減らして近づけた。動かす前と後で、drop-shadow() の数を2つにそろえる
+       */
+      --_drop-shadow: drop-shadow(0 1px 1px oklch(0% 0 none / 4%)) drop-shadow(0 6px 8px oklch(26% 0.05 265deg / 10%));
+      --_drop-shadow-raised: drop-shadow(0 2px 2px oklch(0% 0 none / 5%)) drop-shadow(0 12px 16px oklch(26% 0.05 265deg / 18%));
+
       & > ._card {
         grid-row: span 4;
       }
@@ -132,25 +140,25 @@
       padding: 16px;
       border: 1px solid var(--border--base);
       border-radius: var(--rounded--lg);
-      box-shadow: var(--shadow--card);
       background-color: var(--background--surface);
+      filter: var(--_drop-shadow);
 
       /* フォーカスの移動には、動きを付けない */
       &:not(:has(:focus-visible)) {
         transition-duration: var(--duration--base);
-        transition-property: box-shadow;
+        transition-property: filter;
         transition-timing-function: var(--ease--out-quint);
       }
 
       /* 見出しのリンクにホバーしたら、影を深くする。カードの位置は動かさない */
       &:has(a:any-link:hover) {
         @media (any-hover) {
-          box-shadow: var(--shadow--card-hover);
+          filter: var(--_drop-shadow-raised);
         }
       }
 
       &:has(a:focus-visible) {
-        box-shadow: var(--shadow--card-hover);
+        filter: var(--_drop-shadow-raised);
       }
     }
 
@@ -280,13 +288,13 @@
   /* セクションの見出し */
   .section-heading {
     /* 幅360pxで32px、幅1024pxで display（48px）になるよう、2つの幅から傾きと切片を求める */
-    --_min: 32;
-    --_slope: calc((var(--text--display--font-size) - var(--_min)) / (1024 - 360));
+    --_p--min: 32;
+    --_p--slope: calc((var(--text--display--font-size) - var(--_p--min)) / (1024 - 360));
 
     font-feature-settings: "palt";
     font-size: clamp(
-      calc(var(--_min) / 16 * 1rem),
-      calc((var(--_min) - 360 * var(--_slope)) / 16 * 1rem + var(--_slope) * 100svi),
+      calc(var(--_p--min) / 16 * 1rem),
+      calc((var(--_p--min) - 360 * var(--_p--slope)) / 16 * 1rem + var(--_p--slope) * 100svi),
       calc(var(--text--display--font-size) / 16 * 1rem)
     );
     font-kerning: normal;

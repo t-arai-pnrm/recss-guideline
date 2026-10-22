@@ -157,8 +157,9 @@
 - id: isolation-for-relative-z-index
   level: 必須
   kind: spec
-  rule: '内部の要素で相対的な z-index を使うコンポーネントは、ルートに `isolation: isolate` を指定する。'
+  rule: '内部の要素で相対的な z-index を使うコンポーネントは、その重なりを閉じ込める要素に `isolation: isolate` を指定する。閉じ込める要素は、コンポーネントのルートか、z-index を使う要素をすべて含む内部の区画にする。'
   reason: 内部の z-index がほかのコンポーネントと干渉せず、-1 の要素がルートや親の背景の下に隠れることもなくなるため。
+  note: 'z-index を使う要素が、タブの1つの項目や飾りを持つリンクのように1つの区画の中で完結するなら、その区画に指定します。区画をまたいで重なりを比べるときは、ルートに指定します。-1 の要素が隠れないために要るのは、閉じ込める要素がスタッキングコンテキストを作っていることです。`position: sticky` や `opacity` などで、すでにスタッキングコンテキストができている要素もありますが、それらの値は見た目の都合で変わるので、本書では予防のために `isolation: isolate` を明示します。'
   aiProne: true
   page: components/boundaries
   since: 0.1.0

@@ -1,3 +1,8 @@
+/**
+ * 背景色から、文字色を黒か白に決める色見本。
+ *
+ * @prop {color} --swatch-chip--background [oklch(50% 0 0deg)] - 背景色
+ */
 @layer pages {
   @scope (.scoped.contrast-demo) to (.scoped) {
     :scope {
@@ -22,11 +27,6 @@
 }
 
 @layer components {
-  /*
-   * 背景色から、文字色を黒か白に決める色見本。
-   *
-   * @prop {color} --swatch-chip--background [oklch(50% 0 0deg)] - 背景色
-   */
   @scope (.scoped.swatch-chip) to (.scoped) {
     :scope {
       --_background: var(--swatch-chip--background, oklch(50% 0 0deg));

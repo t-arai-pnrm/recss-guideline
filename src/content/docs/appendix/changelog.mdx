@@ -11,6 +11,31 @@ AI向けのスキル、プラグイン、MCPサーバーには、本書と同じ
 
 執筆中の版は `0.x` とし、すべての章の内容を著者が確認した時点で `1.0.0` にする予定です。`0.x` の間は、ルールを変えたり削除したりしたときも、マイナーバージョンを上げます。
 
+## 0.76.0（2026年10月22日）
+
+刊行前のレビューで見つかった、推奨例と本書のルールの食い違いを直しました。ルールを変えたので、マイナーバージョンを上げています。
+
+- ルールを変えました。
+  - [`reel-focusable-without-focusable-items`](/compositions/reel/#rule-reel-focusable-without-focusable-items)：IDを `reel-region-without-focusable-items` から変えました。`ul` で使えるロールの中に `region` はないので、一覧が `ul` や `ol` なら `role="region"` を付けず、`tabindex="0"` と `aria-labelledby` だけを付けます。「[12-12 reel](/compositions/reel/#キーボードで操作できるようにする)」のコード例も直しました。
+  - [`isolation-for-relative-z-index`](/components/boundaries/#rule-isolation-for-relative-z-index)：`isolation: isolate` を指定する要素を、ルートに限らず、`z-index` を使う要素をすべて含む内部の区画でもよいことにしました。ほかの理由でできたスタッキングコンテキストに頼らない理由を補足に書きました。
+  - [`no-motion-on-focus-visible`](/interaction/states-and-focus/#rule-no-motion-on-focus-visible)：動きを付けないのは、キーボードでフォーカスを受けた瞬間の変化だと明確にしました。フォーカスが離れて戻る変化は、トランジションで動いてかまいません。
+  - [`dialog-closedby-any`](/interaction/disclosure/#rule-dialog-closedby-any)、[`table-min-size-with-scroller`](/layout-practice/tables/#rule-table-min-size-with-scroller)：補足を、ポリフィルと `ul` のロールに合わせて直しました。
+- ホバーで変えた見た目を `:focus-visible` に指定していなかった「[16-5 面・影・角丸](/decoration/surfaces/)」のコード例と、「[13-9 収まらなくなったらナビゲーションを折りたたむ](/responsive/overflow-collapse/)」のデモに、フォーカスの指定を足しました。
+- 「[10-6 スタイルクエリで状態を伝える](/components/style-queries/)」のイベントカードの閾値に、左右の `padding` を足しました。標準の文字サイズで、344pxではなく392pxで切り替わります。
+- 定義済みのトークンを使っていなかったコード例と、リンクや選択した状態でないところに青（accent）を使っていたデモを直しました。「[最小の構成で始める](/introduction/quick-start/)」のお知らせのカードの見出しは、青ではなく濃い文字色にし、第4章の手を動かす課題の文も合わせました。
+- `<img>` に `width` と `height` を書いていなかった、「[19-3 表示と操作を確かめる](/operations/verification/)」などのコード例に属性を足しました。読み込めない画像の確かめ方は、寸法を残して `src` だけを変えると書きました。
+- デモのCSSは、公開プロパティのないファイルではファイルの先頭の説明ブロックを省いていることを「[本書の読み方](/introduction/how-to-read/#コード例のラベル)」に書き、公開プロパティを持つデモには `@prop` を書いた説明ブロックを足しました。
+- 第21章の演習を直しました。
+  - 見出しのパターンの内部プロパティを、`--_p--` で始まる名前にしました。
+  - 1つの部品でしか使わない影とグラデーションを、サイトのトークンから部品の内部プロパティに移しました。
+  - カードの影は、`box-shadow` のトランジションをやめ、`filter` の `drop-shadow()` で動かすようにしました。
+  - ドロワーで、`closedby` 属性に対応していないブラウザのために `dialog-closedby-polyfill` を読み込むようにしました。
+  - お問い合わせフォームの合格の条件に、Safari 26.0〜26.3では入力欄の枠線が赤くならなくてもよいことを書きました。
+- 「本書の読み方」で、第I部にもルールを置いている節（1-1、1-2、2-3）があることと、「仕様にもとづく制約」が問題を起こす条件を書き直しました。
+- 「[17-8 CSSでカルーセルを作る](/interaction/carousel/)」で、WCAGの達成基準2.2.2の2つの対象を分けて書きました。
+- 「[2-3 保守しやすさを最優先にする](/design-mindset/maintainability/)」と「[1-3 CSSはレイアウトのアルゴリズムの集まりである](/principles/layout-algorithms/)」で、範囲が広すぎた断定を、条件を付けた書き方に直しました。「[15-5 強制カラーモードとコントラスト](/color-media/forced-colors/)」の利用者の割合は、出典を確かめられた調査だけを残しました。
+- デモのボタンが実際にはコピーしないことを、「[18-5 トランジションを応用する](/motion/transition-techniques/)」の本文とボタンの名前に示しました。
+
 ## 0.75.1（2026年10月16日）
 
 コード例に添えた「全体：デモ『…』」の案内を、デモのCSSと照らし合わせて直しました。
@@ -171,7 +196,7 @@ AI向けのスキル、プラグイン、MCPサーバーには、本書と同じ
 - ルール [`table-min-size-with-scroller`](/layout-practice/tables/#rule-table-min-size-with-scroller) の補足に、表以外の横スクロールの一覧も同じ付け方をすることを書きました。
 - ルールを追加しました。
   - [`reel-grid-auto-columns`](/compositions/reel/#rule-reel-grid-auto-columns)：子を折り返さずに横へ並べてスクロールさせる一覧は、`reel` で並べ、項目の幅を親の `grid-auto-columns` で決めます。
-  - [`reel-region-without-focusable-items`](/compositions/reel/#rule-reel-region-without-focusable-items)：項目にフォーカスできる要素がない横スクロールの一覧には、`role="region"`、`aria-labelledby`、`tabindex="0"` を付けます。
+  - [`reel-focusable-without-focusable-items`](/compositions/reel/#rule-reel-focusable-without-focusable-items)：項目にフォーカスできる要素がない横スクロールの一覧には、`role="region"`、`aria-labelledby`、`tabindex="0"` を付けます。
 
 ## 0.68.0（2026年10月16日）
 

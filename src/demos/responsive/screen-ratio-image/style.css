@@ -1,3 +1,8 @@
+/**
+ * stack のコンポジションと、画面の幅の7割以上を占めるときだけ横長になる画像。
+ *
+ * @prop {length} --stack--gap [0] - 子要素の間隔
+ */
 @layer compositions {
   .stack {
     display: block flex;

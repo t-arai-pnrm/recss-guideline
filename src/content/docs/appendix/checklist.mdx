@@ -148,7 +148,7 @@ sidebar:
 - [ ] 外から変えてよい値を `--<コンポーネント>--<プロパティ>` の公開プロパティにし、内部で使う値を `--_` で始めているか（[`public-property-naming`](/components/custom-properties/#rule-public-property-naming)、[`internal-property-prefix`](/components/custom-properties/#rule-internal-property-prefix)）
 - [ ] 公開プロパティを自分で宣言せず、内部プロパティで受けてフォールバックにデフォルト値を書いているか（[`receive-public-property-with-fallback`](/components/custom-properties/#rule-receive-public-property-with-fallback)）
 - [ ] ルートには絶対的なz-indexだけを、内部には相対的なz-indexだけを指定しているか（[`z-index-absolute-root-relative-inside`](/components/boundaries/#rule-z-index-absolute-root-relative-inside)）
-- [ ] 内部で相対的なz-indexを使うコンポーネントのルートに、`isolation: isolate` があるか（[`isolation-for-relative-z-index`](/components/boundaries/#rule-isolation-for-relative-z-index)）
+- [ ] 内部で相対的なz-indexを使うコンポーネントは、重なりを閉じ込めるルートか内部の区画に `isolation: isolate` があるか（[`isolation-for-relative-z-index`](/components/boundaries/#rule-isolation-for-relative-z-index)）
 
 ## 8. レスポンシブ
 
@@ -180,7 +180,7 @@ sidebar:
 - [ ] 機能的な動きの大きな変動を、動きを減らす設定でフェードに置き換えているか。DevToolsで `prefers-reduced-motion: reduce` をエミュレートして確かめたか（[`simplify-large-motion-when-reduced`](/motion/reduced-motion/#rule-simplify-large-motion-when-reduced)）
 - [ ] 機能的な動きの再生時間が300ms以下（大きなUIでも500ms以下）か。イージングは標準のキーワードではなくトークンで、現れる動きと出ていく動きは `ease-out` 系、画面の上にあるものの移動は `ease-in-out` 系か。`ease-in` 系を使っていないか（[`functional-motion-under-300ms`](/motion/easing-and-duration/#rule-functional-motion-under-300ms)、[`no-ease-in-for-ui`](/motion/easing-and-duration/#rule-no-ease-in-for-ui)）
 - [ ] 拡大して現れる動きを `scale: 0` から始めず、`transform-origin` をトリガーのある側に向けているか（[`scale-in-from-near-one`](/motion/easing-and-duration/#rule-scale-in-from-near-one)）
-- [ ] キーボードのフォーカスの移動に動きを付けていないか（[`no-motion-on-focus-visible`](/interaction/states-and-focus/#rule-no-motion-on-focus-visible)）
+- [ ] キーボードでフォーカスを受けた要素の見た目を、動きを付けずに一度で切り替えているか（[`no-motion-on-focus-visible`](/interaction/states-and-focus/#rule-no-motion-on-focus-visible)）
 - [ ] キーボードショートカットで開閉するUIに、出現と退場の動きを付けていないか（[`no-motion-on-keyboard-shortcut`](/motion/purpose/#rule-no-motion-on-keyboard-shortcut)）
 - [ ] 途中で取り消される動きをトランジションで書き、続けて押されるUIの動きを短くするか省いているか（[`interruptible-with-transition`](/motion/transitions-and-keyframes/#rule-interruptible-with-transition)）
 - [ ] レイアウトの変わるプロパティを動かしていないか。`clip-path`、`background-color`、`filter` を動かすときは、描き直しが起きないことをDevToolsで確かめたか。影を `box-shadow` ではなく `filter: drop-shadow()` で動かしているか。`will-change` をCSSに書いたままの状態にしていないか（[`animate-composite-properties`](/motion/performance/#rule-animate-composite-properties)、[`no-animate-layered-shadow`](/decoration/surfaces/#rule-no-animate-layered-shadow)、[`will-change-temporarily`](/motion/performance/#rule-will-change-temporarily)）

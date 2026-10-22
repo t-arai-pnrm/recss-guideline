@@ -36,13 +36,13 @@ import Guideline from '../../../components/Guideline.astro';
 </ul>
 ```
 
-入れる内容は、見出しをカンプの2倍ほどの長さにしたもの、空白を含まない長いURLや英単語、読み込めない画像、空のリスト、そして項目が0件、1件、多数の場合です。長いURLや英単語は、日本語と違って途中で折り返されないので、はみ出しの原因になります。読み込めない画像は、縦横比を `aspect-ratio` や `width` と `height` の属性で確保していないと、領域の高さが変わり、下の要素の位置がずれます。
+入れる内容は、見出しをカンプの2倍ほどの長さにしたもの、空白を含まない長いURLや英単語、読み込めない画像、空のリスト、そして項目が0件、1件、多数の場合です。長いURLや英単語は、日本語と違って途中で折り返されないので、はみ出しの原因になります。読み込めない画像は、縦横比を `aspect-ratio` や `width` と `height` の属性で確保していないと、領域の高さが変わり、下の要素の位置がずれます。テストページの画像には、本番と同じ `width` と `height` を書き、読み込めない画像は `src` だけを存在しないファイルにします。寸法を書き忘れたときの崩れは、読み込めないことによる崩れとは別の問題なので、同じ画像で試しません。
 
 ```html title="🙆‍♂ Recommended: 崩れやすい内容を1ページに並べる"
 <h2>見出しが長い</h2>
 <ul class="scoped card-list">
   <li class="scoped card">
-    <img src="/images/sample.jpg" alt="" />
+    <img src="/images/sample.jpg" alt="" width="640" height="360" />
     <h3>見出しがカンプの2倍ほどの長さになり、狭い幅では3行以上に折り返すことを想定したカードの見出し</h3>
     <p>本文</p>
   </li>
@@ -51,7 +51,7 @@ import Guideline from '../../../components/Guideline.astro';
 <h2>折り返せない文字列と、読み込めない画像</h2>
 <ul class="scoped card-list">
   <li class="scoped card">
-    <img src="/images/not-found.jpg" alt="読み込めない画像" />
+    <img src="/images/not-found.jpg" alt="読み込めない画像" width="640" height="360" />
     <h3>https://example.com/articles/2026/10/very-long-path-without-any-spaces-to-break</h3>
     <p>Pneumonoultramicroscopicsilicovolcanoconiosis</p>
   </li>

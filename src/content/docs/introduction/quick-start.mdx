@@ -77,9 +77,9 @@ HTMLは、エントリーポイントの `style.css` だけを読み込みます
 :root {
   --color--neutral--100: oklch(97% 0 0deg);
   --color--neutral--600: oklch(43.9% 0 0deg);
-  --color--accent--600: oklch(52% 0.16 250deg);
+  --color--neutral--900: oklch(20.5% 0 0deg);
   --background--surface: var(--color--neutral--100);
-  --foreground--accent: var(--color--accent--600);
+  --foreground--base: var(--color--neutral--900);
   --foreground--muted: var(--color--neutral--600);
 }
 ```
@@ -103,7 +103,7 @@ HTMLは、エントリーポイントの `style.css` だけを読み込みます
  * お知らせのカード。
  * 一覧としての並べ方は、置く側のレイアウトが受け持つ。
  *
- * @prop {color} --news-card--accent [var(--foreground--accent)] - 見出しの色
+ * @prop {color} --news-card--accent [var(--foreground--base)] - 見出しの色
  *
  * @example
  * <article class="scoped news-card" style="--news-card--accent: oklch(50% 0.17 30deg)">
@@ -113,7 +113,7 @@ HTMLは、エントリーポイントの `style.css` だけを読み込みます
 
 @scope (.scoped.news-card) to (.scoped) {
   :scope {
-    --_accent: var(--news-card--accent, var(--foreground--accent));
+    --_accent: var(--news-card--accent, var(--foreground--base));
 
     display: block grid;
     gap: calc(var(--spacing--xxs) * 1px);
@@ -133,13 +133,13 @@ HTMLは、エントリーポイントの `style.css` だけを読み込みます
 }
 ```
 
-`index.html` をブラウザで開くと、淡い灰色の背景のカードに、青い見出し、日付、本文が表示されます。背景色や見出しの色が付かないときは、開発者ツールのネットワークのパネルで、CSSのファイルがすべて読み込まれているかを確かめてください。
+`index.html` をブラウザで開くと、淡い灰色の背景のカードに、濃い色の見出し、灰色の日付、本文が表示されます。背景色や見出しの色が付かないときは、開発者ツールのネットワークのパネルで、CSSのファイルがすべて読み込まれているかを確かめてください。
 
 ## 課題2：見出しの色を1つ変える
 
 カードの見出しの色は、使う側から変えられるようにしてあります。`index.html` のカードの `article` 要素に、`style="--news-card--accent: oklch(50% 0.17 30deg)"` のように属性を足すと、そのカードの見出しだけが赤みのある色に変わります。コンポーネントのCSSは書き換えません。
 
-次のデモは、この構成と同じCSSで、カードを2枚並べたものです。2枚目のカードにだけ、`style` 属性で `--news-card--accent` に値を渡しています。1枚目の見出しはトークンの青、2枚目の見出しは渡した色で表示されます。
+次のデモは、この構成と同じCSSで、カードを2枚並べたものです。2枚目のカードにだけ、`style` 属性で `--news-card--accent` に値を渡しています。1枚目の見出しはトークンの文字色、2枚目の見出しは渡した赤みのある色で表示されます。
 
 <Demo title="最小の構成で表示したお知らせのカード" html={quickStartHtml} css={quickStartCss} widths={[]} scheme="light" />
 
@@ -207,7 +207,7 @@ npmでインストールする場合（`npm install kiso.css`）は、CSSの `@i
 | `.-<名前>` | `.-visually-hidden`、`.-fluid-text--md` | ユーティリティ。段階や種類は `--` で続ける | [9-1](/notation/naming/)、[10-3](/components/compositions-and-utilities/) |
 | 接頭辞なし（配置の名前） | `.cluster`、`.switcher` | コンポジション（配置のパターン） | [9-1](/notation/naming/)、[10-3](/components/compositions-and-utilities/) |
 | 接頭辞なし（役割の名前） | `.section-heading`、`.icon` | パターン（静的な見た目の断片）。コンポーネントが変える値は `--<パターン>--<プロパティ>` で受け取る | [9-1](/notation/naming/)、[10-3](/components/compositions-and-utilities/) |
-| `--<分類>--<名前>` | `--color--accent--600`、`--spacing--md` | デザイントークン | [10-4](/components/design-tokens/) |
+| `--<分類>--<名前>` | `--color--neutral--600`、`--spacing--md` | デザイントークン | [10-4](/components/design-tokens/) |
 | `--<役割>--<バリエーション>` | `--foreground--muted` | 役割を表す色のトークン | [10-4](/components/design-tokens/) |
 | `--<コンポーネント>--<プロパティ>` | `--news-card--accent` | 公開プロパティ。外から値を渡してよい | [10-5](/components/custom-properties/) |
 | `--_<名前>` | `--_accent` | 内部プロパティ。コンポーネントの中だけで使う | [10-5](/components/custom-properties/) |

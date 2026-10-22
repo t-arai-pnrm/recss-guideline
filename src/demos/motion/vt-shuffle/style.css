@@ -1,3 +1,8 @@
+/**
+ * 並べ替えると、各項目がビュー遷移で新しい位置へ動く商品の一覧。
+ *
+ * @prop {angle} --product-list--hue [0deg] - 項目の背景色の色相
+ */
 @layer components {
   @scope (.scoped.product-list) to (.scoped) {
     :scope {

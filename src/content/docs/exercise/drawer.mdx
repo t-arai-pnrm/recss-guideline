@@ -156,16 +156,21 @@ HTMLでは、`._actions` とメニューのボタン（`._menu`）を `._end` �
 </dialog>
 ```
 
-ただし、`command` 属性と `commandfor` 属性に対応したのはSafari 26.2からで、本書が対象にするSafari 18.6では、メニューのボタンを押してもドロワーが開きません。狭い画面ではナビゲーションにたどり着けなくなるので、対応していないブラウザでだけポリフィルを読み込みます（`dialog-command-attributes`）。デモと配布版の `script.js` は、この処理だけを書いたファイルです。
+ただし、`command` 属性と `commandfor` 属性に対応したのはSafari 26.2からで、本書が対象にするSafari 18.6では、メニューのボタンを押してもドロワーが開きません。狭い画面ではナビゲーションにたどり着けなくなります。ドロワーの外を押して閉じる `closedby` 属性には、Safariがまだ対応していないので、Safariではドロワーの外を押しても閉じません。どちらも要件に関わるので、対応していないブラウザでだけ、それぞれのポリフィルを読み込みます（`dialog-command-attributes`、「[17-6 開閉するUI](/interaction/disclosure/)」）。デモと配布版の `script.js` は、この2つの処理だけを書いたファイルです。
 
-```js title="🙆‍♂ Recommended: command 属性に対応していないブラウザでだけ、ポリフィルを読み込む" from="exercise/drawer-1"
+```js title="🙆‍♂ Recommended: command 属性と closedby 属性に対応していないブラウザでだけ、ポリフィルを読み込む" use="complete" from="exercise/drawer-1"
 // command 属性と commandfor 属性に対応していないブラウザでは、メニューのボタンでドロワーを開けるようにポリフィルを読み込む
 if (!('command' in HTMLButtonElement.prototype)) {
   import('https://cdn.jsdelivr.net/npm/invokers-polyfill@1.0.4/invoker.min.js');
 }
+
+// closedby 属性に対応していないブラウザでは、ドロワーの外を押して閉じられるようにポリフィルを読み込む
+if (!('closedBy' in HTMLDialogElement.prototype)) {
+  import('https://cdn.jsdelivr.net/npm/dialog-closedby-polyfill@1.3.0/index.min.js');
+}
 ```
 
-モーダルとして開いたダイアログは、外側の要素をすべて操作できなくし、フォーカスもダイアログの中だけを移ります。Escキーで閉じ、閉じたあとはフォーカスが開いたボタンへ戻ります。どれもブラウザの機能なので、フォーカスを閉じ込める処理を自分で書きません（`no-custom-focus-trap`）。ドロワーの外を押して閉じる動作は、`closedby="any"` に任せます。背面のスクロールは、ベーススタイルの `:root:has(:modal)` で止めます（「[8-2 ベーススタイルに書くもの](/reset/base-styles/)」）。
+モーダルとして開いたダイアログは、外側の要素をすべて操作できなくし、フォーカスもダイアログの中だけを移ります。Escキーで閉じ、閉じたあとはフォーカスが開いたボタンへ戻ります。どれもブラウザの機能なので、フォーカスを閉じ込める処理を自分で書きません（`no-custom-focus-trap`）。ドロワーの外を押して閉じる動作は、`closedby="any"` に任せます。`closedby` 属性に対応していないブラウザでは、上で読み込んだポリフィルが同じ動作を補います。背面のスクロールは、ベーススタイルの `:root:has(:modal)` で止めます（「[8-2 ベーススタイルに書くもの](/reset/base-styles/)」）。
 
 開閉の動きは、`@starting-style` と `transition-behavior: allow-discrete` で付けます（「[18-7 出現と退場](/motion/entry-and-exit/#ダイアログの開閉を動かす)」）。
 

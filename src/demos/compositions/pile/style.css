@@ -1,11 +1,14 @@
+/**
+ * pile と stack のコンポジションと、画像の上に文字を重ねるヒーローの例。
+ *
+ * @prop {keyword} --pile--placement     [normal] - 子のブロック方向とインライン方向の配置（一括。キーワードは1つ）
+ * @prop {keyword} --pile--alignment     [normal] - 子のブロック方向の配置
+ * @prop {keyword} --pile--justification [normal] - 子のインライン方向の配置
+ *
+ * @prop {length} --stack--gap [0] - 子要素の間隔
+ */
 @layer compositions {
-  /*
-   * すべての子要素を同じグリッドのセルに重ねる。
-   *
-   * @prop {keyword} --pile--placement     [normal] - 子のブロック方向とインライン方向の配置（一括。キーワードは1つ）
-   * @prop {keyword} --pile--alignment     [normal] - 子のブロック方向の配置
-   * @prop {keyword} --pile--justification [normal] - 子のインライン方向の配置
-   */
+  /* すべての子要素を同じグリッドのセルに重ねる。 */
   .pile {
     display: block grid;
     grid-template-areas: "--pile";
@@ -17,11 +20,7 @@
     }
   }
 
-  /*
-   * 子要素を縦に積む。
-   *
-   * @prop {length} --stack--gap [0] - 子要素の間隔
-   */
+  /* 子要素を縦に積む。 */
   .stack {
     display: block flex;
     flex-direction: column;

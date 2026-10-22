@@ -1,8 +1,8 @@
 # 第10章 コンポーネントとカスタムプロパティ：ルール
 
-- ガイドラインのバージョン: 0.75.1（2026-10-16 生成）
+- ガイドラインのバージョン: 0.76.0（2026-10-22 生成）
 - ルールの数: 53
-- 本文: 約16.7万字
+- 本文: 約16.8万字
 - 読む条件: すべてのCSS（コンポーネントの境界、カスタムプロパティ、デザイントークン）（常に読む）
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
@@ -14,12 +14,12 @@
 
 - `components` 第10章 コンポーネントとカスタムプロパティ（約1.1万字）https://t-arai-pnrm.github.io/recss-guideline/components/
 - `components/what-is-a-component` 10-1 何をコンポーネントにするか（約1.6万字）https://t-arai-pnrm.github.io/recss-guideline/components/what-is-a-component/
-- `components/boundaries` 10-2 コンポーネントの境界を守る（約3万字）https://t-arai-pnrm.github.io/recss-guideline/components/boundaries/
+- `components/boundaries` 10-2 コンポーネントの境界を守る（約3.1万字）https://t-arai-pnrm.github.io/recss-guideline/components/boundaries/
 - `components/compositions-and-utilities` 10-3 コンポジションとユーティリティ（約2.3万字）https://t-arai-pnrm.github.io/recss-guideline/components/compositions-and-utilities/
 - `components/design-tokens` 10-4 デザイントークン（約1.6万字）https://t-arai-pnrm.github.io/recss-guideline/components/design-tokens/
 - `components/custom-properties` 10-5 公開プロパティと内部プロパティ（約1.8万字）https://t-arai-pnrm.github.io/recss-guideline/components/custom-properties/
 - `components/style-queries` 10-6 スタイルクエリで状態を伝える（約2.3万字）https://t-arai-pnrm.github.io/recss-guideline/components/style-queries/
-- `components/placement-and-child-states` 10-7 置き場所と子の状態を伝える（約1.2万字）https://t-arai-pnrm.github.io/recss-guideline/components/placement-and-child-states/
+- `components/placement-and-child-states` 10-7 置き場所と子の状態を伝える（約1.3万字）https://t-arai-pnrm.github.io/recss-guideline/components/placement-and-child-states/
 - `components/web-components` 10-8 Web Components（約1.8万字）https://t-arai-pnrm.github.io/recss-guideline/components/web-components/
 
 ## 10-1 何をコンポーネントにするか
@@ -94,8 +94,9 @@ https://t-arai-pnrm.github.io/recss-guideline/components/boundaries/
   - 理由: ページ全体の重なり順と、コンポーネントの中の前後関係を分けて管理できるため。
   - 補足: 重なり順は、まず HTML の順番で解決し、足りないときだけ相対的な z-index を使います。子のコンポーネントどうしの前後は、ルートに相対的な z-index を持たせず、親のコンポーネントが子を包む Outer の要素で指定します。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/components/boundaries/#rule-z-index-absolute-root-relative-inside
-- 【必須・仕様にもとづく制約】内部の要素で相対的な z-index を使うコンポーネントは、ルートに `isolation: isolate` を指定する。（`isolation-for-relative-z-index`）
+- 【必須・仕様にもとづく制約】内部の要素で相対的な z-index を使うコンポーネントは、その重なりを閉じ込める要素に `isolation: isolate` を指定する。閉じ込める要素は、コンポーネントのルートか、z-index を使う要素をすべて含む内部の区画にする。（`isolation-for-relative-z-index`）
   - 理由: 内部の z-index がほかのコンポーネントと干渉せず、-1 の要素がルートや親の背景の下に隠れることもなくなるため。
+  - 補足: z-index を使う要素が、タブの1つの項目や飾りを持つリンクのように1つの区画の中で完結するなら、その区画に指定します。区画をまたいで重なりを比べるときは、ルートに指定します。-1 の要素が隠れないために要るのは、閉じ込める要素がスタッキングコンテキストを作っていることです。`position: sticky` や `opacity` などで、すでにスタッキングコンテキストができている要素もありますが、それらの値は見た目の都合で変わるので、本書では予防のために `isolation: isolate` を明示します。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/components/boundaries/#rule-isolation-for-relative-z-index
 - 【推奨・実装上の判断】トップレイヤーに表示する `<dialog>` や `popover` 属性の要素に閉じる動きを付けるときは、`z-index: var(--z--top)`（値は `calc(infinity)`）も指定する。（`top-layer-z-index-top`）
   - 理由: `transition-property: overlay` に対応していないブラウザでは、閉じるアニメーションの途中で z-index の大きい要素の下に潜り込むことがあるため。

@@ -115,9 +115,9 @@ import switcherCss from '../../../demos/compositions/switcher/style.css?raw';
 @scope (.scoped.feature-section) to (.scoped) {
   section,
   li {
-    padding: 16px;
-    border: 1px solid oklch(85% 0 0deg);
-    border-radius: 8px;
+    padding: calc(var(--spacing--sm) * 1px);
+    border: 1px solid var(--border--base);
+    border-radius: var(--rounded--md);
   }
 
   h2 {

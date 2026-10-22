@@ -1,8 +1,8 @@
 # 第16章 画像・装飾：ルール
 
-- ガイドラインのバージョン: 0.75.1（2026-10-16 生成）
+- ガイドラインのバージョン: 0.76.0（2026-10-22 生成）
 - ルールの数: 34
-- 本文: 約21.1万字
+- 本文: 約21.4万字
 - 読む条件: 画像、SVG、アイコン、mask、影、角丸、枠線、区切り線、印刷
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
@@ -21,8 +21,8 @@
 - `decoration/gradients` 16-6 グラデーションを描く（約1.2万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/gradients/
 - `decoration/text-ornaments` 16-7 文字とリストの装飾（約1.4万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/text-ornaments/
 - `decoration/shapes` 16-8 角の形を変える（約1.9万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/shapes/
-- `decoration/outlines` 16-9 輪郭と枠線を描く（約2.8万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/outlines/
-- `decoration/separators` 16-10 区切り線を引く（約1.4万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/separators/
+- `decoration/outlines` 16-9 輪郭と枠線を描く（約2.9万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/outlines/
+- `decoration/separators` 16-10 区切り線を引く（約1.5万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/separators/
 
 ## 16-1 画像の配置と比率
 

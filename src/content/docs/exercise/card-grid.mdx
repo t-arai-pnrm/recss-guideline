@@ -34,6 +34,8 @@ import cardGridChangedCss from '../../../demos/exercise/card-grid-2/style.css?ra
 - [13-3 コンテナサイズクエリ](/responsive/container-size-queries/)
 - [13-4 コンテナの副作用とコンテナ単位](/responsive/container-units-and-side-effects/)
 - [16-1 画像の配置と比率](/decoration/images/)
+- [16-5 面・影・角丸](/decoration/surfaces/)
+- [17-1 ホバーとフォーカスを表す](/interaction/states-and-focus/)
 
 ## 予想する
 
@@ -99,6 +101,9 @@ import cardGridChangedCss from '../../../demos/exercise/card-grid-2/style.css?ra
 ```css title="🙆‍♂ Recommended: 各カードを4行にまたがらせ、一覧の行を subgrid で使う" from="exercise/card-grid-1"
 @scope (.scoped.article-cards) to (.scoped) {
   :scope {
+    --_drop-shadow: drop-shadow(0 1px 1px oklch(0% 0 none / 4%)) drop-shadow(0 6px 8px oklch(26% 0.05 265deg / 10%));
+    --_drop-shadow-raised: drop-shadow(0 2px 2px oklch(0% 0 none / 5%)) drop-shadow(0 12px 16px oklch(26% 0.05 265deg / 18%));
+
     & > ._card {
       grid-row: span 4;
     }
@@ -111,25 +116,25 @@ import cardGridChangedCss from '../../../demos/exercise/card-grid-2/style.css?ra
     padding: 16px;
     border: 1px solid var(--border--base);
     border-radius: var(--rounded--lg);
-    box-shadow: var(--shadow--card);
     background-color: var(--background--surface);
+    filter: var(--_drop-shadow);
 
     /* フォーカスの移動には、動きを付けない */
     &:not(:has(:focus-visible)) {
       transition-duration: var(--duration--base);
-      transition-property: box-shadow;
+      transition-property: filter;
       transition-timing-function: var(--ease--out-quint);
     }
 
     /* 見出しのリンクにホバーしたら、影を深くする。カードの位置は動かさない */
     &:has(a:any-link:hover) {
       @media (any-hover) {
-        box-shadow: var(--shadow--card-hover);
+        filter: var(--_drop-shadow-raised);
       }
     }
 
     &:has(a:focus-visible) {
-      box-shadow: var(--shadow--card-hover);
+      filter: var(--_drop-shadow-raised);
     }
   }
 
@@ -144,6 +149,8 @@ import cardGridChangedCss from '../../../demos/exercise/card-grid-2/style.css?ra
 ```
 
 `grid-row: span 4` で各カードを一覧の4行にまたがらせ、`grid-template-rows: subgrid` でその行をそのまま使います（`subgrid-span-rows`）。カードの中の行の間隔は、`row-gap` で一覧の間隔とは別に決めます。カードとカードの間は、`grid` に渡した24pxのままです。`img` は、グリッドのアイテムでも自然には幅いっぱいに広がらない置換要素なので、`stretch` で広げ、高さは `aspect-ratio` で決めます（「[7-4 大きさの決まり方](/layout/sizing/)」、「[16-1 画像の配置と比率](/decoration/images/)」）。画像の角丸の12pxは、カードの28pxから内側の余白の16pxを引いた値で、外と内の角が同じ中心でそろいます。ホバーとフォーカスで深くするのは影だけで、カード自身は動かさず、子から親の向きの条件は `:has()` で書きます。
+
+影は、ホバーとフォーカスで変わるので、`box-shadow` ではなく `filter` の `drop-shadow()` で描きます。`box-shadow` をトランジションで動かすと、動いている間は毎フレーム影を描き直すからです（`no-animate-layered-shadow`、「[16-5 面・影・角丸](/decoration/surfaces/)」）。`drop-shadow()` は広がりを持たないので、`box-shadow` の負の広がりで絞っていた影は、オフセット、ぼかし、濃さを減らして近づけ、Chromeで並べて確かめました。動かす前と後で `drop-shadow()` の数を2つにそろえます。どちらの値もこのカードでしか使わないので、サイトのトークンにせず、ルートの内部プロパティにします（`no-single-use-token`）。カードの縁は、動かさない `border` の線のままです。トランジションは `&:not(:has(:focus-visible))` の中に書いてあるので、キーボードでフォーカスしたときは一度で影が切り替わります（「[17-1 ホバーとフォーカスを表す](/interaction/states-and-focus/)」）。
 
 カードの行は、一覧のグリッドの行です。カードだけを一覧の外に取り出すと、行をそろえる相手がなくなり、`grid-row: span 4` の意味もなくなります。カードは一覧の中でしか成り立たないので、一覧とカードを1つのコンポーネント `article-cards` にし、カードは子要素の `._card` として書きます（`subgrid-list-as-one-component`）。21-10の料金プランも、同じ理由で一覧のコンポーネントにしています（「[21-10 料金プランを作る](/exercise/pricing/)」）。
 
@@ -249,8 +256,8 @@ import cardGridChangedCss from '../../../demos/exercise/card-grid-2/style.css?ra
       padding: 16px;
       border: 1px solid var(--border--base);
       border-radius: var(--rounded--lg);
-      box-shadow: var(--shadow--card);
       background-color: var(--background--surface);
+      filter: var(--_drop-shadow);
 
       /* ... */
     }
@@ -341,6 +348,10 @@ import cardGridChangedCss from '../../../demos/exercise/card-grid-2/style.css?ra
 - [`stretch-over-width-100`](/layout/sizing/#rule-stretch-over-width-100)：幅いっぱいに広げる指定が要る要素には、`stretch` を使います。
 - [`aspect-ratio-for-ratios`](/decoration/images/#rule-aspect-ratio-for-ratios)：要素の縦横比は `aspect-ratio` で決めます。
 - [`img-width-height-attributes`](/decoration/images/#rule-img-width-height-attributes)：`<img>` には、画像の実際の大きさを `width` と `height` の属性で書きます。
+- [`no-animate-layered-shadow`](/decoration/surfaces/#rule-no-animate-layered-shadow)：影を変えるときに、`box-shadow` を `transition` や `animation` で動かしません。
+- [`no-single-use-token`](/components/design-tokens/#rule-no-single-use-token)：1回しか使わない値や、特定のコンポーネントだけで使う値を、グローバルなトークンにしません。
+- [`no-motion-on-focus-visible`](/interaction/states-and-focus/#rule-no-motion-on-focus-visible)：キーボードでフォーカスを受けた要素の見た目は、トランジションを掛けずに一度で切り替えます。
+- [`hover-with-focus-visible`](/interaction/states-and-focus/#rule-hover-with-focus-visible)：ホバーで変える見た目は、`:focus-visible` にも同じように指定します。
 - [`sidebar-before-queries`](/compositions/sidebar/#rule-sidebar-before-queries)：メインとサイドを横に並べ、狭ければ縦に積む配置は、クエリで閾値を書かず、`sidebar` で組みます。
 - [`sidebar-two-direct-children`](/compositions/sidebar/#rule-sidebar-two-direct-children)：`sidebar` の直接の子は2つだけにし、`.main-column` と `.side-column` を付けます。
 - [`grid-max-count-over-queries`](/compositions/grid/#rule-grid-max-count-over-queries)：列の数に上限がある一覧は、メディアクエリで列数を切り替えず、`grid` に列の最小幅と最大数を渡します。

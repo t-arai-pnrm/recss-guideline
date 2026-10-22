@@ -133,9 +133,9 @@ CSSのセレクタは、長いあいだ、祖先から子孫へ、前の兄弟�
 「画像を持たないカード」を選びたいとき、`:has()` と `:not()` を入れ子にします。そのとき、入れ子の順序で意味が逆になります。次の3枚のカードで考えます。1枚目は画像と説明文を、2枚目は説明文だけを、3枚目は画像だけを持っています。
 
 ```html
-<article class="card"><img src="…" alt=""><span>説明文</span></article>
+<article class="card"><img src="…" alt="" width="…" height="…"><span>説明文</span></article>
 <article class="card"><span>説明文</span></article>
-<article class="card"><img src="…" alt=""></article>
+<article class="card"><img src="…" alt="" width="…" height="…"></article>
 ```
 
 `.card:has(:not(img))` は、「`img` 以外の子孫を1つでも持つカード」を選びます。1枚目と2枚目には、`img` 以外の要素（`span`）があるので、どちらも当てはまります。画像を持たないカードだけを選んだことにはなりません。一方、`.card:not(:has(img))` は、「`img` の子孫を持たないカード」を選ぶので、当てはまるのは2枚目だけです。

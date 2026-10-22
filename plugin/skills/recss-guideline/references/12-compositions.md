@@ -1,6 +1,6 @@
 # 第12章 レイアウトコンポジション：ルール
 
-- ガイドラインのバージョン: 0.75.1（2026-10-16 生成）
+- ガイドラインのバージョン: 0.76.0（2026-10-22 生成）
 - ルールの数: 39
 - 本文: 約19.1万字
 - 読む条件: 要素を縦に積む、横に並べる、横にスクロールさせる、列に分けるなど、繰り返し使うレイアウトのパターン
@@ -224,7 +224,7 @@ https://t-arai-pnrm.github.io/recss-guideline/compositions/reel/
   - 理由: グリッドの列は指定した幅より縮まないので、子に縮まない指定や幅を書かずに済み、並び方と項目の幅が親の1か所に集まるため。
   - 補足: スクロールスナップは `reel` に含めず、使う側のコンポーネントで付けます。カードのように1つずつ見せる項目には `mandatory` を使い、タグのように小さな項目には付けず、画面より大きな項目には `proximity` を使います。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/compositions/reel/#rule-reel-grid-auto-columns
-- 【推奨・仕様にもとづく制約】項目にフォーカスできる要素がない横スクロールの一覧には、`role="region"`、見出しを指す `aria-labelledby`、`tabindex="0"` を付ける。（`reel-region-without-focusable-items`）
+- 【推奨・仕様にもとづく制約】項目にフォーカスできる要素がない横スクロールの一覧は、スクロールする要素に `tabindex="0"` と、見出しを指す `aria-labelledby` を付ける。（`reel-focusable-without-focusable-items`）
   - 理由: スクロールコンテナにキーボードでフォーカスできるかはブラウザによって違い、フォーカスできる要素がないと、キーボードでは画面の外の項目を見られないため。
-  - 補足: 項目にリンクやボタンがあれば、Tab キーで移ったときにブラウザがその位置までスクロールするので、付けません。表を包む要素も同じ付け方をします（第11章のルール `table-min-size-with-scroller`）。
-  - 詳細: https://t-arai-pnrm.github.io/recss-guideline/compositions/reel/#rule-reel-region-without-focusable-items
+  - 補足: 項目にリンクやボタンがあれば、Tab キーで移ったときにブラウザがその位置までスクロールするので、付けません。一覧が `ul` や `ol` なら `role` を付けず、リストの意味を残します（HTML の仕様で、`ul` と `ol` に `region` のロールは許されていません）。意味を持たない `div` で包む表には、`role="region"` も付けます（第11章のルール `table-min-size-with-scroller`）。
+  - 詳細: https://t-arai-pnrm.github.io/recss-guideline/compositions/reel/#rule-reel-focusable-without-focusable-items
