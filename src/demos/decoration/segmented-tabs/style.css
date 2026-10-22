@@ -48,7 +48,10 @@
     }
 
     ._highlight {
-      clip-path: xywh(calc(var(--_index) * 100% / var(--_count)) 0 calc(100% / var(--_count)) 100% round var(--rounded--full));
+      /* xywh() の位置は左端から数えるので、右から左へ書く言語では、選んだタブが左から何番目かに数え直す */
+      --_clip-start: calc(var(--_index) * 100% / var(--_count));
+
+      clip-path: xywh(var(--_clip-start) 0 calc(100% / var(--_count)) 100% round var(--rounded--full));
       background-color: var(--background--accent);
       color: var(--foreground--on-accent);
       pointer-events: none;
@@ -58,6 +61,10 @@
         transition-duration: var(--duration--press);
         transition-property: clip-path;
         transition-timing-function: var(--ease--in-out-quint);
+      }
+
+      &:dir(rtl) {
+        --_clip-start: calc((var(--_count) - 1 - var(--_index)) * 100% / var(--_count));
       }
     }
 

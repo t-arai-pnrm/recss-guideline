@@ -128,10 +128,17 @@ import avatarCutoutCss from '../../../demos/decoration/avatar-cutout/style.css?r
   }
 
   ._highlight {
-    clip-path: xywh(calc(var(--_index) * 100% / var(--_count)) 0 calc(100% / var(--_count)) 100% round var(--rounded--full));
+    /* xywh() の位置は左端から数えるので、右から左へ書く言語では、選んだタブが左から何番目かに数え直す */
+    --_clip-start: calc(var(--_index) * 100% / var(--_count));
+
+    clip-path: xywh(var(--_clip-start) 0 calc(100% / var(--_count)) 100% round var(--rounded--full));
     background-color: var(--background--accent);
     color: var(--foreground--on-accent);
     pointer-events: none;
+
+    &:dir(rtl) {
+      --_clip-start: calc((var(--_count) - 1 - var(--_index)) * 100% / var(--_count));
+    }
   }
 }
 ```
@@ -140,11 +147,11 @@ import avatarCutoutCss from '../../../demos/decoration/avatar-cutout/style.css?r
 
 下の列（`._list`）は、`role="tab"` を付けた `<button>` を並べた、操作するためのタブです。上の列（`._highlight`）は見た目のためだけの複製なので、`aria-hidden="true"` で読み上げから外し、中身は `<span>` にしてフォーカスを受けないようにします。`pointer-events: none` で、クリックは下のタブに通します。どのタブを選んでいるかは、`aria-selected` から `:has()` で読み取り、`--_index` に入れています。
 
-次のデモでは、タブを選ぶとスクリプトが `aria-selected` を付け替え、`:has()` で決まる `--_index` が変わります。上の列を切り抜く範囲が選んだタブへ滑って移り、帯が通った部分から背景と文字の色が切り替わります。キーボードでは、左右の矢印キーでタブを移れます。切り抜く範囲を動かす書き方は、次の見出しで説明します。
+次のデモでは、タブを選ぶとスクリプトが `aria-selected` を付け替え、`:has()` で決まる `--_index` が変わります。上の列を切り抜く範囲が選んだタブへ滑って移り、帯が通った部分から背景と文字の色が切り替わります。キーボードでは、左右の矢印キーでタブを移れます。パネルの中身は文章だけでフォーカスできる要素がないので、パネルに `tabindex="0"` を付け、選んだタブからTabキーでパネルへ移れるようにしています（WAI-ARIA APGのタブのパターン）。切り抜く範囲を動かす書き方は、次の見出しで説明します。
 
 <Demo title="選んだときの色で描いた列を重ね、選んだタブの範囲だけを切り抜いて見せる" html={segmentedHtml} css={segmentedCss} js={segmentedJs} />
 
-この方法では、選んだときの見た目を1つの列としてまとめて描けます。角丸の帯をタブの区切りと関係なく置くことも、列全体に掛けたグラデーションのうち選んだ範囲だけを見せることもできます。選択が変わったときに変わるのは、切り抜く範囲だけです。なお、`xywh()` の位置は左端から数えるので、右から左へ書く言語では、`:dir(rtl)` で位置の計算を反転させます。
+この方法では、選んだときの見た目を1つの列としてまとめて描けます。角丸の帯をタブの区切りと関係なく置くことも、列全体に掛けたグラデーションのうち選んだ範囲だけを見せることもできます。選択が変わったときに変わるのは、切り抜く範囲だけです。`xywh()` の位置は、書字方向に関係なく左端から数えます。右から左へ書く言語では、Gridの列は右から並ぶのに切り抜く範囲は左から数えたままなので、何もしないと、1つ目のタブを選んだときに左端の3つ目のタブが青くなります。そこで、切り抜く範囲の始まりを `--_clip-start` に分け、`:dir(rtl)` では `--_count - 1 - --_index` 番目の位置から数え直しています。矢印キーも、右から左へ書く言語では、左の矢印キーで次のタブに移るように、見た目の向きに合わせています。
 
 ### 選んだ色を隣のタブへ滑らせる
 
@@ -399,3 +406,4 @@ import avatarCutoutCss from '../../../demos/decoration/avatar-cutout/style.css?r
 - [radial-gradient() - CSS | MDN](https://developer.mozilla.org/ja/docs/Web/CSS/gradient/radial-gradient)
 - [scroll() - CSS | MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/animation-timeline/scroll)
 - [Scroll-driven Animations Module Level 1 | W3C](https://drafts.csswg.org/scroll-animations-1/)
+- [Tabs Pattern | APG](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/)（W3C。フォーカスできる要素のないタブパネルの `tabindex="0"`）
