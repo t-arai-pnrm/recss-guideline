@@ -11,9 +11,9 @@ import scrollRevealInitialCss from '../../../demos/exercise/scroll-reveal-1/styl
 import scrollRevealChangedHtml from '../../../demos/exercise/scroll-reveal-2/index.html?raw';
 import scrollRevealChangedCss from '../../../demos/exercise/scroll-reveal-2/style.css?raw';
 
-トップページの各セクションを、スクロールして画面に入ったところで、下から24px浮き上がりながら現れるようにします。再生は1回だけで、600msかけて動かします。上へ戻してからもう一度スクロールしても、現れたセクションは表示されたままにします。
+トップページの各セクションを、スクロールして画面に入ったところで、下から24px浮き上がりながら現れるようにします。再生は1回だけで、600msかけて動かします。再生を終えたセクションは、上へ戻しても表示されたままにします。再生の途中で開始位置より手前へ戻したときは一時停止し、次に入ったときに続きから再生すれば十分とします。
 
-動きを減らす設定では、浮き上がりを付けずに、フェードだけで現します。スクロール駆動アニメーションを使えないブラウザでは、演出を付けず、最初から表示します。どの環境でも、演出のせいで内容が読めなくなることは避けます。
+動きを減らす設定では、浮き上がりを付けずに、フェードだけで現します。スクロール駆動アニメーションを使えないブラウザと、印刷のようにスクロールしない媒体では、演出を付けず、最初から表示します。どの環境でも、演出のせいで内容が読めなくなることは避けます。
 
 手元で進めるときは、開始版（[index.html](/exercise-files/scroll-reveal/start/index.html)）から始め、中間版（[index.html](/exercise-files/scroll-reveal/middle/index.html)）と見比べます。後半の要件の変更は、中間版から始めて、完成版（[index.html](/exercise-files/scroll-reveal/finished/index.html)）と見比べます。サンプル一式のZIPでは、それぞれ `exercise/scroll-reveal/start/`、`exercise/scroll-reveal/middle/`、`exercise/scroll-reveal/finished/` にあります。開始版の `page-top.css` には、セクションの並べ方だけが入っていて、表示の演出はまだありません。サイト全体で使う `@keyframes` は、開始版から `site-base.css` にあります。準備は「[21-1 題材と準備](/exercise/setup/#手元で進める準備)」で説明しています。
 
@@ -38,7 +38,7 @@ import scrollRevealChangedCss from '../../../demos/exercise/scroll-reveal-2/styl
 
 <Demo base="exercise" scheme="light" title="最初の要件を満たしたトップページ：各セクションが、画面に入ったところで1回だけ現れる" html={scrollRevealInitialHtml} css={scrollRevealInitialCss} height="560px" />
 
-デモの中を下へスクロールすると、各セクションが画面に入ったところで、下から浮き上がりながら現れます。上へ戻してからもう一度スクロールしても、現れたセクションは表示されたままです。スクロール駆動アニメーションを使えないFirefoxでは、すべてのセクションが最初から表示されます。動きを減らす設定にすると、浮き上がりがなくなり、フェードだけで現れれば完成です。
+デモの中を下へスクロールすると、各セクションが画面に入ったところで、下から浮き上がりながら現れます。再生を終えたセクションは、上へ戻しても表示されたままです。再生の途中で開始位置より手前へ戻すと一時停止し、次に入ったときに続きから再生します。スクロール駆動アニメーションを使えないFirefoxと、印刷のプレビューでは、すべてのセクションが最初から表示されます。動きを減らす設定にすると、浮き上がりがなくなり、フェードだけで現れれば完成です。
 
 ## 画面に入ったきっかけを view() で作る
 
@@ -71,32 +71,36 @@ import scrollRevealChangedCss from '../../../demos/exercise/scroll-reveal-2/styl
   ._section-body {
     --translate-from--y-value: 24px;
 
-    @supports (animation-timeline: view()) and (animation-range: entry) {
-      animation-name: --fade-in;
-      animation-duration: var(--duration--reveal);
-      animation-timing-function: var(--ease--out-quint);
-      animation-fill-mode: both;
-      animation-play-state: paused;
+    @media screen {
+      @supports (animation-timeline: view()) and (animation-range: entry) {
+        animation-name: --fade-in;
+        animation-duration: var(--duration--reveal);
+        animation-timing-function: var(--ease--out-quint);
+        animation-fill-mode: both;
+        animation-play-state: paused;
 
-      @container style(--_in-view: --true) {
-        animation-play-state: running;
-      }
+        @container style(--_in-view: --true) {
+          animation-play-state: running;
+        }
 
-      @media (prefers-reduced-motion: no-preference) {
-        animation-name: --fade-in, --translate-from;
+        @media (prefers-reduced-motion: no-preference) {
+          animation-name: --fade-in, --translate-from;
+        }
       }
     }
   }
 }
 ```
 
-セクションのルートの `section` は、`view()` のタイムラインで自分の位置を測り、要素の30%が画面に入った位置で `--_in-view` を `--true` に切り替えます。登録していないカスタムプロパティは補間されないので、キーフレームの中間で値が切り替わります。中身の `._section-body` は、一時停止したアニメーションの最初の見た目で待機し、`@container style(--_in-view: --true)` が当てはまったところで再生します。要素は自分自身の値を問い合わせられないので、切り替える要素と再生する要素を分けています。
+セクションのルートの `section` は、`view()` のタイムラインで自分の位置を測り、`entry` の範囲の30%の位置で `--_in-view` を `--true` に切り替えます。セクションが表示領域より小さい場合は、セクションの30%が画面に入った位置です。セクションが表示領域より大きい場合は、`entry` の範囲はセクションが表示領域を覆った時点で終わるので、表示領域の高さの30%まで入った位置になり、セクション全体の30%ではありません。登録していないカスタムプロパティは補間されないので、キーフレームの中間で値が切り替わります。中身の `._section-body` は、一時停止したアニメーションの最初の見た目で待機し、`@container style(--_in-view: --true)` が当てはまったところで再生します。要素は自分自身の値を問い合わせられないので、切り替える要素と再生する要素を分けています。
 
 動きは、サイト全体で使う `--fade-in` と `--translate-from` の `@keyframes` を組み合わせます。浮き上がる量は、`--translate-from--y-value` で渡します（「[18-6 @keyframesを設計する](/motion/keyframes/)」）。`--_in-view` を切り替える `@keyframes` は、このページだけで使うので、ページの名前を付けています。
 
 ## 対応していない環境と、動きを減らす設定
 
 アニメーションの指定は、すべて `@supports (animation-timeline: view()) and (animation-range: entry)` の中に書きます。待機の見た目（透明で、24px下にある状態）は、`@keyframes` の `from` と `animation-fill-mode: both` が作るので、アニメーションが当たらない環境では、待機の見た目も当たりません。Firefoxでは、内容が最初から表示されます（「[1-2 ブラウザサポートとプログレッシブ・エンハンスメント](/principles/browser-support/)」）。
+
+待機させる `._section-body` の指定は、さらに `@media screen` で囲みます。印刷のようにスクロールしない媒体では、最初の画面より下のセクションが画面に入ることがないので、待機の見た目のまま透明で印刷されるからです。`screen` の条件の外では、アニメーションが当たらず、内容は最初から表示されます。
 
 動きを減らす設定には、浮き上がりの `--translate-from` だけを `prefers-reduced-motion: no-preference` の中で加えて対応します。フェードは、動きを減らす設定でも残してよい動きなので、条件の外に書きます（`motion-only-with-no-preference`）。600msの再生時間は、機能的な動きの目安より長くなります。ページを読み進める間に一度だけ再生する装飾なので、例外として扱います。
 
@@ -126,23 +130,25 @@ import scrollRevealChangedCss from '../../../demos/exercise/scroll-reveal-2/styl
     --_stagger: 80ms;
     --translate-from--y-value: 24px;
 
-    @supports (animation-timeline: view()) and (animation-range: entry) {
-      animation-name: --fade-in;
-      animation-duration: var(--duration--reveal);
-      animation-timing-function: var(--ease--out-quint);
-      animation-fill-mode: both;
-      animation-play-state: paused;
+    @media screen {
+      @supports (animation-timeline: view()) and (animation-range: entry) {
+        animation-name: --fade-in;
+        animation-duration: var(--duration--reveal);
+        animation-timing-function: var(--ease--out-quint);
+        animation-fill-mode: both;
+        animation-play-state: paused;
 
-      @supports (z-index: sibling-index()) {
-        animation-delay: calc(min(sibling-index() - 1, 5) * var(--_stagger));
-      }
+        @supports (z-index: sibling-index()) {
+          animation-delay: calc(min(sibling-index() - 1, 5) * var(--_stagger));
+        }
 
-      @container style(--_in-view: --true) {
-        animation-play-state: running;
-      }
+        @container style(--_in-view: --true) {
+          animation-play-state: running;
+        }
 
-      @media (prefers-reduced-motion: no-preference) {
-        animation-name: --fade-in, --translate-from;
+        @media (prefers-reduced-motion: no-preference) {
+          animation-name: --fade-in, --translate-from;
+        }
       }
     }
   }
@@ -159,7 +165,7 @@ import scrollRevealChangedCss from '../../../demos/exercise/scroll-reveal-2/styl
 
 予想と見比べたら、自分の変更を次の3つの点で見直します。
 
-- 演出が動かない環境で、内容が透明のまま残らないことを、`@supports` と `animation-fill-mode` から説明できるか。
+- 演出が動かない環境と印刷で、内容が透明のまま残らないことを、`@supports`、`@media screen`、`animation-fill-mode` から説明できるか。
 - 遅れを順番から計算すると予想できたか。`:nth-child()` で書いていたなら、カードが増えたときに書き足す行を数えられるか。
 - 演出をコンポーネントではなくページのCSSに書いた理由を、同じ部品をほかのページに置く場面から説明できるか。
 

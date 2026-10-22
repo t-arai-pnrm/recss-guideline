@@ -1,7 +1,7 @@
 /**
  * pile と stack のコンポジションと、画像の上に文字を重ねるヒーローの例。
  *
- * @prop {keyword} --pile--placement     [normal] - 子のブロック方向とインライン方向の配置（一括。キーワードは1つ）
+ * @prop {keyword} --pile--placement     [なし]   - 子のブロック方向とインライン方向の配置（一括。キーワードは1つ）。指定すると個別の指定より優先する
  * @prop {keyword} --pile--alignment     [normal] - 子のブロック方向の配置
  * @prop {keyword} --pile--justification [normal] - 子のインライン方向の配置
  *

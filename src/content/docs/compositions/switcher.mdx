@@ -45,7 +45,7 @@ import switcherCss from '../../../demos/compositions/switcher/style.css?raw';
  *
  * @prop {integer} --switcher--column-count     [3]                     - 横に並べるときの列数
  * @prop {length}  --switcher--column-min-width [calc(320 / 16 * 1rem)] - 列の最小幅（閾値の計算に使う）
- * @prop {length}  --switcher--gap              [0px]                   - 行と列の間隔（一括）
+ * @prop {length}  --switcher--gap              [なし]                  - 行と列の間隔（一括）。指定すると個別の指定より優先する
  * @prop {length}  --switcher--row-gap          [0px]                   - 行の間隔
  * @prop {length}  --switcher--column-gap       [0px]                   - 列の間隔
  *
@@ -90,7 +90,7 @@ import switcherCss from '../../../demos/compositions/switcher/style.css?raw';
 |---|---|---|
 | `--switcher--column-count` | 横に並べるときの列数（単位のない整数） | `3` |
 | `--switcher--column-min-width` | 列の最小幅。閾値の計算に使う | `calc(320 / 16 * 1rem)` |
-| `--switcher--gap` | 行と列の間隔（一括） | `0px` |
+| `--switcher--gap` | 行と列の間隔（一括）。指定すると個別の指定より優先する | なし |
 | `--switcher--row-gap` | 行の間隔 | `0px` |
 | `--switcher--column-gap` | 列の間隔 | `0px` |
 

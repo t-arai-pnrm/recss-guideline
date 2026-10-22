@@ -1,6 +1,6 @@
 # AIが誤りやすいルール
 
-- ガイドラインのバージョン: 0.77.2（2026-10-22 生成）
+- ガイドラインのバージョン: 0.78.0（2026-10-22 生成）
 - ルールの数: 297
 
 AIが生成するコードで特に誤りやすいルールです。CSSを書く前とレビューの前に、必ず確認してください。1件1行で、強度とルールの本文と ID だけを並べています。理由と補足は、章ごとのファイル（`references/<章>.md`）を ID で検索して読んでください。
@@ -335,7 +335,7 @@ AIが生成するコードで特に誤りやすいルールです。CSSを書く
 - 【推奨】`display: none` から表示する要素の出現と退場は、`@starting-style` と `transition-behavior: allow-discrete` で動かす。（`starting-style-for-entry`）
 - 【推奨】`@starting-style` で動かすプロパティは、詳細度の高い規則やインラインスタイルで指定しない。`@starting-style` は元の規則の中に書く。出現だけを動かすなら `@keyframes` の `from` を使う。（`starting-style-not-overridden`）
 - 【推奨】スクロール位置に合わせて連続して変わる動きはスクロール駆動アニメーションで、画面に入ったときに1回だけ動かす演出は `view()` のタイムラインで切り替えたカスタムプロパティを `@container style()` で問い合わせて作り、`scroll` イベントで毎回位置を計算しない。（`scroll-linked-method`）
-- 【推奨】画面に入ったら1回だけ再生する演出は、ルートの `view()` のタイムラインで登録していないカスタムプロパティを `--false` から `--true` に切り替え、子の一時停止したアニメーションを `@container style(--_in-view: --true)` の中で `running` にし、全体を `@supports (animation-timeline: view()) and (animation-range: entry)` で囲む。（`reveal-once-with-style-query`）
+- 【推奨】画面に入ったら1回だけ再生する演出は、ルートの `view()` のタイムラインで登録していないカスタムプロパティを `--false` から `--true` に切り替え、子の一時停止したアニメーションを `@container style(--_in-view: --true)` の中で `running` にし、全体を `@supports (animation-timeline: view()) and (animation-range: entry)` と `@media screen` で囲む。（`reveal-once-with-style-query`）
 - 【必須】`will-change` は CSS に書いたままにせず、どうしても必要なときだけ、動きの直前に JavaScript で付けて、終わったら外す。（`will-change-temporarily`）
 - 【推奨】`content-visibility: auto` は最初の画面より下にある大きなブロックにだけ指定し、`contain-intrinsic-block-size: auto <長さ>` を組で書く。（`content-visibility-with-intrinsic-size`）
 - 【禁止】同時に表示される複数の要素に、同じ `view-transition-name` を付けない。（`view-transition-name-unique`）

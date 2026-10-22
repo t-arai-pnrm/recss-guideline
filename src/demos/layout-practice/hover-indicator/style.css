@@ -64,6 +64,7 @@
 
     a {
       --_hocus: --false;
+      --_focus-visible: --false;
 
       display: block grid;
       grid-template-columns: 1fr auto;
@@ -78,10 +79,13 @@
           translate: 4px;
         }
 
-        @media (prefers-reduced-motion: no-preference) {
-          transition-duration: var(--duration--base);
-          transition-property: translate;
-          transition-timing-function: var(--ease--out-quint);
+        /* キーボードでフォーカスしたときは、矢印を一度で動かす */
+        @container style(--_focus-visible: --false) {
+          @media (prefers-reduced-motion: no-preference) {
+            transition-duration: var(--duration--base);
+            transition-property: translate;
+            transition-timing-function: var(--ease--out-quint);
+          }
         }
       }
 
@@ -95,6 +99,7 @@
 
       &:focus-visible {
         --_hocus: --true;
+        --_focus-visible: --true;
 
         anchor-name: --current-hocus;
       }

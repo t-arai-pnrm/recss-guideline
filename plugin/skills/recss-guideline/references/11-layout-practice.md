@@ -1,6 +1,6 @@
 # 第11章 レイアウトを組む：ルール
 
-- ガイドラインのバージョン: 0.77.2（2026-10-22 生成）
+- ガイドラインのバージョン: 0.78.0（2026-10-22 生成）
 - ルールの数: 61
 - 本文: 約26.8万字
 - 読む条件: 余白の設計、内容の変化への耐性、はみ出しとスクロール、重なり、z-index、アンカーポジショニング、表
@@ -20,7 +20,7 @@
 - `layout-practice/quantity-layouts` 11-5 件数で配置を組み替える（約1.8万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/quantity-layouts/
 - `layout-practice/layering` 11-6 重なりと全幅（約1.3万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/layering/
 - `layout-practice/sticky-header` 11-7 固定ヘッダー（約7,600字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/sticky-header/
-- `layout-practice/anchor-positioning` 11-8 アンカーポジショニング（約1.9万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/anchor-positioning/
+- `layout-practice/anchor-positioning` 11-8 アンカーポジショニング（約2万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/anchor-positioning/
 - `layout-practice/overlap-detection` 11-9 要素どうしの重なりを検出する（約1.1万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/overlap-detection/
 - `layout-practice/root-scroller` 11-10 ページのスクロールとルートスクローラー（約1.4万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/root-scroller/
 - `layout-practice/masonry` 11-11 grid-lanesで石積みのレイアウトを組む（約1.2万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/masonry/

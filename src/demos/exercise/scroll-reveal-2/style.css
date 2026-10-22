@@ -30,7 +30,7 @@
    *
    * @prop {integer} --switcher--column-count     [3]                     - 横に並べるときの列数
    * @prop {length}  --switcher--column-min-width [calc(320 / 16 * 1rem)] - 列の最小幅（閾値の計算に使う）
-   * @prop {length}  --switcher--gap              [0px]                   - 行と列の間隔（一括）
+   * @prop {length}  --switcher--gap              [なし]                   - 行と列の間隔（一括）。指定すると個別の指定より優先する
    * @prop {length}  --switcher--row-gap          [0px]                   - 行の間隔
    * @prop {length}  --switcher--column-gap       [0px]                   - 列の間隔
    */
@@ -92,20 +92,23 @@
       display: block grid;
       gap: 24px;
 
-      @supports (animation-timeline: view()) and (animation-range: entry) {
-        animation-name: --fade-in;
-        animation-duration: var(--duration--reveal);
-        animation-timing-function: var(--ease--out-quint);
-        animation-fill-mode: both;
-        animation-play-state: paused;
+      /* 印刷のようにスクロールしない媒体では、待たせずに最初から表示する */
+      @media screen {
+        @supports (animation-timeline: view()) and (animation-range: entry) {
+          animation-name: --fade-in;
+          animation-duration: var(--duration--reveal);
+          animation-timing-function: var(--ease--out-quint);
+          animation-fill-mode: both;
+          animation-play-state: paused;
 
-        /* いちばん近い祖先（section）の --_in-view を問い合わせる */
-        @container style(--_in-view: --true) {
-          animation-play-state: running;
-        }
+          /* いちばん近い祖先（section）の --_in-view を問い合わせる */
+          @container style(--_in-view: --true) {
+            animation-play-state: running;
+          }
 
-        @media (prefers-reduced-motion: no-preference) {
-          animation-name: --fade-in, --translate-from;
+          @media (prefers-reduced-motion: no-preference) {
+            animation-name: --fade-in, --translate-from;
+          }
         }
       }
     }
@@ -133,24 +136,26 @@
       box-shadow: var(--shadow--card);
       background-color: var(--background--surface);
 
-      /* 強みのカードは、画面に入ったあと、1枚ずつ少し遅らせて出す */
-      @supports (animation-timeline: view()) and (animation-range: entry) {
-        animation-name: --fade-in;
-        animation-duration: var(--duration--reveal);
-        animation-timing-function: var(--ease--out-quint);
-        animation-fill-mode: both;
-        animation-play-state: paused;
+      /* 強みのカードは、画面に入ったあと、1枚ずつ少し遅らせて出す。印刷のようにスクロールしない媒体では、待たせずに最初から表示する */
+      @media screen {
+        @supports (animation-timeline: view()) and (animation-range: entry) {
+          animation-name: --fade-in;
+          animation-duration: var(--duration--reveal);
+          animation-timing-function: var(--ease--out-quint);
+          animation-fill-mode: both;
+          animation-play-state: paused;
 
-        @supports (z-index: sibling-index()) {
-          animation-delay: calc(min(sibling-index() - 1, 5) * var(--_stagger));
-        }
+          @supports (z-index: sibling-index()) {
+            animation-delay: calc(min(sibling-index() - 1, 5) * var(--_stagger));
+          }
 
-        @container style(--_in-view: --true) {
-          animation-play-state: running;
-        }
+          @container style(--_in-view: --true) {
+            animation-play-state: running;
+          }
 
-        @media (prefers-reduced-motion: no-preference) {
-          animation-name: --fade-in, --translate-from;
+          @media (prefers-reduced-motion: no-preference) {
+            animation-name: --fade-in, --translate-from;
+          }
         }
       }
     }

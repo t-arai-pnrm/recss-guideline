@@ -2,6 +2,17 @@
 // 押し切っても削除せず、確定できる状態にするだけにする。削除は、ボタンの上で離したときに確定する。
 // 途中で離したとき、ボタンの外へ出たとき、pointercancel、フォーカスを失ったときは中止し、次に押したときは最初から数える。
 // 押してすぐに離したときと、Enter キーやスクリーンリーダーで押したときは、command 属性で確認のダイアログを開く。
+
+// command 属性と commandfor 属性に対応していないブラウザでは、ボタンで確認のダイアログを開けるようにポリフィルを読み込む
+if (!('command' in HTMLButtonElement.prototype)) {
+  import('https://cdn.jsdelivr.net/npm/invokers-polyfill@1.0.4/invoker.min.js');
+}
+
+// closedby 属性に対応していないブラウザでは、ダイアログの外を押して閉じられるようにポリフィルを読み込む
+if (!('closedBy' in HTMLDialogElement.prototype)) {
+  import('https://cdn.jsdelivr.net/npm/dialog-closedby-polyfill@1.3.0/index.min.js');
+}
+
 const demo = document.querySelector('.scoped.hold-demo');
 const button = demo.querySelector('.scoped.hold-button');
 const dialog = demo.querySelector('.scoped.confirm-dialog');
@@ -11,10 +22,15 @@ let messageTimer;
 let ready = false;
 let confirmed = false;
 
-// 2s や 2000ms の形で書いた時間を、ミリ秒の数に直す
+// 確定までの時間の既定値（ミリ秒）。CSS の @property の初期値と同じ2秒
+const defaultDuration = 2000;
+
+// 計算した時間（2s や 2000ms）を、ミリ秒の数に直す。読めない値と負の値は、既定値にする
 const toMilliseconds = (time) => {
-  const value = Number.parseFloat(time);
-  return time.trim().endsWith('ms') ? value : value * 1000;
+  const match = time.trim().match(/^(.+?)(ms|s)$/i);
+  if (!match) return defaultDuration;
+  const value = Number(match[1]) * (match[2].toLowerCase() === 'ms' ? 1 : 1000);
+  return Number.isFinite(value) && value >= 0 ? value : defaultDuration;
 };
 
 const remove = () => {

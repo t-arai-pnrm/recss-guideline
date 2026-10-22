@@ -4,7 +4,7 @@
  * @prop {keyword} --grid--mode             [auto-fill]             - repeat() のキーワード（auto-fill | auto-fit）
  * @prop {length}  --grid--column-min-width [calc(320 / 16 * 1rem)] - 列の最小幅（これより狭くなると列が減る）
  * @prop {integer} --grid--column-max-count [5]                     - 列の最大数
- * @prop {length}  --grid--gap              [0px]                   - 行と列の間隔（一括）
+ * @prop {length}  --grid--gap              [なし]                  - 行と列の間隔（一括）。指定すると個別の指定より優先する
  */
 @layer compositions {
   .grid {

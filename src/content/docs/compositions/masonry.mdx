@@ -41,7 +41,7 @@ import masonryCss from '../../../demos/compositions/masonry/style.css?raw';
  * @prop {keyword} --masonry--mode             [auto-fill]             - repeat() のキーワード（auto-fill | auto-fit）
  * @prop {integer} --masonry--column-max-count [5]                     - 列の最大数
  * @prop {length}  --masonry--column-min-width [calc(320 / 16 * 1rem)] - 列の最小幅（これより狭くなると列が減る）
- * @prop {length}  --masonry--gap              [0px]                   - 行と列の間隔（一括）
+ * @prop {length}  --masonry--gap              [なし]                  - 行と列の間隔（一括）。指定すると個別の指定より優先する
  * @prop {length}  --masonry--row-gap          [0px]                   - 行の間隔
  * @prop {length}  --masonry--column-gap       [0px]                   - 列の間隔
  * @prop {length}  --masonry--tolerance        [normal]                - 同じ高さとみなす列の高さの差（flow-tolerance）
@@ -103,7 +103,7 @@ import masonryCss from '../../../demos/compositions/masonry/style.css?raw';
 |---|---|---|
 | `--masonry--column-min-width` | 列の最小幅。これより狭くなると列が減る | `calc(320 / 16 * 1rem)` |
 | `--masonry--column-max-count` | 列の最大数 | `5` |
-| `--masonry--gap` | 行と列の間隔（一括） | `0px` |
+| `--masonry--gap` | 行と列の間隔（一括）。指定すると個別の指定より優先する | なし |
 | `--masonry--row-gap` | 行の間隔 | `0px` |
 | `--masonry--column-gap` | 列の間隔 | `0px` |
 | `--masonry--mode` | `repeat()` のキーワード（`auto-fill` か `auto-fit`） | `auto-fill` |

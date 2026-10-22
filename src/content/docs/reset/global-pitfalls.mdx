@@ -105,7 +105,7 @@ p {
 
 なお、kiso.cssは、`tabindex="-1"` を持つ要素がフォーカスされたときだけ、`outline` を消しています。スキップリンクの移動先の `main` のように、プログラムでフォーカスを移した要素に、リングが出ないようにするための例外です。
 
-リストのマーカーを消すときの `list-style: none` にも注意が必要です。SafariのVoiceOverは、`list-style: none` を指定した `ul` や `ol` を、リストとして読み上げません。マーカーは、`list-style-type` に空の文字列を指定して消します。
+リストのマーカーを消すときの `list-style: none` にも注意が必要です。SafariとVoiceOverの組み合わせでは、`list-style: none` を指定した `ul` や `ol` が、リストとして読み上げられないことがあります。マーカーは、`list-style-type` に空の文字列を指定して消します。
 
 ```css title="🙅‍♂ Not Recommended: list-style: none でマーカーを消す" issue="behavior"
 /* 🙅‍♂ Not Recommended */

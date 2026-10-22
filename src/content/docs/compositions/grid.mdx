@@ -53,7 +53,7 @@ import switcherCss from '../../../demos/compositions/grid-switcher/style.css?raw
  * @prop {keyword} --grid--mode             [auto-fill]             - repeat() のキーワード（auto-fill | auto-fit）
  * @prop {length}  --grid--column-min-width [calc(320 / 16 * 1rem)] - 列の最小幅（これより狭くなると列が減る）
  * @prop {integer} --grid--column-max-count [5]                     - 列の最大数
- * @prop {length}  --grid--gap              [0px]                   - 行と列の間隔（一括）
+ * @prop {length}  --grid--gap              [なし]                  - 行と列の間隔（一括）。指定すると個別の指定より優先する
  * @prop {length}  --grid--row-gap          [0px]                   - 行の間隔
  * @prop {length}  --grid--column-gap       [0px]                   - 列の間隔（単位を付けて渡す）
  *
@@ -81,7 +81,7 @@ import switcherCss from '../../../demos/compositions/grid-switcher/style.css?raw
 }
 ```
 
-公開プロパティは6つです。`--grid--column-min-width` は列の最小幅で、デフォルトは320px相当です。列の幅がこれを下回りそうになると、列が1つ減ります。`--grid--column-max-count` は列の最大数で、デフォルトは5です。間隔は `--grid--gap` で一括に、`--grid--row-gap` と `--grid--column-gap` で個別に指定でき、どれもデフォルトは `0px` です。間隔のデフォルトを0にする理由は、「[10-3 コンポジションとユーティリティ](/components/compositions-and-utilities/#rule-composition-default-gap-zero)」のとおり、間隔はコンポジションを置く文脈で決まる値だからです。
+公開プロパティは6つです。`--grid--column-min-width` は列の最小幅で、デフォルトは320px相当です。列の幅がこれを下回りそうになると、列が1つ減ります。`--grid--column-max-count` は列の最大数で、デフォルトは5です。間隔は `--grid--gap` で一括に、`--grid--row-gap` と `--grid--column-gap` で個別に指定できます。個別の2つのデフォルトは `0px` です。一括の `--grid--gap` にデフォルト値はなく、指定すると個別の指定より優先します。間隔のデフォルトを0にする理由は、「[10-3 コンポジションとユーティリティ](/components/compositions-and-utilities/#rule-composition-default-gap-zero)」のとおり、間隔はコンポジションを置く文脈で決まる値だからです。
 
 残る `--grid--mode` は、`repeat()` に渡すキーワードで、`auto-fill` か `auto-fit` を受け取ります。2つの違いが出るのは、アイテムの数が入る列の数より少ないときです。`auto-fill` は、アイテムのない列を空のまま残すので、アイテムは1列分の幅で行の先頭に寄ります。`auto-fit` は空の列を幅0に折りたたむので、残ったアイテムが `1fr` で行いっぱいに広がります。
 

@@ -144,6 +144,8 @@ import contactFormChangedJs from '../../../demos/exercise/contact-form-2/script.
 
 スクリプトが受け持つのは、`aria-describedby` と `aria-invalid` の2つの属性だけです。見た目は、CSSが `:user-invalid` と `[aria-invalid="true"]` のどちらでも同じになるように、`:is()` でまとめて指定しています（`native-and-aria-state-together`）。サーバーで検証した結果を、HTMLの `aria-invalid="true"` として返す場合も、同じ見た目になります。
 
+サーバーが返した誤りは、ブラウザから見ると正しい値なので、`:user-invalid` には当てはまりません。スクリプトが `:user-invalid` だけを見て属性を書き換えると、値を変えずに入力欄から離れただけで、サーバーの誤りが消えてしまいます。そこで、ページを開いた時点で `aria-invalid="true"` が付いていた入力欄は、値を変えるまで誤りのまま残し、入力し直したあとはブラウザの検証の結果に任せます。
+
 ## 振り返り
 
 直したのは、各項目に誤りの文章を足したHTMLと、入力欄の枠線と誤りの文章の指定、誤りの文章を入力欄に関連付けるスクリプトです。フォームの並び、ラベル、必須の印、送信ボタンは直していません。最初の要件で、入力欄に共通の `._text-control` を付けていたので、誤りの見た目も1か所に書けました。

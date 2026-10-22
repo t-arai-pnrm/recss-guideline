@@ -5,7 +5,7 @@
  *
  * @prop {integer} --switcher--column-count     [3]                     - 横に並べるときの列数
  * @prop {length}  --switcher--column-min-width [calc(320 / 16 * 1rem)] - 列の最小幅（閾値の計算に使う）
- * @prop {length}  --switcher--gap              [0px]                   - 行と列の間隔（一括）
+ * @prop {length}  --switcher--gap              [なし]                  - 行と列の間隔（一括）。指定すると個別の指定より優先する
  * @prop {length}  --switcher--row-gap          [0px]                   - 行の間隔
  * @prop {length}  --switcher--column-gap       [0px]                   - 列の間隔
  */

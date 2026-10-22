@@ -21,7 +21,7 @@ import pinFrame from '../../../demos/motion/horizontal-pin/frame.css?raw';
 
 スクロールに合わせた動きは、値の変わり方で作り方を選びます。スクロール位置に合わせて連続して変わる値には、CSSのスクロール駆動アニメーションを使い、`animation-range` で範囲を明示します。画面に入った時点で1回だけ変わる演出は、`view()` のタイムラインでカスタムプロパティを切り替え、`@container style()` で時間で進むアニメーションを再生して作ります。Firefoxでも演出を出したいときと、スクロールを戻しても再生を止めたくないときは、`IntersectionObserver` で属性を付けます。JavaScriptで毎フレーム同期するのは、それでも作れない複雑な分岐が必要なときだけです。
 
-どの方法でも、演出に対応していない環境では、要素を動き始める前の見た目で待たせません。CSSだけの方法は、`@supports (animation-timeline: view()) and (animation-range: entry)` で囲みます。JavaScriptを使う方法は、準備を終えてルートに `data-motion-mode="motion"` を付けたときだけ待たせます。待機中の見た目は `@keyframes` の `from` に任せ、`opacity: 0` を別に書きません。演出が動かない環境でも、動きを減らす設定の環境でも、すべての内容を読めるようにするためです。
+どの方法でも、演出に対応していない環境では、要素を動き始める前の見た目で待たせません。CSSだけの方法は、`@supports (animation-timeline: view()) and (animation-range: entry)` で囲みます。JavaScriptを使う方法は、準備を終えてルートに `data-motion-mode="motion"` を付けたときだけ待たせます。印刷のようにスクロールしない媒体でも待たせないように、待機の指定は `screen` のメディアに限ります。待機中の見た目は `@keyframes` の `from` に任せ、`opacity: 0` を別に書きません。演出が動かない環境でも、動きを減らす設定の環境でも、すべての内容を読めるようにするためです。
 
 初めて読むときは、「連続した変化か、1回の変化か」で手段の選び方を押さえ、「スクロール駆動アニメーションで値を連続して変える」と「画面に入ったら1回だけ再生する」を読みます。`IntersectionObserver` で属性を切り替える方法は、Firefoxでも演出を出すときに読みます。横に流れるセクションとJavaScriptで毎フレーム同期する方法は、その演出を作る場面が来てから戻ってください。
 
@@ -169,19 +169,21 @@ Firefoxはスクロール駆動アニメーションに対応していません�
   ._body {
     --translate-from--y-value: 24px;
 
-    @supports (animation-timeline: view()) and (animation-range: entry) {
-      animation-name: --fade-in;
-      animation-duration: var(--duration--reveal);
-      animation-timing-function: var(--ease--out-quint);
-      animation-fill-mode: both;
-      animation-play-state: paused;
+    @media screen {
+      @supports (animation-timeline: view()) and (animation-range: entry) {
+        animation-name: --fade-in;
+        animation-duration: var(--duration--reveal);
+        animation-timing-function: var(--ease--out-quint);
+        animation-fill-mode: both;
+        animation-play-state: paused;
 
-      @container style(--_in-view: --true) {
-        animation-play-state: running;
-      }
+        @container style(--_in-view: --true) {
+          animation-play-state: running;
+        }
 
-      @media (prefers-reduced-motion: no-preference) {
-        animation-name: --fade-in, --translate-from;
+        @media (prefers-reduced-motion: no-preference) {
+          animation-name: --fade-in, --translate-from;
+        }
       }
     }
   }
@@ -190,9 +192,9 @@ Firefoxはスクロール駆動アニメーションに対応していません�
 
 <Demo title="画面に入ったカードが、1回だけフェードインする" html={revealHtml} css={revealCss} frame={revealFrame} height="360px" />
 
-デモの枠の中を下へスクロールすると、3枚のカードが画面に入ったところで1枚ずつ現れます。上へ戻してからもう一度スクロールしても、再生を終えたカードは表示されたままです。スクロール駆動アニメーションに対応していない環境では、カードは最初から表示されています。
+デモの枠の中を下へスクロールすると、3枚のカードが画面に入ったところで1枚ずつ現れます。上へ戻してからもう一度スクロールしても、再生を終えたカードは表示されたままです。スクロール駆動アニメーションに対応していない環境と印刷では、カードは最初から表示されています。
 
-ルートは、`view()` のタイムラインで自分の位置を測るだけで、自分は動きません。`--_in-view` は `@property` で登録していないので、キーフレームの間を補間できず、進み具合の50%の時点で `--false` から `--true` に切り替わります（CSS Custom Properties Level 1）。`linear` を指定しているので、切り替わるのは範囲のちょうど中間です。この例の範囲は `entry 0%` から `entry 60%` なので、要素の30%が画面に入った位置で `--true` になります。`animation-fill-mode: both` を指定しているので、範囲を過ぎたあとも `--true` のまま残ります。
+ルートは、`view()` のタイムラインで自分の位置を測るだけで、自分は動きません。`--_in-view` は `@property` で登録していないので、キーフレームの間を補間できず、進み具合の50%の時点で `--false` から `--true` に切り替わります（CSS Custom Properties Level 1）。`linear` を指定しているので、切り替わるのは範囲のちょうど中間です。この例の範囲は `entry 0%` から `entry 60%` なので、`entry` の範囲の30%の位置で `--true` になります。このデモのように要素が表示領域より小さい場合は、要素の30%が画面に入った位置です。要素が表示領域より大きい場合は、`entry` の範囲は要素が表示領域を覆った時点で終わるので、表示領域の高さの30%まで入った位置になり、要素全体の30%ではありません（Scroll-driven Animations）。`animation-fill-mode: both` を指定しているので、範囲を過ぎたあとも `--true` のまま残ります。
 
 子の `._body` は、`animation-play-state: paused` と `animation-fill-mode: both` で、`@keyframes` の `from` の見た目のまま待機します。`--_in-view` が `--true` になると、`@container style()` の中の `running` が当てはまり、アニメーションが最後まで再生されます。`opacity: 0` を別に書かないので、開始の見た目を変えたいときは、`@keyframes` に渡すカスタムプロパティだけを変えればすみます。再生時間の `--duration--reveal`（600ms）は、機能的な動きの上限（300ms）を超えます。ページを読み進める間に一度だけ再生する、頻度の低い装飾なので、例外として扱います。
 
@@ -203,6 +205,8 @@ Firefoxはスクロール駆動アニメーションに対応していません�
 ### スクロールを戻したときと、対応していない環境
 
 範囲より手前までスクロールを戻すと、`--_in-view` は `--false` に戻り、`._body` のアニメーションは再び一時停止します。再生を終えていれば、見た目は終わった状態のまま変わりません。しかし、再生の途中で戻すと、その位置で止まり、巻き戻りません。次に範囲に入ると、止まった位置から再生を続けます。半透明のまま止まるのを避けたい場合は、次の `IntersectionObserver` の方法を使います。
+
+待機させる `._body` の指定は、`@supports` に加えて `@media screen` で囲みます。印刷のようにスクロールしない媒体では、最初の画面より下の要素が画面に入ることがないので、待機の見た目のまま透明で印刷されるからです。
 
 スクロール駆動アニメーションはChrome 115以降とSafari 26以降が対応し、Firefoxは対応していません。スタイルクエリは、Firefoxも151から使えます。`@supports` で囲まないと、Firefoxでは `animation-timeline` が無視され、ルートのアニメーションは再生時間が0の普通のアニメーションになります。読み込んだ直後から `--_in-view` が `--true` なので、`._body` のアニメーションは画面の外で再生を終えます。`@supports` で囲めば、Firefoxでは演出なしで最初から表示されます。
 
@@ -220,7 +224,7 @@ Firefoxでも演出を出したいときと、スクロールを戻しても再�
     --translate-from--y-value: 24px;
 
     &:is(:scope[data-motion-mode="motion"] *) {
-      @media (prefers-reduced-motion: no-preference) and (scripting: enabled) {
+      @media screen and (prefers-reduced-motion: no-preference) and (scripting: enabled) {
         animation-name: --fade-in, --translate-from;
         animation-duration: var(--duration--reveal);
         animation-timing-function: var(--ease--out-quint);
@@ -272,7 +276,7 @@ root?.setAttribute('data-motion-mode', reduced ? 'reduced' : 'motion');
     --translate-from--y-value: 24px;
 
     &:is(:scope[data-motion-mode="motion"] *) {
-      @media (scripting: enabled) {
+      @media screen and (scripting: enabled) {
         animation-name: --fade-in;
         animation-duration: var(--duration--reveal);
         animation-timing-function: var(--ease--out-quint);
@@ -280,7 +284,7 @@ root?.setAttribute('data-motion-mode', reduced ? 'reduced' : 'motion');
         animation-play-state: paused;
       }
 
-      @media (prefers-reduced-motion: no-preference) and (scripting: enabled) {
+      @media screen and (prefers-reduced-motion: no-preference) and (scripting: enabled) {
         animation-name: --fade-in, --translate-from;
       }
     }
@@ -395,7 +399,7 @@ window.addEventListener(
 );
 ```
 
-演出のためのスタイル（要素を重ねる、最初は隠しておくなど）を常に当てておくと、JavaScriptが動かない環境で内容が読めなくなります。そこで、`IntersectionObserver` で1回だけ再生する演出と同じく、演出のためのスタイルは `data-motion-mode="motion"` のときだけ当てます。基本のスタイルは、JavaScriptがないときと動きを減らす設定のときの、最終的な状態として書きます。
+演出のためのスタイル（要素を重ねる、最初は隠しておくなど）を常に当てておくと、JavaScriptが動かない環境で内容が読めなくなります。そこで、`IntersectionObserver` で1回だけ再生する演出と同じく、演出のためのスタイルは `data-motion-mode="motion"` のときだけ当てます。基本のスタイルは、JavaScriptがないときと動きを減らす設定のときの、最終的な状態として書きます。印刷ではスクロールで場面が切り替わらないので、演出のためのスタイルは `screen` に限ります。
 
 ```css title="🙆‍♂ Recommended: 演出のためのスタイルを、motion のときだけ当てる"
 @scope (.scoped.story-section) to (.scoped) {
@@ -404,7 +408,7 @@ window.addEventListener(
     gap: 48px;
 
     &:is(:scope[data-motion-mode="motion"] *) {
-      @media (scripting: enabled) {
+      @media screen and (scripting: enabled) {
         grid-template-areas: "--step";
         gap: initial;
       }
@@ -413,7 +417,7 @@ window.addEventListener(
 
   ._step {
     &:is(:scope[data-motion-mode="motion"] *) {
-      @media (scripting: enabled) {
+      @media screen and (scripting: enabled) {
         grid-area: --step;
         opacity: 0;
       }
@@ -445,6 +449,7 @@ window.addEventListener(
 - [animation-range - CSS | MDN](https://developer.mozilla.org/ja/docs/Web/CSS/animation-range)
 - [view-timeline-name - CSS | MDN](https://developer.mozilla.org/ja/docs/Web/CSS/view-timeline-name)
 - [animation-fill-mode - CSS | MDN](https://developer.mozilla.org/ja/docs/Web/CSS/animation-fill-mode)
+- [Scroll-driven Animations](https://drafts.csswg.org/scroll-animations-1/#view-timelines-ranges)（W3C、view() のタイムラインの範囲）
 - [CSS Custom Properties for Cascading Variables Module Level 1](https://drafts.csswg.org/css-variables-1/#defining-variables)（W3C、カスタムプロパティは値が50%の時点で切り替わる）
 - [交差オブザーバー API - Web API | MDN](https://developer.mozilla.org/ja/docs/Web/API/Intersection_Observer_API)
 - [scripting - CSS | MDN](https://developer.mozilla.org/ja/docs/Web/CSS/@media/scripting)

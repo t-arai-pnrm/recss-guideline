@@ -4,8 +4,11 @@ for (const field of document.querySelectorAll('.contact-form ._field')) {
   const error = field.querySelector('._error');
   if (!control || !error) continue;
 
+  // サーバーが aria-invalid="true" を付けて返した誤りは、値を変えるまで残す
+  let serverError = control.getAttribute('aria-invalid') === 'true';
+
   const update = () => {
-    const invalid = control.matches(':user-invalid');
+    const invalid = serverError || control.matches(':user-invalid');
     const ids = new Set((control.getAttribute('aria-describedby') ?? '').split(' ').filter(Boolean));
     if (invalid) ids.add(error.id);
     else ids.delete(error.id);
@@ -14,9 +17,15 @@ for (const field of document.querySelectorAll('.contact-form ._field')) {
     else control.removeAttribute('aria-describedby');
   };
 
+  const updateAfterEdit = () => {
+    serverError = false;
+    update();
+  };
+
+  if (serverError) update();
   control.addEventListener('blur', update);
-  control.addEventListener('change', update);
-  control.addEventListener('input', update);
+  control.addEventListener('change', updateAfterEdit);
+  control.addEventListener('input', updateAfterEdit);
   // 送信しようとして invalid になったあと、:user-invalid が当てはまってから読み直す
   control.addEventListener('invalid', () => requestAnimationFrame(update));
 }

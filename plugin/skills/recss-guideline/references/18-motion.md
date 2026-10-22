@@ -1,8 +1,8 @@
 # 第18章 モーション：ルール
 
-- ガイドラインのバージョン: 0.77.2（2026-10-22 生成）
+- ガイドラインのバージョン: 0.78.0（2026-10-22 生成）
 - ルールの数: 31
-- 本文: 約20.1万字
+- 本文: 約20.3万字
 - 読む条件: transition、animation、@keyframes、prefers-reduced-motion、スクロール連動、View Transitions
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
@@ -17,11 +17,11 @@
 - `motion/reduced-motion` 18-2 動きを減らす設定に対応する（約1.4万字）https://t-arai-pnrm.github.io/recss-guideline/motion/reduced-motion/
 - `motion/easing-and-duration` 18-3 イージングと再生時間（約2.4万字）https://t-arai-pnrm.github.io/recss-guideline/motion/easing-and-duration/
 - `motion/transitions-and-keyframes` 18-4 トランジションの基本と中断（約7,200字）https://t-arai-pnrm.github.io/recss-guideline/motion/transitions-and-keyframes/
-- `motion/transition-techniques` 18-5 トランジションを応用する（約2.3万字）https://t-arai-pnrm.github.io/recss-guideline/motion/transition-techniques/
+- `motion/transition-techniques` 18-5 トランジションを応用する（約2.4万字）https://t-arai-pnrm.github.io/recss-guideline/motion/transition-techniques/
 - `motion/keyframes` 18-6 @keyframesを設計する（約1.1万字）https://t-arai-pnrm.github.io/recss-guideline/motion/keyframes/
 - `motion/entry-and-exit` 18-7 出現と退場（約2万字）https://t-arai-pnrm.github.io/recss-guideline/motion/entry-and-exit/
 - `motion/overlays-and-stagger` 18-8 重ねて出すパネルと順に出す要素（約2万字）https://t-arai-pnrm.github.io/recss-guideline/motion/overlays-and-stagger/
-- `motion/scroll-driven` 18-9 スクロールに合わせて動かす（約3.2万字）https://t-arai-pnrm.github.io/recss-guideline/motion/scroll-driven/
+- `motion/scroll-driven` 18-9 スクロールに合わせて動かす（約3.3万字）https://t-arai-pnrm.github.io/recss-guideline/motion/scroll-driven/
 - `motion/performance` 18-10 動きの負荷を抑える（約2.2万字）https://t-arai-pnrm.github.io/recss-guideline/motion/performance/
 - `motion/view-transitions` 18-11 View Transitionsで画面の切り替えをつなぐ（約1.2万字）https://t-arai-pnrm.github.io/recss-guideline/motion/view-transitions/
 
@@ -149,9 +149,9 @@ https://t-arai-pnrm.github.io/recss-guideline/motion/scroll-driven/
   - 理由: スクロールのたびに位置を計算する処理はメインスレッドを占有し、動きがかくつく原因になるため。
   - 補足: Firefox でも演出を出したい場合と、スクロールを戻しても再生を途中で止めたくない場合は、`IntersectionObserver` で属性を切り替えます。1回だけ動かす演出を CSS だけで書く `timeline-trigger` と `animation-trigger` は、Chrome 系のブラウザだけが対応しています。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/motion/scroll-driven/#rule-scroll-linked-method
-- 【推奨・実装上の判断】画面に入ったら1回だけ再生する演出は、ルートの `view()` のタイムラインで登録していないカスタムプロパティを `--false` から `--true` に切り替え、子の一時停止したアニメーションを `@container style(--_in-view: --true)` の中で `running` にし、全体を `@supports (animation-timeline: view()) and (animation-range: entry)` で囲む。（`reveal-once-with-style-query`）
-  - 理由: 見た目の変化を時間で進むアニメーションで再生するので、スクロールを止めた位置で途中のまま残らず、スクロール駆動アニメーションに対応していない環境では演出なしで内容を表示できるため。
-  - 補足: 登録していないカスタムプロパティは、キーフレームの50%の時点で切り替わるので、`animation-timing-function: linear` なら範囲の中間（`entry 0% entry 60%` なら `entry 30%`）で再生が始まります。範囲を過ぎても値を残すために `animation-fill-mode: both` を指定します。スタイルクエリは自分の値を問い合わせられないので、切り替える要素と再生する要素を分けます。範囲より手前まで戻すと一時停止し、再生の途中なら、その位置で止まります。
+- 【推奨・実装上の判断】画面に入ったら1回だけ再生する演出は、ルートの `view()` のタイムラインで登録していないカスタムプロパティを `--false` から `--true` に切り替え、子の一時停止したアニメーションを `@container style(--_in-view: --true)` の中で `running` にし、全体を `@supports (animation-timeline: view()) and (animation-range: entry)` と `@media screen` で囲む。（`reveal-once-with-style-query`）
+  - 理由: 見た目の変化を時間で進むアニメーションで再生するので、スクロールを止めた位置で途中のまま残らず、スクロール駆動アニメーションに対応していない環境と、印刷のようにスクロールしない媒体では、演出なしで内容を表示できるため。
+  - 補足: 登録していないカスタムプロパティは、キーフレームの50%の時点で切り替わるので、`animation-timing-function: linear` なら範囲の中間（`entry 0% entry 60%` なら `entry 30%`）で再生が始まります。`entry 30%` は `entry` の範囲の30%で、要素が表示領域より小さいときは要素の30%が入った位置ですが、要素が表示領域より大きいときは要素全体の30%を意味しません。範囲を過ぎても値を残すために `animation-fill-mode: both` を指定します。スタイルクエリは自分の値を問い合わせられないので、切り替える要素と再生する要素を分けます。範囲より手前まで戻すと一時停止し、再生の途中なら、その位置で止まります。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/motion/scroll-driven/#rule-reveal-once-with-style-query
 - 【推奨・実装上の判断】スクロール駆動アニメーションは、`animation-range` で範囲を明示する。（`scroll-animation-explicit-range`）
   - 理由: 指定しないと `view()` では `cover`（画面に入り始めてから出終わるまで）の全体になり、見せたいタイミングとずれやすいため。

@@ -45,20 +45,23 @@
       display: block grid;
       gap: 24px;
 
-      @supports (animation-timeline: view()) and (animation-range: entry) {
-        animation-name: --fade-in;
-        animation-duration: var(--duration--reveal);
-        animation-timing-function: var(--ease--out-quint);
-        animation-fill-mode: both;
-        animation-play-state: paused;
+      /* 印刷のようにスクロールしない媒体では、待たせずに最初から表示する */
+      @media screen {
+        @supports (animation-timeline: view()) and (animation-range: entry) {
+          animation-name: --fade-in;
+          animation-duration: var(--duration--reveal);
+          animation-timing-function: var(--ease--out-quint);
+          animation-fill-mode: both;
+          animation-play-state: paused;
 
-        /* いちばん近い祖先（section）の --_in-view を問い合わせる */
-        @container style(--_in-view: --true) {
-          animation-play-state: running;
-        }
+          /* いちばん近い祖先（section）の --_in-view を問い合わせる */
+          @container style(--_in-view: --true) {
+            animation-play-state: running;
+          }
 
-        @media (prefers-reduced-motion: no-preference) {
-          animation-name: --fade-in, --translate-from;
+          @media (prefers-reduced-motion: no-preference) {
+            animation-name: --fade-in, --translate-from;
+          }
         }
       }
     }

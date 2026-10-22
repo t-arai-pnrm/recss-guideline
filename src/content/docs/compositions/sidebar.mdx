@@ -45,7 +45,7 @@ import sidebarCss from '../../../demos/compositions/sidebar/style.css?raw';
  *
  * @prop {length} --sidebar--main-min-width [calc(480 / 16 * 1rem)] - メインの最小幅（これを確保できないと縦に積む）
  * @prop {length} --sidebar--side-width     [calc(320 / 16 * 1rem)] - 横に並べたときのサイドの幅
- * @prop {length} --sidebar--gap            [0px]                   - 行と列の間隔（一括）
+ * @prop {length} --sidebar--gap            [なし]                  - 行と列の間隔（一括）。指定すると個別の指定より優先する
  * @prop {length} --sidebar--row-gap        [0px]                   - 縦に積んだときの間隔
  * @prop {length} --sidebar--column-gap     [0px]                   - 横に並べたときの間隔
  *
@@ -117,7 +117,7 @@ import sidebarCss from '../../../demos/compositions/sidebar/style.css?raw';
 |---|---|---|
 | `--sidebar--main-min-width` | `calc(480 / 16 * 1rem)` | メインの最小幅。サイドと並ぶための条件 |
 | `--sidebar--side-width` | `calc(320 / 16 * 1rem)` | 横に並べたときのサイドの幅 |
-| `--sidebar--gap` | なし | 行と列の間隔を一括で指定する |
+| `--sidebar--gap` | なし | 行と列の間隔を一括で指定する。指定すると個別の指定より優先する |
 | `--sidebar--row-gap` | `0px` | 縦に積んだときの、メインとサイドの間隔 |
 | `--sidebar--column-gap` | `0px` | 横に並べたときの、メインとサイドの間隔 |
 

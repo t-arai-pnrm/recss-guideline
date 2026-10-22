@@ -1,8 +1,15 @@
 /**
  * 押し続けると削除を確定するボタンと、確定した後の確認のダイアログ。押し続けている状態は、判定する JavaScript が付ける属性で受け取る。
  *
- * @prop {time} --hold-button--duration [2s] - 確定までに押し続ける時間（進み具合の表示と JavaScript の判定の両方が使う）
+ * @prop {time} --hold-button--duration [2s] - 確定までに押し続ける時間。0以上の時間で書く（進み具合の表示と JavaScript の判定の両方が使う）
  */
+@property --hold-button--duration {
+  /* 時間の型で登録し、calc() で書いた値も計算した時間（2s など）として読めるようにする。時間でない値は初期値の2秒になる */
+  syntax: "<time>";
+  inherits: true;
+  initial-value: 2s;
+}
+
 @layer pages {
   @scope (.scoped.hold-demo) to (.scoped) {
     ._hint,
@@ -24,7 +31,7 @@
       --_holding: --false;
 
       /* 確定までに押し続ける時間。進み具合の表示と、JavaScript の判定の両方がここから読む */
-      --_duration: var(--hold-button--duration, 2s);
+      --_duration: var(--hold-button--duration);
 
       display: inline grid;
       overflow: clip;
