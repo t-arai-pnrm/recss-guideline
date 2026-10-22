@@ -1,13 +1,13 @@
 # 第20章 AIにコーディングさせる：ルール
 
-- ガイドラインのバージョン: 0.77.0（2026-10-22 生成）
+- ガイドラインのバージョン: 0.77.1（2026-10-22 生成）
 - ルールの数: 17
 - 本文: 約8.8万字
 - 読む条件: AIが書いたCSS、Figmaなどのデザインツールから書いたCSS
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
 強度は「必須」「推奨」「非推奨」「禁止」の4段階です。「必須」と「禁止」は、各ルールの補足に書いた適用範囲と例外を除いて必ず守り、「推奨」と「非推奨」は理由があれば外れてかまいません。
-性質は3種類です。「仕様にもとづく制約」はCSS・HTML・ブラウザの振る舞いやWCAGから導かれ、守らないと表示や操作が崩れます。「実装上の判断」は状況とトレードオフで決まり、適用する条件があります。「本書の規約」は一貫性のために本書が選んだ約束で、ほかの約束を選んでも同じように成り立ちます。
+性質は3種類です。「仕様にもとづく制約」はCSS・HTML・ブラウザの振る舞いやWCAGを根拠にし、適用する条件に当たる場面で守らないと、表示、操作、情報の伝わり方に問題が出ます。問題が起きる条件と適用する範囲はルールごとに違い、補足に書いています。「実装上の判断」は状況とトレードオフで決まり、適用する条件があります。「本書の規約」は一貫性のために本書が選んだ約束で、ほかの約束を選んでも同じように成り立ちます。
 背景とコード例は、各節の本文にあります。本文は MCP の `get_page`（ページID）か、URL で読みます。
 
 ## この章の節
@@ -20,7 +20,7 @@
 - `ai-coding/from-figma` 20-5 Figmaのデザインから計画を立てる（約1.2万字）https://t-arai-pnrm.github.io/recss-guideline/ai-coding/from-figma/
 - `ai-coding/implementation` 20-6 実装と検証を回す（約1.1万字）https://t-arai-pnrm.github.io/recss-guideline/ai-coding/implementation/
 - `ai-coding/pitfalls` 20-7 AIが誤りやすいパターン（約6,500字）https://t-arai-pnrm.github.io/recss-guideline/ai-coding/pitfalls/
-- `ai-coding/verify-output` 20-8 生成したコードを確かめ、教訓を残す（約5,400字）https://t-arai-pnrm.github.io/recss-guideline/ai-coding/verify-output/
+- `ai-coding/verify-output` 20-8 生成したコードを確かめ、教訓を残す（約5,600字）https://t-arai-pnrm.github.io/recss-guideline/ai-coding/verify-output/
 - `ai-coding/audit` 20-9 既存のCSSの監査と移行をAIに任せる（約7,700字）https://t-arai-pnrm.github.io/recss-guideline/ai-coding/audit/
 
 ## 20-1 AIに任せる範囲と人が担う範囲

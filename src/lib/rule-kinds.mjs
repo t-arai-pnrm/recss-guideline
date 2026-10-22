@@ -4,7 +4,7 @@
  * `<Guideline />`、付録A、AI 向けのルール集（scripts/gen-ai.mjs）が使う。
  */
 export const RULE_KINDS = {
-  /** CSS・HTML・ブラウザの振る舞いや WCAG から導かれ、守らないと表示や操作が崩れる。 */
+  /** CSS・HTML・ブラウザの振る舞いや WCAG を根拠にし、適用する条件に当たる場面で守らないと問題が出る。 */
   spec: '仕様にもとづく制約',
   /** 状況とトレードオフで決まる。適用する条件がある。 */
   judgment: '実装上の判断',
