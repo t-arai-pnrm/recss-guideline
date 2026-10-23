@@ -81,8 +81,9 @@ section:has(> .card-wrapper:only-child) {
     --_density: --compact;
 
     display: block grid;
+    padding: 16px;
 
-    @container --scoped (inline-size >= calc(240 / 16 * 1rem + 24px + 280 / 16 * 1rem)) {
+    @container --scoped (inline-size >= calc(240 / 16 * 1rem + 24px + 280 / 16 * 1rem + 16px * 2)) {
       --_density: --spacious;
 
       grid-template-columns: calc(240 / 16 * 1rem) 1fr;

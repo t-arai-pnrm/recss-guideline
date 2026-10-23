@@ -11,6 +11,24 @@ AI向けのスキル、プラグイン、MCPサーバーには、本書と同じ
 
 執筆中の版は `0.x` とし、すべての章の内容を著者が確認した時点で `1.0.0` にする予定です。`0.x` の間は、ルールを変えたり削除したりしたときも、マイナーバージョンを上げます。
 
+## 0.79.1（2026年10月23日）
+
+刊行前の厳格レビューで見つかった、必須のルールに反するコード例とデモ、デモで再現しない数値、対応した版の誤りを直しました。
+
+- 初期のHTMLで内容を隠していたデモを直しました。「[17-6 開閉するUI](/interaction/disclosure/)」のドロワーは、初期のHTMLではナビゲーションを表示し、開閉の処理の初期化が成功してから `hidden` 属性で閉じるようにしました。スクリプトが動かなくても、ナビゲーションにたどり着けます。
+- 「[16-4 clip-pathとマスクで見せる範囲を決める](/decoration/clipping-and-masks/)」のタブで、切り抜いた帯が強制カラーモードで消えていたので、帯を `SelectedItem` で塗るようにしました。
+- 「[10-7 置き場所と子の状態を伝える](/components/placement-and-child-states/)」の商品カードの閾値に、左右の `padding` を足しました。
+- 「[7-7 Flexboxの基礎](/layout/flexbox-basics/)」の `order` で並べ替える例に `reading-flow` を足し、子の `order` で並べ替えるときも親に指定することを書きました。
+- コンテナの名前を本書の規約にそろえました。「[7-8 Gridの基礎](/layout/grid-basics/)」「[7-9 Gridでアイテムをそろえる](/layout/grid-alignment/)」「[7-12 display: contentsで箱をなくす](/layout/display-contents/)」のコード例は、ルートのコンテナの名前を `--scoped` にしました。「[9-3 名前に使う語](/notation/terminology/)」の語の表からは、ルートの名前に見える例を外しました。
+- 「[7-11 アンカーポジショニングの基礎](/layout/anchor-basics/)」のポップオーバーのコード例に、未対応の環境で画面の中央に置く `margin: revert` を足しました。
+- 「[4-3 カスケードレイヤーで順位を決める](/cascade/layers/)」のコード例のユーティリティクラスを `.-text-muted` にしました。
+- 状態で変わる値の内部プロパティの名前を、`--_drop-shadow--hocus` のように `--` の接尾辞にそろえました。「[21-3 カード一覧とサイドバーを作る](/exercise/card-grid/)」と「[16-5 面・影・角丸](/decoration/surfaces/)」のデモ、演習の配布ファイルが対象です。
+- 「[1-2 ブラウザサポートとプログレッシブ・エンハンスメント](/principles/browser-support/)」の画面に入ったら表示する例を、18-9と同じく `screen` のメディアに限り、印刷で透明のまま残らないようにしました。
+- デモの枠の左右の余白（24pxずつ）を数えていなかった説明を直しました。「[12-5 switcher：n列と1列を幅で切り替える](/compositions/switcher/)」は、下だけが4列になる幅を672pxに、「[12-6 sidebar：メインとサイドの2カラムにし、狭ければ縦に積む](/compositions/sidebar/)」は、Chromeで測った幅の表を測り直しました。「[4-5 CSSネストの基礎](/cascade/nesting/)」は480pxでは横に並ばないこと、「[11-5 件数で配置を組み替える](/layout-practice/quantity-layouts/)」は4〜5枚目が中央に寄る幅を1200pxにしました。「[6-4 計算関数を応用する](/values/advanced-math-functions/)」のデモは、左右の余白を外して本文の数値どおりにしました。
+- 確かめた環境より新しいFirefoxとChromeの版を、対応した版として書いていた箇所を直しました。「[11-9 要素どうしの重なりを検出する](/layout-practice/overlap-detection/)」と「[13-9 収まらなくなったらナビゲーションを折りたたむ](/responsive/overflow-collapse/)」には、Firefoxの安定版がスクロール駆動アニメーションに対応していないことを書きました。「[16-2 画像の形式と読み込み](/decoration/image-loading/)」には、JPEG XLを扱えるのがSafariだけであることを書きました。
+- 「[5-4 子要素の位置で選ぶ](/pseudo/child-index/)」で、`sibling-index()` の対応が2026年8月にそろったときのブラウザを、Safari 26.2からFirefox 154へ直しました。
+- 「[13-4 コンテナの副作用とコンテナ単位](/responsive/container-units-and-side-effects/)」のデモで、見出しが最大の大きさになる幅のコメントを、式に合わせて720pxに直しました。
+
 ## 0.79.0（2026年10月23日）
 
 画面の幅で連続的に変える値の区間をそろえる節を足しました。ルールを追加したので、マイナーバージョンを上げています。

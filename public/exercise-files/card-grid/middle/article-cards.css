@@ -15,7 +15,7 @@
        * オフセット、ぼかし、濃さを減らして近づけた。動かす前と後で、drop-shadow() の数を2つにそろえる
        */
       --_drop-shadow: drop-shadow(0 1px 1px oklch(0% 0 none / 4%)) drop-shadow(0 6px 8px oklch(26% 0.05 265deg / 10%));
-      --_drop-shadow-raised: drop-shadow(0 2px 2px oklch(0% 0 none / 5%)) drop-shadow(0 12px 16px oklch(26% 0.05 265deg / 18%));
+      --_drop-shadow--hocus: drop-shadow(0 2px 2px oklch(0% 0 none / 5%)) drop-shadow(0 12px 16px oklch(26% 0.05 265deg / 18%));
 
       & > ._card {
         grid-row: span 4;
@@ -44,12 +44,12 @@
       /* 見出しのリンクにホバーしたら、影を深くする。カードの位置は動かさない */
       &:has(a:any-link:hover) {
         @media (any-hover) {
-          filter: var(--_drop-shadow-raised);
+          filter: var(--_drop-shadow--hocus);
         }
       }
 
       &:has(a:focus-visible) {
-        filter: var(--_drop-shadow-raised);
+        filter: var(--_drop-shadow--hocus);
       }
     }
 

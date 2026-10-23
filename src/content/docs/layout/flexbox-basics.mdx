@@ -277,11 +277,12 @@ Flexboxは、まず各アイテムの仮の大きさを `flex-basis` で決め�
 
 フォーカスできる要素を並べ替えると、キーボードで操作する人には、フォーカスが前後に飛ぶように見えます。手順やランキングでは、読み上げの順番が見た目と食い違い、内容が誤って伝わります。HTMLは文書構造の順番で書き、見た目の順番が違うなら、まずHTMLの順番を見直します（[`source-order-for-reading`](/layout/grid-basics/#rule-source-order-for-reading)）。
 
-並べ替えてよいのは、順番に意味がなく、フォーカスできる要素も含まない並びです。装飾の画像と本文の左右を入れ替える程度なら、読み上げの妨げになりません。見た目の順番でフォーカスを移す `reading-flow` は、Baselineではありません。それでも `row-reverse` や `wrap-reverse` で並べ替えるときは、同じルールに `reading-flow` を指定します（「[11-12 表示順と読み上げ順を合わせる](/layout-practice/reading-flow/)」）。
+並べ替えてよいのは、順番に意味がなく、フォーカスできる要素も含まない並びです。装飾の画像と本文の左右を入れ替える程度なら、読み上げの妨げになりません。見た目の順番でフォーカスを移す `reading-flow` は、Baselineではありません。それでも `row-reverse` や `wrap-reverse` で並べ替えるときは、同じルールに `reading-flow` を指定します。子の `order` で並べ替えるときも、親のコンテナに指定します（「[11-12 表示順と読み上げ順を合わせる](/layout-practice/reading-flow/)」）。次の例では、`flex-visual` で、読み上げとフォーカスの順番を見た目の順番に合わせています。
 
 ```css title="🙆‍♂ Recommended: HTML では見出しを先に書き、装飾の画像だけを見た目の先頭に出す" from="layout/flexbox-order"
 ._card {
   display: block flex;
+  reading-flow: flex-visual;
   flex-direction: column;
 
   & > ._image {
@@ -290,7 +291,7 @@ Flexboxは、まず各アイテムの仮の大きさを `flex-basis` で決め�
 }
 ```
 
-次のデモは、見出し、本文、装飾の画像の順に書いたカードです。2つ目のカードでは、画像に `order: -1` を指定して見た目の先頭に出しています。読み上げの順番は、どちらのカードも見出しから始まります。
+次のデモは、見出し、本文、装飾の画像の順に書いたカードです。2つ目のカードでは、画像に `order: -1` を指定して見た目の先頭に出しています。`reading-flow` に未対応の環境では、読み上げの順番はどちらのカードも見出しから始まります。対応したブラウザでは、2つ目のカードは見た目のとおり画像から読み上げます。実際の装飾の画像は `alt=""` で読み上げから外すので、どちらの環境でも、読み上げは見出しから始まります。{/* 要検証: ブラウザ。reading-flow: flex-visual で、order: -1 の子が読み上げの先頭になるか */}
 
 <Demo title="order で装飾の画像だけを見た目の先頭に出す" html={orderHtml} css={orderCss} />
 

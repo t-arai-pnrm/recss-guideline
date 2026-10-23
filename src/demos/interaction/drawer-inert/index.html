@@ -1,6 +1,7 @@
 <header class="scoped global-header">
   <p class="_logo">サイト名</p>
-  <button type="button" class="_drawer-button" aria-expanded="false" aria-controls="global-drawer">メニュー</button>
+  <!-- 初期の HTML ではナビゲーションを隠さず、ボタンを隠す。開閉の処理の初期化が成功してから入れ替える -->
+  <button type="button" class="_drawer-button" hidden>メニュー</button>
   <nav class="_drawer" id="global-drawer" aria-label="サイト内">
     <ul>
       <li><a href="#">サービス</a></li>

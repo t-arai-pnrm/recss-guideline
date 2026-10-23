@@ -95,9 +95,9 @@ import powCss from '../../../demos/values/pow-type-scale/style.css?raw';
 
 3つ目に、ラベルをずらす手段を、書字方向に従わない `left` から `margin-inline-start` に変えました。4つ目に、本文の幅を決める `._article-inner` とラベルの `._label` を、`@scope` の中の子要素として分け、ラベルをずらす `margin-inline-start` は、本文の幅を決める要素のネストに書きました。境の672pxと720pxは、画面の幅ではなく、コンテナの幅で数えます。
 
-次のデモの破線の枠が本文の幅です。480pxではラベルが枠の左端にそろい、696pxでは12px、1024pxでは24px、枠の外へ出ます。
+次のデモの破線の枠が本文の幅です。デモの左右の余白を外しているので、コンテナの幅はデモの幅と同じです。480pxではラベルが枠の左端にそろい、696pxでは12px、1024pxでは24px、枠の外へ出ます。
 
-<Demo title="clamp() の範囲に負の値を含め、余白が広いときだけラベルを本文の外へ出す" html={hangingHtml} css={hangingCss} widths={[480, 696, 1024]} />
+<Demo title="clamp() の範囲に負の値を含め、余白が広いときだけラベルを本文の外へ出す" html={hangingHtml} css={hangingCss} widths={[480, 696, 1024]} bleed="inline" />
 
 はみ出させる手段には、`inset-inline-start` ではなく `margin-inline-start` を選びます。`inset-inline-start` でずらすには `position: relative` が要り、ずらしても元の場所が空いたまま描画だけが動きます。負の `margin-inline-start` なら、ラベルはレイアウトの中で動き、位置を決めるための指定だと分かります。要素の間隔を作る `margin` とは役割が違うので、次兄弟結合子で付ける規則の対象にもなりません（「[11-2 余白を設計する](/layout-practice/spacing/)」）。
 

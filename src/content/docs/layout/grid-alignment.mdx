@@ -152,9 +152,9 @@ article {
 
 画像の幅がカードごとに違うなら、画像の列は「画像の幅まで広がり、上限で止まる」可変の列です。この列には `fit-content()` が合います。
 
-```css title="🙆‍♂ Recommended: 画像の列を画像の幅に合わせ、上限で止める"
+```css title="🙆‍♂ Recommended: 画像の列を画像の幅に合わせ、上限で止める" from="layout/image-card-fit-content"
 .image-card {
-  container: --image-card / inline-size;
+  container: --scoped / inline-size;
 }
 
 ._layout {
@@ -168,7 +168,7 @@ article {
     ".       --body    .      "
     / 24px 1fr 24px;
 
-  @container --image-card (inline-size >= calc(240 / 16 * 1rem + 32px + 240 / 16 * 1rem + 32px)) {
+  @container --scoped (inline-size >= calc(240 / 16 * 1rem + 32px + 240 / 16 * 1rem + 32px)) {
     --_density: --spacious;
 
     grid-template:

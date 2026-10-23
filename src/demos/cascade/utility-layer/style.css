@@ -17,7 +17,7 @@
     }
 
     /* 詳細度は同じ 0.1.0 で、後ろに書いている */
-    ._text {
+    ._lead {
       color: var(--foreground--accent);
       font-size: calc(18 / 16 * 1rem);
     }

@@ -130,11 +130,19 @@ import avatarCutoutCss from '../../../demos/decoration/avatar-cutout/style.css?r
   ._highlight {
     /* xywh() の位置は左端から数えるので、右から左へ書く言語では、選んだタブが左から何番目かに数え直す */
     --_clip-start: calc(var(--_index) * 100% / var(--_count));
+    --_background: var(--background--accent);
 
     clip-path: xywh(var(--_clip-start) 0 calc(100% / var(--_count)) 100% round var(--rounded--full));
-    background-color: var(--background--accent);
+    background-color: var(--_background);
     color: var(--foreground--on-accent);
     pointer-events: none;
+
+    /* 強制カラーモードでは背景色がページの背景色に置き換わるので、帯を選んだ状態のシステムカラーで塗る */
+    @media (forced-colors: active) {
+      --_background: SelectedItem;
+
+      color: SelectedItemText;
+    }
 
     &:dir(rtl) {
       --_clip-start: calc((var(--_count) - 1 - var(--_index)) * 100% / var(--_count));
@@ -144,6 +152,8 @@ import avatarCutoutCss from '../../../demos/decoration/avatar-cutout/style.css?r
 ```
 
 <Baseline id="rect-xywh" compatKey="css.types.basic-shape.xywh" name="xywh()" />
+
+上の列の背景色は、内部プロパティ `--_background` から受け取ります。強制カラーモードでは、`background-color` がページの背景色に置き換わり、帯と文字色の差がどちらも消えて、どのタブを選んだかが分からなくなります。そこで、強制カラーモードでは `--_background` を選んだ状態のシステムカラー `SelectedItem` に、文字色を `SelectedItemText` に切り替えます（「[15-5 強制カラーモードとコントラスト](/color-media/forced-colors/)」）。{/* 要検証: ブラウザ。強制カラーモードで、切り抜いた帯が SelectedItem で表示されるか */}
 
 下の列（`._list`）は、`role="tab"` を付けた `<button>` を並べた、操作するためのタブです。上の列（`._highlight`）は見た目のためだけの複製なので、`aria-hidden="true"` で読み上げから外し、中身は `<span>` にしてフォーカスを受けないようにします。`pointer-events: none` で、クリックは下のタブに通します。どのタブを選んでいるかは、`aria-selected` から `:has()` で読み取り、`--_index` に入れています。
 
@@ -171,7 +181,7 @@ import avatarCutoutCss from '../../../demos/decoration/avatar-cutout/style.css?r
 
 前の見出しのデモの `._highlight` には、この3つの宣言を足しています。タブは続けて押されるUIなので、`@keyframes` ではなくトランジションで書きます（「[18-4 トランジションの基本と中断](/motion/transitions-and-keyframes/)」）。再生時間は、続けて押されるUIの目安の100〜150msに収まる `--duration--press`（120ms）にしています。トランジションは、動いている途中でほかのタブを押すと、その時点の範囲から新しいタブへ向かい直します。Chromeで、帯が移っている途中に別のタブを押すと、切り抜く範囲が途中の値から新しいタブへ向かうことを確かめました。イージングは、画面の上にある帯の移動なので `in-out` 系のトークンを選んでいます（「[18-3 イージングと再生時間](/motion/easing-and-duration/)」）。
 
-帯が横に移る動きは、色の変化ではなく位置の変化です。トランジションの指定は `@media (prefers-reduced-motion: no-preference)` の中に書き、動きを減らす設定では、切り抜く範囲が一度で切り替わります（「[18-2 動きを減らす設定に対応する](/motion/reduced-motion/)」）。帯が動かなくても、どのタブを選んだかは色で伝わるので、動きを省いても情報は欠けません。Chromeで、動きを減らす設定を模したときにトランジションが起きないことも確かめました。
+帯が横に移る動きは、色の変化ではなく位置の変化です。トランジションの指定は `@media (prefers-reduced-motion: no-preference)` の中に書き、動きを減らす設定では、切り抜く範囲が一度で切り替わります（「[18-2 動きを減らす設定に対応する](/motion/reduced-motion/)」）。帯が動かなくても、どのタブを選んだかは帯の色で伝わり、強制カラーモードでもシステムカラーの帯が残るので、動きを省いても情報は欠けません。Chromeで、動きを減らす設定を模したときにトランジションが起きないことも確かめました。
 
 `clip-path` のアニメーションでは、レイアウトは起きず、ブラウザと値によっては描き直しも避けられます。切り抜く範囲が変わっても、上の列の大きさと位置は変わらないので、ほかの要素の配置にも影響しません。Chromeで、帯が移る間の切り抜きのトランジションがコンポジタのスレッドで進み、押した直後を除いて描き直しが起きないことを、パフォーマンスのトレースで確かめました。動かすプロパティと負荷の関係は、「[18-10 動きの負荷を抑える](/motion/performance/)」で説明しています。{/* 要検証: ブラウザ。Firefox と Safari で、clip-path のトランジションで描き直しが起きるか、進行がコンポジタのスレッドに移るか */}
 

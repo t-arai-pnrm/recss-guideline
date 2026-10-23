@@ -2,6 +2,7 @@
   @scope (.scoped.flexbox-order) to (.scoped) {
     ._card {
       display: block flex;
+      reading-flow: flex-visual;
       flex-direction: column;
       gap: 8px;
       padding: 12px;

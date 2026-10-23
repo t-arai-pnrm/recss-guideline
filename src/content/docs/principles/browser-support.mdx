@@ -204,7 +204,7 @@ JavaScriptで表示を切り替える前提のスタイルは、`@media (scripti
   li {
     /* 監視を始めた JavaScript がルートに付ける属性があるときだけ待たせる */
     &:is(:scope[data-motion-mode="motion"] *) {
-      @media (prefers-reduced-motion: no-preference) and (scripting: enabled) {
+      @media screen and (prefers-reduced-motion: no-preference) and (scripting: enabled) {
         animation-name: --fade-in, --translate-from;
         animation-duration: var(--duration--reveal);
         animation-fill-mode: both;
@@ -219,7 +219,7 @@ JavaScriptで表示を切り替える前提のスタイルは、`@media (scripti
 }
 ```
 
-この条件がないと、JavaScriptが無効な環境では再生を始める処理が動かず、要素がいつまでも透明なままになります。ただし、`scripting: enabled` はJavaScriptが有効なことしか表しません。スクリプトの読み込みに失敗したり、実行の途中でエラーが起きたりしても、条件は当てはまります。そこで、待たせる条件には、JavaScriptが初期化に成功した時点で付ける属性（ここでは `data-motion-mode="motion"`）も加えます。画面に入ったら、JavaScriptが `data-revealed` を付けて再生します。属性が付く前に処理が止まれば、要素は最初から表示されたままです。待機中の見た目を `@keyframes` に任せる書き方と、動きを減らす設定との組み合わせは、「[18-9 スクロールに合わせて動かす](/motion/scroll-driven/)」で説明します。
+この条件がないと、JavaScriptが無効な環境では再生を始める処理が動かず、要素がいつまでも透明なままになります。ただし、`scripting: enabled` はJavaScriptが有効なことしか表しません。スクリプトの読み込みに失敗したり、実行の途中でエラーが起きたりしても、条件は当てはまります。そこで、待たせる条件には、JavaScriptが初期化に成功した時点で付ける属性（ここでは `data-motion-mode="motion"`）も加えます。画面に入ったら、JavaScriptが `data-revealed` を付けて再生します。属性が付く前に処理が止まれば、要素は最初から表示されたままです。待たせる指定は `screen` のメディアに限ります。印刷ではスクロールしないので、画面に入っていない要素に `data-revealed` が付かず、透明のまま印刷されるからです。待機中の見た目を `@keyframes` に任せる書き方と、動きを減らす設定との組み合わせは、「[18-9 スクロールに合わせて動かす](/motion/scroll-driven/)」で説明します。
 
 <Baseline id="scripting" name="scripting メディア特性" />
 

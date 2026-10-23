@@ -23,9 +23,8 @@
       border-radius: var(--rounded--sm);
     }
 
-    /* ボタンの aria-expanded が true の間だけ、ドロワーを表示する */
+    /* 閉じている間は、初期化したスクリプトが hidden 属性を付けて隠す */
     ._drawer {
-      display: none;
       padding: 16px;
       border-radius: var(--rounded--lg);
       box-shadow: var(--shadow--xs);
@@ -33,10 +32,6 @@
 
       @media (forced-colors: active) {
         outline: 1px solid;
-      }
-
-      &:is(:scope:has(._drawer-button[aria-expanded="true"]) *) {
-        display: block flow;
       }
     }
 

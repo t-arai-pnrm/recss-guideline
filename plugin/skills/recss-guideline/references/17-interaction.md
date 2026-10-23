@@ -1,8 +1,8 @@
 # 第17章 インタラクション：ルール
 
-- ガイドラインのバージョン: 0.79.0（2026-10-23 生成）
+- ガイドラインのバージョン: 0.79.1（2026-10-23 生成）
 - ルールの数: 40
-- 本文: 約14.2万字
+- 本文: 約14.3万字
 - 読む条件: ホバー、フォーカス、押せる範囲、タッチ操作、user-select、状態を表す属性（ARIA属性、data-*属性）、カード全体のリンク、開閉するUI（details、dialog、popover）、フォーム部品、カルーセル
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
@@ -18,7 +18,7 @@
 - `interaction/state-attributes` 17-3 状態を属性で表す（約7,000字）https://t-arai-pnrm.github.io/recss-guideline/interaction/state-attributes/
 - `interaction/card-link` 17-4 カード全体をリンクにする（約2,500字）https://t-arai-pnrm.github.io/recss-guideline/interaction/card-link/
 - `interaction/hiding-elements` 17-5 要素を隠す方法を選ぶ（約1.4万字）https://t-arai-pnrm.github.io/recss-guideline/interaction/hiding-elements/
-- `interaction/disclosure` 17-6 開閉するUI（約2.2万字）https://t-arai-pnrm.github.io/recss-guideline/interaction/disclosure/
+- `interaction/disclosure` 17-6 開閉するUI（約2.3万字）https://t-arai-pnrm.github.io/recss-guideline/interaction/disclosure/
 - `interaction/forms` 17-7 フォーム部品（約2.5万字）https://t-arai-pnrm.github.io/recss-guideline/interaction/forms/
 - `interaction/carousel` 17-8 CSSでカルーセルを作る（約2.4万字）https://t-arai-pnrm.github.io/recss-guideline/interaction/carousel/
 

@@ -91,8 +91,12 @@ import functionsCss from '../../../demos/layout/anchor-functions/style.css?raw';
 ```css title="🙆‍♂ Recommended: 開いたボタンを基準に、名前を付けずにポップオーバーを置く" from="layout/anchor-implicit-popover"
 .help-tip {
   & > [popover] {
+    margin: revert;
+
     @supports (position-area: block-end span-inline-end) {
       position-area: block-end span-inline-end;
+      margin-block: 4px 0;
+      margin-inline: 0;
     }
   }
 }
@@ -105,7 +109,7 @@ import functionsCss from '../../../demos/layout/anchor-functions/style.css?raw';
 </span>
 ```
 
-次のデモでボタンを押すと、ポップオーバーがボタンの下に開きます。デモのCSSには、あとの「未対応の環境では読める位置に置く」で説明する、未対応の環境のための `margin` の指定も含めています。
+`margin` の2つの指定は、未対応の環境のためのものです。理由は、あとの「未対応の環境では読める位置に置く」で説明します。次のデモでボタンを押すと、ポップオーバーがボタンの下に開きます。
 
 <Demo title="名前を付けずに、開いたボタンの下にポップオーバーを置く" html={popoverHtml} css={popoverCss} height="160px" />
 
@@ -217,9 +221,13 @@ import functionsCss from '../../../demos/layout/anchor-functions/style.css?raw';
 }
 
 ._popover {
+  margin: revert;
+
   @supports (position-area: block-end span-inline-end) {
     position-area: block-end span-inline-end;
     position-try-fallbacks: flip-block;
+    margin-block: 4px 0;
+    margin-inline: 0;
   }
 }
 ```

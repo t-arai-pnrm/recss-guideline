@@ -38,38 +38,38 @@
       /* 比べる2つの書き方。止まっているときと持ち上げたときの影を、書き方ごとに決める */
       &[data-shadow="box-shadow"] {
         --_box-shadow: var(--shadow--sm);
-        --_box-shadow-raised: var(--shadow--md);
+        --_box-shadow--hocus: var(--shadow--md);
         --_filter: none;
-        --_filter-raised: none;
+        --_filter--hocus: none;
 
         transition-property: box-shadow;
       }
 
       &[data-shadow="drop-shadow"] {
         --_box-shadow: var(--shadow--xs);
-        --_box-shadow-raised: var(--shadow--xs);
+        --_box-shadow--hocus: var(--shadow--xs);
         --_filter: var(--drop-shadow--sm);
-        --_filter-raised: var(--drop-shadow--md);
+        --_filter--hocus: var(--drop-shadow--md);
 
         transition-property: filter;
       }
 
       &:focus-visible {
-        box-shadow: var(--_box-shadow-raised);
-        filter: var(--_filter-raised);
+        box-shadow: var(--_box-shadow--hocus);
+        filter: var(--_filter--hocus);
       }
 
       &:any-link:hover {
         @media (any-hover) {
-          box-shadow: var(--_box-shadow-raised);
-          filter: var(--_filter-raised);
+          box-shadow: var(--_box-shadow--hocus);
+          filter: var(--_filter--hocus);
         }
       }
 
       /* 下の段は、持ち上げた後の影を止めたまま並べる */
       &[data-state="raised"] {
-        box-shadow: var(--_box-shadow-raised);
-        filter: var(--_filter-raised);
+        box-shadow: var(--_box-shadow--hocus);
+        filter: var(--_filter--hocus);
       }
     }
 

@@ -51,7 +51,7 @@ import boxCss from '../../../demos/layout/display-contents-box/style.css?raw';
 ```css title="🙅‍♂ Not Recommended: ラッパーの箱をなくし、order で見出しを前へ出す" issue="behavior"
 /* 🙅‍♂ Not Recommended */
 .feature {
-  container: --feature / inline-size;
+  container: --scoped / inline-size;
 }
 
 ._layout {
@@ -60,7 +60,7 @@ import boxCss from '../../../demos/layout/display-contents-box/style.css?raw';
   display: block flex;
   flex-direction: column;
 
-  @container --feature (inline-size >= calc(560 / 16 * 1rem)) {
+  @container --scoped (inline-size >= calc(560 / 16 * 1rem)) {
     --_density: --spacious;
 
     flex-direction: row;
@@ -90,7 +90,7 @@ import boxCss from '../../../demos/layout/display-contents-box/style.css?raw';
 
 ```css title="🙆‍♂ Recommended: テンプレートを差し替えて、構造の変化をエリアで書く"
 .feature {
-  container: --feature / inline-size;
+  container: --scoped / inline-size;
 }
 
 ._layout {
@@ -104,7 +104,7 @@ import boxCss from '../../../demos/layout/display-contents-box/style.css?raw';
   reading-flow: grid-rows;
   grid-template: var(--_template);
 
-  @container --feature (inline-size >= calc(560 / 16 * 1rem)) {
+  @container --scoped (inline-size >= calc(560 / 16 * 1rem)) {
     --_density: --spacious;
     --_template:
       "--image --headline"

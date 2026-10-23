@@ -35,7 +35,7 @@ await sharp('logo.png').avif({ lossless: true }).toFile('logo.avif');
 
 JPEG XLは、AVIFより高度なプログレッシブ表示ができる形式です。読み込みの途中から、粗い全体像を表示し、データが届くにつれて細部を描き足していきます。ページでいちばん大きく表示され、テキストの下に敷くヒーローの写真のように、早く何かを見せたい画像ほど、この性質が生きます。JPEG XLの画像は、可逆圧縮のまま画質を保つこともできます。
 
-ただし、JPEG XLはまだBaselineではありません。Safariは17から対応し、Chromeは155から、Firefoxは158から対応しました。ChromeとFirefoxが対応したのは2026年10月なので、対応前の版を使う人も残ります。{/* 要確認: 出典なし。Edge が JPEG XL に対応した版 */}そのため、JPEG XLは `<picture>` の `<source>` に `type="image/jxl"` を付けて置き、`<img>` にはAVIFを書きます。ブラウザは、`<source>` を上から順に調べ、対応している形式の最初のものを選びます。どれにも対応していなければ `<img>` の画像を使います。
+ただし、JPEG XLはまだBaselineではありません。web-featuresのデータでは、対応しているのはSafari 17以降だけで、ChromeとFirefoxの安定版は対応していません。{/* 要確認: 出典なし。Chrome、Edge、Firefox が JPEG XL に対応する版と時期 */}そのため、JPEG XLは `<picture>` の `<source>` に `type="image/jxl"` を付けて置き、`<img>` にはAVIFを書きます。ブラウザは、`<source>` を上から順に調べ、対応している形式の最初のものを選びます。どれにも対応していなければ `<img>` の画像を使います。
 
 <Baseline id="jpegxl" name="JPEG XL" />
 

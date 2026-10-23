@@ -43,8 +43,8 @@
       box-shadow: var(--shadow--xs);
       background-color: var(--background--surface);
 
-      /* 画像の列 240px 相当・隙間 24px・本文の最小幅 280px 相当が並ぶ幅 */
-      @container --scoped (inline-size >= calc(240 / 16 * 1rem + 24px + 280 / 16 * 1rem)) {
+      /* 画像の列 240px 相当・隙間 24px・本文の最小幅 280px 相当に、左右の padding 16px を足した幅 */
+      @container --scoped (inline-size >= calc(240 / 16 * 1rem + 24px + 280 / 16 * 1rem + 16px * 2)) {
         --_density: --spacious;
 
         grid-template-columns: calc(240 / 16 * 1rem) 1fr;

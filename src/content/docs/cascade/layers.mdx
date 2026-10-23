@@ -53,19 +53,19 @@ import forgottenLayerCss from '../../../demos/cascade/forgotten-layer/style.bad.
 @layer components, utilities;
 
 @layer utilities {
-  .text-muted {
+  .-text-muted {
     color: var(--foreground--muted);
   }
 }
 
 @layer components {
-  .notice .text {
+  .notice ._lead {
     color: var(--foreground--accent);
   }
 }
 ```
 
-`.notice .text` の詳細度は0.2.0で、`.text-muted` の0.1.0より高く、ブロックも後ろに書いています。それでも、両方のクラスを持つ要素の文字色は `--foreground--muted` になります。カスケードはレイヤーの順番を詳細度より先に比べ、後に宣言した `utilities` のほうが強いからです。詳細度と書いた順番を比べるのは、同じレイヤーの中の宣言どうしだけです。
+`.notice ._lead` の詳細度は0.2.0で、`.-text-muted` の0.1.0より高く、ブロックも後ろに書いています。それでも、両方のクラスを持つ要素の文字色は `--foreground--muted` になります。カスケードはレイヤーの順番を詳細度より先に比べ、後に宣言した `utilities` のほうが強いからです。詳細度と書いた順番を比べるのは、同じレイヤーの中の宣言どうしだけです。
 
 次のデモは、本書の規約に沿って書いたコンポーネントで、同じことを確かめます。デモでは、`utilities` レイヤーのルールを、`components` レイヤーのルールより前に書いています。どちらも0.1.0ですが、ユーティリティクラスを付けた2つ目の段落は灰色になります。コンポーネントの指定だけの1つ目の段落は、`components` レイヤーの青のままです。順番は先頭の `@layer` 文で決まっているので、ルールを書いた位置には左右されません。
 

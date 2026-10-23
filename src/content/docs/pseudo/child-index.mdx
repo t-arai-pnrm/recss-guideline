@@ -173,7 +173,7 @@ Sが判定するのは、セレクタに当てはまるかどうかだけです�
 
 <Baseline id="sibling-count" name="sibling-index() と sibling-count()" />
 
-2026年8月にSafari 26.2が対応し、主要なブラウザの最新版がそろいました（Chrome 138、Firefox 154）。ただし、本書の対象のブラウザのうち、Safari 18系の最終版は対応していません。そのため本書では、未対応の環境で失われても困らない装飾の値に限って使い、`@supports` の中に書きます。レイアウトの要に使わないのは、未対応の環境で表示が崩れるからです（「[1-2 ブラウザサポートとプログレッシブ・エンハンスメント](/principles/browser-support/)」）。
+2026年8月にFirefox 154が対応し、主要なブラウザの最新版がそろいました（Chrome 138、Safari 26.2）。ただし、本書の対象のブラウザのうち、Safari 18系の最終版は対応していません。そのため本書では、未対応の環境で失われても困らない装飾の値に限って使い、`@supports` の中に書きます。レイアウトの要に使わないのは、未対応の環境で表示が崩れるからです（「[1-2 ブラウザサポートとプログレッシブ・エンハンスメント](/principles/browser-support/)」）。
 
 ```css title="🙆‍♂ Recommended: 対応した環境でだけ、項目ごとに色相をずらす" from="pseudo/sibling-index-hue"
 @scope (.scoped.topic-list) to (.scoped) {

@@ -50,11 +50,19 @@
     ._highlight {
       /* xywh() の位置は左端から数えるので、右から左へ書く言語では、選んだタブが左から何番目かに数え直す */
       --_clip-start: calc(var(--_index) * 100% / var(--_count));
+      --_background: var(--background--accent);
 
       clip-path: xywh(var(--_clip-start) 0 calc(100% / var(--_count)) 100% round var(--rounded--full));
-      background-color: var(--background--accent);
+      background-color: var(--_background);
       color: var(--foreground--on-accent);
       pointer-events: none;
+
+      /* 強制カラーモードでは背景色がページの背景色に置き換わるので、帯を選んだ状態のシステムカラーで塗る */
+      @media (forced-colors: active) {
+        --_background: SelectedItem;
+
+        color: SelectedItemText;
+      }
 
       /* 切り抜く範囲を、選んだタブへ滑らせる */
       @media (prefers-reduced-motion: no-preference) {
