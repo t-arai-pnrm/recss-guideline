@@ -1,9 +1,9 @@
 # 第13章 レスポンシブデザイン：ルール
 
-- ガイドラインのバージョン: 0.78.0（2026-10-22 生成）
-- ルールの数: 43
-- 本文: 約13.1万字
-- 読む条件: @media、@container、ブレイクポイント、画面幅やコンテナの幅による切り替え、ナビゲーションの折りたたみ、safe-area
+- ガイドラインのバージョン: 0.79.0（2026-10-23 生成）
+- ルールの数: 44
+- 本文: 約14.3万字
+- 読む条件: @media、@container、ブレイクポイント、画面幅やコンテナの幅による切り替え、ナビゲーションの折りたたみ、safe-area、画面の幅で変える clamp() の区間、progress()
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
 強度は「必須」「推奨」「非推奨」「禁止」の4段階です。「必須」と「禁止」は、各ルールの補足に書いた適用範囲と例外を除いて必ず守り、「推奨」と「非推奨」は理由があれば外れてかまいません。
@@ -12,7 +12,7 @@
 
 ## この章の節
 
-- `responsive` 第13章 レスポンシブデザイン（約8,400字）https://t-arai-pnrm.github.io/recss-guideline/responsive/
+- `responsive` 第13章 レスポンシブデザイン（約8,600字）https://t-arai-pnrm.github.io/recss-guideline/responsive/
 - `responsive/escalation` 13-1 検討する順番（約8,500字）https://t-arai-pnrm.github.io/recss-guideline/responsive/escalation/
 - `responsive/breakpoints` 13-2 ブレイクポイントの決め方（約1.7万字）https://t-arai-pnrm.github.io/recss-guideline/responsive/breakpoints/
 - `responsive/container-size-queries` 13-3 コンテナサイズクエリ（約2.2万字）https://t-arai-pnrm.github.io/recss-guideline/responsive/container-size-queries/
@@ -22,6 +22,7 @@
 - `responsive/design-comp-pattern` 13-7 カンプの幅で全体を拡大・縮小しない（約8,300字）https://t-arai-pnrm.github.io/recss-guideline/responsive/design-comp-pattern/
 - `responsive/safe-area` 13-8 セーフエリアに対応する（約1.6万字）https://t-arai-pnrm.github.io/recss-guideline/responsive/safe-area/
 - `responsive/overflow-collapse` 13-9 収まらなくなったらナビゲーションを折りたたむ（約1.4万字）https://t-arai-pnrm.github.io/recss-guideline/responsive/overflow-collapse/
+- `responsive/fluid-range` 13-10 流体的な値の区間をそろえる（約1.2万字）https://t-arai-pnrm.github.io/recss-guideline/responsive/fluid-range/
 
 ## 13-1 検討する順番
 
@@ -221,3 +222,12 @@ https://t-arai-pnrm.github.io/recss-guideline/responsive/overflow-collapse/
   - 理由: `display: none` にすると溢れが消えてタイムラインが無効になり、フラグが戻って再び表示される切り替えを繰り返すため。
   - 補足: `visibility: hidden` の要素は、レイアウトに場所を残したまま、フォーカスと支援技術からは外れます。スクロールバーが場所を取る環境で、溢れた瞬間に高さが変わらないように、溢れを測る要素には `scrollbar-width: none` も指定します。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/responsive/overflow-collapse/#rule-hide-overflow-source-with-visibility
+
+## 13-10 流体的な値の区間をそろえる
+
+https://t-arai-pnrm.github.io/recss-guideline/responsive/fluid-range/
+
+- 【推奨・実装上の判断】画面の幅で連続的に変える値（`svi` を使う `clamp()` など）の区間の端（変わり始める幅と変わり終える幅）は、サイト共通のトークンで持ち、値ごとに決めない。（`shared-fluid-range`）
+  - 理由: 文字サイズと余白が同じ幅で変わり始めて同じ幅で止まり、区間を変えるときの修正も1か所で済むため。
+  - 補足: トークンは単位のないpx相当の数値（`--fluid--min-width: 375` と `--fluid--max-width: 1280` など）で持ち、値ごとには最小値と最大値だけを決めて、傾きと切片を式で求めます（`clamp-from-slope-intercept`）。区間をずらす理由がある値は、宣言の前のコメントに理由を残します。コンテナの幅で変える値（`cqi`）は、置かれる場所によって幅が違うので対象外です。区間の中の位置を数値にする `progress()` は、Safari 18が対応していないので、単位のない数値が要る型スケールの比率にだけ使い、`@supports` の中でトークンにして、対応していない環境では区間の始まりの値にします。流体的な値が1つだけなら、トークンにしなくてもかまいません。
+  - 詳細: https://t-arai-pnrm.github.io/recss-guideline/responsive/fluid-range/#rule-shared-fluid-range

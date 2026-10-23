@@ -1,0 +1,57 @@
+@layer tokens {
+  :root {
+    /* 流体的な値が変わり始める画面の幅と、変わり終える画面の幅（px 相当の数値） */
+    --fluid--min-width: 375;
+    --fluid--max-width: 1280;
+
+    @supports (opacity: progress(1, 0, 2)) {
+      /* 画面の幅が区間のどこにあるか（0 から 1 の数値） */
+      --fluid--progress: progress(
+        100svi,
+        var(--fluid--min-width) / 16 * 1rem,
+        var(--fluid--max-width) / 16 * 1rem
+      );
+    }
+  }
+}
+
+@layer components {
+  @scope (.scoped.fluid-scale) to (.scoped) {
+    :scope {
+      /* 基準の文字サイズと、狭い画面と広い画面で1段階ごとに掛ける比率 */
+      --_base: var(--font-size--md);
+      --_min-ratio: 1.2;
+      --_max-ratio: 1.333;
+
+      /* progress() に対応していない環境では、区間の始まりの比率になる */
+      --_ratio: calc(var(--_min-ratio) + (var(--_max-ratio) - var(--_min-ratio)) * var(--fluid--progress, 0));
+
+      & > * + * {
+        margin-block-start: 12px;
+      }
+    }
+
+    ._step-3 {
+      font-size: calc(var(--_base) * pow(var(--_ratio), 3) / 16 * 1rem);
+      font-weight: var(--font-weight--bold);
+      line-height: var(--leading--tight);
+    }
+
+    ._step-2 {
+      font-size: calc(var(--_base) * pow(var(--_ratio), 2) / 16 * 1rem);
+      font-weight: var(--font-weight--bold);
+      line-height: var(--leading--tight);
+    }
+
+    ._step-1 {
+      font-size: calc(var(--_base) * pow(var(--_ratio), 1) / 16 * 1rem);
+      font-weight: var(--font-weight--bold);
+      line-height: var(--leading--snug);
+    }
+
+    ._step-0 {
+      font-size: calc(var(--_base) / 16 * 1rem);
+      line-height: var(--text--body--leading);
+    }
+  }
+}

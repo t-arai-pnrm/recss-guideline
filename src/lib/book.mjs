@@ -102,7 +102,7 @@ export const PARTS = [
         number: 13,
         dir: 'responsive',
         title: 'レスポンシブデザイン',
-        review: '@media、@container、ブレイクポイント、画面幅やコンテナの幅による切り替え、ナビゲーションの折りたたみ、safe-area',
+        review: '@media、@container、ブレイクポイント、画面幅やコンテナの幅による切り替え、ナビゲーションの折りたたみ、safe-area、画面の幅で変える clamp() の区間、progress()',
       },
       {
         number: 14,

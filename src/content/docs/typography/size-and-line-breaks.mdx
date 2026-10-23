@@ -48,8 +48,8 @@ import breakCss from '../../../demos/typography/heading-line-breaks/style.css?ra
 
 ```css title="🙆‍♂ Recommended: 最小値と最大値を受け取って、流体的な文字サイズを計算する"
 [class*="-fluid-text"] {
-  --_u--relative-max-width: var(--fluid-text--relative-max-width, 1280);
-  --_u--relative-min-width: var(--fluid-text--relative-min-width, 375);
+  --_u--relative-max-width: var(--fluid-text--relative-max-width, var(--fluid--max-width, 1280));
+  --_u--relative-min-width: var(--fluid-text--relative-min-width, var(--fluid--min-width, 375));
   --_u--min-font-size: var(--fluid-text--min-font-size, 14);
   --_u--max-font-size: var(--fluid-text--max-font-size, 16);
   --_u--base-font-size: var(--fluid-text--base-font-size, 16);
@@ -80,7 +80,7 @@ import breakCss from '../../../demos/typography/heading-line-breaks/style.css?ra
 }
 ```
 
-値は、デザインカンプのピクセル値を単位のない数値で受け取ります。画面の幅が375pxのとき最小値、1280pxのとき最大値となり、その間の幅では値が連続して変わります。使う側は、`.-fluid-text--lg` のように段階のクラスを付けるか、`style` 属性で最小値と最大値を渡します。セレクタを `[class*="-fluid-text"]` としたのは、段階のクラスを1つ付けるだけで、計算のルールも当たるからです。
+値は、デザインカンプのピクセル値を単位のない数値で受け取ります。画面の幅が375pxのとき最小値、1280pxのとき最大値となり、その間の幅では値が連続して変わります。区間の端のトークン（`--fluid--min-width` と `--fluid--max-width`）があれば、375pxと1280pxはその値に置き換わります。余白などほかの流体的な値と同じ区間で変わるようにするためです（「[13-10 流体的な値の区間をそろえる](/responsive/fluid-range/)」）。使う側は、`.-fluid-text--lg` のように段階のクラスを付けるか、`style` 属性で最小値と最大値を渡します。セレクタを `[class*="-fluid-text"]` としたのは、段階のクラスを1つ付けるだけで、計算のルールも当たるからです。
 
 ```html title="段階のクラスを付けるか、style 属性で値を渡す"
 <h2 class="-fluid-text--lg">お知らせ</h2>

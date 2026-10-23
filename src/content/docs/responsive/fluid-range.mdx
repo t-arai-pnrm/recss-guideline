@@ -1,0 +1,170 @@
+---
+title: 13-10 流体的な値の区間をそろえる
+description: 画面の幅で連続的に変える値は、変わり始める幅と変わり終える幅をサイト共通のトークンで持ち、文字サイズと余白が同じ区間で変わるようにします。progress() は区間の中の位置を0から1の数値で返しますが、本書の対象のSafari 18は対応していないので、単位のない数値が要る型スケールの比率にだけ使い、対応していない環境では区間の始まりの値にします。
+reading: applied
+sidebar:
+  order: 10
+---
+
+import Baseline from '../../../components/Baseline.astro';
+import Demo from '../../../components/Demo.astro';
+import Guideline from '../../../components/Guideline.astro';
+import rangeHtml from '../../../demos/responsive/fluid-shared-range/index.html?raw';
+import rangeCss from '../../../demos/responsive/fluid-shared-range/style.css?raw';
+import scaleHtml from '../../../demos/responsive/fluid-type-scale/index.html?raw';
+import scaleCss from '../../../demos/responsive/fluid-type-scale/style.css?raw';
+
+画面の幅で連続的に変える値は、変わり始める幅と変わり終える幅（区間の端）を、サイト共通のトークンで持ちます。値ごとに区間を決めると、見出しが大きくなり終えた後も余白だけが広がり続けるように、ページの中で変わり方がずれます。トークンにしておけば、文字サイズと余白が同じ幅で変わり始め、同じ幅で止まります。
+
+`progress()` を使うと、画面の幅が区間のどこにあるかを0から1の数値で得られます。ただし、本書の対象のブラウザのうちSafari 18は対応していません。そこで、`progress()` は、単位のない数値がないと書けない型スケールの比率にだけ使います。対応していない環境では、区間の始まりの比率を使います。`clamp()` の式の組み立て方は「[6-3 計算関数で根拠を式に残す](/values/math-functions/)」で、`pow()` で段階を求める方法は「[6-4 計算関数を応用する](/values/advanced-math-functions/)」で説明しています。
+
+## 値ごとに区間を決めると、変わり方がずれる
+
+流体的な値を `clamp()` で書くとき、推奨値は、2つの基準の幅とそのときの値から求めます。基準の幅を値ごとに決めると、値ごとに変わる区間が違ってきます。ジェネレーターで作った数値を貼っていると、区間の違いはコードから読み取れません。
+
+```css title="🙅‍♂ Not Recommended: 見出しと余白で、変わる区間が違う" issue="behavior"
+/* 🙅‍♂ Not Recommended */
+@scope (.scoped.fluid-section) to (.scoped) {
+  :scope {
+    padding-block: clamp(32px, 7.143svi - 22.86px, 80px);
+  }
+
+  ._title {
+    font-size: clamp(1.5rem, 1.768svi + 1.086rem, 2.5rem);
+  }
+}
+```
+
+見出しの文字サイズは、画面の幅が375pxから1280pxまでの間で24pxから40pxへ変わります。一方、上下の余白は768pxから1440pxまでの間で32pxから80pxへ変わります。768pxより狭い画面では見出しだけが大きくなり、1280pxを超えると、見出しが止まった後も余白だけが広がります。
+
+次のデモでは、上のセクションが値ごとに区間を決め、下のセクションが区間をそろえています。768pxのときは、どちらの見出しも約30.9pxですが、余白は上が32px、下が約52.8pxです。1280pxでは、下は見出しが40px、余白が80pxでそろって止まり、上の余白は約68.6pxで、まだ広がる途中です。
+
+<Demo title="上下の余白と見出しの文字サイズを、値ごとの区間と共通の区間で変えたセクション" html={rangeHtml} css={rangeCss} widths={[375, 768, 1280]} />
+
+## 区間の端をトークンにする
+
+区間の端は、単位のないpx相当の数値のトークンにします。値ごとに決めるのは最小値と最大値だけにし、傾きと切片は、トークン、最小値、最大値から式で求めます。
+
+```css title="🙆‍♂ Recommended: 区間の端をトークンにし、値ごとには最小値と最大値だけを決める" from="responsive/fluid-shared-range"
+:root {
+  --fluid--min-width: 375;
+  --fluid--max-width: 1280;
+}
+
+@scope (.scoped.fluid-section) to (.scoped) {
+  :scope {
+    --_min-padding: 32;
+    --_max-padding: 80;
+    --_padding-slope: calc((var(--_max-padding) - var(--_min-padding)) / (var(--fluid--max-width) - var(--fluid--min-width)));
+    --_padding-intercept: calc(var(--_min-padding) - var(--_padding-slope) * var(--fluid--min-width));
+
+    padding-block: clamp(
+      var(--_min-padding) * 1px,
+      var(--_padding-slope) * 100svi + var(--_padding-intercept) * 1px,
+      var(--_max-padding) * 1px
+    );
+  }
+
+  ._title {
+    --_min-size: 24;
+    --_max-size: 40;
+    --_slope: calc((var(--_max-size) - var(--_min-size)) / (var(--fluid--max-width) - var(--fluid--min-width)));
+    --_intercept: calc(var(--_min-size) - var(--_slope) * var(--fluid--min-width));
+
+    font-size: clamp(
+      var(--_min-size) / 16 * 1rem,
+      var(--_slope) * 100svi + var(--_intercept) / 16 * 1rem,
+      var(--_max-size) / 16 * 1rem
+    );
+  }
+}
+```
+
+式は「[6-3 計算関数で根拠を式に残す](/values/math-functions/)」の組み立て方と同じで、基準の幅をトークンに置き換えただけです。区間を変えるときは、`:root` の2行を書き換えれば、すべての値が同じ区間で変わります。文字サイズは、最小値と最大値をremにし、ユーザーの文字サイズの設定に追従させます。余白は追従させる必要がないので、pxで書いています。サイト全体の流体的な文字サイズをまとめる「[14-4 文字サイズと改行](/typography/size-and-line-breaks/)」のユーティリティも、区間の端のデフォルトをこのトークンから受け取ります。
+
+区間の端は、流体的な値を設計した幅にします。多くの場合、デザインカンプの狭い画面と広い画面の幅です。ブレイクポイントとそろえる必要はありません。ブレイクポイントは、内容が成り立たなくなる幅で配置を切り替える閾値です（「[13-2 ブレイクポイントの決め方](/responsive/breakpoints/)」）。区間は、その間の値をどの幅で補間するかを決めるだけです。
+
+トークンに従わないのは、区間をずらす理由がある値です。たとえば、ヒーローの見出しだけを、ほかの値が止まった後も広い画面まで大きくしたい場合です。そうした値は、宣言の前のコメントに、トークンと違う区間を選んだ理由を残します。コンテナの幅で変える値（`cqi`）は、置かれる場所によって幅が違うので、画面の幅の区間にそろえる対象ではありません（「[13-4 コンテナの副作用とコンテナ単位](/responsive/container-units-and-side-effects/)」）。
+
+## progress() で区間の中の位置を数値にする
+
+`progress(値, 始まり, 終わり)` は、値が始まりから終わりまでのどこにあるかを、0から1の単位のない数値で返します。画面の幅と区間の端を渡せば、区間の中の位置が得られます。Chromeで確かめたところ、区間より狭い画面では0、広い画面では1に収まりました。
+
+```css title="🙆‍♂ Recommended: 区間の中の位置を、progress() に対応している環境でだけトークンにする" from="responsive/fluid-type-scale"
+:root {
+  --fluid--min-width: 375;
+  --fluid--max-width: 1280;
+
+  @supports (opacity: progress(1, 0, 2)) {
+    --fluid--progress: progress(
+      100svi,
+      var(--fluid--min-width) / 16 * 1rem,
+      var(--fluid--max-width) / 16 * 1rem
+    );
+  }
+}
+```
+
+区間の位置が数値になると、どの値も「最小値に、最小値と最大値の差を位置の分だけ足す」形で書けます。見出しなら `calc((24 + (40 - 24) * var(--fluid--progress)) / 16 * 1rem)` です。傾きと切片を求める式より、どの範囲の値なのかを読み取りやすくなります。区間の端は、ブレイクポイントと同じく `… / 16 * 1rem` の形で渡しています。
+
+トークンの宣言を `@supports` で囲むのは、カスタムプロパティには解釈できない値も代入できるからです。対応していない環境で `progress()` を代入すると、そのトークンを使う宣言は計算できず、無効になります。`@supports` の中で宣言すれば、対応していない環境ではトークンが定義されず、`var(--fluid--progress, 0)` のフォールバックで区間の始まりの値に戻せます。
+
+<Baseline id="progress-function" name="progress()" />
+
+ただし、`progress()` は、本書の対象のブラウザのうちSafari 18が対応していません。見出しや余白を `progress()` だけで書くと、Safari 18では区間の始まりの値に固定されます。`clamp()` の式なら、どのブラウザでも幅に合わせて変わります。そこで、Safari 18を対象から外せるまでは、見出しや余白は「区間の端をトークンにする」の `clamp()` で書き、`progress()` は次の型スケールの比率にだけ使います。
+
+長さを長さで割る式（`(100svi - 375px) / 905px` など）でも同じ数値を得られます。ただし、この割り算はFirefoxの安定版が対応していません（「[6-4 計算関数を応用する](/values/advanced-math-functions/)」）。`tan(atan2())` で単位を外す書き方は、割り算だと読み取れないので使いません（ルール `typed-arithmetic-to-unitless`）。
+
+## 比率を幅で変える型スケール
+
+文字サイズの段階を比率で決める型スケールでは、狭い画面では比率を小さくして段階どうしの差を詰め、広い画面では比率を大きくして見出しを目立たせることがあります。比率は単位のない数値なので、`clamp()` と `svi` の式では、幅に合わせて変えられません。比率を区間の位置で補間し、各段階の文字サイズを `pow()` で求めます。
+
+```css title="🙆‍♂ Recommended: 比率を区間の位置で補間し、各段階を pow() で求める" from="responsive/fluid-type-scale"
+@scope (.scoped.fluid-scale) to (.scoped) {
+  :scope {
+    --_base: var(--font-size--md);
+    --_min-ratio: 1.2;
+    --_max-ratio: 1.333;
+    --_ratio: calc(var(--_min-ratio) + (var(--_max-ratio) - var(--_min-ratio)) * var(--fluid--progress, 0));
+  }
+
+  ._step-3 {
+    font-size: calc(var(--_base) * pow(var(--_ratio), 3) / 16 * 1rem);
+  }
+
+  ._step-2 {
+    font-size: calc(var(--_base) * pow(var(--_ratio), 2) / 16 * 1rem);
+  }
+
+  ._step-1 {
+    font-size: calc(var(--_base) * pow(var(--_ratio), 1) / 16 * 1rem);
+  }
+}
+```
+
+基準の文字サイズは16pxのまま変えず、比率だけを、375pxの1.2から1280pxの1.333へ変えています。本文の文字サイズは、ほとんどの場合、画面の幅で変えなくて済むからです。段階3の見出しは、375pxで約27.6px、1280pxで約37.9pxになります。最大値は最小値の約1.37倍で、2.5倍以内に収まっています（ルール `fluid-font-size-max-ratio`）。
+
+次のデモは、この式で4つの段階の文字サイズを決めています。768pxのときは比率が約1.258になり、段階3は約31.8px、段階2は約25.3px、段階1は約20.1pxです。本文の段階0は、どの幅でも16pxです。`progress()` に対応していない環境では、比率は1.2のままで、どの幅でも375pxのときの大きさになります。
+
+<Demo title="型スケールの比率を、画面の幅に合わせて1.2から1.333へ変える" html={scaleHtml} css={scaleCss} widths={[375, 768, 1280]} />
+
+{/* 要検証: ブラウザ。ブラウザのズームで、progress() から求めた文字サイズが拡大されるか（Chrome、Safari、Firefox） */}
+
+## 補足と注意点
+
+区間の端のトークンは、本書がこの節で導入する規約です。トークンが2つ増え、値を読むときは `:root` の定義も見る必要があります。流体的な値が見出しの1つだけなら、トークンにせず、その宣言に基準の幅を書いても、ずれは起こりません。値が増えた時点で、トークンを用意します。
+
+チームで導入するときは、先にトークンを定義し、既存の `clamp()` は、手を入れるときにトークンを使う式へ置き換えます。ジェネレーターで作った数値は、区間の端と最小値、最大値に分解し直します。数値から基準の幅を逆算できないときは、デザインカンプで区間の端を確かめます。
+
+`progress()` のトークンは `svi` を基準にしているので、どの要素で使っても同じ値です。コンテナの幅で `progress(100cqi, …)` を使うときは、`cqi` の基準が使う要素によって変わるので、`:root` のトークンにはしません。コンテナの直下の要素で宣言します（「[13-4 コンテナの副作用とコンテナ単位](/responsive/container-units-and-side-effects/)」）。
+
+## ガイドライン
+
+<Guideline />
+
+## 参考リンク
+
+- [progress() - CSS | MDN](https://developer.mozilla.org/en-US/docs/Web/CSS/progress)
+- [pow() - CSS | MDN](https://developer.mozilla.org/ja/docs/Web/CSS/pow)
+- [clamp() - CSS | MDN](https://developer.mozilla.org/ja/docs/Web/CSS/clamp)
+- [No more clamp() magic numbers](https://www.youtube.com/watch?v=bLB90QwRki4)（Kevin Powell、YouTube）{/* 要確認: 出典なし。動画の公開年月 */}

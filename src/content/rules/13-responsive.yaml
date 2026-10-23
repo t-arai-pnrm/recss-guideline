@@ -401,3 +401,13 @@
   aiProne: true
   page: responsive/overflow-collapse
   since: 0.71.0
+
+# 13-10 流体的な値の区間をそろえる
+- id: shared-fluid-range
+  level: 推奨
+  kind: judgment
+  rule: '画面の幅で連続的に変える値（`svi` を使う `clamp()` など）の区間の端（変わり始める幅と変わり終える幅）は、サイト共通のトークンで持ち、値ごとに決めない。'
+  reason: 文字サイズと余白が同じ幅で変わり始めて同じ幅で止まり、区間を変えるときの修正も1か所で済むため。
+  note: 'トークンは単位のないpx相当の数値（`--fluid--min-width: 375` と `--fluid--max-width: 1280` など）で持ち、値ごとには最小値と最大値だけを決めて、傾きと切片を式で求めます（`clamp-from-slope-intercept`）。区間をずらす理由がある値は、宣言の前のコメントに理由を残します。コンテナの幅で変える値（`cqi`）は、置かれる場所によって幅が違うので対象外です。区間の中の位置を数値にする `progress()` は、Safari 18が対応していないので、単位のない数値が要る型スケールの比率にだけ使い、`@supports` の中でトークンにして、対応していない環境では区間の始まりの値にします。流体的な値が1つだけなら、トークンにしなくてもかまいません。'
+  page: responsive/fluid-range
+  since: 0.79.0
