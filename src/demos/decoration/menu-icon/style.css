@@ -1,0 +1,99 @@
+@layer components {
+  @scope (.scoped.site-menu) to (.scoped) {
+    button {
+      display: inline flex;
+      gap: 8px;
+      align-items: center;
+      padding-block: 8px;
+      padding-inline: 16px;
+      border: 1px solid var(--border--base);
+      border-radius: var(--rounded--full);
+      color: var(--foreground--base);
+
+      @media (any-hover) {
+        &:enabled:hover {
+          background-color: var(--background--hover);
+        }
+      }
+
+      &:enabled:active {
+        background-color: var(--background--active);
+      }
+
+      & > ._icon {
+        flex: none;
+      }
+    }
+
+    ._icon {
+      inline-size: 1.25em;
+      aspect-ratio: 1;
+    }
+
+    ._line-start,
+    ._line-middle,
+    ._line-end {
+      transform-origin: center;
+      transform-box: fill-box;
+
+      @media (prefers-reduced-motion: no-preference) {
+        transition-duration: var(--duration--base);
+        transition-property: translate, rotate, opacity;
+        transition-timing-function: var(--ease--in-out-quint);
+      }
+    }
+
+    ._line-start {
+      &:is(button:has(+ :popover-open) *) {
+        translate: 0 6px;
+        rotate: 45deg;
+      }
+    }
+
+    ._line-middle {
+      &:is(button:has(+ :popover-open) *) {
+        opacity: 0;
+      }
+    }
+
+    ._line-end {
+      &:is(button:has(+ :popover-open) *) {
+        translate: 0 -6px;
+        rotate: -45deg;
+      }
+    }
+
+    [popover] {
+      /* 未対応の環境では、ブラウザのデフォルトスタイルに戻して画面の中央に表示する */
+      margin: revert;
+      padding-block: 8px;
+      padding-inline: 8px;
+      border: 1px solid var(--border--base);
+      border-radius: var(--rounded--lg);
+      box-shadow: var(--shadow--lg);
+      background-color: var(--background--overlay);
+
+      /* popovertarget で開いたボタンの下に置く */
+      @supports (position-area: block-end span-inline-end) {
+        position-area: block-end span-inline-end;
+        margin-block: 8px 0;
+        margin-inline: 0;
+      }
+    }
+
+    a {
+      display: block flow;
+      padding-block: 8px;
+      padding-inline: 16px;
+      border-radius: var(--rounded--md);
+      color: var(--foreground--base);
+      text-decoration: none;
+
+      @media (any-hover) {
+        &:any-link:hover {
+          background-color: var(--background--hover);
+        }
+      }
+    }
+  }
+}

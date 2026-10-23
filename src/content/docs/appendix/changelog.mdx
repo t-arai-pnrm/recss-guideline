@@ -11,6 +11,21 @@ AI向けのスキル、プラグイン、MCPサーバーには、本書と同じ
 
 執筆中の版は `0.x` とし、すべての章の内容を著者が確認した時点で `1.0.0` にする予定です。`0.x` の間は、ルールを変えたり削除したりしたときも、マイナーバージョンを上げます。
 
+## 0.80.0（2026年10月23日）
+
+固定ヘッダーに移動先が隠れないようにする方法を、移動先の要素の `scroll-margin` から、ルートの `scroll-padding` に変えました。メニューのボタンの三本線をインラインSVGで描く方法も足しました。ルールを追加して変えたので、マイナーバージョンを上げています。
+
+- ルールを追加しました。
+  - [`measure-sticky-header-block-size`](/layout-practice/sticky-header/#rule-measure-sticky-header-block-size)：固定ヘッダーの高さはCSSに数値で書かず、`ResizeObserver` で測って、ルート要素のカスタムプロパティに渡します。
+  - [`menu-icon-inline-svg`](/decoration/icons-and-masks/#rule-menu-icon-inline-svg)：メニューのボタンの三本線は、空の要素を並べてCSSで線にせず、インラインSVGで描きます。
+- ルールを変えました。
+  - [`scroll-padding-for-targets`](/reset/base-styles/#rule-scroll-padding-for-targets)：IDを `scroll-margin-for-targets` から変えました。`[id]` と `:focus` の `scroll-margin-block-start` ではなく、ルートの `scroll-padding-block-start` で、スクロールで見せる範囲からヘッダーの分を除きます。Spaceキーなどで1画面ずつ送る量にも反映されるからです。値は `var(--site-header--block-size, 4rlh)` で受け取ります。
+  - [`sticky-header-height-query`](/layout-practice/sticky-header/#rule-sticky-header-height-query)：補足を、ルートの `scroll-padding-block-start` も同じ条件の中に書く、という書き方に直しました。
+- 「[8-2 ベーススタイルに書くもの](/reset/base-styles/)」の「固定ヘッダーに隠れる移動先」を書き直しました。`scroll-margin` との違いと、2つを両方指定すると余白が足し合わされることを、Chromeで確かめた値とともに書いています。
+- 「[11-7 固定ヘッダー](/layout-practice/sticky-header/)」に、ヘッダーの高さを `ResizeObserver` で測って渡すスクリプトと、ルートの指定をヘッダーを固定する条件に合わせる書き方を足しました。「[17-1 ホバーとフォーカスを表す](/interaction/states-and-focus/)」と「[21-6 固定ヘッダーを作る](/exercise/sticky-header/)」の説明も合わせています。
+- 「[16-3 アイコンとSVG](/decoration/icons-and-masks/)」に、メニューのボタンの三本線をインラインSVGで描く方法と、開いている間は上下の線を回して×に変える方法を足しました。
+- 「[21-7 ドロワーメニューを作る](/exercise/drawer/)」で、メニューのボタンに三本線、閉じるボタンに×のアイコンを付け、`action-control` に子要素 `._icon` を足しました。アイコンのあるボタンは、アイコンの側の `padding-inline-start` を20pxに詰めたので、幅375pxでもメニューのボタンがロゴの横に並びます。21-7と「[21-14 ページに組み上げる](/exercise/assemble/)」のデモと配布ファイルも直しています。
+
 ## 0.79.1（2026年10月23日）
 
 刊行前の厳格レビューで見つかった、必須のルールに反するコード例とデモ、デモで再現しない数値、対応した版の誤りを直しました。

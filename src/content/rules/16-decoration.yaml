@@ -112,6 +112,16 @@
   page: decoration/icons-and-masks
   since: 0.1.0
 
+- id: menu-icon-inline-svg
+  level: 推奨
+  kind: judgment
+  rule: 'メニューのボタンの三本線は、空の要素を並べて CSS で線にせず、インライン SVG で描く。`viewBox`、`fill`、`stroke`、`stroke-width` は属性で書き、線を個別に動かすなら `path` を線ごとに分ける。'
+  reason: 'SVG は CSS が読み込まれなくても図形として表示され、マークアップから形が分かるため。空の要素は、CSS で幅、高さ、背景色を与えないと何も表示されない。'
+  note: 'ボタンの名前は、見える文字かボタンの `aria-label` で付け、SVG は `aria-hidden="true"` にします。開いている間に×へ変えるときは、各 `path` に `transform-box: fill-box` と `transform-origin: center` を指定して、線ごとに回します。'
+  aiProne: true
+  page: decoration/icons-and-masks
+  since: 0.80.0
+
 # 16-4 clip-pathとマスクで見せる範囲を決める
 - id: clip-path-shape-tokens
   level: 推奨

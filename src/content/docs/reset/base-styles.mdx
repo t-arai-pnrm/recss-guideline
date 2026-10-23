@@ -45,7 +45,7 @@ import ringBadCss from '../../../demos/reset/focus-ring/style.bad.css?raw';
 
 色は、`--color--neutral--50` のような色そのものを表すトークン（プリミティブ）ではなく、`--background--base` のような役割を表すトークン（セマンティクス）で指定します。ダークモードの値は役割のトークンの側で `light-dark()` を使って切り替えるので、ベーススタイルの指定は配色にかかわらず同じです。トークンの2層の設計は「[10-4 デザイントークン](/components/design-tokens/)」、配色の切り替えは「[15-4 ダークモード](/color-media/dark-mode/)」で説明します。
 
-`body` ではなく `:root` に指定するのは、行の高さを `rlh` 単位の基準にするためです。`rlh` はルート要素の行の高さを表す単位なので、`body` に `line-height` を指定しても `rlh` の値は変わりません。このページで後に出てくる `scroll-margin-block-start: 4rlh` も、ルート要素の行の高さを前提にしています。また、ルート要素の背景色は、ページの領域の外側（スクロールしすぎたときに見える部分など）にも描かれます。
+`body` ではなく `:root` に指定するのは、行の高さを `rlh` 単位の基準にするためです。`rlh` はルート要素の行の高さを表す単位なので、`body` に `line-height` を指定しても `rlh` の値は変わりません。このページで後に出てくる `scroll-padding-block-start` の代替値の `4rlh` も、ルート要素の行の高さを前提にしています。また、ルート要素の背景色は、ページの領域の外側（スクロールしすぎたときに見える部分など）にも描かれます。
 
 行の高さは1.5以上にします。kiso.cssも `:root` に `line-height: 1.5` を指定していますが、本文の読みやすさに合わせて、プロジェクトの値で上書きします。値の決め方は「[14-3 行の高さとハーフレディング](/typography/line-height/)」で説明します。
 
@@ -151,9 +151,24 @@ window.addEventListener("load", () => {
 
 ## 固定ヘッダーに隠れる移動先
 
-固定ヘッダーがあるページでは、ページ内リンクで移動した先の見出しが、ヘッダーの下に隠れてしまいます。`scroll-margin-block-start` を指定すると、スクロールで要素を表示するとき、ブロック方向の始点側に、指定した分の余白が空きます。
+固定ヘッダーがあるページでは、ページ内リンクで移動した先の見出しが、ヘッダーの下に隠れてしまいます。ページをスクロールさせているルートに `scroll-padding-block-start` を指定すると、スクロールで内容を見せる範囲から、ブロック方向の始点側の指定した分が除かれます。移動先の要素は、除いた範囲のすぐ下に表示されます。
 
-```css title="🙆‍♂ Recommended: 移動先とフォーカスした要素の上に余白を空ける"
+```css title="🙆‍♂ Recommended: スクロールで見せる範囲から、ヘッダーの高さを除く"
+@layer base {
+  :root {
+    scroll-padding-block-start: var(--site-header--block-size, 4rlh);
+  }
+}
+```
+
+`--site-header--block-size` は、固定ヘッダーの高さを受け取るカスタムプロパティです。高さはJavaScriptで測ってルート要素に渡します。測り方と、ヘッダーを固定する条件に合わせて指定を絞る方法は、「[11-7 固定ヘッダー](/layout-practice/sticky-header/)」で説明しています。値が渡されないときの代替値 `4rlh` は、ルート要素の行の高さの4倍です。ユーザーが文字サイズを大きくすれば、余白も一緒に大きくなるので、スクリプトが動かない環境でも、多くのヘッダーの下から見出しを出せます。
+
+この指定は、Tabキーでフォーカスを移したときのスクロールにも反映されます。Chromeで、高さ64pxのヘッダーの下に入った入力欄へフォーカスを移すと、指定したページでは入力欄が見える位置までスクロールし、指定しないページではヘッダーの下に隠れたままでした。
+
+移動先の要素の側に余白を付ける書き方もあります。
+
+```css title="🙅‍♂ Not Recommended: 移動先とフォーカスした要素の側に余白を付ける" issue="behavior"
+/* 🙅‍♂ Not Recommended */
 @layer base {
   [id],
   :focus {
@@ -162,9 +177,9 @@ window.addEventListener("load", () => {
 }
 ```
 
-対象は、ページ内リンクの移動先になりうる、`id` 属性を持つ要素と、フォーカスした要素です。`:focus` も含めるのは、Tabキーでフォーカスを移したときのスクロールでも、フォーカスした要素をヘッダーの下に隠さないためです。
+ページ内リンクの移動先とフォーカスした要素は、この書き方でも隠れません。違いが出るのは、Spaceキーなどで1画面ずつ送るときです。`scroll-padding` は、スクロールで見せる範囲そのものを狭めるので、送る量からヘッダーの分が除かれます。`scroll-margin` は要素の側の余白なので、送る量はビューポートの高さのままで、送るたびに、直前の画面で見えていた最後の行がヘッダーの下に入ります。Chromeで高さ64pxのヘッダーのページを試すと、Spaceキーで送る量は、`scroll-padding-block-start` を指定すると64px少なくなりました。{/* 要検証: ブラウザ。Firefox と Safari で、Space キーで送る量に scroll-padding が反映されること */}キーボードでページを読み進めるユーザーにとって、この差は大きいので、本書はスクロールする側の `scroll-padding` を選びます。
 
-値の `4rlh` は、ルート要素の行の高さの4倍です。ユーザーが文字サイズを大きくすれば、余白も一緒に大きくなります。ヘッダーの高さをJavaScriptで測らなくても、多くの場合はこの目安で足ります。ヘッダーが特に高いプロジェクトでは、この値を調整します。
+2つを両方に指定すると、余白は足し合わされます。Chromeで、ルートの `scroll-padding-block-start` を64px、移動先の `scroll-margin-block-start` を30pxにすると、移動先はビューポートの上端から94pxの位置に止まりました。ヘッダーの高さを除くのは `scroll-padding` だけにし、移動先の要素には `scroll-margin` を足しません。
 
 ## モーダル表示中の背面のスクロール
 
@@ -283,6 +298,7 @@ Safariは18.2で対応したので、本書が対象とするブラウザ（Safa
     color: var(--foreground--base);
     line-height: var(--leading--normal);
     text-underline-offset: 25%;
+    scroll-padding-block-start: var(--site-header--block-size, 4rlh);
 
     @media (prefers-reduced-motion: no-preference) {
       interpolate-size: allow-keywords;
@@ -307,15 +323,10 @@ Safariは18.2で対応したので、本書が対象とするブラウザ（Safa
     outline: var(--_b--ring-width) solid CanvasText;
     outline-offset: var(--_b--ring-offset);
   }
-
-  [id],
-  :focus {
-    scroll-margin-block-start: 4rlh;
-  }
 }
 ```
 
-`scrollbar-gutter: stable` は、kiso.cssが指定しているので、ここには含めていません。`data-loaded` 属性を付けるJavaScriptは、スムーススクロールの節のものを使います。kiso.cssを使わない場合は、`:root` に書き足します。
+`scrollbar-gutter: stable` は、kiso.cssが指定しているので、ここには含めていません。`data-loaded` 属性を付けるJavaScriptは、スムーススクロールの節のものを使います。`--site-header--block-size` を渡すJavaScriptは、「[11-7 固定ヘッダー](/layout-practice/sticky-header/)」のものを使います。kiso.cssを使わない場合は、`:root` に書き足します。
 
 ## ガイドライン
 

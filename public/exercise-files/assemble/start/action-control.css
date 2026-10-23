@@ -33,6 +33,11 @@
         --_hit-size: max(44px, 44 / 16 * 1rem);
       }
 
+      /* アイコンは図形の周りに空きがあるので、アイコンの側の余白を詰める */
+      &:has(> ._icon) {
+        padding-inline-start: 20px;
+      }
+
       &[data-variant="secondary"] {
         --_background: transparent;
         --_background--hocus: var(--background--hover);
@@ -65,6 +70,15 @@
 
         background-color: var(--_background--hocus);
       }
+
+      & > ._icon {
+        flex: none;
+      }
+    }
+
+    ._icon {
+      inline-size: 1.25em;
+      aspect-ratio: 1;
     }
 
     /* ホバーを受けるルートは動かさず、矢印だけを動かす */

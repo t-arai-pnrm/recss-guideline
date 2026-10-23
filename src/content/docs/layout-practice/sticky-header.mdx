@@ -1,6 +1,6 @@
 ---
 title: "11-7 固定ヘッダー"
-description: "ヘッダーは、ビューポートの高さが十分なときだけ position: sticky で固定し、フォーカスやページ内リンクの移動先が隠れないように、スクロールで見せる範囲からヘッダーの分を除きます。上端に留まっている間の見た目は scroll-state() のコンテナクエリで切り替え、変えるのは色や影のように寸法の変わらないものに限ります。"
+description: "ヘッダーは、ビューポートの高さが十分なときだけ position: sticky で固定し、フォーカスやページ内リンクの移動先が隠れないように、スクロールで見せる範囲からヘッダーの分を除きます。ヘッダーの高さは ResizeObserver で測り、ルート要素のカスタムプロパティで渡します。上端に留まっている間の見た目は scroll-state() のコンテナクエリで切り替え、変えるのは色や影のように寸法の変わらないものに限ります。"
 reading: applied
 sidebar:
   order: 7
@@ -9,7 +9,7 @@ sidebar:
 import Baseline from '../../../components/Baseline.astro';
 import Guideline from '../../../components/Guideline.astro';
 
-ヘッダーを画面の上に固定するのは、ビューポートの高さが十分なときだけにします。固定するときは、フォーカスした要素やページ内リンクの移動先がヘッダーの下に隠れないように、スクロールで見せる範囲からヘッダーの分を除きます。上端に留まっている間だけ見た目を変えるときは、`scroll` イベントではなく `scroll-state()` のコンテナクエリを使い、変えるのは色や影のように寸法の変わらないものに限ります。
+ヘッダーを画面の上に固定するのは、ビューポートの高さが十分なときだけにします。固定するときは、フォーカスした要素やページ内リンクの移動先がヘッダーの下に隠れないように、スクロールで見せる範囲からヘッダーの分を除きます。ヘッダーの高さはCSSに数値で書かず、JavaScriptで測って渡します。上端に留まっている間だけ見た目を変えるときは、`scroll` イベントではなく `scroll-state()` のコンテナクエリを使い、変えるのは色や影のように寸法の変わらないものに限ります。
 
 この節は、`position: sticky` を前提にしています。`sticky` の要素は、通常フローの位置に置かれたまま、スクロールに合わせて、祖先のスクロールコンテナと包含ブロック（位置と大きさの基準になる領域）の範囲の中でずれます。値ごとの違い、包含ブロックの決まり方、`sticky` が留まらない原因は、「[7-10 positionの基礎](/layout/positioning/)」で説明しています。
 
@@ -49,21 +49,46 @@ import Guideline from '../../../components/Guideline.astro';
 
 ## フォーカスとページ内リンクの移動先を隠さない
 
-固定しているときも、フォーカスした要素がヘッダーの下に入ることはあります。「[8-2 ベーススタイルに書くもの](/reset/base-styles/)」では、`[id]` と `:focus` に `scroll-margin-block-start: 4rlh` を指定し、移動先の上に余白を空けています。これは移動先の要素の側に付ける余白で、ヘッダーの高さを知らなくても、たいていのヘッダーの下から見出しや入力欄を出せます。
+固定しているときも、フォーカスした要素やページ内リンクの移動先がヘッダーの下に入ることはあります。「[8-2 ベーススタイルに書くもの](/reset/base-styles/)」では、ルートに `scroll-padding-block-start` を指定し、スクロールで内容を見せる範囲からヘッダーの分を除いています。値は `var(--site-header--block-size, 4rlh)` です。仕様では、この指定は、フォーカスやページ内リンクによるスクロールと、Spaceキーなどで1画面ずつ送るときの送り幅に反映されるとされています。この節では、ヘッダーの高さを測って `--site-header--block-size` に渡し、指定をヘッダーを固定する条件に絞ります。
 
-ヘッダーの高さが決まっているなら、スクロールする側のルートに `scroll-padding-block-start` を指定する方法もあります。スクロールで内容を見せる範囲からヘッダーの分を除く指定で、仕様では、フォーカスやページ内リンクによるスクロールと、Spaceキーなどで1画面ずつ送るときの送り幅に反映されるとされています。
+### ヘッダーの高さを測って渡す
+
+ヘッダーの高さは、CSSに数値で書かず、`ResizeObserver` で測ってルート要素のカスタムプロパティに渡します。ヘッダーの高さは、ナビゲーションの文言、ユーザーの文字サイズ、折り返しで変わります。数値で書くと、高さが変わるたびに、ヘッダーのCSSとルートの値の2か所をそろえ直すことになります。
+
+```js title="🙆‍♂ Recommended: ヘッダーの高さを測り、ルート要素のカスタムプロパティに渡す"
+const header = document.querySelector(".site-header");
+
+if (header) {
+  new ResizeObserver(([entry]) => {
+    const blockSize = Math.ceil(entry.borderBoxSize[0].blockSize);
+    document.documentElement.style.setProperty("--site-header--block-size", `${blockSize}px`);
+  }).observe(header);
+}
+```
+
+`ResizeObserver` のコールバックは、監視を始めたときと、要素の大きさが変わったときにだけ呼ばれます。`scroll` や `resize` のイベントで測る書き方と違い、ヘッダーの高さが変わらない間は何も処理しません。Chromeで、高さ64pxのヘッダーに高さ50pxの要素を足すと、カスタムプロパティの値は `64px` から `114px` に変わりました。
+
+`borderBoxSize` は、枠線と `padding` を含めた大きさです。`blockSize` はブロック方向の大きさで、横書きのページでは高さに当たります。`scroll-padding-block-start` と同じ方向の大きさなので、縦書きのページでもそのまま渡せます。値は `Math.ceil` で切り上げます。四捨五入で切り下がると、移動先の上端が1px未満だけヘッダーの下に入るからです。スクリプトは、ヘッダーより後で動くように、`type="module"` か `defer` で読み込みます。スクリプトが動かない環境では、8-2の代替値の `4rlh` が使われます。
+
+<Baseline id="resize-observer" compatKey="api.ResizeObserverEntry.borderBoxSize" name="ResizeObserverEntry.borderBoxSize" />
+
+### 固定する条件に合わせる
+
+8-2の指定は、ヘッダーを固定するかどうかを知りません。この節のようにビューポートの高さが十分なときだけ固定するなら、ルートの指定も同じ条件の中に移します。
 
 ```css title="🙆‍♂ Recommended: ヘッダーを固定するときだけ、スクロールで見せる範囲からヘッダーの高さを除く"
-:root {
-  @media (height >= calc(600 / 16 * 1rem)) {
-    scroll-padding-block-start: calc(64 / 16 * 1rem);
+@layer base {
+  :root {
+    @media (height >= calc(600 / 16 * 1rem)) {
+      scroll-padding-block-start: var(--site-header--block-size, 4rlh);
+    }
   }
 }
 ```
 
-閾値は、ヘッダーのクエリとそろえます。ヘッダーを固定しない画面で余白だけが残ると、移動先の上に意味のない空きができるからです。`scroll-padding` を指定するのは、ページをスクロールさせているルートです。ページを入れ子のスクロールコンテナでスクロールさせていると、この指定は反映されません（「[11-10 ページのスクロールとルートスクローラー](/layout-practice/root-scroller/)」）。
+閾値は、ヘッダーのクエリとそろえます。ヘッダーを固定しない画面で余白だけが残ると、移動先の上に意味のない空きができるからです。スクリプトは画面の高さにかかわらずヘッダーを測りますが、値を使うのはこの条件の中だけです。
 
-`scroll-padding` と `scroll-margin` を両方指定すると、2つの余白は足し合わされます。ルートでヘッダーの高さを除くなら、ベーススタイルの `scroll-margin-block-start` は、見出しの上に少しゆとりを残す程度の値に下げます。{/* 要確認: 出典なし */}
+`scroll-padding` を指定するのは、ページをスクロールさせているルートです。ページを入れ子のスクロールコンテナでスクロールさせていると、この指定は反映されません（「[11-10 ページのスクロールとルートスクローラー](/layout-practice/root-scroller/)」）。移動先の要素に `scroll-margin-block-start` を足すと、2つの余白は足し合わされます。8-2で説明したとおり、ヘッダーの高さを除くのは `scroll-padding` だけにします。
 
 ## 留まっている間だけ見た目を変える
 

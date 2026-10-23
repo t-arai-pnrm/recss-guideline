@@ -1,6 +1,6 @@
 ---
 title: "16-3 アイコンとSVG"
-description: "単色のアイコンは、擬似要素の mask-image かインライン SVG で描き、文字色に合わせて塗ります。インライン SVG の fill や stroke は currentColor にし、状態ごとにアイコンの色を指定し直さず、文字色だけを切り替えます。意味を持つインライン SVG のアイコンには、role 属性の img と aria-label で名前を付け、ページ内検索の対象にしたい名前は視覚的に隠したテキストで添えます。マスク、インライン SVG、img の使い分けと、同じアイコンを symbol にまとめて use で参照するスプライト（シャドウツリーとスタイルの届き方、2色目の渡し方、同じオリジンの制約）も扱います。"
+description: "単色のアイコンは、擬似要素の mask-image かインライン SVG で描き、文字色に合わせて塗ります。インライン SVG の fill や stroke は currentColor にし、状態ごとにアイコンの色を指定し直さず、文字色だけを切り替えます。意味を持つインライン SVG のアイコンには、role 属性の img と aria-label で名前を付け、ページ内検索の対象にしたい名前は視覚的に隠したテキストで添えます。マスク、インライン SVG、img の使い分け、メニューのボタンの三本線をインライン SVG で描き、開いている間は×に変える方法と、同じアイコンを symbol にまとめて use で参照するスプライト（シャドウツリーとスタイルの届き方、2色目の渡し方、同じオリジンの制約）も扱います。"
 reading: reference
 sidebar:
   order: 3
@@ -13,10 +13,12 @@ import maskIconHtml from '../../../demos/decoration/mask-icon/index.html?raw';
 import maskIconCss from '../../../demos/decoration/mask-icon/style.css?raw';
 import currentColorHtml from '../../../demos/decoration/current-color-icon/index.html?raw';
 import currentColorCss from '../../../demos/decoration/current-color-icon/style.css?raw';
+import menuIconHtml from '../../../demos/decoration/menu-icon/index.html?raw';
+import menuIconCss from '../../../demos/decoration/menu-icon/style.css?raw';
 
 単色のアイコンは、擬似要素の `mask-image` かインラインSVGで描き、どちらも文字色に合わせて塗ります。マスクで描くなら `background-color` で塗り、インラインSVGなら `fill` や `stroke` を `currentColor` にします。文字色を変えるだけでアイコンも一緒に変わるので、状態ごとにアイコンの色を指定し直す必要がありません。
 
-意味を持つインラインSVGのアイコンには、`role="img"` と `aria-label` で名前を付けます。名前をページ内検索やコピーの対象にしたいときは、SVGを `aria-hidden="true"` にし、隣に視覚的に隠したテキストを置きます。マスク、インラインSVG、外部のファイルを読み込む `<img>` のどれで描くかは、文字色に合わせたいか、HTMLにアイコンを書けるかで選びます。
+意味を持つインラインSVGのアイコンには、`role="img"` と `aria-label` で名前を付けます。名前をページ内検索やコピーの対象にしたいときは、SVGを `aria-hidden="true"` にし、隣に視覚的に隠したテキストを置きます。マスク、インラインSVG、外部のファイルを読み込む `<img>` のどれで描くかは、文字色に合わせたいか、HTMLにアイコンを書けるかで選びます。メニューのボタンの三本線も、空の要素を並べず、インラインSVGで描きます。
 
 三角形のような図形を `clip-path` で描く方法と、マスクのグラデーションでスクロールできる領域の端を薄くする方法は、「[16-4 clip-pathとマスクで見せる範囲を決める](/decoration/clipping-and-masks/)」で説明しています。マスクの合成で枠線やドーナツグラフを描く方法は、「[16-9 輪郭と枠線を描く](/decoration/outlines/)」にあります。
 
@@ -177,6 +179,90 @@ button {
 <Baseline id="alt-text-generated-content" name="生成コンテンツの代替テキスト" />
 
 文字色に合わせる必要があるアイコンは、`mask-image` かインラインSVGのどちらかになります。HTMLに手を入れずにCSSだけで足したい装飾なら `mask-image` を、HTMLの中で意味を持たせたいアイコンならインラインSVGを選びます。強制カラーモードの補正は、どちらも「[15-5 強制カラーモードとコントラスト](/color-media/forced-colors/)」で説明しています。
+
+## メニューのボタンの三本線をSVGで描く
+
+メニューのボタンの三本線は、インラインSVGで描きます。線を描くためだけの空の要素を並べ、CSSで線にする書き方もありますが、CSSが読み込まれないと何も表示されません。SVGなら、`viewBox` と図形の属性だけで形が決まるので、CSSがなくても三本線が残ります。
+
+```html title="🙅‍♂ Not Recommended: 線を描くためだけの空の span を並べる" issue="convention"
+<!-- 🙅‍♂ Not Recommended -->
+<button type="button" popovertarget="demo-menu">
+  <span class="_line"></span>
+  <span class="_line"></span>
+  <span class="_line"></span>
+  メニュー
+</button>
+```
+
+この `span` は、CSSで幅、高さ、背景色を与えて初めて線になります。HTMLには形の情報がないので、マークアップを読んでも、何を描いているのかが分かりません。Chromeで、CSSを読み込まないページに2つのボタンを置くと、空の `span` のボタンには文字だけが表示され、SVGのボタンには三本線が表示されました。
+
+```html title="🙆‍♂ Recommended: 三本線をインラインSVGで描き、線の太さと色は属性で書く" from="decoration/menu-icon"
+<button type="button" popovertarget="demo-menu">
+  <svg class="_icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path class="_line-start" d="M4 6H20" />
+    <path class="_line-middle" d="M4 12H20" />
+    <path class="_line-end" d="M4 18H20" />
+  </svg>
+  メニュー
+</button>
+```
+
+`viewBox`、`fill`、`stroke`、`stroke-width` は、CSSではなく属性で書きます。CSSがなくても、線の太さと色が決まった三本線として表示されるからです。大きさを決めるCSSがないときは、アイコンがボタンの幅まで広がりますが、何のボタンかは分かります。色は `currentColor` にして、ボタンの文字色に合わせます（「[アイコンは currentColor で文字色に合わせる](#アイコンは-currentcolor-で文字色に合わせる)」）。
+
+ボタンの名前は、見える文字の「メニュー」で付け、SVGは隣の文字と同じ意味なので `aria-hidden="true"` にします。アイコンだけのボタンにするときは、SVGではなく、操作する要素の `<button>` に `aria-label="メニュー"` を付けます。
+
+### 開いている間は×に変える
+
+線ごとに `path` を分けておけば、メニューを開いている間、上下の線を回して×にできます。1つの `path` に3本の線をまとめると（`d="M4 6H20M4 12H20M4 18H20"`）、3本を一緒にしか動かせません。
+
+```css title="🙆‍♂ Recommended: メニューを開いている間、上下の線を回して×にし、真ん中の線を消す" from="decoration/menu-icon"
+@scope (.scoped.site-menu) to (.scoped) {
+  ._line-start,
+  ._line-middle,
+  ._line-end {
+    transform-origin: center;
+    transform-box: fill-box;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition-duration: var(--duration--base);
+      transition-property: translate, rotate, opacity;
+      transition-timing-function: var(--ease--in-out-quint);
+    }
+  }
+
+  ._line-start {
+    &:is(button:has(+ :popover-open) *) {
+      translate: 0 6px;
+      rotate: 45deg;
+    }
+  }
+
+  ._line-middle {
+    &:is(button:has(+ :popover-open) *) {
+      opacity: 0;
+    }
+  }
+
+  ._line-end {
+    &:is(button:has(+ :popover-open) *) {
+      translate: 0 -6px;
+      rotate: -45deg;
+    }
+  }
+}
+```
+
+<Demo title="メニューを開いている間、三本線の上下の線が回って×になる" html={menuIconHtml} css={menuIconCss} height="240px" />
+
+デモのボタンを押すと、ボタンの下にメニューが開き、三本線が×に変わります。Escキーを押すか、メニューの外を押して閉じると、三本線に戻ります。
+
+SVGの図形は、デフォルトでは、`viewBox` の原点（左上）を基準に変形します。`transform-box: fill-box` で基準を図形自身の範囲にし、`transform-origin: center` を合わせると、各線が自分の中心で回ります。上下の線は真ん中の線から6ずつ離れているので、`translate` で6ずつ寄せてから回すと、3本が中心で交わります。SVGの図形に指定した `translate` の長さは `viewBox` の座標で数えるので、アイコンを表示する大きさが変わっても、寄せる量は直さずに済みます。
+
+<Baseline id="transform-box" compatKey="css.properties.transform-box.fill-box" name="transform-box: fill-box" />
+
+開いた状態は、ボタンの直後に置いたポップオーバーが開いているかを、`button:has(+ :popover-open)` で調べて選びます。「[18-4 トランジションの基本と中断](/motion/transitions-and-keyframes/)」のボタンのアイコンを回す例と同じく、`&:is(… *)` で、状態を持つ祖先の下の図形を選んでいます。HTMLの要素と支援技術の対応を定める仕様（HTML-AAM）では、`popovertarget` を付けたボタンは、ポップオーバーが開いているかどうかを支援技術に伝えるとされています。そのため、`aria-expanded` を自分で切り替える必要はありません。{/* 要検証: ブラウザ。Chrome、Firefox、Safari のアクセシビリティツリーで、popovertarget を付けたボタンの展開状態が、ポップオーバーの開閉に合わせて変わること */}トランジションは、`prefers-reduced-motion: no-preference` の中に書きます。動きを減らす設定では、×への切り替えが一度で起きます（「[18-2 動きを減らす設定に対応する](/motion/reduced-motion/)」）。
+
+画面を覆うモーダルのドロワーでは、開いている間、メニューのボタンは背面にあって操作できないので、×に変えても見せる場面がありません。ドロワーの中に閉じるボタンを置きます（「[21-7 ドロワーメニューを作る](/exercise/drawer/)」）。
 
 ## 同じアイコンを何度も置くときのスプライト
 

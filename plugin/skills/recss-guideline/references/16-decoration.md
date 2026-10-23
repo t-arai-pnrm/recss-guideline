@@ -1,8 +1,8 @@
 # 第16章 画像・装飾：ルール
 
-- ガイドラインのバージョン: 0.79.1（2026-10-23 生成）
-- ルールの数: 34
-- 本文: 約21.7万字
+- ガイドラインのバージョン: 0.80.0（2026-10-23 生成）
+- ルールの数: 35
+- 本文: 約22.3万字
 - 読む条件: 画像、SVG、アイコン、mask、影、角丸、枠線、区切り線、印刷
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
@@ -15,7 +15,7 @@
 - `decoration` 第16章 画像・装飾（約5,100字）https://t-arai-pnrm.github.io/recss-guideline/decoration/
 - `decoration/images` 16-1 画像の配置と比率（約3.4万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/images/
 - `decoration/image-loading` 16-2 画像の形式と読み込み（約8,400字）https://t-arai-pnrm.github.io/recss-guideline/decoration/image-loading/
-- `decoration/icons-and-masks` 16-3 アイコンとSVG（約1.6万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/icons-and-masks/
+- `decoration/icons-and-masks` 16-3 アイコンとSVG（約2.3万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/icons-and-masks/
 - `decoration/clipping-and-masks` 16-4 clip-pathとマスクで見せる範囲を決める（約3.7万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/clipping-and-masks/
 - `decoration/surfaces` 16-5 面・影・角丸（約2.6万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/surfaces/
 - `decoration/gradients` 16-6 グラデーションを描く（約1.2万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/gradients/
@@ -83,6 +83,10 @@ https://t-arai-pnrm.github.io/recss-guideline/decoration/icons-and-masks/
   - 理由: `role="img"` を付けると SVG の図形がまとめて1つの画像として扱われ、`aria-label` の名前が支援技術に伝わるため。`aria-label` は主要なブラウザの翻訳機能でも訳されるが、ページ内検索とコピーの対象にはならない。
   - 補足: 装飾だけのアイコンと、隣のテキストと同じ意味のアイコンは、`aria-hidden="true"` にして名前を付けません。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/decoration/icons-and-masks/#rule-inline-svg-accessible-name
+- 【推奨・実装上の判断】メニューのボタンの三本線は、空の要素を並べて CSS で線にせず、インライン SVG で描く。`viewBox`、`fill`、`stroke`、`stroke-width` は属性で書き、線を個別に動かすなら `path` を線ごとに分ける。（`menu-icon-inline-svg`）
+  - 理由: SVG は CSS が読み込まれなくても図形として表示され、マークアップから形が分かるため。空の要素は、CSS で幅、高さ、背景色を与えないと何も表示されない。
+  - 補足: ボタンの名前は、見える文字かボタンの `aria-label` で付け、SVG は `aria-hidden="true"` にします。開いている間に×へ変えるときは、各 `path` に `transform-box: fill-box` と `transform-origin: center` を指定して、線ごとに回します。
+  - 詳細: https://t-arai-pnrm.github.io/recss-guideline/decoration/icons-and-masks/#rule-menu-icon-inline-svg
 
 ## 16-4 clip-pathとマスクで見せる範囲を決める
 

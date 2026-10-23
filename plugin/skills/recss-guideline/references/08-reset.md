@@ -1,8 +1,8 @@
 # 第8章 リセットとベーススタイル：ルール
 
-- ガイドラインのバージョン: 0.79.1（2026-10-23 生成）
+- ガイドラインのバージョン: 0.80.0（2026-10-23 生成）
 - ルールの数: 23
-- 本文: 約4.8万字
+- 本文: 約5万字
 - 読む条件: リセットCSS、要素セレクタだけのスタイル、:root や body のようにグローバルに書くスタイル
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
@@ -14,7 +14,7 @@
 
 - `reset` 第8章 リセットとベーススタイル（約4,300字）https://t-arai-pnrm.github.io/recss-guideline/reset/
 - `reset/kiso` 8-1 壊さないリセット（約1.3万字）https://t-arai-pnrm.github.io/recss-guideline/reset/kiso/
-- `reset/base-styles` 8-2 ベーススタイルに書くもの（約2.3万字）https://t-arai-pnrm.github.io/recss-guideline/reset/base-styles/
+- `reset/base-styles` 8-2 ベーススタイルに書くもの（約2.5万字）https://t-arai-pnrm.github.io/recss-guideline/reset/base-styles/
 - `reset/global-pitfalls` 8-3 グローバルに書いてはいけないもの（約8,300字）https://t-arai-pnrm.github.io/recss-guideline/reset/global-pitfalls/
 
 ## 8-1 壊さないリセット
@@ -70,10 +70,10 @@ https://t-arai-pnrm.github.io/recss-guideline/reset/base-styles/
   - 理由: ページ内リンクで移動するときだけなめらかにし、フラグメント付きの URL で表示した直後や、キーボードでフォーカスを移すとき、動きを減らす設定をしているときは即座にスクロールさせるため。
   - 補足: `data-loaded` 属性は、JavaScript で `load` イベントのときにルート要素に付けます。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/reset/base-styles/#rule-smooth-scroll-conditional
-- 【推奨・仕様にもとづく制約】`[id]` と `:focus` に `scroll-margin-block-start` を指定し、ページ内リンクの移動先やフォーカスした要素が固定ヘッダーに隠れないようにする。（`scroll-margin-for-targets`）
-  - 理由: 移動先の見出しやフォーカスした要素が、固定ヘッダーの下に隠れて見えなくなるのを防ぐため。
-  - 補足: 本書のベーススタイルでは `4rlh` を目安にしています。
-  - 詳細: https://t-arai-pnrm.github.io/recss-guideline/reset/base-styles/#rule-scroll-margin-for-targets
+- 【推奨・仕様にもとづく制約】ページをスクロールさせているルートに `scroll-padding-block-start` を指定し、ページ内リンクの移動先やフォーカスした要素が固定ヘッダーに隠れないようにする。値は `var(--site-header--block-size, 4rlh)` のように、ヘッダーの高さを受け取るカスタムプロパティで書き、渡されないときの代替値を添える。（`scroll-padding-for-targets`）
+  - 理由: スクロールで内容を見せる範囲からヘッダーの分を除くので、ページ内リンクとフォーカスによるスクロールに加えて、Space キーなどで1画面ずつ送る量にも反映されるため。移動先の要素の `scroll-margin-block-start` では、送る量がビューポートの高さのままで、送るたびに直前の画面の最後の行がヘッダーの下に入る。
+  - 補足: `scroll-padding` と `scroll-margin` を両方指定すると余白が足し合わされるので、ヘッダーの高さを除くのは `scroll-padding` だけにします。ヘッダーの高さは、ルール `measure-sticky-header-block-size` のスクリプトで渡します。代替値の `4rlh` は、スクリプトが動かない環境のための目安です。
+  - 詳細: https://t-arai-pnrm.github.io/recss-guideline/reset/base-styles/#rule-scroll-padding-for-targets
 - 【必須・実装上の判断】モーダル表示中の背面のスクロールは、`:root:has(:modal)` に `overflow: hidden` を指定して止める。（`modal-scroll-lock-root`）
   - 理由: `:modal` ならモーダルとして開いたダイアログだけに限定でき、ルート要素の `overflow` はビューポートに伝わるので `position: sticky` の要素を妨げないため。
   - 補足: `body:has(dialog[open])` はモーダルでないダイアログにも反応するので使いません。スクロールバーの分のずれは、`:root` の `scrollbar-gutter: stable` で防ぎます。

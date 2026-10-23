@@ -297,10 +297,20 @@
   kind: judgment
   rule: 'ヘッダーを固定するときは、`@media (height >= calc(600 / 16 * 1rem))` のように、ビューポートの高さが十分なときだけ固定する。'
   reason: 高さの低い画面や拡大した画面では、固定したヘッダーが画面の多くを覆い、フォーカスした要素も隠すため。
-  note: 'ヘッダーの高さが決まっているなら、同じ条件でルートに `scroll-padding-block-start` を指定し、スクロールで見せる範囲からヘッダーの分を除きます。閾値の600px相当は目安です。'
+  note: 'ルートの `scroll-padding-block-start`（ルール `scroll-padding-for-targets`）も同じ条件の中に書き、ヘッダーを固定しない画面では、スクロールで見せる範囲を狭めません。閾値の600px相当は目安です。'
   aiProne: true
   page: layout-practice/sticky-header
   since: 0.3.0
+
+- id: measure-sticky-header-block-size
+  level: 推奨
+  kind: judgment
+  rule: '固定ヘッダーの高さは CSS に数値で書かず、`ResizeObserver` で測って、ルート要素のカスタムプロパティ（`--site-header--block-size` など）に渡す。'
+  reason: 'ヘッダーの高さは文言、文字サイズ、折り返しで変わり、数値で書くと、ヘッダーとルートの `scroll-padding-block-start` の2か所をそろえ直すことになるため。`ResizeObserver` は大きさが変わったときだけ呼ばれるので、`scroll` や `resize` のイベントで測り続ける処理が要らない。'
+  note: '値は `borderBoxSize[0].blockSize` を `Math.ceil` で切り上げて渡します。スクリプトが動かない環境のために、参照する側に代替値（`var(--site-header--block-size, 4rlh)`）を書きます。ヘッダーの高さを CSS で固定したデザインでは、同じ値を書いてもかまいません（「21-6 固定ヘッダーを作る」）。'
+  aiProne: true
+  page: layout-practice/sticky-header
+  since: 0.80.0
 
 - id: scroll-state-for-sticky-styles
   level: 推奨

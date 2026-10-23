@@ -1,7 +1,7 @@
 # AIが誤りやすいルール
 
-- ガイドラインのバージョン: 0.79.1（2026-10-23 生成）
-- ルールの数: 297
+- ガイドラインのバージョン: 0.80.0（2026-10-23 生成）
+- ルールの数: 299
 
 AIが生成するコードで特に誤りやすいルールです。CSSを書く前とレビューの前に、必ず確認してください。1件1行で、強度とルールの本文と ID だけを並べています。理由と補足は、章ごとのファイル（`references/<章>.md`）を ID で検索して読んでください。
 
@@ -188,6 +188,7 @@ AIが生成するコードで特に誤りやすいルールです。CSSを書く
 - 【推奨】Flexbox と Grid の子の重なり順を変えるだけなら、`position: relative` を足さずに z-index を指定する。（`z-index-on-items-without-position`）
 - 【必須】親の幅を超えて画面の端まで広げる量は、`calc((100lvi - 100%) / -2)` のように「画面の幅と親の幅の差の半分」の式で書き、`100vw` や `calc(50% - 50vw)` を使わない。（`full-bleed-offset-formula`）
 - 【推奨】ヘッダーを固定するときは、`@media (height >= calc(600 / 16 * 1rem))` のように、ビューポートの高さが十分なときだけ固定する。（`sticky-header-height-query`）
+- 【推奨】固定ヘッダーの高さは CSS に数値で書かず、`ResizeObserver` で測って、ルート要素のカスタムプロパティ（`--site-header--block-size` など）に渡す。（`measure-sticky-header-block-size`）
 - 【推奨】`sticky` の要素が留まっている間だけ見た目を変えるときは、`scroll` イベントではなく `container-type: scroll-state` と `@container scroll-state(stuck: …)` を使い、変える内容は見えなくても操作に困らない装飾に限る。（`scroll-state-for-sticky-styles`）
 - 【推奨】ページ全体のスクロールはビューポート（ルートスクローラー）に任せ、`html`、`body`、ページ全体を包むラッパーをスクロールコンテナにしない。（`root-scroller-for-page-scroll`）
 - 【非推奨】`html` と `body` に `height: 100%` を指定しない。画面の高さが必要なら、ページのレイアウトの要素に `min-block-size: 100svb` で最小値を決める。（`root-scroller-no-fixed-root-height`）
@@ -290,6 +291,7 @@ AIが生成するコードで特に誤りやすいルールです。CSSを書く
 - 【推奨】背景に写真を敷くときは、`background-image` ではなく、`object-fit` を指定した `<img>` を本文と同じグリッドのエリアに置く。（`img-over-background-image`）
 - 【禁止】ファーストビューに表示される画像に、`loading="lazy"` を指定しない。（`no-lazy-loading-first-view`）
 - 【推奨】`<img>` に `decoding="async"` を指定せず、デフォルトの `auto` に任せる。（`no-decoding-async`）
+- 【推奨】メニューのボタンの三本線は、空の要素を並べて CSS で線にせず、インライン SVG で描く。`viewBox`、`fill`、`stroke`、`stroke-width` は属性で書き、線を個別に動かすなら `path` を線ごとに分ける。（`menu-icon-inline-svg`）
 - 【推奨】三角形などの図形は `border` の組み合わせではなく `clip-path` で描き、`polygon()` の値は `--shape--triangle-bottom` のようなトークンにする。（`clip-path-shape-tokens`）
 - 【推奨】重なった要素の周りに隙間を見せるときは、手前の要素に背景と同じ色の `border` や `box-shadow` を付けず、奥の要素の重なる部分を `mask-image` で切り抜く。切り抜く位置と大きさは、手前の要素の大きさと隙間の幅から `calc()` で求める。（`cutout-overlap-with-mask`）
 - 【推奨】ダークモードでは、高い面ほど背景を明るくし、面の高さを影だけで表さない。（`lighter-surface-in-dark-mode`）

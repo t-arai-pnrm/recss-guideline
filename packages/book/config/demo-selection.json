@@ -220,6 +220,9 @@
   "decoration/mask-icon": {
     "print": false
   },
+  "decoration/menu-icon": {
+    "print": false
+  },
   "decoration/nested-radius": {
     "print": true
   },

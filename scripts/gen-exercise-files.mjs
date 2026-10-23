@@ -49,7 +49,7 @@ const SECTIONS = [
     slug: 'drawer',
     title: '21-7 ドロワーメニューを作る',
     empty: ['site-drawer.css'],
-    startFrom: { demo: 'sticky-header-1', files: ['site-header.css', 'global-nav.css', 'site-base.css'] },
+    startFrom: { demo: 'sticky-header-1', files: ['site-header.css', 'global-nav.css', 'site-base.css', 'action-control.css'] },
   },
   { slug: 'hero', title: '21-8 ヒーローを作る', empty: ['hero.css'] },
   { slug: 'faq', title: '21-9 よくある質問を作る', empty: ['faq-accordion.css'] },

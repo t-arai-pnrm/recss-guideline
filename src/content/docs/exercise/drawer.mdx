@@ -13,9 +13,9 @@ import drawerChangedHtml from '../../../demos/exercise/drawer-2/index.html?raw';
 import drawerChangedCss from '../../../demos/exercise/drawer-2/style.css?raw';
 import drawerChangedJs from '../../../demos/exercise/drawer-2/script.js?raw';
 
-狭い画面のナビゲーションを作ります。ヘッダーの幅が、ロゴ、ナビゲーション、お問い合わせのボタンを1行に並べられないほど狭いときは、ナビゲーションとお問い合わせのボタンを隠し、代わりに「メニュー」のボタンを置きます。メニューのボタンは、21-2で作った副ボタンです（「[21-2 ボタンとセクション見出しを作る](/exercise/buttons/)」）。
+狭い画面のナビゲーションを作ります。ヘッダーの幅が、ロゴ、ナビゲーション、お問い合わせのボタンを1行に並べられないほど狭いときは、ナビゲーションとお問い合わせのボタンを隠し、代わりに「メニュー」のボタンを置きます。メニューのボタンは、21-2で作った副ボタンです（「[21-2 ボタンとセクション見出しを作る](/exercise/buttons/)」）。文字の前に、三本線のアイコンを置きます。
 
-メニューのボタンを押すと、画面の右から、幅360px相当のドロワーが、大きな影を落として現れます。ドロワーには、閉じるボタン、縦に並べたナビゲーション、お問い合わせのボタンを置きます。縦に並べたナビゲーションのリンクは、16px相当の文字で、上下に16pxの余白を取ります。
+メニューのボタンを押すと、画面の右から、幅360px相当のドロワーが、大きな影を落として現れます。ドロワーには、×のアイコンを付けた閉じるボタン、縦に並べたナビゲーション、お問い合わせのボタンを置きます。縦に並べたナビゲーションのリンクは、16px相当の文字で、上下に16pxの余白を取ります。
 
 ドロワーを開いている間は、背面のページの操作とスクロールを止めます。Escキー、閉じるボタン、ドロワーの外のどれを押しても閉じます。ドロワーは開くときと閉じるときに右から動かし、動きを減らす設定ではフェードだけにします。ヘッダーそのものは、21-6で作った固定ヘッダーです（「[21-6 固定ヘッダーを作る](/exercise/sticky-header/)」）。
 
@@ -28,6 +28,7 @@ import drawerChangedJs from '../../../demos/exercise/drawer-2/script.js?raw';
 - [10-7 置き場所と子の状態を伝える](/components/placement-and-child-states/)
 - [13-2 ブレイクポイントの決め方](/responsive/breakpoints/)
 - [13-9 収まらなくなったらナビゲーションを折りたたむ](/responsive/overflow-collapse/)
+- [16-3 アイコンとSVG](/decoration/icons-and-masks/)
 - [17-6 開閉するUI](/interaction/disclosure/)
 - [18-7 出現と退場](/motion/entry-and-exit/)
 
@@ -142,12 +143,18 @@ HTMLでは、`._actions` とメニューのボタン（`._menu`）を `._end` �
 
 ```html title="🙆‍♂ Recommended: command 属性でドロワーをモーダルとして開き、閉じる" from="exercise/drawer-1"
 <div class="_menu">
-  <button class="scoped action-control" type="button" data-variant="secondary" commandfor="site-drawer" command="show-modal">メニュー</button>
+  <button class="scoped action-control" type="button" data-variant="secondary" commandfor="site-drawer" command="show-modal">
+    <svg class="_icon" …>…</svg>
+    メニュー
+  </button>
 </div>
 
 <dialog class="scoped site-drawer" id="site-drawer" aria-label="メニュー" closedby="any">
   <div class="_drawer-header">
-    <button class="scoped action-control" type="button" data-variant="secondary" commandfor="site-drawer" command="close">閉じる</button>
+    <button class="scoped action-control" type="button" data-variant="secondary" commandfor="site-drawer" command="close">
+      <svg class="_icon" …>…</svg>
+      閉じる
+    </button>
   </div>
   <div class="_navigation">
     <nav class="scoped global-nav" aria-label="メイン">…</nav>
@@ -205,6 +212,58 @@ if (!('closedBy' in HTMLDialogElement.prototype)) {
 ```
 
 動き始めの位置を `--_translate-from` にまとめ、動きを減らす設定のときは0のままにします。画面の端から大きく動くパネルは、動きを減らす設定ではフェードに置き換えます（`simplify-large-motion-when-reduced`）。
+
+## ボタンにアイコンを付ける
+
+メニューのボタンの三本線と、閉じるボタンの×は、「[16-3 アイコンとSVG](/decoration/icons-and-masks/#メニューのボタンの三本線をsvgで描く)」と同じく、線ごとに `path` を分けたインラインSVGで描きます（`menu-icon-inline-svg`）。線の太さと色は属性で書き、色は `currentColor` でボタンの文字色に合わせます。ボタンの名前は見える文字で付けるので、SVGには `aria-hidden="true"` を付けます。
+
+```html title="🙆‍♂ Recommended: 三本線と×をインラインSVGで描き、ボタンの文字の前に置く" from="exercise/drawer-1"
+<button class="scoped action-control" type="button" data-variant="secondary" commandfor="site-drawer" command="show-modal">
+  <svg class="_icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M4 6H20" />
+    <path d="M4 12H20" />
+    <path d="M4 18H20" />
+  </svg>
+  メニュー
+</button>
+
+<button class="scoped action-control" type="button" data-variant="secondary" commandfor="site-drawer" command="close">
+  <svg class="_icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <path d="M6 6L18 18" />
+    <path d="M18 6L6 18" />
+  </svg>
+  閉じる
+</button>
+```
+
+21-2で作った `action-control` には、アイコンを置く子要素がまだありません。`._icon` を足し、大きさを文字に合わせます。ボタンのルートは `display: inline flex` なので、ルートのネストで `flex: none` を指定し、文字が長いときにもアイコンが縮まないようにします。
+
+アイコンのあるボタンは、アイコンの側の `padding-inline-start` を28pxから20pxに詰めます。アイコンは図形の周りに空きがあるので、文字の側と同じ余白では、アイコンの側が広く見えます。詰めないと、ボタンの幅はアイコンと `gap` の分の28px広がります。幅375pxでは、メニューのボタンがロゴの横に入らず、ロゴの下へ回りました。詰めると、ボタンの幅は142pxになり、375pxでもロゴの横に並びます。372px以下では、21-6と同じように、ロゴの下へ回ります。
+
+```css title="🙆‍♂ Recommended: action-control に、文字の大きさに合わせたアイコンの子要素を足し、アイコンの側の余白を詰める" use="diff" from="exercise/drawer-1"
+@scope (.scoped.action-control) to (.scoped) {
+  :scope {
+    /* ... */
+
+    &:has(> ._icon) {
+      padding-inline-start: 20px;
+    }
+
+    /* ... */
+
+    & > ._icon {
+      flex: none;
+    }
+  }
+
+  ._icon {
+    inline-size: 1.25em;
+    aspect-ratio: 1;
+  }
+}
+```
+
+三本線を×に変える動きは付けません。ドロワーはモーダルなので、開いている間、メニューのボタンは背面にあって操作できず、変化を見せる場面がないからです。閉じる操作は、ドロワーの中の閉じるボタンが受け持ちます。
 
 ## 同じナビゲーションを縦に並べる
 
@@ -313,6 +372,7 @@ CSSは直していません。直したのは、ヘッダーとドロワーの�
 - [`collapse-nav-on-overflow`](/responsive/overflow-collapse/#rule-collapse-nav-on-overflow)：項目の数や文言が変わる横並びを、1行に収まらなくなったらメニューのボタンに切り替えるときは、横並び自身の溢れを検知したフラグで切り替えます。
 - [`hide-overflow-source-with-visibility`](/responsive/overflow-collapse/#rule-hide-overflow-source-with-visibility)：溢れを検知して隠す要素は、`visibility: hidden` で隠し、`display: none` にしません。
 - [`state-flag-values`](/components/style-queries/#rule-state-flag-values)：オンとオフの2値のフラグは、`--true` と `--false` にそろえます。
+- [`menu-icon-inline-svg`](/decoration/icons-and-masks/#rule-menu-icon-inline-svg)：メニューのボタンの三本線は、空の要素を並べず、インラインSVGで描きます。
 - [`native-disclosure-elements`](/interaction/disclosure/#rule-native-disclosure-elements)：開閉するUIは、`<dialog>` や `popover` 属性のようなHTMLの機能で作ります。
 - [`dialog-command-attributes`](/interaction/disclosure/#rule-dialog-command-attributes)：モーダルの開閉は、`command` 属性と `commandfor` 属性で行い、対応していないブラウザのためにポリフィルを読み込みます。
 - [`dialog-closedby-any`](/interaction/disclosure/#rule-dialog-closedby-any)：背景のクリックで閉じるモーダルは、`closedby="any"` で作ります。

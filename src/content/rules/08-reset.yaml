@@ -109,12 +109,12 @@
   page: reset/base-styles
   since: 0.1.0
 
-- id: scroll-margin-for-targets
+- id: scroll-padding-for-targets
   level: 推奨
   kind: spec
-  rule: '`[id]` と `:focus` に `scroll-margin-block-start` を指定し、ページ内リンクの移動先やフォーカスした要素が固定ヘッダーに隠れないようにする。'
-  reason: 移動先の見出しやフォーカスした要素が、固定ヘッダーの下に隠れて見えなくなるのを防ぐため。
-  note: 本書のベーススタイルでは `4rlh` を目安にしています。
+  rule: 'ページをスクロールさせているルートに `scroll-padding-block-start` を指定し、ページ内リンクの移動先やフォーカスした要素が固定ヘッダーに隠れないようにする。値は `var(--site-header--block-size, 4rlh)` のように、ヘッダーの高さを受け取るカスタムプロパティで書き、渡されないときの代替値を添える。'
+  reason: 'スクロールで内容を見せる範囲からヘッダーの分を除くので、ページ内リンクとフォーカスによるスクロールに加えて、Space キーなどで1画面ずつ送る量にも反映されるため。移動先の要素の `scroll-margin-block-start` では、送る量がビューポートの高さのままで、送るたびに直前の画面の最後の行がヘッダーの下に入る。'
+  note: '`scroll-padding` と `scroll-margin` を両方指定すると余白が足し合わされるので、ヘッダーの高さを除くのは `scroll-padding` だけにします。ヘッダーの高さは、ルール `measure-sticky-header-block-size` のスクリプトで渡します。代替値の `4rlh` は、スクリプトが動かない環境のための目安です。'
   page: reset/base-styles
   since: 0.1.0
 
