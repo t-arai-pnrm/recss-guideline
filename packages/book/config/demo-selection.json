@@ -376,6 +376,12 @@
   "interaction/hover-item-gaps": {
     "print": false
   },
+  "interaction/hover-lift": {
+    "print": false
+  },
+  "interaction/hover-weight": {
+    "print": false
+  },
   "interaction/pseudo-hit-area": {
     "print": false
   },

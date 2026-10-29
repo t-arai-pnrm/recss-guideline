@@ -1,6 +1,6 @@
 ---
 title: "17-1 ホバーとフォーカスを表す"
-description: "ホバーのスタイルは操作できる状態に限り、@media (any-hover)の中に書いて、:focus-visibleにも同じ見た目を指定します。キーボードでのフォーカスの変化は一度で切り替え、ホバーの変化は透明度ではなく色で表し、ホバーを受ける要素自身は動かしません。"
+description: "ホバーのスタイルは操作できる状態に限り、@media (any-hover)の中に書いて、:focus-visibleにも同じ見た目を指定します。キーボードでのフォーカスの変化は一度で切り替え、ホバーの変化は透明度ではなく色で表し、ホバーを受ける要素自身は動かしません。ホバーで文字を太くするときは、隣の要素を押さない書き方を書体に合わせて選びます。"
 reading: basic
 sidebar:
   order: 1
@@ -12,10 +12,14 @@ import Guideline from '../../../components/Guideline.astro';
 import hoverHtml from '../../../demos/interaction/hover-focus/index.html?raw';
 import hoverCss from '../../../demos/interaction/hover-focus/style.css?raw';
 import hoverBadCss from '../../../demos/interaction/hover-focus/style.bad.css?raw';
+import liftHtml from '../../../demos/interaction/hover-lift/index.html?raw';
+import liftCss from '../../../demos/interaction/hover-lift/style.css?raw';
+import weightHtml from '../../../demos/interaction/hover-weight/index.html?raw';
+import weightCss from '../../../demos/interaction/hover-weight/style.css?raw';
 
 ホバーのスタイルは、ホバーできる入力があり、しかも操作できる状態の要素にだけ当てます。書き方は、`&:any-link:hover` や `&:enabled:hover` を `@media (any-hover)` の中に置く形です。同じ見た目を `:focus-visible` にも指定し、キーボードで操作するユーザーにも同じ手がかりを示します。
 
-キーボードでフォーカスを移したときの変化は、トランジションを掛けずに一度で切り替えます。ホバーの変化は `opacity` で透かさず、背景色や文字色を別の色に変えて表します。押せる範囲の大きさは「[17-2 押せる範囲とタッチ操作](/interaction/hit-area-and-touch/)」で、選択中や展開中のような状態の表し方は「[17-3 状態を属性で表す](/interaction/state-attributes/)」で扱います。
+キーボードでフォーカスを移したときの変化は、トランジションを掛けずに一度で切り替えます。ホバーの変化は `opacity` で透かさず、背景色や文字色を別の色に変えて表します。ホバーで要素を動かすときは、ホバーを受ける要素ではなく子要素を動かします。文字を太くするときは、隣の要素を押さない書き方を選びます。押せる範囲の大きさは「[17-2 押せる範囲とタッチ操作](/interaction/hit-area-and-touch/)」で、選択中や展開中のような状態の表し方は「[17-3 状態を属性で表す](/interaction/state-attributes/)」で扱います。
 
 ## タッチ操作の端末でのホバー
 
@@ -203,7 +207,7 @@ import hoverBadCss from '../../../demos/interaction/hover-focus/style.bad.css?ra
 
 ## ホバーで動く要素の当たり判定
 
-ホバーで位置や大きさが変わる要素を、そのまま `:hover` の対象にすると、ちらつくことがあります。カーソルが縁にあるとき要素が動くと、ホバーが外れて要素がもとの位置に戻り、戻るとまたホバーが当たる、という繰り返しになるからです。
+ホバーで位置や大きさが変わる要素を、そのまま `:hover` の対象にすると、ちらつくことがあります。カーソルが縁にあるとき要素が動くと、ホバーが外れて要素がもとの位置に戻り、戻るとまたホバーが当たる、という繰り返しになるからです。たとえば、ホバーを受けるボタンを4px持ち上げると、下端から4px以内にあるカーソルは、持ち上がったボタンの外に出ます。カーソルを少し動かすたびに、ボタンは上下に揺れます。
 
 ```css title="🙅‍♂ Not Recommended: ホバーを受ける要素自身を動かす" issue="behavior"
 /* 🙅‍♂ Not Recommended */
@@ -218,7 +222,7 @@ import hoverBadCss from '../../../demos/interaction/hover-focus/style.bad.css?ra
 
 次の例では、ボタンの状態を子へ伝えるため、フラグのカスタムプロパティ `--_hocus` を使います。フラグを使うのは、このように子要素や擬似要素を変えるときです。要素自身の色や背景だけを変えるなら、前の見出しまでの例のように、状態のセレクタに直接書けば足ります。
 
-```css title="🙆‍♂ Recommended: ホバーを受ける要素は動かさず、子要素を動かす"
+```css title="🙆‍♂ Recommended: ホバーを受ける要素は動かさず、子要素を動かす" from="interaction/hover-lift"
 @scope (.scoped.lift-button) to (.scoped) {
   :scope {
     --_hocus: --false;
@@ -257,6 +261,74 @@ import hoverBadCss from '../../../demos/interaction/hover-focus/style.bad.css?ra
 ボタンのホバーとフォーカスは、フラグのカスタムプロパティ `--_hocus` で子の `._face` に伝えます。ボタンの状態のセレクタで `--_hocus: --true` を立て、`._face` は `@container style(--_hocus: --true)` で持ち上がります。名前なしの `style()` は親を問い合わせ、カスタムプロパティは継承するので、ボタンで立てたフラグを `._face` から読めます。ボタンにデフォルト値の `--_hocus: --false` を明示しているのは、外側の要素で立てたフラグを継承しないためです。
 
 キーボードでフォーカスしたときは一度で持ち上げるので、トランジションも `--_focus-visible` のフラグで切り替えます。ボタンの `&:not(:focus-visible)` にトランジションを書いても、`transition` は継承しないので、動く `._face` には掛かりません。フラグとスタイルクエリで状態を伝える書き方は、「[10-6 スタイルクエリで状態を伝える](/components/style-queries/)」で説明しています。
+
+次のデモでは、「ボタン自身を動かす」のボタンはボタン自身を、「内側の面を動かす」のボタンは内側の `._face` を、ホバーで4px持ち上げます。カーソルをボタンの下端から4px以内に置いて横に少しずつ動かすと、前者はホバーが外れては当たり、上下に揺れます。後者は、ホバーを受けるボタンが動かないので、持ち上がったままです。Chromeで確かめたところ、前者ではカーソルを動かすたびにホバーが外れ、後者ではホバーが続きました。
+
+<Demo title="ホバーを受ける要素自身を動かすと、下端でちらつく" html={liftHtml} css={liftCss} />
+
+## ホバーで太さを変えると隣が動く
+
+ナビゲーションのリンクをホバーで太字にすると、リンクの幅が広がり、後ろのリンクが押されて横にずれます。太い字形は、線が太くなるだけでなく、字幅も広がるからです。カーソルをリンクからリンクへ動かすたびに、並びが揺れます。
+
+ただし、どの文字でも広がるわけではありません。和文の漢字と全角のかなは、太さを変えても1文字の幅が1emのままです。macOSのChromeで、デモと同じ16pxのゴシック体を測ったところ、「会社概要」の幅は、400と700のどちらも64pxで、「News」は42.7pxから46.4pxに広がりました。かなを `palt` で詰めた場合は、太くすると1px程度広がります。和文だけのラベルで確かめると動かないので、欧文のラベルが混ざってから気付くことがあります。
+
+そこで、太さを変える書き方は、書体とラベルに合わせて選びます。書体に字幅を変えずに濃さを変えるグレード（`GRAD`）の軸があれば、`GRAD` で濃くします。グレードの軸を持つのは、Roboto Flexのような一部の可変フォントです。`GRAD` には対応するプロパティがないので、`font-variation-settings` で指定します（「[14-1 フォントを指定する](/typography/fonts/#font-weightの指定)」）。値の範囲は書体ごとに決まっているので、書体の説明で確かめます。Webフォントを読み込む前や代わりのフォントでは濃さが変わらないので、`GRAD` だけでホバーを表さず、色の変化と組み合わせます。
+
+```css title="🙆‍♂ Recommended: グレードの軸で、字幅を変えずに濃くする"
+@scope (.scoped.global-nav) to (.scoped) {
+  ._link {
+    &:focus-visible {
+      font-variation-settings: "GRAD" 150;
+    }
+
+    &:any-link:hover {
+      @media (any-hover) {
+        font-variation-settings: "GRAD" 150;
+      }
+    }
+  }
+}
+```
+
+グレードの軸がない書体でも、ラベルが和文だけなら、`font-weight` を変えてかまいません。漢字と全角のかなは字幅が変わらず、`palt` で詰めたかなでも、隣が動くのは1px程度だからです。欧文のラベルが混ざり、隣が目に見えて動くときは、太字の幅を先に確保します。
+
+```css title="🙆‍♂ Recommended: 太字の幅を先に確保してから、太さを変える" from="interaction/hover-weight"
+@scope (.scoped.weight-nav) to (.scoped) {
+  ._link {
+    display: inline flex;
+    flex-direction: column;
+
+    &::after {
+      content: attr(data-label) / "";
+      visibility: hidden;
+      block-size: 0;
+      font-weight: var(--font-weight--bold);
+    }
+
+    &:focus-visible {
+      font-weight: var(--font-weight--bold);
+    }
+
+    &:any-link:hover {
+      @media (any-hover) {
+        font-weight: var(--font-weight--bold);
+      }
+    }
+  }
+}
+```
+
+リンクの文字と同じ文字を `data-label` 属性に持たせ、`::after` に `attr()` で写します。写しは太字にし、`visibility: hidden` で見えなくして、`block-size: 0` で高さを持たせません。リンクを縦並びの `inline flex` にすると、リンクの幅は、本来の文字と太字の写しのうち広いほう、つまり太字の幅になります。ホバーで本来の文字を太くしても、リンクの幅は変わりません。
+
+`content` の `/` の後ろは代替テキストで、空にすると、支援技術は写しの文字を読み上げません。代替テキストの書き方に対応していないブラウザでは、`content` の宣言ごと無視されるので、写しは作られず、太さだけを変える書き方と同じ表示になります。写しの文字は、リンクの文字と必ずそろえます。片方だけを直すと、確保する幅がずれます。CMSで文字を入力するなら、テンプレートで同じ値を両方に出力します。
+
+<Baseline id="alt-text-generated-content" />
+
+次のデモの「太さだけを変える」には、`data-label` がありません。写しが空になるので、幅は確保されません。macOSのChromeでは、「News」にカーソルを重ねると、リンクの幅が42.7pxから46.4pxに広がり、「Contact」が3.7px右へずれます。「会社概要」と「サービス」は、太くなっても幅が変わりません。「太字の幅を先に確保する」は、どのリンクに重ねても並びが動きません。
+
+<Demo title="ホバーで太くすると、欧文のリンクだけが後ろのリンクを押す" html={weightHtml} css={weightCss} />
+
+状態で `border` を足して隣を押すのも、同じ理由です。透明な `border` を最初から置いて色だけを変える書き方は、「[7-3 ボックスモデルの基礎](/layout/box-model/)」で説明しています。
 
 ## ガイドライン
 

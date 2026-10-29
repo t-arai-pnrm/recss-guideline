@@ -1,0 +1,63 @@
+@layer components {
+  @scope (.scoped.lift-button) to (.scoped) {
+    :scope {
+      --_hocus: --false;
+      --_focus-visible: --false;
+
+      display: inline grid;
+      padding: unset;
+      border: unset;
+      background-color: unset;
+
+      &:focus-visible {
+        --_hocus: --true;
+        --_focus-visible: --true;
+      }
+
+      &:enabled:hover {
+        @media (any-hover) {
+          --_hocus: --true;
+        }
+      }
+
+      /* 比べるために、ホバーを受けるボタン自身を動かし、._face には状態を伝えない */
+      &[data-lift="self"] {
+        &:enabled:hover {
+          @media (any-hover) {
+            --_hocus: --false;
+
+            translate: 0 -4px;
+          }
+        }
+
+        &:not(:focus-visible) {
+          @media (prefers-reduced-motion: no-preference) {
+            transition-duration: var(--duration--fast);
+            transition-property: translate;
+            transition-timing-function: var(--ease--out-quint);
+          }
+        }
+      }
+    }
+
+    ._face {
+      padding-block: 8px;
+      padding-inline: 20px;
+      border-radius: var(--rounded--sm);
+      background-color: var(--background--inverse);
+      color: var(--foreground--inverse);
+
+      @container style(--_hocus: --true) {
+        translate: 0 -4px;
+      }
+
+      @container style(--_focus-visible: --false) {
+        @media (prefers-reduced-motion: no-preference) {
+          transition-duration: var(--duration--fast);
+          transition-property: translate;
+          transition-timing-function: var(--ease--out-quint);
+        }
+      }
+    }
+  }
+}

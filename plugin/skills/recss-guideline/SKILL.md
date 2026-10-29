@@ -6,8 +6,8 @@ license: CC-BY-4.0
 
 # RECSSガイドライン Skill
 
-- ガイドラインのバージョン: 0.80.0（2026-10-23 生成）
-- ルールの数: 622（うち AI が誤りやすいもの 299）
+- ガイドラインのバージョン: 0.81.0（2026-10-29 生成）
+- ルールの数: 623（うち AI が誤りやすいもの 299）
 - 本書: https://t-arai-pnrm.github.io/recss-guideline/
 
 ## 基本原則
@@ -114,7 +114,7 @@ Figma などのデザインツールのデザインから書くときは、「20
 | 第14章 タイポグラフィと和文組版 | `references/14-typography.md` | 32 | 約8.4万字 | font-*、line-height、文字の大きさ、和文組版、改行、文字の色の役割 |
 | 第15章 色 | `references/15-color-media.md` | 23 | 約9.2万字 | 色の指定（oklch()、color-mix()、相対カラー構文）、ダークモード、強制カラーモード、コントラスト |
 | 第16章 画像・装飾 | `references/16-decoration.md` | 35 | 約22.3万字 | 画像、SVG、アイコン、mask、影、角丸、枠線、区切り線、印刷 |
-| 第17章 インタラクション | `references/17-interaction.md` | 40 | 約14.3万字 | ホバー、フォーカス、押せる範囲、タッチ操作、user-select、状態を表す属性（ARIA属性、data-*属性）、カード全体のリンク、開閉するUI（details、dialog、popover）、フォーム部品、カルーセル |
+| 第17章 インタラクション | `references/17-interaction.md` | 41 | 約15万字 | ホバー、フォーカス、押せる範囲、タッチ操作、user-select、状態を表す属性（ARIA属性、data-*属性）、カード全体のリンク、開閉するUI（details、dialog、popover）、フォーム部品、カルーセル |
 | 第18章 モーション | `references/18-motion.md` | 31 | 約20.3万字 | transition、animation、@keyframes、prefers-reduced-motion、スクロール連動、View Transitions |
 | 第19章 実務での運用 | `references/19-operations.md` | 29 | 約7.2万字 | Stylelint、レビュー、CMSの本文エリアやWYSIWYG、既存のサイトへの導入 |
 | 第20章 AIにコーディングさせる | `references/20-ai-coding.md` | 17 | 約8.8万字 | AIが書いたCSS、Figmaなどのデザインツールから書いたCSS |

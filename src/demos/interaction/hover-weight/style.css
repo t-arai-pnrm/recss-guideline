@@ -1,0 +1,32 @@
+@layer components {
+  @scope (.scoped.weight-nav) to (.scoped) {
+    ._list {
+      display: block flex;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    ._link {
+      display: inline flex;
+      flex-direction: column;
+
+      /* 太字の同じ文字を高さ0で重ね、太字の幅だけを先に占める。代替テキストを空にして、読み上げを重ねない */
+      &::after {
+        content: attr(data-label) / "";
+        visibility: hidden;
+        block-size: 0;
+        font-weight: var(--font-weight--bold);
+      }
+
+      &:focus-visible {
+        font-weight: var(--font-weight--bold);
+      }
+
+      &:any-link:hover {
+        @media (any-hover) {
+          font-weight: var(--font-weight--bold);
+        }
+      }
+    }
+  }
+}

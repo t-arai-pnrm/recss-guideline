@@ -1,8 +1,8 @@
 # 第17章 インタラクション：ルール
 
-- ガイドラインのバージョン: 0.80.0（2026-10-23 生成）
-- ルールの数: 40
-- 本文: 約14.3万字
+- ガイドラインのバージョン: 0.81.0（2026-10-29 生成）
+- ルールの数: 41
+- 本文: 約15万字
 - 読む条件: ホバー、フォーカス、押せる範囲、タッチ操作、user-select、状態を表す属性（ARIA属性、data-*属性）、カード全体のリンク、開閉するUI（details、dialog、popover）、フォーム部品、カルーセル
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
@@ -13,7 +13,7 @@
 ## この章の節
 
 - `interaction` 第17章 インタラクション（約7,200字）https://t-arai-pnrm.github.io/recss-guideline/interaction/
-- `interaction/states-and-focus` 17-1 ホバーとフォーカスを表す（約1.8万字）https://t-arai-pnrm.github.io/recss-guideline/interaction/states-and-focus/
+- `interaction/states-and-focus` 17-1 ホバーとフォーカスを表す（約2.5万字）https://t-arai-pnrm.github.io/recss-guideline/interaction/states-and-focus/
 - `interaction/hit-area-and-touch` 17-2 押せる範囲とタッチ操作（約2.3万字）https://t-arai-pnrm.github.io/recss-guideline/interaction/hit-area-and-touch/
 - `interaction/state-attributes` 17-3 状態を属性で表す（約7,000字）https://t-arai-pnrm.github.io/recss-guideline/interaction/state-attributes/
 - `interaction/card-link` 17-4 カード全体をリンクにする（約2,500字）https://t-arai-pnrm.github.io/recss-guideline/interaction/card-link/
@@ -45,6 +45,10 @@ https://t-arai-pnrm.github.io/recss-guideline/interaction/states-and-focus/
   - 理由: ホバーを受ける要素自身が動くと、カーソルが要素の外に出てホバーが外れ、戻るとまた当たるという繰り返しで、ちらつくため。
   - 補足: ホバーを受ける要素の `&:any-link:hover`／`&:enabled:hover` と `&:focus-visible` で `--_hocus: --true` を立て、動かす子要素や擬似要素は `@container style(--_hocus: --true)` の中で動かします。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/interaction/states-and-focus/#rule-hover-target-stays-still
+- 【推奨・仕様にもとづく制約】ホバーやフォーカスで、隣の要素を押すほど要素の大きさを変えない。文字を太くするときは、書体にグレード（`GRAD`）の軸があれば `font-variation-settings` の `GRAD` で濃くし、なければ太字の幅を先に確保する。（`hover-keeps-size`）
+  - 理由: 状態で要素の幅が広がると後ろの要素が押され、カーソルを動かすたびに並びが揺れるため。
+  - 補足: ラベルが和文だけなら、漢字と全角のかなは太さで字幅が変わらないので、`font-weight` を変えてかまいません。太字の幅は、リンクの文字と同じ文字を `data-label` 属性に持たせ、縦並びの `inline flex` にしたリンクの `::after` に `content: attr(data-label) / ""`、`visibility: hidden`、`block-size: 0`、太字を指定して確保します。状態で `border` を足すときは、同じ太さの透明な `border` を最初から置き、色だけを変えます。
+  - 詳細: https://t-arai-pnrm.github.io/recss-guideline/interaction/states-and-focus/#rule-hover-keeps-size
 
 ## 17-2 押せる範囲とタッチ操作
 

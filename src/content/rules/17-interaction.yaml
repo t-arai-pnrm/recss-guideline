@@ -48,6 +48,15 @@
   page: interaction/states-and-focus
   since: 0.4.0
 
+- id: hover-keeps-size
+  level: 推奨
+  kind: spec
+  rule: 'ホバーやフォーカスで、隣の要素を押すほど要素の大きさを変えない。文字を太くするときは、書体にグレード（`GRAD`）の軸があれば `font-variation-settings` の `GRAD` で濃くし、なければ太字の幅を先に確保する。'
+  reason: 状態で要素の幅が広がると後ろの要素が押され、カーソルを動かすたびに並びが揺れるため。
+  note: 'ラベルが和文だけなら、漢字と全角のかなは太さで字幅が変わらないので、`font-weight` を変えてかまいません。太字の幅は、リンクの文字と同じ文字を `data-label` 属性に持たせ、縦並びの `inline flex` にしたリンクの `::after` に `content: attr(data-label) / ""`、`visibility: hidden`、`block-size: 0`、太字を指定して確保します。状態で `border` を足すときは、同じ太さの透明な `border` を最初から置き、色だけを変えます。'
+  page: interaction/states-and-focus
+  since: 0.81.0
+
 # 17-2 押せる範囲とタッチ操作
 - id: hit-area-min-size
   level: 推奨
