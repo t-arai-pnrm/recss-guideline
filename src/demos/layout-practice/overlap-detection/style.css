@@ -16,12 +16,14 @@
       padding-block: 48px;
       padding-inline: 16px;
       border-radius: var(--rounded--lg);
-      background-color: var(--background--active);
+      background-color: var(--background--surface);
       isolation: isolate;
 
       @supports (anchor-name: --decoration) and (animation-timeline: scroll()) {
         anchor-scope: --decoration, --content;
-        animation: --detect-overlap linear both;
+        animation-name: --detect-overlap;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
         animation-timeline: --decoration-gap;
 
         /* 子孫の _measure が作るスクロールタイムラインを、ルートから参照できるようにする */
@@ -34,7 +36,7 @@
         inset-inline-start: 16px;
       }
 
-      /* 円の行末側の辺から本文の行頭側の辺までの範囲を占める */
+      /* 円と本文の間隔をこの要素の幅にして、はみ出すかどうかで測るため */
       & > ._measure {
         @supports (anchor-name: --decoration) and (animation-timeline: scroll()) {
           position: absolute;
@@ -49,8 +51,8 @@
       anchor-name: --decoration;
       inline-size: 120px;
       aspect-ratio: 1;
-      border-radius: 50%;
-      background-color: oklch(from var(--foreground--accent) l c h / 40%);
+      border-radius: var(--rounded--full);
+      background-color: color-mix(in oklab, var(--foreground--base) 12%, transparent);
 
       /* 間隔が足りないときだけ、ルートで --_overlapping が --true になる */
       @container style(--_overlapping: --true) {
@@ -63,7 +65,7 @@
       max-inline-size: calc(400 / 16 * 1rem);
       padding: 24px;
       border-radius: var(--rounded--md);
-      background-color: var(--background--surface);
+      background-color: var(--background--base);
 
       & > h2 + p {
         margin-block-start: 8px;
@@ -73,7 +75,7 @@
     ._measure {
       display: none;
 
-      /* 20px の中身がはみ出すかで間隔を測る */
+      /* 20px は、円と本文の間に確保したい最小の間隔 */
       @supports (anchor-name: --decoration) and (animation-timeline: scroll()) {
         display: block flow;
         overflow-x: auto;

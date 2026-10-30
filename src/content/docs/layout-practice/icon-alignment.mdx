@@ -50,7 +50,7 @@ Flexboxにはもう1つ問題があります。項目の中に `strong` や `a` 
 
 中身が1つの文章なら、項目をGridにして、アイコンの列と文章の列に分けます。アイコンの上下の `margin` を `calc((1lh - var(--_icon-size)) / 2)` にすると、1行目の行の高さとアイコンの大きさの差が、上下に半分ずつ配られます。アイコンは1行目の中央に置かれ、2行目以降がいくつ増えても動きません。
 
-```css title="🙆‍♂ Recommended: Gridの列に置いたアイコンを、1行目の中央にそろえる"
+```css title="🙆‍♂ Recommended: Gridの列に置いたアイコンを、1行目の中央にそろえる" from="layout-practice/icon-align-grid"
 @scope (.scoped.check-list) to (.scoped) {
   li {
     --_icon-size: 1em;
@@ -67,7 +67,7 @@ Flexboxにはもう1つ問題があります。項目の中に `strong` や `a` 
       inline-size: var(--_icon-size);
       aspect-ratio: 1;
 
-      /* 1行目の行の高さの中で、上下の中央に置く */
+      /* 文章が折り返しても、アイコンを1行目にそろえるため */
       margin-block: calc((1lh - var(--_icon-size)) / 2);
     }
   }
@@ -136,7 +136,7 @@ CMSで入力した本文のリストのように、項目の中身に `strong` �
       inline-size: var(--_icon-size);
       aspect-ratio: 1;
 
-      /* 1行目の行の高さの中で、上下の中央に置く */
+      /* 文章が折り返しても、アイコンを1行目にそろえるため */
       margin-block: calc((1lh - var(--_icon-size)) / 2);
 
       /* 項目の padding の中へ戻し、文章の幅を狭めない */
@@ -165,7 +165,7 @@ CMSで入力した本文のリストのように、項目の中身に `strong` �
     content: "";
     position: absolute;
 
-    /* 項目の padding に、1行目の行の高さとアイコンの差の半分を足す */
+    /* inset は項目の padding を含む領域の上端から測るので、padding も足す */
     inset-block-start: calc(var(--_padding-block) + (1lh - var(--_icon-size)) / 2);
     inset-inline-start: 0;
     inline-size: var(--_icon-size);
@@ -186,7 +186,7 @@ CMSで入力した本文のリストのように、項目の中身に `strong` �
 
 `1lh` が指すのは、擬似要素自身の行の高さです。アイコンの大きさを `font-size` で決めようとして擬似要素の文字の大きさを変えると、`1lh` も変わり、項目の行の高さとずれます。アイコンの大きさは `inline-size` で決め、擬似要素の `font-size` と `line-height` は項目から継承させたままにします。行の高さの決め方は「[14-3 行の高さとハーフレディング](/typography/line-height/)」で説明しています。
 
-アイコンをマスクで描くか、インラインSVGで描くかは、「[16-3 アイコンとSVG](/decoration/icons-and-masks/)」で説明しています。マスクで描いたアイコンは、`background-color` を文字色にすると、強制カラーモードで消えます。デモでは、通常の文字の中のアイコンをグラデーションとシステムカラーの重ね塗りで、リンクとボタンの中のアイコンを `--background--current` で塗っています。この2つの使い分けは「[15-5 強制カラーモードとコントラスト](/color-media/forced-colors/)」で説明しています。
+アイコンをマスクで描くか、インラインSVGで描くかは、「[16-3 アイコンとSVG](/decoration/icons-and-masks/)」で説明しています。マスクで描いたアイコンは、`background-color` を文字色にすると、強制カラーモードで消えます。デモでは、`float` と絶対配置を比べるデモの通常の文字の中のアイコンをグラデーションとシステムカラーの重ね塗りで、それ以外のアイコンを `--background--current` で塗っています。この2つの使い分けは「[15-5 強制カラーモードとコントラスト](/color-media/forced-colors/)」で説明しています。
 
 `float`、`margin`、`inset` の値は、`inline-start` や `margin-inline-start` のように論理値と論理プロパティで書きます。右から左へ書く言語でも、アイコンは行の始端に置かれます（「[9-9 論理プロパティと論理値](/notation/logical-properties/)」）。
 

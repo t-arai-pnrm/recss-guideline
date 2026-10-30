@@ -31,7 +31,7 @@ sidebar:
 
 ## 初めて読むとき
 
-初めて読むときは、基本の節の「[19-1 Stylelintでルールを守る](/operations/stylelint/)」と「[19-3 表示と操作を確かめる](/operations/verification/)」を読み、19-1の機械的な検査と、19-3のブラウザで条件を再現する確認を手元で試します。この章で確かめる力は、確認の項目を答えられることではなく、幅、拡大、キーボード、表示の設定を自分のブラウザで再現できることだからです。
+初めて読むときは、基本の節の「[19-1 Stylelintでルールを守る](/operations/stylelint/)」と「[19-3 表示と操作を確かめる](/operations/verification/)」を読み、19-3のブラウザで条件を再現する確認を手元で試します。19-1の機械的な検査は、Node.jsを使えるプロジェクトがあれば、そこで試します。この章で確かめる力は、確認の項目を答えられることではなく、幅、拡大、キーボード、表示の設定を自分のブラウザで再現できることだからです。
 
 ## 最初に押さえるルール
 
@@ -47,7 +47,7 @@ sidebar:
 
 この章の内容で答えられる問いを1つ置きます。答えを開く前に、確かめる条件とその順番を書き出してください。
 
-記事のカードのCSSに、置かれた幅が狭いときに画像を左へ並べるコンテナサイズクエリを足しました。Stylelintはエラーと警告を1件も報告せず、ビルドも通っています。公開の前に、ほかに何を、どの順番で確かめますか。また、lintが通ったことだけで済ませられないのはなぜですか。
+記事のカードのCSSに、置かれた幅が広いときに画像を左へ並べるコンテナサイズクエリを足しました。Stylelintはエラーと警告を1件も報告せず、ビルドも通っています。公開の前に、ほかに何を、どの順番で確かめますか。また、lintが通ったことだけで済ませられないのはなぜですか。
 
 <details>
 {/* textlint-disable ja-technical-writing/ja-no-mixed-period */}
@@ -58,37 +58,131 @@ sidebar:
 
 内容から始めるのは、内容の問題が狭い幅や拡大した表示でも同じ原因で現れやすく、先に直せば同じ原因を何度も見つけずに済むからです。長い見出し、折り返せない文字列、読み込めない画像を入れたテストページで崩れを直してから、320px、480px、768px、1024px、1280pxの5つの幅と、その間の幅を見ます。この変更はコンテナサイズクエリなので、ページの幅だけでなく、同じカードを本文の幅とサイドバーの幅に並べて確かめます。
 
-拡大では、ページ全体のズーム、既定の文字サイズの変更、文字だけのズームを、それぞれ200%まで上げます。200%まで拡大しても内容と機能が失われないことはWCAGの達成基準1.4.4の要求で、3つの操作をそれぞれ確かめるのは、操作ごとに見つかる崩れが違うために本書が加えた手順です（`verify-text-resize-200`）。キーボードでは、すべてのリンクとボタンに届くか、フォーカスが見えるか、移動の順番が見た目の順番と合うかを見ます。最後に、強制カラーモードで境界やアイコンが消えないか、動きを減らす設定で大きな動きが止まるか、グレースケールで状態の違いが分かるかを確かめます（`verify-keyboard-and-display-settings`）。
+この変更に固有の確認もあります。閾値ちょうどの幅とその前後の幅で、画像が左へ移る境目に、どちらの形でもない中間の状態が出ないかを見ます。画像を読み込めないときに、横に並べた形の文章の幅が崩れないかも見ます。画像を左へ移すのが表示の順番を入れ替える指定なら、`Tab` キーの移動と読み上げの順番が、見た目の順番と食い違わないかも確かめます。
+
+拡大では、ページ全体のズーム、既定の文字サイズの変更、文字だけのズームを、それぞれ200%まで上げます。200%まで拡大しても内容と機能が失われないことはWCAGの達成基準1.4.4の要求で、3つの操作をそれぞれ確かめるのは、操作ごとに見つかる崩れが違うために本書が加えた手順です（`verify-text-resize-200`）。続けて、幅1280pxの画面を400%に拡大して横スクロールが出ないこと（`verify-reflow-400`）と、行の高さや字間を広げる上書きで文字が欠けないこと（`verify-text-spacing-override`）を確かめます。キーボードでは、すべてのリンクとボタンに届くか、フォーカスが見えるか、移動の順番が見た目の順番と合うかを見ます。最後に、強制カラーモードで境界やアイコンが消えないか、動きを減らす設定で大きな動きが止まるか、グレースケールで状態の違いが分かるかを確かめます（`verify-keyboard-and-display-settings`）。
 
 </details>
 
 ## 手を動かす課題
 
-判断の問いでは、確かめる条件と順番を挙げました。ここでは、第13章の「[手を動かす課題](/responsive/#手を動かす課題)」を終えたページで、その条件を実際に再現し、結果を記録します。
+判断の問いでは、確かめる条件と順番を挙げました。ここでは、第13章の「[手を動かす課題](/responsive/#手を動かす課題)」を終えたページで、まず第14〜18章の実装をカードに足し、そのうえで条件を実際に再現して、結果を記録します。
 
-最初に、カードの内容を厳しくします。サイドバーの1枚目の見出しを3行に折り返すほど長い文にし、主欄の1枚目の本文に、改行できない長い英字の文字列（URLなど）を入れます。各カードの見出しの文字を `<a href="#news-1">` のようなリンクで囲み、キーボードで移動できるようにします。そのうえで、「[19-3 表示と操作を確かめる](/operations/verification/)」の順に条件を再現します。条件は、内容、幅（320px、768px、1280px）、文字サイズの200%、キーボード、強制カラーモードです。結果は `verification.md` に1条件1行で書きます。
+前半では、カードを仕上げます。文字は「[14-5 文字の役割と色](/typography/text-roles/)」のとおり、`css/tokens/typography.css` に役割のトークンを定義し、見出し、本文、日付を役割で指定します。見出しは、カードの幅が480px未満なら20px、480px以上なら24pxのままにし、日付は12pxにします。各カードの見出しの文字を `<a href="#news-1">` のようなリンクで囲み、「[17-1 ホバーとフォーカスを表す](/interaction/states-and-focus/)」のとおり、ホバーとキーボードのフォーカスで同じように下線を出し、見出しの末尾の矢印を右へ4px動かします。矢印の動きは、「[18-2 動きを減らす設定に対応する](/motion/reduced-motion/)」のとおり、動きを減らす設定がないときだけ付けます。最後に、背景色だけで描いたカードの範囲を、強制カラーモードでも見えるようにします（「[15-5 強制カラーモードとコントラスト](/color-media/forced-colors/)」）。
 
-合格の条件は、記録のすべての行に、使ったブラウザ、条件、期待した結果、観察した結果がそろっていることです。試していないブラウザや設定は、「未確認」として行に残します。「確認済み」の印だけの行は、合格にしません。
+後半では、条件を厳しくして確かめます。サイドバーの1枚目の見出しを3行に折り返すほど長い文にし、主欄の1枚目の本文に、改行できない長い英字の文字列（URLなど）を入れます。そのうえで、「[19-3 表示と操作を確かめる](/operations/verification/)」の順に条件を再現します。条件は、内容、幅（320px、768px、1280px）、文字サイズの200%、キーボード、動きを減らす設定、強制カラーモードです。結果は `verification.md` に1条件1行で書きます。各行の期待した結果は、ブラウザで見る前に、閾値と設定から先に書きます。
+
+合格の条件は、記録のすべての行に、使ったブラウザ、条件、期待した結果、観察した結果がそろっていることです。試していないブラウザや設定は、期待した結果を書いたうえで、観察した結果を「未確認」として行に残します。「確認済み」の印だけの行は、合格にしません。期待と違う結果が出た行は、原因を直して同じ条件で確かめ直し、直した内容を観察した結果の欄に書きます。
 
 <details>
 {/* textlint-disable ja-technical-writing/ja-no-mixed-period */}
 <summary>答えの例と解説</summary>
 {/* textlint-enable ja-technical-writing/ja-no-mixed-period */}
 
+文字のトークンは、カードで使う役割だけを定義します。カードの見出しは、置かれた幅に合わせて20pxから24pxまで変わるので、両端の2つのサイズを、`title` と `headline` の2つの役割に分けています。
+
+```css title="🙆‍♂ Recommended: カードで使う役割だけを、サイズと行の高さの組で定義する" use="complete" from="tasks/19-operations/css/tokens/typography.css"
+:root {
+  --font-size--xs: 12;
+  --font-size--md: 16;
+  --font-size--xl: 20;
+  --font-size--xxl: 24;
+  --leading--snug: 1.4;
+  --leading--normal: 1.6;
+  --leading--relaxed: 1.75;
+  --text--headline--font-size: var(--font-size--xxl);
+  --text--headline--leading: var(--leading--snug);
+  --text--title--font-size: var(--font-size--xl);
+  --text--title--leading: var(--leading--snug);
+  --text--body--font-size: var(--font-size--md);
+  --text--body--leading: var(--leading--relaxed);
+  --text--caption--font-size: var(--font-size--xs);
+  --text--caption--leading: var(--leading--normal);
+}
+```
+
+カードでは、ルートに本文の役割を、見出しと日付にそれぞれの役割を指定します。見出しのリンクでは、ホバーとフォーカスで `--_hocus` を立て、リンク自身の下線は状態のセレクタに直接書き、擬似要素の矢印はスタイルクエリで動かします。矢印の移動とトランジションは `prefers-reduced-motion: no-preference` の中にだけ書くので、動きを減らす設定では、矢印は動かず、下線だけが出ます。キーボードでフォーカスしたときは、2つ目のフラグ `--_focus-visible` でトランジションを外し、一度で切り替えます。カードのルートの透明な枠線は、強制カラーモードで色が付き、背景色が消えてもカードの範囲を示します。
+
+```css title="🙆‍♂ Recommended: 役割のトークン、ホバーとフォーカス、動きを減らす設定、強制カラーモードの枠線を足す" use="diff" from="tasks/19-operations/css/components/news-card.css"
+@scope (.scoped.news-card) to (.scoped) {
+  :scope {
+    border: 1px solid transparent;
+    font-size: calc(var(--text--body--font-size) / 16 * 1rem);
+    line-height: var(--text--body--leading);
+  }
+
+  h2 {
+    font-size: clamp(var(--text--title--font-size) / 16 * 1rem, 1.25cqi + 16 / 16 * 1rem, var(--text--headline--font-size) / 16 * 1rem);
+    line-height: var(--text--title--leading);
+  }
+
+  a {
+    --_hocus: --false;
+    --_focus-visible: --false;
+
+    &:focus-visible {
+      --_hocus: --true;
+      --_focus-visible: --true;
+
+      text-decoration-line: underline;
+    }
+
+    &:any-link:hover {
+      @media (any-hover) {
+        --_hocus: --true;
+
+        text-decoration-line: underline;
+      }
+    }
+
+    &::after {
+      content: "→" / "";
+      display: inline flow-root;
+      padding-inline-start: 0.25em;
+
+      @container style(--_hocus: --true) {
+        @media (prefers-reduced-motion: no-preference) {
+          translate: 4px 0;
+        }
+      }
+
+      @container style(--_focus-visible: --false) {
+        @media (prefers-reduced-motion: no-preference) {
+          transition-duration: var(--duration--fast);
+          transition-property: translate;
+          transition-timing-function: var(--ease--out-quint);
+        }
+      }
+    }
+  }
+
+  time {
+    font-size: calc(var(--text--caption--font-size) / 16 * 1rem);
+    line-height: var(--text--caption--leading);
+  }
+}
+```
+
+矢印を動かすのはリンクではなく擬似要素なので、ホバーを受けるリンクの位置は変わりません（`hover-target-stays-still`）。新しく足した `typography.css` と、トランジションの時間を定義した `motion.css` は、`css/style.css` で `layer(tokens)` として読み込みます。カードの枠線は中身の幅を左右1pxずつ狭めますが、試す幅はどれも480pxの閾値から離れているので、結果は変わりません。
+
 記録は、次のような形にします。観察した結果の欄は、自分のブラウザで見たとおりに書きます。
 
 ```text title="verification.md の例"
 | ブラウザ | 条件 | 期待した結果 | 観察した結果 |
 | --- | --- | --- | --- |
-| Chrome | 幅320px、長い見出しと長い英字の文字列 | カードが横にはみ出さない | （見たとおりに書く） |
-| Chrome | 幅1280px | 主欄の見出しは24px、サイドバーは20px | （見たとおりに書く） |
+| Chrome | 幅320px、長い見出しと長い英字の文字列 | 主欄とサイドバーが縦に積まれ、カードが横にはみ出さない。見出しは20px | （見たとおりに書く） |
+| Chrome | 幅768px | 主欄とサイドバーが縦に積まれ、どちらのカードの見出しも24px | （見たとおりに書く） |
+| Chrome | 幅1280px | 主欄の見出しは24px、サイドバーは20px。日付はどちらも12px | （見たとおりに書く） |
 | Chrome | 既定の文字サイズ200% | 見出しと本文が欠けず、重ならない | （見たとおりに書く） |
-| Chrome | Tabキーで移動 | すべての見出しのリンクに届き、フォーカスが見える | （見たとおりに書く） |
-| Chrome | 強制カラーモード | カードの範囲と見出しのリンクが分かる | （見たとおりに書く） |
-| Safari、Firefox | すべての条件 | — | 未確認 |
+| Chrome | Tabキーで移動 | すべての見出しのリンクに届き、フォーカスリングと下線が見え、矢印が一度で右へ移る | （見たとおりに書く） |
+| Chrome | 動きを減らす設定（reduce）でホバー | 下線は出るが、矢印は動かない | （見たとおりに書く） |
+| Chrome | 強制カラーモード | カードの範囲が枠線で分かり、見出しのリンクと矢印が見える | （見たとおりに書く） |
+| Safari、Firefox | Chromeの各行と同じ条件 | Chromeの各行と同じ | 未確認 |
 ```
 
-長い英字の文字列は、kiso.cssが `overflow-wrap: anywhere` を指定しているので、カードの幅で折り返されます。リセットCSSを替えたときに崩れる箇所なので、この行は残しておく価値があります。強制カラーモードでは、背景色だけで描いたカードの範囲が見えなくなります。範囲が分からないと判断したら、直し方を「[15-5 強制カラーモードとコントラスト](/color-media/forced-colors/)」で選び、直したあとにもう一度同じ行を確かめます。
+768pxの行は、1280pxの行と期待した結果が違います。`sidebar` は、主欄の最小幅480px、サイドバーの320px、間隔の24pxを合わせた824pxより狭いと縦に積むので、768pxではサイドバーのカードも主欄と同じ幅に広がり、480pxの閾値を超えます。期待した結果は、このように `sidebar.css` と `news-card.css` の値から先に計算して書きます。
+
+長い英字の文字列は、kiso.cssが `overflow-wrap: anywhere` を指定しているので、カードの幅で折り返されます。リセットCSSを替えたときに崩れる箇所なので、この行は残しておく価値があります。強制カラーモードの行は、透明な枠線を足す前と後で同じ条件を見比べると、直した効果を確かめられます。
 
 記録の目的は、同じ条件をあとで再現できるようにすることです。どのブラウザで何を試し、何を試していないかが残っていれば、次の確認は試していない組み合わせから始められます。使ったルールは、`verify-worst-case-content`、`verify-text-resize-200`、`verify-keyboard-and-display-settings` です。
 

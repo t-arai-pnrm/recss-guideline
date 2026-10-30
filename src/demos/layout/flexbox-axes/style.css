@@ -7,7 +7,7 @@
       /* 縦にも余りを作るため、高さの下限を決める */
       min-block-size: 200px;
       border: 1px dashed var(--border--strong);
-      background-color: var(--background--hover);
+      background-color: var(--background--surface);
     }
 
     ._item {

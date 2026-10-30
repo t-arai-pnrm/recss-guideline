@@ -40,7 +40,8 @@
     }
 
     ._heading {
-      font-size: calc(18 / 16 * 1rem);
+      font-size: calc(var(--text--subtitle--font-size) / 16 * 1rem);
+      line-height: var(--text--subtitle--leading);
     }
 
     ._more {

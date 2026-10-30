@@ -1,7 +1,8 @@
 /**
  * サイト全体のスタイルの入り口。
  * レイヤーの順番を宣言し、各ファイルをレイヤーに割り当てる。
- * 引き継いだ legacy.css は base レイヤーに入れ、components の宣言に勝たせない。
+ * 引き継いだ legacy.css は中身が要素の見た目を決める1つのルールだと分かっているので base に入れ、components の宣言に勝たせない。
+ * 中身を確かめていない既存の CSS なら vendors に入れる（19-6）。
  */
 @layer tokens, reset, base, vendors, compositions, pages, components, patterns, utilities;
 

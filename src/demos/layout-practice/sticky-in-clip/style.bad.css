@@ -9,9 +9,8 @@
       overflow: hidden;
       padding-block-end: 24px;
       padding-inline: 16px;
-      background-color: var(--background--active);
+      background-color: var(--background--surface);
 
-      /* セクションの外へはみ出す装飾 */
       &::before {
         content: "";
         position: absolute;
@@ -19,8 +18,8 @@
         inset-inline-end: -48px;
         inline-size: calc(160 / 16 * 1rem);
         aspect-ratio: 1;
-        border-radius: 50%;
-        background-color: oklch(from var(--foreground--accent) l c h / 30%);
+        border-radius: var(--rounded--full);
+        background-color: color-mix(in oklab, var(--foreground--base) 12%, transparent);
       }
     }
 

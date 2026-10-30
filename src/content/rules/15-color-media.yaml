@@ -154,9 +154,9 @@
 - id: background-current-for-shapes
   level: 必須
   kind: convention
-  rule: '`mask-image` や `clip-path` で切り抜き、`background-color` で塗る図形は、`currentColor` を直接指定せず、強制カラーモードでシステムカラーに切り替わるカスタムプロパティ（`--background--current`）から色を受け取る。'
+  rule: '`mask-image` や `clip-path` で切り抜き、文字色の代わりに `background-color` で塗るアイコンや記号は、`currentColor` を直接指定せず、強制カラーモードでシステムカラーに切り替わるカスタムプロパティ（`--background--current`）から色を受け取る。'
   reason: 強制カラーモードでは `background-color` がページの背景色に置き換わり、図形が見えなくなるため。
-  note: 通常の文字の文脈でしか使わない図形は、`background-image` に `conic-gradient(currentColor 0 0)` を、`background-color` に `CanvasText` を指定する方法でも描けます。
+  note: 通常の文字の文脈でしか使わない図形は、`background-image` に `conic-gradient(currentColor 0 0)` を、`background-color` に `CanvasText` を指定する方法でも描けます。タブの輪郭や吹き出しの本体のように、面の背景として塗る図形は対象外です。`--background--current` で塗ると、強制カラーモードで面の上の文字と同じ色になるからです。強制カラーモードで範囲を示す必要があるなら、透明な `border` を残します（16-9）。
   aiProne: true
   page: color-media/forced-colors
   since: 0.1.0
@@ -192,7 +192,7 @@
   level: 必須
   kind: spec
   rule: 本文の中のリンク、フォーカスやホバーの状態、入力エラーのような情報を、色の違いだけで伝えない。
-  reason: 色の見え方は人によって違い、グレースケールで表示している人もいるため（WCAG 2.1 の「色の使用」）。
+  reason: 色の見え方は人によって違い、グレースケールで表示している人もいるため（WCAG 2.2 の「色の使用」）。
   note: 下線、太さ、アイコン、文言のような、色以外の手がかりを足します。
   aiProne: true
   page: color-media/forced-colors
@@ -210,7 +210,7 @@
 - id: text-contrast-aa
   level: 必須
   kind: spec
-  rule: 文字と背景のコントラスト比は、WCAG 2.1 の AA（通常の文字で 4.5:1 以上、大きな文字で 3:1 以上）を満たす。
+  rule: 文字と背景のコントラスト比は、WCAG 2.2 の AA（通常の文字で 4.5:1 以上、大きな文字で 3:1 以上）を満たす。
   reason: 視力の弱い人や、明るい屋外で画面を見る人にも文字を読めるようにするため。
   note: 薄い文字色のトークンは、組み合わせる背景のトークンごとに確かめます。
   aiProne: true

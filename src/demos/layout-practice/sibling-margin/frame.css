@@ -5,4 +5,13 @@
       align-items: start;
     }
   }
+
+  @scope (.scoped.notice-card) to (.scoped) {
+    /* 要素の箱の範囲を見せる */
+    h2,
+    p,
+    ul {
+      outline: 1px dashed var(--border--strong);
+    }
+  }
 }

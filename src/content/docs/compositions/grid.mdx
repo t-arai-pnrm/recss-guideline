@@ -118,7 +118,7 @@ import switcherCss from '../../../demos/compositions/grid-switcher/style.css?raw
 ```html
 <ul
   class="scoped news-list | grid"
-  style="--grid--column-min-width: calc(280 / 16 * 1rem); --grid--column-max-count: 3; --grid--gap: calc(var(--spacing--md) / 16 * 1rem)"
+  style="--grid--column-min-width: calc(280 / 16 * 1rem); --grid--column-max-count: 3; --grid--gap: calc(var(--spacing--md) * 1px)"
 >
   <li>
     <article class="scoped card">…</article>
@@ -129,10 +129,10 @@ import switcherCss from '../../../demos/compositions/grid-switcher/style.css?raw
 
 コンポーネントのCSSが受け持つのは、セルの中身だけです。列の数と間隔は `grid` とHTMLの `style` 属性で決まるので、`news-list` のCSSには `grid-template-columns` と `gap` を書きません。
 
-```css title="🙆‍♂ Recommended: 列の数と間隔はコンポジションに任せ、セルの中だけを書く" from="compositions/grid"
+```css title="🙆‍♂ Recommended: 列の数と間隔はコンポジションに任せ、セルの中だけを書く"
 @layer components {
   @scope (.scoped.news-list) to (.scoped) {
-    /* li を grid にして、中のカードをセルの高さいっぱいに伸ばす */
+    /* 同じ行のカードの下端をそろえるため、li をグリッドにしてカードをセルの高さまで伸ばす */
     li {
       display: block grid;
     }
@@ -142,7 +142,7 @@ import switcherCss from '../../../demos/compositions/grid-switcher/style.css?raw
 
 `li` を `display: block grid` にしているのは、同じ行のカードの高さをそろえるためです。`grid` の子である `li` は、行の高さいっぱいに伸びます。その `li` をグリッドにすると、中の `article` もデフォルトの `stretch` で `li` の高さまで伸び、隣のカードと下端がそろいます。カードの中の見出しや本文の位置まで行ごとにそろえたいときは、サブグリッドを使います（「[7-9 Gridでアイテムをそろえる](/layout/grid-alignment/#rule-subgrid-for-aligned-rows)」）。その場合は、カードを別のコンポーネントにせず、一覧の子要素として書きます。カードの行が一覧の行になり、カードだけを一覧の外に取り出せなくなるからです（「[10-1 何をコンポーネントにするか](/components/what-is-a-component/#行をそろえて並べる一覧と項目)」）。
 
-次のデモは、最小幅200px相当、最大4列、間隔16px相当でカードを6枚並べています。デモの本体には左右に24pxの余白があるので、一覧の幅は表示の幅より48px狭くなります。幅を320px、480px、768px、1024pxと切り替えると、列は1列、2列、3列、4列と1つずつ増えます。1280pxでは、最小幅だけで並べれば5列入りますが、最大数の4列で止まります。
+次のデモは、最小幅200px相当、最大4列、間隔16pxでカードを6枚並べています。デモの本体には左右に24pxの余白があるので、一覧の幅は表示の幅より48px狭くなります。幅を320px、480px、768px、1024pxと切り替えると、列は1列、2列、3列、4列と1つずつ増えます。1280pxでは、最小幅だけで並べれば5列入りますが、最大数の4列で止まります。
 
 <Demo title="最小幅200px相当、最大4列でカードを並べる grid" html={gridHtml} css={gridCss} widths={[320, 480, 768, 1024, 1280]} />
 
@@ -164,13 +164,13 @@ import switcherCss from '../../../demos/compositions/grid-switcher/style.css?raw
 
 ## 補足と注意点
 
-列の間隔は、`0` であっても `0px` のように単位を付けて渡します。`--_c--column-preferred-width` の計算では、間隔を `100%` から引いています。単位のない `0` は長さではなく数値として扱われるので、`100% - 0 * 4` は型の合わない計算になり、`grid-template-columns` の宣言全体が無効になります。デフォルト値を `0px` と書いているのも同じ理由です。`--grid--mode` が `auto-fill` と `auto-fit` 以外の値のときや、`--grid--column-max-count` が0のときも、宣言が無効になります。どの場合も表示は崩れず1列になるだけなので、間違いを見落としやすくなります。
+列の間隔は、`0` であっても `0px` のように単位を付けて渡します。`--_c--column-preferred-width` の計算では、間隔を `100%` から引いています。単位のない `0` は長さではなく数値として扱われるので、`100% - 0 * 4` は型の合わない計算になり、`grid-template-columns` の宣言全体が無効になります。デフォルト値を `0px` と書いているのも同じ理由です。`--grid--mode` の値が `auto-fill`、`auto-fit`、整数のどれでもないときも、宣言が無効になります。整数を渡したときは、宣言は有効で、その数の列に固定されます。`--grid--column-max-count` が0のときは、列の幅の目安は0で割るので無限大となり、`min(100%, …)` で1列になります。{/* 要検証: ブラウザ。--grid--column-max-count: 0 のときの列数 */}どの場合も表示は崩れず1列になるだけなので、間違いを見落としやすくなります。
 
 内部プロパティの `100%` が計算されるのは、宣言した時点ではなく、`grid-template-columns` の中で使われた時点です。カスタムプロパティの値は、使われる場所に置き換えられてから解釈されるからです。そのため `100%` はグリッドコンテナの内側の幅を指します。`grid` を入れ子にしたときも、それぞれが自分の幅を基準に列数を決めます。
 
 `grid` はアイテムの順番を入れ替えません。アイテムはHTMLの順に左上から右へ並び、行の終わりで次の行へ回るので、スクリーンリーダーの読み上げ順と見た目の順が一致します。この一致を保つため、`order` や `grid-auto-flow: dense` による並べ替えはしません。並べ替えると、見た目の順と、キーボードのフォーカスの移る順がずれるからです。
 
-列の幅は `minmax()` の最小値で守られていますが、カードの中に長いURLや英単語があると、カードの中身が列からはみ出すことがあります。グリッドのアイテムは、既定では中身の最小幅より狭くならないからです。単語の折り返しとアイテムの最小幅の扱いは、「[11-3 サイズと内容の変化に耐える](/layout-practice/defensive/)」で扱っています。
+列の幅は `minmax()` の最小値で守られていますが、カードの中に表や `white-space: nowrap` の文字列のような縮まない中身があると、中身が列からはみ出します。グリッドのアイテムは列の幅まで縮み、縮まない中身だけがアイテムの外へ出るからです。長いURLや英単語は、kiso.cssの `overflow-wrap: anywhere` で折り返されます。単語の折り返しとアイテムの最小幅の扱いは、「[11-3 サイズと内容の変化に耐える](/layout-practice/defensive/)」で扱っています。
 
 列の幅は計算で求めるので、小数になります。表の1800pxの行では、1列は340.8pxです。ブラウザは端数を丸めて配置するので、最大数の列でちょうど埋まる幅のとき、丸めの誤差によって列が1つ減ることも考えられます。Chromeでは、1696pxから2403pxまでの数か所を確かめ、どこも5列になりました。{/* 要確認: 出典なし */}SafariとFirefoxでの丸めの結果は確認していません。
 

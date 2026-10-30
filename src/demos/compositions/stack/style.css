@@ -1,10 +1,16 @@
 /**
- * 子要素を縦に積み、間隔をそろえる。
+ * 子要素を縦に積み、間隔をそろえる stack と、カードの一覧を並べる switcher（12-5）。
  *
  * @prop {length} --stack--gap [0] - 子要素の間隔
  *
+ * @prop {integer} --switcher--column-count     [3]                     - 横に並べるときの列数
+ * @prop {length}  --switcher--column-min-width [calc(320 / 16 * 1rem)] - 列の最小幅（閾値の計算に使う）
+ * @prop {length}  --switcher--gap              [なし]                  - 行と列の間隔（一括）。指定すると個別の指定より優先する
+ * @prop {length}  --switcher--row-gap          [0px]                   - 行の間隔
+ * @prop {length}  --switcher--column-gap       [0px]                   - 列の間隔
+ *
  * @example
- * <div class="stack" style="--stack--gap: calc(var(--spacing--md) / 16 * 1rem)">
+ * <div class="stack" style="--stack--gap: calc(var(--spacing--md) * 1px)">
  *   <h2>…</h2>
  *   <p>…</p>
  * </div>
@@ -15,25 +21,41 @@
     flex-direction: column;
     gap: var(--stack--gap, 0);
   }
+
+  /* 対等なカードが2枚と1枚に分かれないように、1列か指定の列数だけで並べる */
+  .switcher {
+    --_c--row-gap: var(--switcher--gap, var(--switcher--row-gap, 0px));
+    --_c--column-gap: var(--switcher--gap, var(--switcher--column-gap, 0px));
+    --_c--column-count: var(--switcher--column-count, 3);
+    --_c--column-min-width: var(--switcher--column-min-width, calc(320 / 16 * 1rem));
+    --_c--threshold: calc(
+      var(--_c--column-min-width) * var(--_c--column-count) + var(--_c--column-gap) * (var(--_c--column-count) - 1)
+    );
+    --_c--column-preferred-width: calc(
+      (100% - var(--_c--column-gap) * (var(--_c--column-count) - 1)) / var(--_c--column-count)
+    );
+
+    display: block grid;
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(max(var(--_c--column-preferred-width), sign(100% - var(--_c--threshold)) * -100%), 1fr)
+    );
+    gap: var(--_c--row-gap) var(--_c--column-gap);
+  }
 }
 
 @layer components {
   @scope (.scoped.stack-demo) to (.scoped) {
     ._eyebrow {
-      color: var(--foreground--accent);
+      color: var(--foreground--muted);
       font-size: calc(var(--text--body-compact--font-size) / 16 * 1rem);
       font-weight: var(--font-weight--bold);
       line-height: var(--text--body-compact--leading);
     }
 
     h2 {
-      font-size: calc(24 / 16 * 1rem);
-    }
-
-    ul {
-      display: block grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(200 / 16 * 1rem)), 1fr));
-      gap: calc(var(--spacing--sm) / 16 * 1rem);
+      font-size: calc(var(--text--title--font-size) / 16 * 1rem);
+      line-height: var(--text--title--leading);
     }
 
     li {
@@ -55,7 +77,8 @@
     }
 
     h3 {
-      font-size: calc(18 / 16 * 1rem);
+      font-size: calc(var(--text--subtitle--font-size) / 16 * 1rem);
+      line-height: var(--text--subtitle--leading);
     }
 
     a {

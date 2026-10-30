@@ -25,7 +25,7 @@ CSS に関わる部分の例です。コマンド、ディレクトリの構成�
 ## 検証
 
 - 完了と報告する前に、lint とビルドを実行する。lint のエラーを消すためにルールを無効にしない（`no-disabling-to-silence`）。
-- 宣言が効いているかは、`getComputedStyle` で計算値を読んで確かめる（`verify-applied-styles`）。
+- 宣言が適用されているかは、`getComputedStyle` で計算値を読んで確かめる（`verify-applied-styles`）。
 - 実行していない検査を「問題なし」と報告しない（`report-unverified-honestly`）。
 - VRT の基準画像は、差分の原因を確かめずに更新しない（`no-baseline-update-to-pass`）。
 

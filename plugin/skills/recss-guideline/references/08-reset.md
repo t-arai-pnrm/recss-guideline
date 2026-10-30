@@ -1,8 +1,8 @@
 # 第8章 リセットとベーススタイル：ルール
 
-- ガイドラインのバージョン: 0.82.0（2026-10-30 生成）
+- ガイドラインのバージョン: 0.83.0（2026-10-30 生成）
 - ルールの数: 23
-- 本文: 約5万字
+- 本文: 約5.2万字
 - 読む条件: リセットCSS、要素セレクタだけのスタイル、:root や body のようにグローバルに書くスタイル
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
@@ -15,7 +15,7 @@
 - `reset` 第8章 リセットとベーススタイル（約4,300字）https://t-arai-pnrm.github.io/recss-guideline/reset/
 - `reset/kiso` 8-1 壊さないリセット（約1.3万字）https://t-arai-pnrm.github.io/recss-guideline/reset/kiso/
 - `reset/base-styles` 8-2 ベーススタイルに書くもの（約2.5万字）https://t-arai-pnrm.github.io/recss-guideline/reset/base-styles/
-- `reset/global-pitfalls` 8-3 グローバルに書いてはいけないもの（約8,300字）https://t-arai-pnrm.github.io/recss-guideline/reset/global-pitfalls/
+- `reset/global-pitfalls` 8-3 グローバルに書いてはいけないもの（約8,900字）https://t-arai-pnrm.github.io/recss-guideline/reset/global-pitfalls/
 
 ## 8-1 壊さないリセット
 
@@ -60,7 +60,7 @@ https://t-arai-pnrm.github.io/recss-guideline/reset/base-styles/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/reset/base-styles/#rule-focus-ring-double
 - 【禁止・仕様にもとづく制約】フォーカスリングを `box-shadow` だけで描かない。（`focus-ring-not-box-shadow-only`）
   - 理由: 強制カラーモードでは `box-shadow` が `none` になり、フォーカスの位置が見えなくなるため。
-  - 補足: `box-shadow` は、`outline` で描いたリングを補う用途に限って使います。
+  - 補足: `box-shadow` は、`outline` で描いたリングを補う用途に限って使います。強制カラーモードのために `outline-color: transparent` で `outline` を残し、通常の表示のリングを `box-shadow` で描く書き方（第15章の `transparent-outline-for-custom-focus`）は、強制カラーモードで `outline` がリングになるので、この禁止に当たりません。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/reset/base-styles/#rule-focus-ring-not-box-shadow-only
 - 【禁止・仕様にもとづく制約】`html` や `:root` に、`scroll-behavior: smooth` を無条件に指定しない。（`no-global-smooth-scroll`）
   - 理由: キーボードでのフォーカス移動や `scrollTo()` のスクロールまでなめらかになり、動きを減らす設定をしているユーザーにもアニメーションが適用されるため。
@@ -105,14 +105,14 @@ https://t-arai-pnrm.github.io/recss-guideline/reset/global-pitfalls/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/reset/global-pitfalls/#rule-no-heavy-specificity-in-global
 - 【禁止・実装上の判断】ベーススタイルで、要素全体に `display`、`position`、`max-inline-size` のようなレイアウトのプロパティを指定しない（例：`div { display: flex; }`、`* { position: relative; }`）。（`no-layout-properties-in-base`）
   - 理由: レイアウトは文脈によって必要なものが変わるので、ほかの文脈で打ち消しの指定が増え、打ち消し忘れによる不具合も起きやすいため。
-  - 補足: 全称セレクタの `min-inline-size: 0`（8-2）は、フレックスアイテムとグリッドアイテムの最小幅だけを変える例外です。
+  - 補足: 全称セレクタの `min-inline-size: 0`（8-2）は、フレックスアイテムとグリッドアイテムの最小幅だけを変える例外です。リセット CSS やベーススタイルで、ブラウザのデフォルトの余白を `unset` で消す指定（例：`h1 { margin-block: unset; }`）は、前提をそろえる平坦化で、新しいレイアウトを足す指定ではないので対象外です。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/reset/global-pitfalls/#rule-no-layout-properties-in-base
 - 【禁止・仕様にもとづく制約】`outline: none` や `outline: 0` で、フォーカスリングを消さない。（`no-outline-none`）
   - 理由: キーボードで操作するユーザーが、フォーカスの位置を見失うため。
   - 補足: クリックしたときにリングが出る問題は、ブラウザが `:focus-visible` で解決しています。見た目を変えたいときは、消さずに定義し直します。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/reset/global-pitfalls/#rule-no-outline-none
 - 【必須・仕様にもとづく制約】リストのマーカーは、`list-style: none` ではなく `list-style-type: ""` で消す。（`list-style-type-empty-string`）
-  - 理由: Safari の VoiceOver は、`list-style: none` を指定したリストをリストとして読み上げないため。
+  - 理由: Safari の VoiceOver で、`list-style: none` を指定したリストが、リストとして読み上げられないことがあるため。
   - 補足: kiso.css を使えば、`ul`、`ol`、`menu` のマーカーは消えています。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/reset/global-pitfalls/#rule-list-style-type-empty-string
 - 【禁止・仕様にもとづく制約】ダークモードに対応していないサイトで、`color-scheme: light dark` を指定しない。（`no-color-scheme-without-dark-mode`）

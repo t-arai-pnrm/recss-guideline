@@ -1,16 +1,17 @@
 @layer components {
-  /* 下限は共通の目印だけにし、中に置くコンポーネントの名前を書かない */
+  /* 中に置くコンポーネントが増えても下限を書き足さずに済むよう、共通の目印で止める */
   @scope (.scoped.site-footer) to (.scoped) {
     :scope {
       display: block grid;
       gap: 12px;
       padding: 16px;
+      border: 1px solid var(--border--base);
       border-radius: var(--rounded--lg);
-      background-color: var(--background--active);
+      background-color: var(--background--surface);
     }
 
     p {
-      color: var(--foreground--accent);
+      color: var(--foreground--muted);
       font-size: calc(var(--text--body-compact--font-size) / 16 * 1rem);
       line-height: var(--text--body-compact--leading);
     }
@@ -21,7 +22,7 @@
       padding: 12px;
       border: 1px solid var(--border--base);
       border-radius: var(--rounded--md);
-      background-color: var(--background--surface);
+      background-color: var(--background--base);
     }
   }
 

@@ -6,8 +6,7 @@
 
       display: inline grid;
       padding: unset;
-      border: unset;
-      background-color: unset;
+      border-color: transparent;
 
       &:focus-visible {
         --_hocus: --true;
@@ -43,6 +42,9 @@
     ._face {
       padding-block: 8px;
       padding-inline: 20px;
+
+      /* 強制カラーモードで背景色が消えても、持ち上がる面の範囲を枠線で残す */
+      border: 1px solid transparent;
       border-radius: var(--rounded--sm);
       background-color: var(--background--inverse);
       color: var(--foreground--inverse);

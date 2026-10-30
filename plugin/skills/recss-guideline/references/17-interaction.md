@@ -1,8 +1,8 @@
 # 第17章 インタラクション：ルール
 
-- ガイドラインのバージョン: 0.82.0（2026-10-30 生成）
+- ガイドラインのバージョン: 0.83.0（2026-10-30 生成）
 - ルールの数: 41
-- 本文: 約15万字
+- 本文: 約15.7万字
 - 読む条件: ホバー、フォーカス、押せる範囲、タッチ操作、user-select、状態を表す属性（ARIA属性、data-*属性）、カード全体のリンク、開閉するUI（details、dialog、popover）、フォーム部品、カルーセル
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
@@ -12,15 +12,15 @@
 
 ## この章の節
 
-- `interaction` 第17章 インタラクション（約7,200字）https://t-arai-pnrm.github.io/recss-guideline/interaction/
+- `interaction` 第17章 インタラクション（約7,300字）https://t-arai-pnrm.github.io/recss-guideline/interaction/
 - `interaction/states-and-focus` 17-1 ホバーとフォーカスを表す（約2.5万字）https://t-arai-pnrm.github.io/recss-guideline/interaction/states-and-focus/
-- `interaction/hit-area-and-touch` 17-2 押せる範囲とタッチ操作（約2.3万字）https://t-arai-pnrm.github.io/recss-guideline/interaction/hit-area-and-touch/
-- `interaction/state-attributes` 17-3 状態を属性で表す（約7,000字）https://t-arai-pnrm.github.io/recss-guideline/interaction/state-attributes/
-- `interaction/card-link` 17-4 カード全体をリンクにする（約2,500字）https://t-arai-pnrm.github.io/recss-guideline/interaction/card-link/
-- `interaction/hiding-elements` 17-5 要素を隠す方法を選ぶ（約1.4万字）https://t-arai-pnrm.github.io/recss-guideline/interaction/hiding-elements/
-- `interaction/disclosure` 17-6 開閉するUI（約2.3万字）https://t-arai-pnrm.github.io/recss-guideline/interaction/disclosure/
-- `interaction/forms` 17-7 フォーム部品（約2.5万字）https://t-arai-pnrm.github.io/recss-guideline/interaction/forms/
-- `interaction/carousel` 17-8 CSSでカルーセルを作る（約2.4万字）https://t-arai-pnrm.github.io/recss-guideline/interaction/carousel/
+- `interaction/hit-area-and-touch` 17-2 押せる範囲とタッチ操作（約2.4万字）https://t-arai-pnrm.github.io/recss-guideline/interaction/hit-area-and-touch/
+- `interaction/state-attributes` 17-3 状態を属性で表す（約7,500字）https://t-arai-pnrm.github.io/recss-guideline/interaction/state-attributes/
+- `interaction/card-link` 17-4 カード全体をリンクにする（約2,800字）https://t-arai-pnrm.github.io/recss-guideline/interaction/card-link/
+- `interaction/hiding-elements` 17-5 要素を隠す方法を選ぶ（約1.5万字）https://t-arai-pnrm.github.io/recss-guideline/interaction/hiding-elements/
+- `interaction/disclosure` 17-6 開閉するUI（約2.4万字）https://t-arai-pnrm.github.io/recss-guideline/interaction/disclosure/
+- `interaction/forms` 17-7 フォーム部品（約2.6万字）https://t-arai-pnrm.github.io/recss-guideline/interaction/forms/
+- `interaction/carousel` 17-8 CSSでカルーセルを作る（約2.6万字）https://t-arai-pnrm.github.io/recss-guideline/interaction/carousel/
 
 ## 17-1 ホバーとフォーカスを表す
 
@@ -35,7 +35,7 @@ https://t-arai-pnrm.github.io/recss-guideline/interaction/states-and-focus/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/interaction/states-and-focus/#rule-hover-with-focus-visible
 - 【禁止・実装上の判断】キーボードでフォーカスを受けた要素の見た目は、トランジションやアニメーションを掛けずに一度で切り替える。（`no-motion-on-focus-visible`）
   - 理由: 入力と表示の変化がずれて、反応が遅く感じられるため。
-  - 補足: トランジションは `&:not(:focus-visible)` の中に書き、`:focus-visible` のときは一度で切り替えます。フォーカスが離れて元の見た目に戻る変化は、`:not(:focus-visible)` のトランジションで動いてかまいません。
+  - 補足: トランジションは `&:not(:focus-visible)` の中に書き、`:focus-visible` のときは一度で切り替えます。フォーカスが離れて元の見た目に戻る変化は、`:not(:focus-visible)` のトランジションで動いてかまいません。矢印キーでフォーカスと選択が同時に移るタブやセグメントのように、選択の表示もキーボードの操作で動く部品では、部品のルートが `:has(:focus-visible)` に当てはまる間、選択の表示のトランジションも外します。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/interaction/states-and-focus/#rule-no-motion-on-focus-visible
 - 【非推奨・実装上の判断】ホバーやフォーカスの変化を `opacity` で表さない。（`no-opacity-for-hover`）
   - 理由: 文字まで透けてコントラストが下がり、「なぜ透けるのか」という意図もコードから読み取れないため。
@@ -99,7 +99,7 @@ https://t-arai-pnrm.github.io/recss-guideline/interaction/state-attributes/
 
 https://t-arai-pnrm.github.io/recss-guideline/interaction/card-link/
 
-- 【推奨・実装上の判断】カード全体をリンクにするときは、`<a>` でカードを包まず、見出しのリンクの `::after` をカードいっぱいに広げ、フォーカスリングはカードの `:has(:focus-visible)` に出す。（`stretched-link-for-card`）
+- 【推奨・実装上の判断】カード全体をリンクにするときは、`<a>` でカードを包まず、見出しのリンクの `::after` をカードいっぱいに広げ、フォーカスリングは、見出しのリンクの `:focus-visible` を `:has()` で調べてカードに出す。（`stretched-link-for-card`）
   - 理由: リンクのテキストが見出しだけになり、スクリーンリーダーでカードの中身をすべて読み上げるような冗長さを避けられるため。
   - 補足: カードの中にほかのリンクやボタンを置くときは、それらを `::after` より手前に重ねます。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/interaction/card-link/#rule-stretched-link-for-card

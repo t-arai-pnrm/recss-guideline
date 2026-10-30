@@ -2,7 +2,7 @@
   @scope (.scoped.media-text) to (.scoped) {
     :scope {
       container: --scoped / inline-size;
-      line-height: 1.8;
+      line-height: var(--text--body--leading);
     }
 
     /* コンテナサイズクエリを書くのは、フラグを宣言するこの要素だけ */
@@ -11,8 +11,6 @@
 
       display: block grid;
       reading-flow: grid-rows;
-
-      /* 狭いときは、見出し、画像、本文の順に縦に積む */
       grid-template:
         "--heading"
         "--image"
@@ -23,11 +21,10 @@
       @container --scoped (inline-size >= calc(240 / 16 * 1rem + 24px + 240 / 16 * 1rem)) {
         --_density: --spacious;
 
-        /* 画像を左の列に置き、右の列の上に見出し、その下に本文を置く */
         grid-template:
           "--image --heading"
           "--image --paragraphs" 1fr
-          / minmax(calc(240 / 16 * 1rem), 2fr) minmax(calc(240 / 16 * 1rem), 3fr);
+          / minmax(min(100%, calc(240 / 16 * 1rem)), 2fr) minmax(min(100%, calc(240 / 16 * 1rem)), 3fr);
         align-content: start;
       }
 
@@ -45,11 +42,11 @@
     }
 
     ._heading {
-      font-size: calc(22 / 16 * 1rem);
-      line-height: var(--leading--snug);
+      font-size: calc(var(--text--title--font-size) / 16 * 1rem);
+      line-height: var(--text--title--leading);
 
       @container style(--_density: --spacious) {
-        font-size: calc(28 / 16 * 1rem);
+        font-size: calc(var(--text--display--font-size) / 16 * 1rem);
       }
     }
 
@@ -67,11 +64,11 @@
 }
 
 @layer utilities {
-  /* 1行目の上にあるハーフレディングだけを取り除く */
+  /* 隣に並べた画像の上端に文字の上端をそろえるため、1行目の上だけを削り、行と行の間は残す */
   .-trim-start {
     text-box-trim: trim-start;
 
-    /* 英文は大文字の上端で切り取る */
+    /* 和文の字面は大文字の上端よりはみ出すので、cap alphabetic は英文だけにする */
     &:lang(en) {
       text-box-edge: cap alphabetic;
     }

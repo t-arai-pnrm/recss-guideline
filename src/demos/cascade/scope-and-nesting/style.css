@@ -6,7 +6,7 @@
       border-radius: var(--rounded--md);
 
       &[data-variant="featured"] {
-        border: 2px solid var(--foreground--accent);
+        border: 2px solid var(--border--strong);
       }
     }
 
@@ -15,7 +15,8 @@
       line-height: var(--text--title--leading);
 
       &:is(:scope[data-variant="featured"] *) {
-        font-size: calc(24 / 16 * 1rem);
+        font-size: calc(var(--text--display--font-size) / 16 * 1rem);
+        line-height: var(--text--display--leading);
       }
     }
   }

@@ -8,7 +8,6 @@
     ._letter {
       /* 開き括弧で始まる段落では、括弧と次の1字が一緒に大きくなる */
       &::first-letter {
-        color: var(--foreground--accent);
         font-size: 1.75em;
       }
     }

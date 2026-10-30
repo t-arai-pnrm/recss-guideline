@@ -1,8 +1,8 @@
 # 第18章 モーション：ルール
 
-- ガイドラインのバージョン: 0.82.0（2026-10-30 生成）
+- ガイドラインのバージョン: 0.83.0（2026-10-30 生成）
 - ルールの数: 31
-- 本文: 約20.3万字
+- 本文: 約21.1万字
 - 読む条件: transition、animation、@keyframes、prefers-reduced-motion、スクロール連動、View Transitions
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
@@ -13,16 +13,16 @@
 ## この章の節
 
 - `motion` 第18章 モーション（約5,800字）https://t-arai-pnrm.github.io/recss-guideline/motion/
-- `motion/purpose` 18-1 動かすかどうかを決める（約9,400字）https://t-arai-pnrm.github.io/recss-guideline/motion/purpose/
-- `motion/reduced-motion` 18-2 動きを減らす設定に対応する（約1.4万字）https://t-arai-pnrm.github.io/recss-guideline/motion/reduced-motion/
-- `motion/easing-and-duration` 18-3 イージングと再生時間（約2.4万字）https://t-arai-pnrm.github.io/recss-guideline/motion/easing-and-duration/
-- `motion/transitions-and-keyframes` 18-4 トランジションの基本と中断（約7,200字）https://t-arai-pnrm.github.io/recss-guideline/motion/transitions-and-keyframes/
-- `motion/transition-techniques` 18-5 トランジションを応用する（約2.4万字）https://t-arai-pnrm.github.io/recss-guideline/motion/transition-techniques/
-- `motion/keyframes` 18-6 @keyframesを設計する（約1.1万字）https://t-arai-pnrm.github.io/recss-guideline/motion/keyframes/
+- `motion/purpose` 18-1 動かすかどうかを決める（約9,500字）https://t-arai-pnrm.github.io/recss-guideline/motion/purpose/
+- `motion/reduced-motion` 18-2 動きを減らす設定に対応する（約1.6万字）https://t-arai-pnrm.github.io/recss-guideline/motion/reduced-motion/
+- `motion/easing-and-duration` 18-3 イージングと再生時間（約2.5万字）https://t-arai-pnrm.github.io/recss-guideline/motion/easing-and-duration/
+- `motion/transitions-and-keyframes` 18-4 トランジションの基本と中断（約7,300字）https://t-arai-pnrm.github.io/recss-guideline/motion/transitions-and-keyframes/
+- `motion/transition-techniques` 18-5 トランジションを応用する（約2.5万字）https://t-arai-pnrm.github.io/recss-guideline/motion/transition-techniques/
+- `motion/keyframes` 18-6 @keyframesを設計する（約1.2万字）https://t-arai-pnrm.github.io/recss-guideline/motion/keyframes/
 - `motion/entry-and-exit` 18-7 出現と退場（約2万字）https://t-arai-pnrm.github.io/recss-guideline/motion/entry-and-exit/
 - `motion/overlays-and-stagger` 18-8 重ねて出すパネルと順に出す要素（約2万字）https://t-arai-pnrm.github.io/recss-guideline/motion/overlays-and-stagger/
-- `motion/scroll-driven` 18-9 スクロールに合わせて動かす（約3.3万字）https://t-arai-pnrm.github.io/recss-guideline/motion/scroll-driven/
-- `motion/performance` 18-10 動きの負荷を抑える（約2.2万字）https://t-arai-pnrm.github.io/recss-guideline/motion/performance/
+- `motion/scroll-driven` 18-9 スクロールに合わせて動かす（約3.4万字）https://t-arai-pnrm.github.io/recss-guideline/motion/scroll-driven/
+- `motion/performance` 18-10 動きの負荷を抑える（約2.3万字）https://t-arai-pnrm.github.io/recss-guideline/motion/performance/
 - `motion/view-transitions` 18-11 View Transitionsで画面の切り替えをつなぐ（約1.2万字）https://t-arai-pnrm.github.io/recss-guideline/motion/view-transitions/
 
 ## 18-1 動かすかどうかを決める
@@ -73,7 +73,7 @@ https://t-arai-pnrm.github.io/recss-guideline/motion/easing-and-duration/
   - 理由: 動きが終わるまで次の操作を待たせず、1日に何度も触る UI でも待ち時間が積み重ならないようにするため。
   - 補足: 例外は、スクロールで画面に入ったときに一度だけ再生する演出の `--duration--reveal`（600ms）と、ばねの動きの `--duration--spring`（700ms）です。どちらも頻繁に触る UI には使いません。長押しで確定するボタンの進み具合（2秒前後）は、動きの速さではなく確定までに押し続ける時間を表すので、この上限の対象外です。ツールチップの表示を遅らせる `transition-delay` は、再生時間に含めません。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/motion/easing-and-duration/#rule-functional-motion-under-300ms
-- 【推奨・実装上の判断】ボタンを押したことを動きで返すときは、`:active` で `scale` を0.96〜0.98に縮め、再生時間を100〜150msにする。（`press-feedback-short`）
+- 【推奨・実装上の判断】ボタンを押したことを動きで返すときは、`:active` で `scale` を0.96〜0.98に縮め、再生時間を `--duration--fast` から `--duration--base` まで（80〜160ms）にする。（`press-feedback-short`）
   - 理由: 押したことがすぐに伝わり、短い動きなら続けて押す操作の妨げにならないため。
   - 補足: 押したことを伝える必要がある UI にだけ使います。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/motion/easing-and-duration/#rule-press-feedback-short
@@ -93,7 +93,7 @@ https://t-arai-pnrm.github.io/recss-guideline/motion/transitions-and-keyframes/
   - 理由: 動かすプロパティが一目で分かり、サイトの中で動きの速さと質感がそろうため。
   - 補足: `transition-behavior: allow-discrete` も、略記の `transition` に含めず、ロングハンドで書きます。略記に入れると、`allow-discrete` を解釈できないブラウザでは宣言全体が無効になり、ほかのプロパティのトランジションまで失われるためです。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/motion/transitions-and-keyframes/#rule-transition-longhand-with-tokens
-- 【推奨・実装上の判断】操作の途中で取り消されることがある動きは `@keyframes` ではなくトランジションで書き、タブやセグメンテッドコントロールのように続けて押される UI では、再生時間を100〜150msにするか、動きを省く。（`interruptible-with-transition`）
+- 【推奨・実装上の判断】操作の途中で取り消されることがある動きは `@keyframes` ではなくトランジションで書き、タブやセグメンテッドコントロールのように続けて押される UI では、再生時間を `--duration--fast` から `--duration--base` まで（80〜160ms）にするか、動きを省く。（`interruptible-with-transition`）
   - 理由: トランジションは途中の状態から逆向きに戻るが、`@keyframes` のアニメーションは途中で止めると値が飛び、続けて押すと動きが操作に追いつかないため。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/motion/transitions-and-keyframes/#rule-interruptible-with-transition
 

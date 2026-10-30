@@ -31,7 +31,7 @@ import grayscaleCss from '../../../demos/color-media/grayscale-check/style.css?r
 
 問題になるのは、色だけで何かを表していた部分です。背景色だけで範囲を示していたボタンは、背景色が置き換わると、ただの文字になります。`background-color` に `currentColor` を指定して描いたアイコンは、背景色がページの背景と同じ色に置き換わり、見えなくなります。
 
-<ImagePlaceholder alt="強制カラーモード（黒地に白い文字のテーマ）で、この節のデモを表示した画面。左の「対策なし」の列では、青い背景のボタンが背景色を失い、白い「資料をダウンロード」の文字だけが残っていて、どこまでがボタンなのか分からない。ボタンの中の矢印のアイコンと、黄色い文字のリンク「お知らせの一覧へ」の後ろにある矢印のアイコンは、どちらも表示されていない。右の「対策あり」の列では、同じボタンの周りに白い1pxの枠線が表示され、ボタンの中に白い矢印が見えている。リンクの後ろの矢印も、リンクの文字と同じ黄色で表示されている。" />
+<ImagePlaceholder alt="強制カラーモード（黒地に白い文字のテーマ）で、この節のデモを表示した画面。左の「対策なし」の列では、濃い背景のボタンが背景色を失い、白い「資料をダウンロード」の文字だけが残っていて、どこまでがボタンなのか分からない。ボタンの中の矢印のアイコンと、黄色い文字のリンク「お知らせの一覧へ」の後ろにある矢印のアイコンは、どちらも表示されていない。右の「対策あり」の列では、同じボタンの周りに白い1pxの枠線が表示され、ボタンの中に白い矢印が見えている。リンクの後ろの矢印も、リンクの文字と同じ黄色で表示されている。" />
 
 ## システムカラーで色を指定し直す
 
@@ -71,7 +71,7 @@ kiso.cssでは、強制カラーモードのときだけ、`<mark>` の色を `H
 ._primary-button {
   border: none;
   background-color: oklch(52% 0.16 250deg);
-  color: oklch(100% 0 0deg);
+  color: oklch(100% 0 none);
 }
 ```
 
@@ -79,7 +79,7 @@ kiso.cssでは、強制カラーモードのときだけ、`<mark>` の色を `H
 ._primary-button {
   border-color: transparent;
   background-color: oklch(52% 0.16 250deg);
-  color: oklch(100% 0 0deg);
+  color: oklch(100% 0 none);
 }
 ```
 
@@ -92,7 +92,7 @@ kiso.cssは、ボタンやフォームの部品に `1px` の実線の枠線を�
 ```css title="🙆‍♂ Recommended: フォーカスリングを描き直すときは、outline を透明にして残す"
 ._field {
   &:focus-visible {
-    box-shadow: 0 0 0 4px oklch(60% 0.16 250deg / 40%);
+    box-shadow: 0 0 0 3px oklch(52% 0.16 250deg);
     outline-color: transparent;
   }
 }
@@ -252,7 +252,7 @@ kiso.cssは、ボタンやフォームの部品に `1px` の実線の枠線を�
 `<img>` で表示するアイコンは、強制カラーモードの影響を受けません。強制カラーモードでは配色が `light dark` として扱われるので、黒いアイコンは黒い背景に、白いアイコンは白い背景に溶け込むおそれがあります。単色のアイコンなら、`filter` で背景と反対の色に塗りつぶします。
 
 ```css title="🙆‍♂ Recommended: 単色の画像のアイコンを、背景と反対の色に塗りつぶす"
-._logo {
+._icon {
   @media (forced-colors: active) and (prefers-color-scheme: light) {
     filter: brightness(0);
   }
@@ -270,7 +270,7 @@ kiso.cssは、ボタンやフォームの部品に `1px` の実線の枠線を�
 ```css title="🙆‍♂ Recommended: 強制カラーモードでないときだけ、オーバーレイを重ねる"
 ._image {
   @media (forced-colors: none) {
-    outline: 100lvmax solid oklch(0% 0 0deg / 60%);
+    outline: 100lvmax solid oklch(0% 0 none / 60%);
     outline-offset: -100lvmax;
   }
 }
@@ -282,7 +282,7 @@ kiso.cssは、ボタンやフォームの部品に `1px` の実線の枠線を�
 
 ## 色だけで情報を伝えない
 
-色の見え方は人によって違います。色覚の特性がある人や、年齢とともに色を見分けにくくなった人にとって、色の違いだけで示された情報は伝わりにくくなります。電子ペーパーの端末を使う人や、スマートフォンの使いすぎを防ぐために、あえてグレースケールで表示している人もいます。色だけに頼る表現は、WCAG 2.1のレベルAの達成基準（色の使用）にも反します。
+色の見え方は人によって違います。色覚の特性がある人や、年齢とともに色を見分けにくくなった人にとって、色の違いだけで示された情報は伝わりにくくなります。電子ペーパーの端末を使う人や、スマートフォンの使いすぎを防ぐために、あえてグレースケールで表示している人もいます。色だけに頼る表現は、WCAG 2.2のレベルAの達成基準（色の使用）にも反します。
 
 そこで、実装後の確認の項目に「グレースケール表示での確認」を入れておきます。とくに見るのは、本文の中のリンク、フォーカスやホバーの状態、入力エラーのように、色の変化で状態を表しがちな部分です。グレースケールで見分けられなければ、下線、太さ、アイコン、文言のような、色以外の手がかりを足します。
 
@@ -302,13 +302,13 @@ body {
 
 ## コントラスト比を確かめる
 
-文字と背景のコントラスト比は、WCAG 2.1のAAを満たすようにします。通常の大きさの文字では4.5:1以上、大きな文字では3:1以上が基準です。確認には、WebAIMのContrast Checkerや、DevToolsのカラーピッカーに表示されるコントラスト比を使います。計算した比は四捨五入せずに比べるので、4.49:1は4.5:1の基準を満たしません。
+文字と背景のコントラスト比は、WCAG 2.2のAAを満たすようにします。通常の大きさの文字では4.5:1以上、大きな文字では3:1以上が基準です。確認には、WebAIMのContrast Checkerや、DevToolsのカラーピッカーに表示されるコントラスト比を使います。計算した比は四捨五入せずに比べるので、4.49:1は4.5:1の基準を満たしません。
 
-ここでいう「大きな文字」は、[WCAGの定義](https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html)では18ポイント以上、太字なら14ポイント以上の文字です。CSSの単位に直すと、約24px以上、太字なら約18.7px以上になります。和文の場合は、これと同じ大きさに見える文字が該当します。見出しのつもりで大きくした文字でも、太字でない20pxの文字は通常の文字として扱うので、4.5:1が必要です。
+ここでいう「大きな文字」は、[WCAGの定義](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)では18ポイント以上、太字なら14ポイント以上の文字です。CSSの単位に直すと、約24px以上、太字なら約18.7px以上になります。和文の場合は、これと同じ大きさに見える文字が該当します。見出しのつもりで大きくした文字でも、太字でない20pxの文字は通常の文字として扱うので、4.5:1が必要です。
 
-「補足の文字」のような薄い文字色のトークンは、基準に届きにくくなります。たとえば `oklch(55.6% 0 0deg)` のグレーは、`oklch(97% 0 0deg)` の背景の上ではコントラスト比が約4.3:1になり、AAに届きません。トークンを定義するときは、組み合わせる背景のトークンごとに確かめます。私の案件でも、図のキャプションの色をAAを満たす値に調整し、その理由をコメントに残しました。
+「補足の文字」のような薄い文字色のトークンは、基準に届きにくくなります。たとえば `oklch(55.6% 0 none)` のグレーは、`oklch(97% 0 none)` の背景の上ではコントラスト比が約4.3:1になり、AAに届きません。本書のデモの `--foreground--muted` も、ライトモードではこのグレーと同じ値なので、ホバーや選択の重ね色の上には置きません。トークンを定義するときは、組み合わせる背景のトークンごとに確かめます。私の案件でも、図のキャプションの色をAAを満たす値に調整し、その理由をコメントに残しました。
 
-文字でない部分にも基準があります。WCAG 2.1の[達成基準1.4.11（非テキストのコントラスト）](https://www.w3.org/WAI/WCAG21/Understanding/non-text-contrast.html)では、ボタンや入力欄のようなUIコンポーネントの範囲と状態を示す部分に、隣り合う色との3:1以上のコントラスト比を求めています。入力欄の枠線、チェックボックスのオンとオフの違い、フォーカスリングが対象です。ボタンの文字やアイコンのように、範囲を示すほかの手がかりがあれば、枠線そのものは3:1に届かなくてもかまいません。
+文字でない部分にも基準があります。WCAG 2.2の[達成基準1.4.11（非テキストのコントラスト）](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)では、ボタンや入力欄のようなUIコンポーネントの範囲と状態を示す部分に、隣り合う色との3:1以上のコントラスト比を求めています。入力欄の枠線、チェックボックスのオンとオフの違い、フォーカスリングが対象です。ボタンの文字やアイコンのように、範囲を示すほかの手がかりがあれば、枠線そのものは3:1に届かなくてもかまいません。
 
 この基準には例外もあります。無効にしたコンポーネントと、ブラウザのデフォルトの見た目から変えていないコンポーネントは対象外です。逆にいえば、`accent-color` や枠線の色を変えた時点で、その色は自分で3:1を確かめる必要があります。淡いグレーの枠線だけで入力欄の範囲を示すデザインは、白い背景の上では基準に届かないことが多いので、トークンを決める段階で確かめます。{/* 要確認: 出典なし */}
 
@@ -330,5 +330,5 @@ AIにデザインを実装させると、薄いグレーの文字や、淡い色
 - [Scalable Vector Graphics (SVG) 2 — Painting: Filling, Stroking and Marker Symbols](https://www.w3.org/TR/SVG2/painting.html)（W3C。`fill` と `stroke` の初期値と継承）
 - [WebAIM: Contrast Checker](https://webaim.org/resources/contrastchecker/)
 - [Survey of Users with Low Vision #2 Results](https://webaim.org/projects/lowvisionsurvey2/)（WebAIM、2018年。高コントラストの表示を使う人の割合）
-- [Understanding Success Criterion 1.4.3: Contrast (Minimum)](https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html)（W3C。大きな文字の定義と、比を四捨五入しないこと）
-- [Understanding Success Criterion 1.4.11: Non-text Contrast](https://www.w3.org/WAI/WCAG21/Understanding/non-text-contrast.html)（W3C。UIコンポーネントの範囲と状態のコントラスト）
+- [Understanding Success Criterion 1.4.3: Contrast (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)（W3C。大きな文字の定義と、比を四捨五入しないこと）
+- [Understanding Success Criterion 1.4.11: Non-text Contrast](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)（W3C。UIコンポーネントの範囲と状態のコントラスト）

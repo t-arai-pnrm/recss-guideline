@@ -1,5 +1,6 @@
 /*
- * 動きのトークン。fast はホバーとフォーカス、base はメニューとタブ、slow はダイアログに使う。
+ * 動きのトークン。fast はホバー、base はメニュー、slow はダイアログに使う。タブは fast から base まで。
+ * キーボードのフォーカスでは動かさない。out-drawer は画面の端から大きく滑り込む UI に使う（18-3）。
  */
 :root {
   --ease--out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -7,6 +8,7 @@
   --ease--out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease--in-out-quint: cubic-bezier(0.86, 0, 0.07, 1);
   --ease--in-out-expo: cubic-bezier(0.87, 0, 0.13, 1);
+  --ease--out-drawer: cubic-bezier(0.32, 0.72, 0, 1);
   --duration--instant: 50ms;
   --duration--fast: 80ms;
   --duration--press: 120ms;

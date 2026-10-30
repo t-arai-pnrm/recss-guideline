@@ -9,7 +9,7 @@
 
 @layer components {
   /* 詳細度は 0.1.0 でも、後ろのレイヤーなので base のリンクの色に勝つ */
-  @scope (.scoped.button) to (.scoped) {
+  @scope (.scoped.cta-link) to (.scoped) {
     :scope {
       padding-block: 8px;
       padding-inline: 16px;

@@ -57,7 +57,7 @@
 
     /* switch 属性に対応していない環境でも、同じ見た目のスイッチにする */
     ._switch {
-      --_background: var(--border--strong);
+      --_background: var(--foreground--muted);
 
       display: inline flex;
       inline-size: calc(1lh * 2);
@@ -72,25 +72,24 @@
         --_background: var(--_accent);
       }
 
-      /* つまみの手前の余白。オンのときに広がり、つまみを押し出す */
+      /* つまみを translate で動かすと、幅を変えたときや右から左へ書く言語で位置を直すことになるので、手前の余白を伸ばして押し出す */
       &::before {
         content: "";
 
         @media (prefers-reduced-motion: no-preference) {
           transition-duration: var(--duration--fast);
           transition-property: flex-grow;
-          transition-timing-function: var(--ease--out-quint);
+          transition-timing-function: var(--ease--in-out-quint);
         }
       }
 
-      /* つまみ */
       &::after {
         content: "";
         flex-shrink: 0;
         block-size: 100%;
         aspect-ratio: 1;
         border-radius: inherit;
-        background-color: var(--foreground--on-accent);
+        background-color: var(--background--base);
 
         /* 強制カラーモードでは、背景色で描いたつまみが消えるので、システムカラーで描く */
         @media (forced-colors: active) {
@@ -103,7 +102,7 @@
       }
     }
 
-    /* 見た目を作り直したチェックボックス。チェックマークは選択したときだけ作る */
+    /* accent-color で変えられるのは色だけなので、枠線と角丸を変えるときは input 自体に描く */
     ._checkbox {
       display: inline grid;
       place-content: center;
@@ -118,12 +117,17 @@
         background-color: var(--_accent);
       }
 
+      /* 未選択のときにも作ると、強制カラーモードで透明な枠線に色が付き、チェックマークが見えるため、選択したときだけ作る */
       &:checked::before {
         content: "";
         inline-size: 0.3lh;
         block-size: 0.55lh;
-        border-block-end: 2px solid var(--foreground--on-accent);
-        border-inline-end: 2px solid var(--foreground--on-accent);
+
+        /* チェックマークの形は書字方向で変わらないので、物理の辺で描く */
+        /* stylelint-disable-next-line logical-css/require-logical-properties */
+        border-right: 2px solid var(--foreground--on-accent);
+        /* stylelint-disable-next-line logical-css/require-logical-properties */
+        border-bottom: 2px solid var(--foreground--on-accent);
         rotate: 45deg;
       }
     }

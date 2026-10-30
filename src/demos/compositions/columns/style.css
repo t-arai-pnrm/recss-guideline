@@ -36,7 +36,7 @@
     /* 段組みの中の項目はリストの直下の子なので、ユニバーサルセレクタが2つになる */
     /* stylelint-disable-next-line selector-max-universal */
     & > * > * {
-      /* 段の境目でマージンが切り取られ、Safari では段組みの中のマージンが正しく解決されないため、padding で空ける */
+      /* 半分ずつの margin は相殺して足されず、段の境目で2段目以降の先頭だけ切り捨てられるので、padding で空ける */
       padding-block: calc(var(--_c--row-gap) / 2);
       break-inside: avoid;
     }

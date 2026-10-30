@@ -2,7 +2,7 @@
  * 情報カード。
  *
  * @prop {color}  --info-card--accent [var(--foreground--muted)] - 枠線と見出しの色
- * @prop {length} --info-card--radius [8px]                      - 角丸の半径
+ * @prop {length} --info-card--radius [var(--rounded--md)]      - 角丸の半径
  */
 @layer components {
   @scope (.scoped.card-section) to (.scoped) {
@@ -25,7 +25,7 @@
     }
 
     ul {
-      /* 中に置くカードすべてに、継承で届ける */
+      /* カードごとに style 属性で渡さずに済むよう、並べる要素に定義して継承で届ける */
       --info-card--accent: var(--foreground--base);
 
       display: block grid;
@@ -41,7 +41,7 @@
   @scope (.scoped.info-card) to (.scoped) {
     :scope {
       --_accent: var(--info-card--accent, var(--foreground--muted));
-      --_radius: var(--info-card--radius, 8px);
+      --_radius: var(--info-card--radius, var(--rounded--md));
 
       padding: 16px;
       border: 2px solid var(--_accent);
@@ -55,7 +55,8 @@
 
     h3 {
       color: var(--_accent);
-      font-size: calc(18 / 16 * 1rem);
+      font-size: calc(var(--text--subtitle--font-size) / 16 * 1rem);
+      line-height: var(--text--subtitle--leading);
     }
   }
 }

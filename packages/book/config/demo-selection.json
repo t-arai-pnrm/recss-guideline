@@ -783,9 +783,6 @@
   "responsive/page-layout": {
     "print": false
   },
-  "responsive/product-cards": {
-    "print": false
-  },
   "responsive/root-cqi-card": {
     "print": false
   },

@@ -91,9 +91,9 @@ import pageCss from '../../../demos/responsive/page-layout/style.css?raw';
 
 条件付きのアットルールは、上のコード例のように各セレクタの中に書きます。条件のブロックをファイルやスコープの先頭にまとめて置くと、同じ詳細度の元のルールがその後ろに来たとき、後ろのルールが優先され、条件付きの指定が打ち消されてしまうからです。この規約は「[9-5 ネストの書き方](/notation/nesting/)」で説明しています。
 
-次のデモは、本文とサイドバーの2カラムを、ページ全体の幅で切り替えています。閾値は、本文の最小幅とサイドバーの幅と隙間を足した式で書いています。幅を1024pxにするとプレビューを横へスクロールできるようになり、2カラムの表示を確認できます。
+次のデモは、本文とサイドバーの2カラムを、ページ全体の幅で切り替えています。閾値は、本文の最小幅とサイドバーの幅と隙間を足した式で書いています。ページの左右に余白（ガター）があるなら、その幅も式に足します。このデモはページの左右に余白を取らないので、式は3つの項だけです。
 
-<Demo title="本文とサイドバーの段組みを、成り立つ幅でだけ2カラムにする" html={pageHtml} css={pageCss} />
+<Demo title="本文とサイドバーの段組みを、成り立つ幅でだけ2カラムにする" html={pageHtml} css={pageCss} bleed="inline" />
 
 文字サイズが標準のとき、832pxより狭い画面では、サイドバーが本文の下に回ります。このように、ページ全体の骨組みはメディアクエリで、その中に置くコンポーネントはコンテナサイズクエリで切り替えるのが、本書の基本の役割分担です。
 
@@ -175,15 +175,19 @@ import pageCss from '../../../demos/responsive/page-layout/style.css?raw';
 
 `forced-colors` は配色を上書きするモードですが、`prefers-contrast: more` は配色を上書きせず、コントラストを上げてほしいという希望だけを伝えます。強制カラーモードに対応しただけでは、この設定のユーザーには薄い色が残ります。強制カラーモードの扱いは「[15-5 強制カラーモードとコントラスト](/color-media/forced-colors/)」で説明しています。
 
-```css title="🙆‍♂ Recommended: コントラストを上げる設定のときに境界線を濃くする"
-._field {
-  border: 1px solid oklch(80% 0 0deg);
+```css title="🙆‍♂ Recommended: コントラストを上げる設定のときに区切り線を濃くする"
+._entry {
+  & + & {
+    border-block-start: 1px solid var(--border--base);
 
-  @media (prefers-contrast: more) {
-    border-color: oklch(40% 0 0deg);
+    @media (prefers-contrast: more) {
+      border-block-start-color: var(--foreground--muted);
+    }
   }
 }
 ```
+
+この例の区切り線は、記事の一覧の項目を見た目で分けるだけの線です。入力欄の枠線のように、UI部品の範囲を示す線は、この設定と関係なく、隣り合う色と3:1以上の差にします（「[15-5 強制カラーモードとコントラスト](/color-media/forced-colors/#コントラスト比を確かめる)」）。
 
 <Baseline id="prefers-contrast" name="prefers-contrast メディア特性" />
 
@@ -191,11 +195,11 @@ import pageCss from '../../../demos/responsive/page-layout/style.css?raw';
 
 ```css title="🙆‍♂ Recommended: 透明度を下げる設定のときに背景を不透明にする"
 ._overlay {
-  background-color: oklch(from var(--color--neutral--50) l c h / 70%);
+  background-color: oklch(from var(--background--surface) l c h / 70%);
   backdrop-filter: blur(12px);
 
   @media (prefers-reduced-transparency: reduce) {
-    background-color: var(--color--neutral--50);
+    background-color: var(--background--surface);
     backdrop-filter: initial;
   }
 }

@@ -1,8 +1,3 @@
-/**
- * 並べ替えると、各項目がビュー遷移で新しい位置へ動く商品の一覧。
- *
- * @prop {angle} --product-list--hue [0deg] - 項目の背景色の色相
- */
 @layer components {
   @scope (.scoped.product-list) to (.scoped) {
     :scope {
@@ -11,12 +6,11 @@
       gap: 12px;
     }
 
+    /* 色相の --_hue は、テンプレートが項目ごとに style 属性へ書く内部用の値 */
     li {
-      --_hue: var(--product-list--hue, 0deg);
-
       padding: 16px;
       border-radius: var(--rounded--md);
-      background-color: oklch(90% 0.06 var(--_hue));
+      background-color: oklch(90% 0.06 var(--_hue, 0deg));
 
       /* 名前はブラウザに任せ、動きを指定するための目印にクラスを付ける */
       @media (prefers-reduced-motion: no-preference) {

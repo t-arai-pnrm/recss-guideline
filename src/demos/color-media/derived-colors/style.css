@@ -23,14 +23,15 @@
       padding-inline: 8px;
       border-radius: var(--rounded--full);
       background-color: oklch(from var(--_accent) l c h / 15%);
-      color: var(--_accent--hocus);
+      color: oklch(from var(--_accent) calc(l - 0.1) c h);
       font-size: calc(var(--text--caption--font-size) / 16 * 1rem);
       font-weight: var(--font-weight--bold);
       line-height: var(--text--caption--leading);
     }
 
     h2 {
-      font-size: calc(18 / 16 * 1rem);
+      font-size: calc(var(--text--title--font-size) / 16 * 1rem);
+      line-height: var(--text--title--leading);
     }
 
     button {
@@ -41,7 +42,7 @@
       border-color: transparent;
       border-radius: var(--rounded--sm);
       background-color: var(--_background);
-      color: oklch(100% 0 0deg);
+      color: oklch(100% 0 none);
 
       /* キーボードでフォーカスしたときも、ホバーと同じ見た目にする */
       &:focus-visible {

@@ -1,14 +1,14 @@
 @layer components {
   @scope (.scoped.clip-compare) to (.scoped) {
     ._section {
-      /* はみ出しを切り取るだけなので、スクロールコンテナを作らない clip にする */
-      overflow: clip;
+      /* はみ出しを切り取るだけなので、スクロールコンテナを作らない clip にする。縦の軸は visible のまま残す */
+      overflow-x: clip;
       padding: 8px;
       border: 1px dashed var(--border--strong);
 
       /* 比較のため、1つ目の枠だけ横方向を hidden にする。縦方向の visible は auto として算出され、枠がスクロールコンテナになる */
       &[data-demo="overflow-hidden"] {
-        overflow: hidden visible;
+        overflow-x: hidden;
       }
 
       & > * + * {

@@ -6,6 +6,14 @@
   <title>article-cards のテストページ</title>
   <!-- 記事カードの一覧の例の CSS。自分のプロジェクトでは、プロジェクトの CSS を読み込む -->
   <link rel="stylesheet" href="base.css">
+  <link rel="stylesheet" href="tokens/colors.css">
+  <link rel="stylesheet" href="tokens/shadows.css">
+  <link rel="stylesheet" href="tokens/sizes.css">
+  <link rel="stylesheet" href="tokens/typography.css">
+  <link rel="stylesheet" href="tokens/motion.css">
+  <link rel="stylesheet" href="tokens/z-index.css">
+  <link rel="stylesheet" href="tokens/site.css">
+  <link rel="stylesheet" href="kiso.css">
   <link rel="stylesheet" href="compositions.css">
   <link rel="stylesheet" href="article-cards.css">
   <style>
@@ -30,8 +38,11 @@
 </head>
 <body>
 <main class="scoped test-page">
+  <h1>article-cards のテストページ</h1>
+
   <!-- 広い置き場所（最大400px相当）。一覧は1列で、カードは広い形になる -->
-  <section class="_wide" id="wide" aria-label="広い置き場所">
+  <section class="_wide" id="wide" aria-labelledby="wide-heading">
+    <h2 id="wide-heading">広い置き場所</h2>
     <ul class="scoped article-cards | grid">
       <li class="_card">
         <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 9'%3E%3Crect width='16' height='9' fill='%231b2540'/%3E%3C/svg%3E" alt="" width="640" height="360">
@@ -48,7 +59,8 @@
   </section>
 
   <!-- 狭い置き場所（240px相当）。カードは狭い形になる -->
-  <section class="_narrow" id="narrow" aria-label="狭い置き場所">
+  <section class="_narrow" id="narrow" aria-labelledby="narrow-heading">
+    <h2 id="narrow-heading">狭い置き場所</h2>
     <ul class="scoped article-cards | grid">
       <li class="_card">
         <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 9'%3E%3Crect width='16' height='9' fill='%231b2540'/%3E%3C/svg%3E" alt="" width="640" height="360">

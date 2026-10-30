@@ -1,4 +1,4 @@
-/* 型を登録したので、0から1の間の値が補間される。継承させないので、受け取ると明示した要素のほかは、スタイルを計算し直さない */
+/* 型を登録したので、0から1の間の値が補間される。継承させないので、動かす要素のほかは、スタイルを計算し直さない */
 @property --link-card--progress {
   syntax: "<number>";
   inherits: false;
@@ -7,36 +7,34 @@
 
 @layer components {
   @scope (.scoped.link-card) to (.scoped) {
-    /* ホバーを受けるリンクは動かさず、進み具合を動かすだけにする */
+    /* ホバーを受けるリンクは動かさず、フラグを立てるだけにする */
     :scope {
+      --_hocus: --false;
+      --_focus-visible: --false;
+
       display: block grid;
       max-inline-size: calc(400 / 16 * 1rem);
       border-radius: var(--rounded--lg);
       color: inherit;
       text-decoration-line: none;
 
-      &:not(:focus-visible) {
-        transition-duration: var(--duration--base);
-        transition-property: --link-card--progress;
-        transition-timing-function: var(--ease--out-quint);
-      }
-
       &:any-link:hover {
         @media (any-hover) {
-          --link-card--progress: 1;
+          --_hocus: --true;
         }
       }
 
+      /* キーボードのときは、2つ目のフラグで面のトランジションを外す */
       &:focus-visible {
-        --link-card--progress: 1;
+        --_hocus: --true;
+        --_focus-visible: --true;
       }
     }
 
-    /* 動くのは内側の面。進み具合をリンクから受け取り、3つの値を計算する */
+    /* 動くのは内側の面。進み具合を自分で切り替えて動かし、3つの値を計算する */
     ._surface {
       /* 動きを減らす設定のときは持ち上げず、影と枠線の色だけを変える */
       --_lift: 0px;
-      --link-card--progress: inherit;
 
       display: block grid;
       gap: 8px;
@@ -46,6 +44,16 @@
       background-color: var(--background--surface);
       filter: drop-shadow(0 calc(var(--link-card--progress) * 8px) calc(var(--link-card--progress) * 12px) color-mix(in oklab, var(--shadow--color) calc(var(--link-card--progress) * 100%), transparent));
       translate: 0 calc(var(--link-card--progress) * var(--_lift));
+
+      @container style(--_focus-visible: --false) {
+        transition-duration: var(--duration--base);
+        transition-property: --link-card--progress;
+        transition-timing-function: var(--ease--out-quint);
+      }
+
+      @container style(--_hocus: --true) {
+        --link-card--progress: 1;
+      }
 
       @media (prefers-reduced-motion: no-preference) {
         --_lift: -4px;

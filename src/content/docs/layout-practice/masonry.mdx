@@ -94,7 +94,7 @@ import masonryCss from '../../../demos/layout-practice/masonry-cards/style.css?r
 
 `display: block grid-lanes` に対応していない環境では、この宣言が無効になります。外側に `display: block grid` を書いておけば、項目は通常のGridとして、行ごとに高さがそろった状態で並びます。隙間は残りますが、すべての項目が読めて操作でき、並び順も左上から右下へ進むので、プログレッシブ・エンハンスメントとして使える機能です。
 
-次のデモは、本文の長さが違う8つの項目を、最初のコード例と同じ指定で並べたものです。番号はHTMLに書いた順番です。`grid-lanes` に対応したSafariで見ると、項目が短い列へ詰められます。対応していないブラウザでは、行ごとに高さのそろった通常のGridとして表示されます。
+次のデモは、本文の長さが違う8つの項目を、最初のコード例と同じ書き方で並べたものです。番号はHTMLに書いた順番です。`grid-lanes` に対応したSafariで見ると、項目が短い列へ詰められます。対応していないブラウザでは、行ごとに高さのそろった通常のGridとして表示されます。
 
 <Demo title="対応している環境では項目を短い列へ詰め、未対応の環境では通常のGridで並べる" html={masonryHtml} css={masonryCss} />
 
@@ -114,7 +114,7 @@ import masonryCss from '../../../demos/layout-practice/masonry-cards/style.css?r
 }
 ```
 
-どちらも結果は同じですが、本書は `@supports` を選びます。宣言を2つ並べる書き方では、フォールバックの意図がコードに書かれていません。同じプロパティの重複は誤記に見えるので、人やAIが整理するときに、どちらかを消してしまうおそれがあります。`@supports` なら条件が書かれているので、すべての対象のブラウザが対応した時点で、`@supports (display: block grid-lanes)` を検索して分岐を消せます。
+どちらも結果は同じですが、本書は `@supports` を選びます。宣言を2つ並べる書き方では、フォールバックの意図がコードに書かれていません。`display` を2つ並べても、どちらが未対応の環境のための値かはコードから読めず、誤記に見えるので、人やAIが整理するときに、どちらかを消してしまうおそれがあります。`@supports` なら条件が書かれているので、すべての対象のブラウザが対応した時点で、`@supports (display: block grid-lanes)` を検索して分岐を消せます。
 
 もう1つの理由は、`grid-lanes` に合わせてほかの宣言も変えたい場面があることです。フォールバックの書き方を、宣言が無効になる時点と一緒に変える宣言の有無で選ぶ基準は、「[1-2 ブラウザサポートとプログレッシブ・エンハンスメント](/principles/browser-support/)」の「フォールバックの書き方を選ぶ」にまとめています。写真の一覧では、通常のGridのままだと縦長と横長の写真が同じ行に並び、行の高さがばらつきます。フォールバックでは写真を正方形に切り抜いてそろえ、`grid-lanes` の環境では元の縦横比で並べるのが自然です。
 
@@ -131,10 +131,10 @@ import masonryCss from '../../../demos/layout-practice/masonry-cards/style.css?r
   }
 
   img {
+    /* stretch に未対応の環境のための値 */
     inline-size: -webkit-fill-available;
     inline-size: stretch;
     aspect-ratio: 1;
-    object-fit: cover;
 
     @supports (display: block grid-lanes) {
       aspect-ratio: unset;
@@ -143,7 +143,7 @@ import masonryCss from '../../../demos/layout-practice/masonry-cards/style.css?r
 }
 ```
 
-`aspect-ratio: unset` は、フォールバックで指定した `1` を初期値の `auto` に戻し、画像の本来の縦横比で表示する指定です。宣言を2つ並べる書き方では、このように子要素の宣言を切り替えられません。新しい機能に合わせて既存の宣言も変えるときは、その宣言を `@supports` の中に書きます。この考え方は「[1-2 ブラウザサポートとプログレッシブ・エンハンスメント](/principles/browser-support/)」で説明しています。
+正方形の枠に違う比率の写真が入っても、本書のベーススタイルが画像に指定している `object-fit: cover` によって、写真は引き伸ばされずに切り抜かれます（「[16-1 画像の配置と比率](/decoration/images/)」）。`aspect-ratio: unset` は、フォールバックで指定した `1` を初期値の `auto` に戻し、画像の本来の縦横比で表示する指定です。宣言を2つ並べる書き方では、このように子要素の宣言を切り替えられません。新しい機能に合わせて既存の宣言も変えるときは、その宣言を `@supports` の中に書きます。この考え方は「[1-2 ブラウザサポートとプログレッシブ・エンハンスメント](/principles/browser-support/)」で説明しています。
 
 ## 並び順と読み上げ・フォーカスの順番
 
@@ -180,7 +180,7 @@ import masonryCss from '../../../demos/layout-practice/masonry-cards/style.css?r
 
 `columns` には、Gridの感覚で書くと失敗する点が2つあります。1つ目は、`column-width` に `%` を受け付けないことです。Gridの `minmax(min(100%, …), 1fr)` の癖で `column-width: min(100%, 15rem)` と書くと、値が不正になって宣言ごと無視されます。段の幅をコンテナの幅に比例させたいときは、`%` の代わりに名前付きのコンテナの `cqi` を使います。
 
-2つ目は、2段目以降の先頭の項目に付けた `margin-block-start` が切り取られることです。段の境目で分かれた場所に接する `margin` は、断片化の仕様で切り捨てられます。1段目の先頭だけに余白が残り、段の上端がそろいません。上のコード例では、項目の間隔を `margin` ではなく `padding-block` で空けています。
+2つ目は、段の境目に接する `margin` が切り取られることです。段の境目で分かれた場所に接する `margin` は、断片化の仕様で切り捨てられます。すべての項目に `margin-block-start` を付けると、1段目の先頭にだけ余白が残り、段の上端がそろいません。上のコード例では、項目の間隔を `margin` ではなく `padding-block` で空けています。
 
 一方で、フッターのメニューが「見出しとリンクのまとまり」をいくつも並べたものなら、`grid-lanes` が向いています。数の決まっていないまとまりを、長さが違っても均一に並べられるからです。使い分けの基準は、項目を読む順番です。1つのリストを上から下へ読ませるなら `columns`、見出しとリンクのまとまりやカードを横方向の順番で並べながら高さの違いを詰めるなら `grid-lanes` を選びます。
 

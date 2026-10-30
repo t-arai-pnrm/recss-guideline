@@ -4,14 +4,18 @@
       display: block grid;
       gap: 12px;
 
-      /* 直下の子が3つ以上あるときだけ、3列に並べる */
+      /* 項目が多い一覧は、どこまでが1つの一覧かを枠で示す */
       &:has(> :nth-child(3)) {
-        grid-template-columns: repeat(3, 1fr);
+        padding: 12px;
+        border: 1px solid var(--border--strong);
+        border-radius: var(--rounded--lg);
       }
 
       /* 比べるための悪い例：> を省くと、項目の中のタグの3つ目にも当てはまる */
       &:is([data-loose] > *):has(:nth-child(3)) {
-        grid-template-columns: repeat(3, 1fr);
+        padding: 12px;
+        border: 1px solid var(--border--strong);
+        border-radius: var(--rounded--lg);
       }
     }
 
@@ -35,8 +39,8 @@
 
     ._tag {
       padding-inline: 8px;
+      border: 1px solid var(--border--base);
       border-radius: var(--rounded--full);
-      background-color: var(--background--accent-subtle);
       font-size: calc(var(--text--caption--font-size) / 16 * 1rem);
       line-height: var(--text--caption--leading);
     }

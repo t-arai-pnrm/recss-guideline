@@ -1,8 +1,6 @@
 @layer components {
   @scope (.scoped.faq-accordion) to (.scoped) {
     :scope {
-      --_accent: var(--foreground--accent);
-
       display: block grid;
       gap: 8px;
     }
@@ -11,9 +9,9 @@
       border: 1px solid var(--border--base);
       border-radius: var(--rounded--md);
 
-      /* 開いている項目だけ、枠線をアクセントの色にする。name 属性で別の項目を開くと、ブラウザが open 属性を外す */
+      /* name 属性で別の項目を開くと、ブラウザが open 属性を外すので、枠線も一緒に移る */
       &[open] {
-        border-color: var(--_accent);
+        border-color: var(--border--strong);
       }
     }
 

@@ -75,9 +75,9 @@ FlexboxとGridも、同じ基準で動きます。`flex-direction: row` の主�
 body {
   /* 切り欠きは画面の物理的な左右にあるので、書字方向で入れ替わらないようにする */
   /* stylelint-disable-next-line logical-css/require-logical-properties */
-  padding-right: env(safe-area-inset-right);
+  padding-right: max(16px, env(safe-area-inset-right));
   /* stylelint-disable-next-line logical-css/require-logical-properties */
-  padding-left: env(safe-area-inset-left);
+  padding-left: max(16px, env(safe-area-inset-left));
 }
 ```
 

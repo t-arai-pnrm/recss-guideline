@@ -14,7 +14,7 @@
 
       /* 先頭から3件の項目の中 */
       &:is(li:nth-child(-n + 3) *) {
-        color: var(--foreground--accent);
+        color: var(--foreground--base);
         font-weight: var(--font-weight--bold);
       }
     }

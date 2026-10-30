@@ -26,7 +26,7 @@
 
       display: block grid;
 
-      /* 列の数は幅で決まる。最小幅を下回らず、多くても3列まで並べ、項目のない列は auto-fit で畳む */
+      /* 列の数を件数でなく幅で決め、置き場所が変わっても1列の最小幅を保つ。項目のない列は auto-fit で畳む */
       grid-template-columns: repeat(
         auto-fit,
         minmax(
@@ -49,12 +49,13 @@
       border-radius: var(--rounded--md);
 
       & > h3 + p {
-        margin-block-start: 8px;
+        margin-block-start: calc(8 / 16 * 1rem);
       }
     }
 
     h3 {
-      font-size: calc(18 / 16 * 1rem);
+      font-size: calc(var(--text--subtitle--font-size) / 16 * 1rem);
+      line-height: var(--text--subtitle--leading);
     }
   }
 }

@@ -43,9 +43,9 @@
     article {
       padding-block: var(--_padding-block);
       padding-inline: var(--_padding-inline);
-      border-inline-start: var(--_border-width) solid var(--foreground--accent);
+      border-inline-start: var(--_border-width) solid var(--border--strong);
       border-radius: var(--rounded--md);
-      background-color: var(--background--active);
+      background-color: var(--background--surface);
       font-size: var(--_font-size);
 
       /* 文字も余白も線も px */

@@ -11,7 +11,7 @@
 
     ._step {
       &::marker {
-        color: var(--foreground--accent);
+        color: var(--foreground--muted);
       }
     }
   }
@@ -27,7 +27,6 @@
       display: block grid;
       grid-template-columns: auto 1fr;
       gap: 8px;
-      align-items: center;
       counter-increment: --step;
 
       &::before {
@@ -36,12 +35,11 @@
         place-items: center;
         inline-size: 1.75em;
         aspect-ratio: 1;
+        margin-block: calc((1lh - 1.75em) / 2);
         border-radius: var(--rounded--full);
-        background-color: var(--background--accent);
-        color: var(--foreground--on-accent);
-        font-size: calc(var(--text--body-compact--font-size) / 16 * 1rem);
+        background-color: var(--background--inverse);
+        color: var(--foreground--inverse);
         font-weight: var(--font-weight--bold);
-        line-height: var(--text--body-compact--leading);
       }
     }
   }

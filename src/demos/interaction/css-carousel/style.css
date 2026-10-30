@@ -1,6 +1,7 @@
 @layer components {
   @scope (.scoped.css-carousel) to (.scoped) {
     :scope {
+      anchor-scope: --css-carousel;
       display: block grid;
       gap: 12px;
     }
@@ -11,6 +12,9 @@
     }
 
     ul {
+      --_button-size: max(40px, 40 / 16 * 1rem);
+      --_marker-gap: 12px;
+
       anchor-name: --css-carousel;
       display: block grid;
       grid-auto-columns: 100%;
@@ -32,7 +36,7 @@
           position: absolute;
           inset-block-start: anchor(center);
           position-anchor: --css-carousel;
-          inline-size: 40px;
+          inline-size: var(--_button-size);
           aspect-ratio: 1;
           border: 1px solid;
           border-radius: 50%;
@@ -41,7 +45,8 @@
         }
 
         &::scroll-button(*):disabled {
-          opacity: 0.3;
+          border-color: var(--border--base);
+          color: var(--foreground--muted);
         }
 
         &::scroll-button(inline-start) {
@@ -56,10 +61,16 @@
 
         &::scroll-marker-group {
           display: block flex;
-          gap: 12px;
+          gap: var(--_marker-gap);
           justify-content: center;
           padding-block: 8px;
         }
+      }
+
+      /* 点は12pxのまま、中心の間隔で押せる範囲を確保する */
+      @media (any-pointer: coarse) {
+        --_button-size: max(44px, 44 / 16 * 1rem);
+        --_marker-gap: 32px;
       }
 
       @media (prefers-reduced-motion: no-preference) {
@@ -82,7 +93,7 @@
           min-block-size: 12px;
           border: 1px solid transparent;
           border-radius: var(--rounded--full);
-          background-color: var(--border--strong);
+          background-color: var(--foreground--muted);
         }
 
         &::scroll-marker:target-current {
@@ -112,7 +123,8 @@
     }
 
     h3 {
-      font-size: calc(18 / 16 * 1rem);
+      font-size: calc(var(--text--subtitle--font-size) / 16 * 1rem);
+      line-height: var(--text--subtitle--leading);
     }
   }
 }

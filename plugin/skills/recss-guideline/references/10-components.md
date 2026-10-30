@@ -1,8 +1,8 @@
 # 第10章 コンポーネントとカスタムプロパティ：ルール
 
-- ガイドラインのバージョン: 0.82.0（2026-10-30 生成）
+- ガイドラインのバージョン: 0.83.0（2026-10-30 生成）
 - ルールの数: 53
-- 本文: 約16.8万字
+- 本文: 約17.3万字
 - 読む条件: すべてのCSS（コンポーネントの境界、カスタムプロパティ、デザイントークン）（常に読む）
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
@@ -15,10 +15,10 @@
 - `components` 第10章 コンポーネントとカスタムプロパティ（約1.1万字）https://t-arai-pnrm.github.io/recss-guideline/components/
 - `components/what-is-a-component` 10-1 何をコンポーネントにするか（約1.6万字）https://t-arai-pnrm.github.io/recss-guideline/components/what-is-a-component/
 - `components/boundaries` 10-2 コンポーネントの境界を守る（約3.1万字）https://t-arai-pnrm.github.io/recss-guideline/components/boundaries/
-- `components/compositions-and-utilities` 10-3 コンポジションとユーティリティ（約2.3万字）https://t-arai-pnrm.github.io/recss-guideline/components/compositions-and-utilities/
-- `components/design-tokens` 10-4 デザイントークン（約1.6万字）https://t-arai-pnrm.github.io/recss-guideline/components/design-tokens/
-- `components/custom-properties` 10-5 公開プロパティと内部プロパティ（約1.8万字）https://t-arai-pnrm.github.io/recss-guideline/components/custom-properties/
-- `components/style-queries` 10-6 スタイルクエリで状態を伝える（約2.3万字）https://t-arai-pnrm.github.io/recss-guideline/components/style-queries/
+- `components/compositions-and-utilities` 10-3 コンポジションとユーティリティ（約2.4万字）https://t-arai-pnrm.github.io/recss-guideline/components/compositions-and-utilities/
+- `components/design-tokens` 10-4 デザイントークン（約1.7万字）https://t-arai-pnrm.github.io/recss-guideline/components/design-tokens/
+- `components/custom-properties` 10-5 公開プロパティと内部プロパティ（約1.9万字）https://t-arai-pnrm.github.io/recss-guideline/components/custom-properties/
+- `components/style-queries` 10-6 スタイルクエリで状態を伝える（約2.4万字）https://t-arai-pnrm.github.io/recss-guideline/components/style-queries/
 - `components/placement-and-child-states` 10-7 置き場所と子の状態を伝える（約1.3万字）https://t-arai-pnrm.github.io/recss-guideline/components/placement-and-child-states/
 - `components/web-components` 10-8 Web Components（約1.8万字）https://t-arai-pnrm.github.io/recss-guideline/components/web-components/
 
@@ -60,7 +60,7 @@ https://t-arai-pnrm.github.io/recss-guideline/components/boundaries/
 
 - 【必須・本書の規約】コンポーネントの CSS は、コンポーネントごとに1つのファイルに書き、複数のコンポーネントの CSS を1つのファイルに混ぜない。（`one-component-per-file`）
   - 理由: 混ぜると、どこに何が書いてあるかがファイル名から分からなくなり、使わなくなったコンポーネントを安全に消せなくなるため。
-  - 補足: ファイル名はルートの名前とそろえます。Astro のように CSS をコンポーネントのファイルに書く環境では、そのファイルが単位になります。小さな部品でも例外にしません。
+  - 補足: ファイル名はルートの名前とそろえます。Astro のように CSS をコンポーネントのファイルに書く環境では、そのファイルが単位になります。小さな部品でも例外にしません。本書のデモは、比べるために複数のコンポーネントを1つのファイルに書くことがあります（付録I「デモだけの例外」）。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/components/boundaries/#rule-one-component-per-file
 - 【非推奨・実装上の判断】コンポーネントのルートに、外部関連型のレイアウト（`margin`、`position: absolute` と `inset`、`flex`、`grid-area`、`align-self`、`inline-size`、`block-size` など）を指定しない。（`no-external-layout-on-root`）
   - 理由: 置かれる場所を前提にしたコンポーネントになり、ほかの場所に置いたときに打ち消しや上書きが必要になるため。
@@ -75,7 +75,7 @@ https://t-arai-pnrm.github.io/recss-guideline/components/boundaries/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/components/boundaries/#rule-no-class-to-child-component
 - 【推奨・本書の規約】`@scope` の中の要素はタイプセレクタで選び、子クラスは同じ種類の要素を役割で区別するときと、`div` と `span` に役割を示すときだけ付ける（`._list` や `._link` のように要素の種類と同じ意味のクラスを付けない）。（`type-selector-in-scope`）
   - 理由: `@scope` の中のタイプセレクタはそのコンポーネントの範囲にしか当たらず、要素の種類を繰り返すだけのクラス名は情報を増やさずに記述量を増やすため。`div` と `span` は要素そのものが意味を持たず、要素の種類から役割を読み取れないため、1つしかなくてもクラスで補う。
-  - 補足: `div` と `span` に付けるクラスは、`._body` や `._badge` のように役割の名前にします。役割を区別するクラスは `._main-link` と `._sub-link` のように要素の役割の語まで含めて名付け、共通のスタイルはタイプセレクタに、固有のスタイルは子クラスに書きます。スコープの中のタイプセレクタは詳細度が 0.0.1 なので `:where()` で包みません（ベーススタイルの `:where()` は第4章のルール `where-for-base-selectors`）。`a:focus-visible` や `a:any-link:hover` のように擬似クラスを付けると 0.1.1 や 0.2.1 になり子クラスに勝つので、役割ごとに違う状態のスタイルは `._sub-link:focus-visible` や `._sub-link:any-link:hover` のように子クラスの側に書きます。同じコンポーネントの中で同じ種類の要素が入れ子になるときは役割が分かれるので子クラスを付け、任意の HTML が入る領域は別のコンポーネントにします。
+  - 補足: `div` と `span` に付けるクラスは、`._body` や `._badge` のように役割の名前にします。役割を区別するクラスは `._main-link` と `._sub-link` のように要素の役割の語まで含めて名付け、共通のスタイルはタイプセレクタに、固有のスタイルは子クラスに書きます。スコープの中のタイプセレクタは詳細度が 0.0.1 なので `:where()` で包みません（ベーススタイルの `:where()` は第4章のルール `where-for-base-selectors`）。`a:focus-visible` や `a:any-link:hover` のように擬似クラスを付けると 0.1.1 や 0.2.1 になり子クラスに勝つので、役割ごとに違う状態のスタイルは `._sub-link:focus-visible` や `._sub-link:any-link:hover` のように子クラスの側に書きます。同じコンポーネントの中で同じ種類の要素が入れ子になるときは役割が分かれるので子クラスを付け、任意の HTML が入る領域は別のコンポーネントにします。コンポーネントの見出しは、1つしかなくても `._title` を付けてかまいません。見出しのレベル（`h2` か `h3` か）は置く場所の文書構造で変わるので、タイプセレクタで選ぶと、レベルを変えたときにスタイルが当たらなくなるためです。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/components/boundaries/#rule-type-selector-in-scope
 - 【推奨・実装上の判断】子要素のクラスの下にある要素を、子孫結合子のタイプセレクタ（`._summary p`）で選ばない。同じ種類の要素を領域ごとに変えたいときは、その要素にクラスを付ける。（`no-type-under-child-class`）
   - 理由: 子孫結合子は深さを問わないので、領域の中に後から足した同じ種類の要素にも当たり、どの要素が対象かを HTML の入れ子から確かめることになるため。詳細度も 0.1.1 に上がり、クラス1つのセレクタでは上書きできなくなる。
@@ -158,7 +158,7 @@ https://t-arai-pnrm.github.io/recss-guideline/components/design-tokens/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/components/design-tokens/#rule-no-single-use-token
 - 【推奨・実装上の判断】トークンとして定義されている値は、数値や色を直接書かずにトークンを参照する。（`use-defined-tokens`）
   - 理由: デザインの変更をトークンの修正だけで反映でき、わずかに違う値が紛れ込むのを防げるため。
-  - 補足: トークンに定義されていない特殊な値は、トークンを追加せずにその場に直接書きます。
+  - 補足: 色、文字、角丸、影、余白のように、スケールとして定義した値はトークンを参照します。`%` や `cqi` と組み合わせて計算する余白は、その場に直接書いてかまいません。トークンに定義されていない特殊な値は、トークンを追加せずにその場に直接書きます。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/components/design-tokens/#rule-use-defined-tokens
 - 【推奨・実装上の判断】イージングと再生時間はトークンにし、イージングは `--ease--out-quint` のように強さと方向が分かる名前にする。（`motion-tokens`）
   - 理由: サイトの中で動きの速さと質感がそろい、全体の調整もトークンの値を変えるだけで済むため。
@@ -177,15 +177,15 @@ https://t-arai-pnrm.github.io/recss-guideline/components/custom-properties/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/components/custom-properties/#rule-public-property-naming
 - 【必須・本書の規約】コンポーネントの中だけで使う値は、`--_` で始まる内部プロパティにする。（`internal-property-prefix`）
   - 理由: 外から変えてよい値と、内部の都合の値を名前で見分けられるため。
-  - 補足: コンポジションは `--_c--`、パターンは `--_p--`、ユーティリティは `--_u--`、ベースのスタイルは `--_b--` で始めます。
+  - 補足: コンポジションは `--_c--`、パターンは `--_p--`、ユーティリティは `--_u--`、ベースのスタイルは `--_b--` で始めます。トランジションなどのために `@property` で登録する値は、全体で名前が衝突しないよう、コンポーネントの中だけで使う値でも `--<コンポーネント>--<プロパティ>` の形にしてかまいません。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/components/custom-properties/#rule-internal-property-prefix
 - 【必須・本書の規約】公開プロパティはコンポーネント自身では宣言せず、`:scope` で内部プロパティに受けて、デフォルト値を `var()` のフォールバックに書く。（`receive-public-property-with-fallback`）
   - 理由: コンポーネント自身で宣言すると、親から継承した値がその宣言に負けて届かなくなるため。
-  - 補足: 例：`--_radius: var(--card--radius, 8px);`。`@property` で登録して `initial-value` を持たせた公開プロパティ（アニメーションさせる値など）は、この規約の例外で、宣言の中で直接読んでかまいません。未定義にならないのでフォールバックが要らず、内部プロパティに受け直すと、アニメーションさせるプロパティと宣言で読むプロパティが分かれてしまうためです。
+  - 補足: 例：`--_radius: var(--card--radius, 8px);`。`@property` で登録して `initial-value` を持たせた公開プロパティ（アニメーションさせる値など）は、この規約の例外で、宣言の中で直接読んでかまいません。未定義にならないのでフォールバックが要らず、内部プロパティに受け直すと、アニメーションさせるプロパティと宣言で読むプロパティが分かれてしまうためです。テンプレートが項目ごとに `style` 属性へ書く値（`--_index`、`--_hue` など）は、コンポーネントが自分の子に書く値なので、公開プロパティにせず内部用の名前にし、`:scope` で受け直しません。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/components/custom-properties/#rule-receive-public-property-with-fallback
 - 【必須・本書の規約】状態やモードで変わる値は、`--_background--hocus` のように `--` で区切った接尾辞で表し、デフォルトの状態には接尾辞を付けない。（`state-suffix-for-custom-properties`）
   - 理由: 状態ごとの値を `:scope` の先頭に並べて見渡せ、状態のセレクタでは参照を切り替えるだけで済むため。
-  - 補足: 幅などの条件で変わる値を受け取る公開プロパティにも、`--media-card--gap--wide` のように同じ形の接尾辞を付けます。
+  - 補足: 幅などの条件で変わる値を受け取る公開プロパティにも、`--media-card--gap--spacious` のように同じ形の接尾辞を付け、名前は幅のフラグの値（`--compact`、`--spacious`）にそろえます。接尾辞の対象は、擬似クラスや ARIA 属性で切り替わる状態と、幅の条件です。`data-variant` のバリエーションは状態ではないので、`&[data-variant="…"]` の中で内部プロパティを宣言し直します（9-2）。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/components/custom-properties/#rule-state-suffix-for-custom-properties
 - 【推奨・実装上の判断】公開プロパティの値は、できるだけ呼び出し側の `style` 属性で渡す。（`pass-values-via-style-attribute`）
   - 理由: 値が対象のタグと同じ場所に書かれ、セレクタや詳細度に依存せずに渡せるため。
@@ -216,7 +216,7 @@ https://t-arai-pnrm.github.io/recss-guideline/components/style-queries/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/components/style-queries/#rule-density-via-style-query
 - 【必須・本書の規約】親や自身のホバーとフォーカスで子要素や擬似要素の見た目を変えるときは、`--_hocus: --false` をデフォルト値として宣言し、`&:any-link:hover`（`@media (any-hover)` の中）と `&:focus-visible` で `--_hocus: --true` に切り替え、子要素と擬似要素は `@container style(--_hocus: --true)` で切り替える。（`hocus-via-style-query`）
   - 理由: ホバーとフォーカスの2つの条件を1か所に書けば済み、子孫結合子で子を選ぶ書き方（`&:any-link:hover ._icon`）と違って詳細度が上がらず、子の見た目が子のルールにまとまるため。
-  - 補足: 擬似要素（`::before`、`::after`、`::marker`）のスタイルクエリは元の要素を問い合わせるので、自身の擬似要素もこの形で書けます。フラグを立てた要素自身の見た目は、状態のセレクタに直接書きます。子の状態で親自身の見た目を変えるときは `:has()` を使い、子孫のホバーとフォーカスをほかの子孫に伝えるときは、`&:has(:any-link:hover)`（`@media (any-hover)` の中）と `&:has(:focus-visible)` で `--_has-hocus: --true` を立てます。キーボード操作のときにトランジションを外すなど、ホバーとフォーカスで子の振る舞いを分けたいときは、`&:focus-visible` で `--_focus-visible: --true` のような2つ目のフラグを立てます。
+  - 補足: 擬似要素（`::before`、`::after`、`::marker`）のスタイルクエリは元の要素を問い合わせるので、自身の擬似要素もこの形で書けます。フラグを立てた要素自身の見た目は、状態のセレクタに直接書きます。子の状態で親自身の見た目を変えるときは `:has()` を使い、子孫のホバーとフォーカスをほかの子孫に伝えるときは、`&:has(:any-link:hover)`（`@media (any-hover)` の中）と `&:has(:focus-visible)` で `--_has-hocus: --true` を立てます。キーボード操作のときに自身の擬似要素のトランジションを外すだけなら、`&:not(:focus-visible)::after` のように、状態のセレクタに擬似要素を続けて書いてかまいません。ホバーだけで出し、フォーカスでは出さない自身の擬似要素も、`&:enabled:hover::before`（`@media (any-hover)` の中）のように状態のセレクタに直接書きます。ホバーとフォーカスで子の見た目そのものを分けたいときは、`&:focus-visible` で `--_focus-visible: --true` のような2つ目のフラグを立てます。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/components/style-queries/#rule-hocus-via-style-query
 - 【必須・本書の規約】スタイルクエリで問い合わせるフラグの値は、`--compact` のような `--` で始まる識別子にし、オンとオフの2値の状態は `--true` と `--false` にそろえる。（`state-flag-values`）
   - 理由: スタイルクエリは値が一致するかどうかだけを調べるので、`1` や `true` が混ざると、書き間違えても条件が成り立たないだけで誤りに気付けないため。`--` で始めれば、自分で付けた名前だと分かる。

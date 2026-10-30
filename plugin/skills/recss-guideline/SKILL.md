@@ -6,8 +6,8 @@ license: CC-BY-4.0
 
 # RECSSガイドライン Skill
 
-- ガイドラインのバージョン: 0.82.0（2026-10-30 生成）
-- ルールの数: 623（うち AI が誤りやすいもの 299）
+- ガイドラインのバージョン: 0.83.0（2026-10-30 生成）
+- ルールの数: 621（うち AI が誤りやすいもの 299）
 - 本書: https://t-arai-pnrm.github.io/recss-guideline/
 
 ## 基本原則
@@ -99,25 +99,25 @@ Figma などのデザインツールのデザインから書くときは、「20
 
 | 章 | ファイル | ルールの数 | 本文 | 読む条件 |
 | --- | --- | --- | --- | --- |
-| 第1章 CSSのマインドセット | `references/01-principles.md` | 15 | 約5.5万字 | 新しい機能、ブラウザの対応状況、フォールバック、@supports |
-| 第2章 CSS設計の考え方 | `references/02-design-mindset.md` | 7 | 約2.7万字 | コンポーネントの分け方、共通化、上書きの多い設計 |
-| 第4章 カスケードを制御する | `references/04-cascade.md` | 24 | 約9.1万字 | @layer、!important、詳細度、セレクタの重ね掛け、:is()、:where()、上書きの順番 |
-| 第5章 擬似クラスと擬似要素 | `references/05-pseudo.md` | 28 | 約15.3万字 | :has()、:hover、:focus-visible、:nth-child()、::before、::after などの擬似クラスと擬似要素 |
-| 第6章 値と単位 | `references/06-values.md` | 30 | 約8.9万字 | px、rem、em、vw、vh、cqi などの単位、calc()、min()、max()、clamp()、if()、attr() |
-| 第7章 レイアウトの仕組み | `references/07-layout.md` | 41 | 約27万字 | display、Flexbox、Grid、position、margin、ボックスモデル、幅と高さ |
-| 第8章 リセットとベーススタイル | `references/08-reset.md` | 23 | 約5万字 | リセットCSS、要素セレクタだけのスタイル、:root や body のようにグローバルに書くスタイル |
-| 第9章 記法の規約 | `references/09-notation.md` | 49 | 約12.5万字 | **常に読む**。すべてのCSS（命名、バリエーション、ネスト、@scope、プロパティの並び、記法） |
-| 第10章 コンポーネントとカスタムプロパティ | `references/10-components.md` | 53 | 約16.8万字 | **常に読む**。すべてのCSS（コンポーネントの境界、カスタムプロパティ、デザイントークン） |
-| 第11章 レイアウトを組む | `references/11-layout-practice.md` | 62 | 約27万字 | 余白の設計、内容の変化への耐性、はみ出しとスクロール、重なり、z-index、アンカーポジショニング、表 |
-| 第12章 レイアウトコンポジション | `references/12-compositions.md` | 39 | 約19.2万字 | 要素を縦に積む、横に並べる、横にスクロールさせる、列に分けるなど、繰り返し使うレイアウトのパターン |
-| 第13章 レスポンシブデザイン | `references/13-responsive.md` | 44 | 約14.3万字 | @media、@container、ブレイクポイント、画面幅やコンテナの幅による切り替え、ナビゲーションの折りたたみ、safe-area、画面の幅で変える clamp() の区間、progress() |
-| 第14章 タイポグラフィと和文組版 | `references/14-typography.md` | 32 | 約8.4万字 | font-*、line-height、文字の大きさ、和文組版、改行、文字の色の役割 |
-| 第15章 色 | `references/15-color-media.md` | 23 | 約9.2万字 | 色の指定（oklch()、color-mix()、相対カラー構文）、ダークモード、強制カラーモード、コントラスト |
-| 第16章 画像・装飾 | `references/16-decoration.md` | 35 | 約22.4万字 | 画像、SVG、アイコン、mask、影、角丸、枠線、区切り線、印刷 |
-| 第17章 インタラクション | `references/17-interaction.md` | 41 | 約15万字 | ホバー、フォーカス、押せる範囲、タッチ操作、user-select、状態を表す属性（ARIA属性、data-*属性）、カード全体のリンク、開閉するUI（details、dialog、popover）、フォーム部品、カルーセル |
-| 第18章 モーション | `references/18-motion.md` | 31 | 約20.3万字 | transition、animation、@keyframes、prefers-reduced-motion、スクロール連動、View Transitions |
-| 第19章 実務での運用 | `references/19-operations.md` | 29 | 約7.2万字 | Stylelint、レビュー、CMSの本文エリアやWYSIWYG、既存のサイトへの導入 |
-| 第20章 AIにコーディングさせる | `references/20-ai-coding.md` | 17 | 約8.9万字 | AIが書いたCSS、Figmaなどのデザインツールから書いたCSS |
+| 第1章 CSSのマインドセット | `references/01-principles.md` | 15 | 約5.6万字 | 新しい機能、ブラウザの対応状況、フォールバック、@supports |
+| 第2章 CSS設計の考え方 | `references/02-design-mindset.md` | 7 | 約2.8万字 | コンポーネントの分け方、共通化、上書きの多い設計 |
+| 第4章 カスケードを制御する | `references/04-cascade.md` | 24 | 約9.4万字 | @layer、!important、詳細度、セレクタの重ね掛け、:is()、:where()、上書きの順番 |
+| 第5章 擬似クラスと擬似要素 | `references/05-pseudo.md` | 28 | 約15.4万字 | :has()、:hover、:focus-visible、:nth-child()、::before、::after などの擬似クラスと擬似要素 |
+| 第6章 値と単位 | `references/06-values.md` | 30 | 約9.2万字 | px、rem、em、vw、vh、cqi などの単位、calc()、min()、max()、clamp()、if()、attr() |
+| 第7章 レイアウトの仕組み | `references/07-layout.md` | 41 | 約27.5万字 | display、Flexbox、Grid、position、margin、ボックスモデル、幅と高さ |
+| 第8章 リセットとベーススタイル | `references/08-reset.md` | 23 | 約5.2万字 | リセットCSS、要素セレクタだけのスタイル、:root や body のようにグローバルに書くスタイル |
+| 第9章 記法の規約 | `references/09-notation.md` | 49 | 約12.7万字 | **常に読む**。すべてのCSS（命名、バリエーション、ネスト、@scope、プロパティの並び、記法） |
+| 第10章 コンポーネントとカスタムプロパティ | `references/10-components.md` | 53 | 約17.3万字 | **常に読む**。すべてのCSS（コンポーネントの境界、カスタムプロパティ、デザイントークン） |
+| 第11章 レイアウトを組む | `references/11-layout-practice.md` | 60 | 約27.2万字 | 余白の設計、内容の変化への耐性、はみ出しとスクロール、重なり、z-index、アンカーポジショニング、表 |
+| 第12章 レイアウトコンポジション | `references/12-compositions.md` | 39 | 約19.5万字 | 要素を縦に積む、横に並べる、横にスクロールさせる、列に分けるなど、繰り返し使うレイアウトのパターン |
+| 第13章 レスポンシブデザイン | `references/13-responsive.md` | 44 | 約14.1万字 | @media、@container、ブレイクポイント、画面幅やコンテナの幅による切り替え、ナビゲーションの折りたたみ、safe-area、画面の幅で変える clamp() の区間、progress() |
+| 第14章 タイポグラフィと和文組版 | `references/14-typography.md` | 32 | 約8.6万字 | font-*、line-height、文字の大きさ、和文組版、改行、文字の色の役割 |
+| 第15章 色 | `references/15-color-media.md` | 23 | 約9.3万字 | 色の指定（oklch()、color-mix()、相対カラー構文）、ダークモード、強制カラーモード、コントラスト |
+| 第16章 画像・装飾 | `references/16-decoration.md` | 35 | 約22.9万字 | 画像、SVG、アイコン、mask、影、角丸、枠線、区切り線、印刷 |
+| 第17章 インタラクション | `references/17-interaction.md` | 41 | 約15.7万字 | ホバー、フォーカス、押せる範囲、タッチ操作、user-select、状態を表す属性（ARIA属性、data-*属性）、カード全体のリンク、開閉するUI（details、dialog、popover）、フォーム部品、カルーセル |
+| 第18章 モーション | `references/18-motion.md` | 31 | 約21.1万字 | transition、animation、@keyframes、prefers-reduced-motion、スクロール連動、View Transitions |
+| 第19章 実務での運用 | `references/19-operations.md` | 29 | 約7.8万字 | Stylelint、レビュー、CMSの本文エリアやWYSIWYG、既存のサイトへの導入 |
+| 第20章 AIにコーディングさせる | `references/20-ai-coding.md` | 17 | 約9万字 | AIが書いたCSS、Figmaなどのデザインツールから書いたCSS |
 
 ## トークンの例
 

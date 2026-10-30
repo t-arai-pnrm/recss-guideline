@@ -20,7 +20,7 @@
     ._item {
       padding-block: 1rlh;
 
-      /* 内容の領域と padding の領域を別の色で塗り分ける */
+      /* padding の差で内容の領域の幅がずれるのが見えるよう、2つの領域を塗り分ける */
       background-image: linear-gradient(var(--background--surface) 0 0), none;
       background-clip: content-box, border-box;
       background-color: oklch(from var(--background--accent) calc(l - 0.12) c h);

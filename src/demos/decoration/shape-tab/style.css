@@ -8,7 +8,13 @@
     ul {
       display: block flex;
       gap: 8px;
+      overflow-x: auto;
+      padding-block-start: 6px;
       padding-inline: 24px;
+
+      & > li {
+        flex: none;
+      }
     }
 
     ._tab {
@@ -19,13 +25,11 @@
       display: block flow-root;
       padding-block: 8px;
       padding-inline: 24px;
-      color: var(--foreground--muted);
       isolation: isolate;
 
       &[aria-current="page"] {
         --_background: var(--background--base);
 
-        color: var(--foreground--base);
         font-weight: var(--font-weight--bold);
       }
 

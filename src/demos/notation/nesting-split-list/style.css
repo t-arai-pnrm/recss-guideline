@@ -10,10 +10,9 @@
     ._selected-count {
       padding-block: 8px;
       padding-inline: 16px;
-      border-color: transparent;
+      border: 1px solid var(--border--base);
       border-radius: var(--rounded--sm);
-      background-color: var(--background--active);
-      color: var(--foreground--muted);
+      background-color: var(--background--surface);
     }
 
     button {
@@ -23,7 +22,8 @@
       }
 
       &[data-variant="danger"] {
-        background-color: var(--foreground--danger);
+        background-color: var(--background--surface);
+        color: var(--foreground--danger);
       }
     }
   }

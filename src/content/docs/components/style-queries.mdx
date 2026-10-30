@@ -160,7 +160,7 @@ import hocusCss from '../../../demos/components/hocus-arrow-link/style.css?raw';
 
 ```css title="🙅‍♂ Not Recommended: 親の状態のセレクタから、子孫結合子で子を選ぶ" issue="convention"
 /* 🙅‍♂ Not Recommended */
-@scope (.scoped.link-menu) to (.scoped) {
+@scope (.scoped.related-navigation) to (.scoped) {
   a {
     &:any-link:hover ._icon {
       @media (any-hover) {
@@ -190,7 +190,7 @@ import hocusCss from '../../../demos/components/hocus-arrow-link/style.css?raw';
 幅のフラグと同じく、状態を1か所でフラグにします。リンクやボタンの状態のセレクタで `--_hocus: --true` を立て、子要素と擬似要素は `@container style(--_hocus: --true)` で切り替えます。ホバーを `@media (any-hover)` の中に書き、`:focus-visible` にも同じ変化を付けるという2つの条件は、フラグを立てる1か所にだけ書けば済みます（「[17-1 ホバーとフォーカスを表す](/interaction/states-and-focus/)」）。
 
 ```css title="🙆‍♂ Recommended: ホバーとフォーカスでフラグを立て、子と擬似要素で問い合わせる" from="components/hocus-arrow-link"
-@scope (.scoped.link-menu) to (.scoped) {
+@scope (.scoped.related-navigation) to (.scoped) {
   :scope {
     --_background: transparent;
     --_background--hocus: var(--background--hover);
@@ -199,6 +199,7 @@ import hocusCss from '../../../demos/components/hocus-arrow-link/style.css?raw';
   a {
     --_hocus: --false;
 
+    display: block flex;
     background-color: var(--_background);
 
     &:any-link:hover {
@@ -238,7 +239,7 @@ import hocusCss from '../../../demos/components/hocus-arrow-link/style.css?raw';
 
 <Demo title="ホバーとフォーカスで、矢印が動き、ラベルに下線が引かれるリンク" html={hocusHtml} css={hocusCss} />
 
-矢印の上下の位置は、`margin-block: calc((1lh - var(--_icon-size)) / 2)` で決めています。`1lh` はその要素の行の高さなので、ラベルが2行に折り返しても、矢印は1行目の高さの中で上下の中央にそろいます（「[11-14 floatで文章を回り込ませる](/layout-practice/float/)」）。矢印のトランジションは装飾的な動きなので、`prefers-reduced-motion: no-preference` の中に書いています。
+矢印の上下の位置は、`margin-block: calc((1lh - var(--_icon-size)) / 2)` で決めています。`1lh` はその要素の行の高さなので、ラベルが2行に折り返しても、矢印は1行目の高さの中で上下の中央にそろいます（「[11-13 アイコンを配置する](/layout-practice/icon-alignment/)」）。矢印のトランジションは装飾的な動きなので、`prefers-reduced-motion: no-preference` の中に書いています。
 
 3つ目の段階で押さえるのは、`@media (any-hover)` と `:focus-visible` の2つの条件を書くのがフラグを立てるリンクのルールだけになり、子と擬似要素は `--_hocus` を読むだけになることです。リンク自身の背景色だけは、フラグを読まずに状態のセレクタへ直接書いています。その理由が、次の見出しで説明する制約です。
 
@@ -252,7 +253,7 @@ import hocusCss from '../../../demos/components/hocus-arrow-link/style.css?raw';
 
 一方で、要素は自分自身を問い合わせられません。`@container` は、コンテナの子孫のスタイルに条件を付ける仕組みだからです。`._body` に `@container style(--_density: --spacious)` を書くと、`._body` 自身の値ではなく親の値を調べるので、`._body` の配置は切り替わりません。そのため、フラグを宣言した要素自身の見た目は、フラグを切り替えるのと同じサイズクエリの中に書きます。ホバーとフォーカスでも同じで、リンク自身の背景色は `&:any-link:hover` と `&:focus-visible` の中に直接書きます。値は `--_background--hocus` のような接尾辞の内部プロパティで受けます（「[10-5 公開プロパティと内部プロパティ](/components/custom-properties/)」）。
 
-フラグのデフォルト値（`--compact`、`--false`）を明示するのは、カスタムプロパティが継承するからです。デフォルト値を書かないと、このコンポーネントを別のコンポーネントの中に置いたとき、外側で同じ名前のフラグが立っていれば、その値を受け継ぎます。外側のリンクにホバーしただけで、内側のコンポーネントの矢印まで動くことになります。同じ理由で、フラグはルートの `:scope` ではなく、`._body` のようなルートの子孫に置きます。`:scope` に書いた `@container --scoped (…)` は、ルート自身ではなく外側のコンポーネントのルートを問い合わせるからです（「[コンテナサイズクエリの基本](#コンテナサイズクエリの基本)」）。
+フラグのデフォルト値（`--compact`、`--false`）を明示するのは、カスタムプロパティが継承するからです。デフォルト値を書かないと、このコンポーネントを別のコンポーネントの中に置いたとき、外側で同じ名前のフラグが立っていれば、その値を受け継ぎます。外側のリンクにホバーしただけで、内側のコンポーネントの矢印まで動くことになります。サイズクエリで切り替えるフラグは、ルートの `:scope` ではなく、`._body` のようなルートの子孫に置きます。`:scope` に書いた `@container --scoped (…)` は、ルート自身ではなく外側のコンポーネントのルートを問い合わせるからです（「[コンテナサイズクエリの基本](#コンテナサイズクエリの基本)」）。
 
 ## 1つのクエリに子のルールをまとめる方法と比べる
 
@@ -300,7 +301,7 @@ import hocusCss from '../../../demos/components/hocus-arrow-link/style.css?raw';
 
 ## 補足と注意点
 
-フラグを立てた要素自身の値を、そのフラグで切り替えたい場面もあります。その選択肢が `if()` で、`if(style(--_density: --spacious): 24px; else: 12px)` のように、要素自身に定義したカスタムプロパティの値で1つの値を切り替えられます。ただし、`if()` に対応しているのはChrome 137以降とEdgeだけで、FirefoxとSafariは対応していません。仕様もCSS Values 5のEditor's Draftの段階です。使うなら、「[6-5 if()とattr()で条件と属性を値にする](/values/if-and-attr/)」のルールに従い、前に従来の宣言を書いて、条件1つと `else` の形にとどめます。
+フラグを立てた要素自身の値を、そのフラグで切り替えたい場面もあります。その選択肢が `if()` で、`if(style(--_density: --spacious): 24px; else: 12px)` のように、要素自身に定義したカスタムプロパティの値で1つの値を切り替えられます。ただし、`if()` に対応しているのはChrome 137以降とEdgeだけで、FirefoxとSafariは対応していません。仕様もCSS Values 5の草案（Working Draft）の段階です。使うなら、「[6-5 if()とattr()で条件と属性を値にする](/values/if-and-attr/)」のルールに従い、前に従来の宣言を書いて、条件1つと `else` の形にとどめます。
 
 <Baseline id="if" name="if()" />
 

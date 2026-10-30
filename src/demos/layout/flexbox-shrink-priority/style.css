@@ -41,8 +41,9 @@
 
     ._side {
       container: --side / inline-size;
-      min-inline-size: calc(240 / 16 * 1rem);
-      background-color: var(--background--active);
+      min-inline-size: min(100%, calc(240 / 16 * 1rem));
+      box-shadow: inset 0 0 0 1px var(--border--strong);
+      background-color: var(--background--surface);
     }
 
     ._body {

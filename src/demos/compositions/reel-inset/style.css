@@ -8,9 +8,9 @@
  * @prop {length} --primary-layout--ex-wide-increase  [40px]                   - ワイド幅と超ワイド幅の片側の差（上限）
  * @prop {length} --primary-layout--row-gap           [0px]                    - 行の間隔
  *
- * @prop {length} --reel--item-size [max-content] - 項目の幅（grid-auto-columns）
- * @prop {length} --reel--gap       [0]           - 項目の間隔
- * @prop {length} --reel--inset     [0]           - 両端の余白と、スナップで止まる位置の内側の余白
+ * @prop {length | keyword} --reel--item-size [max-content] - 項目の幅（grid-auto-columns）
+ * @prop {length}           --reel--gap       [0]           - 項目の間隔
+ * @prop {length}           --reel--inset     [0]           - 両端の余白と、スナップで止まる位置の内側の余白
  *
  * @example
  * <div class="primary-layout">
@@ -125,16 +125,16 @@
     :scope {
       scroll-snap-type: inline mandatory;
 
-      & > ._item {
+      & > li {
         scroll-snap-align: start;
       }
     }
 
-    ._item {
+    li {
       display: block grid;
     }
 
-    ._card {
+    article {
       display: block grid;
       grid-template-rows: auto 1fr;
       gap: 8px;
@@ -147,7 +147,7 @@
     ._thumbnail {
       aspect-ratio: 16 / 9;
       border-radius: var(--rounded--sm);
-      background-image: linear-gradient(135deg, oklch(82% 0.08 250deg), oklch(72% 0.12 300deg));
+      background-color: color-mix(in oklab, var(--foreground--muted) 24%, transparent);
     }
 
     ._title {
@@ -158,7 +158,7 @@
 }
 
 @layer pages {
-  @scope (.scoped.reel-inset-demo) to (.scoped) {
+  @scope (.scoped.page-related) to (.scoped) {
     ._heading {
       font-size: calc(var(--text--title--font-size) / 16 * 1rem);
       line-height: var(--text--title--leading);

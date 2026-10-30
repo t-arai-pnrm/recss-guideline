@@ -1,7 +1,7 @@
 @layer components {
   @scope (.scoped.product-card) to (.scoped) {
     :scope {
-      /* バッジの包含ブロックを、カードのルートに作る */
+      /* バッジをカードの角に置くため、カードのルートを包含ブロックにする */
       position: relative;
       padding-block: 16px;
       padding-inline: 16px 80px;
@@ -10,7 +10,7 @@
 
       /* 比較のため、1つ目のカードだけ包含ブロックを作らない */
       &[data-demo="without-containing-block"] {
-        position: static;
+        position: initial;
       }
 
       & > * + * {

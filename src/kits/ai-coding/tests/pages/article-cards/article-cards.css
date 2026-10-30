@@ -7,15 +7,14 @@
     :scope {
       --grid--column-min-width: calc(280 / 16 * 1rem);
       --grid--column-max-count: 2;
-      --grid--gap: 24px;
+      --grid--gap: calc(var(--spacing--md) * 1px);
 
       /*
        * カードの影。ホバーとフォーカスで動かすので、box-shadow ではなく filter の drop-shadow() で描く（16-5）。
-       * drop-shadow() は広がりを持たないので、box-shadow の負の広がりで絞っていた影を、
-       * オフセット、ぼかし、濃さを減らして近づけた。動かす前と後で、drop-shadow() の数を2つにそろえる
+       * --drop-shadow--* はどの段階も関数の数がそろっているので、段階の間でトランジションできる
        */
-      --_drop-shadow: drop-shadow(0 1px 1px oklch(0% 0 none / 4%)) drop-shadow(0 6px 8px oklch(26% 0.05 265deg / 10%));
-      --_drop-shadow--hocus: drop-shadow(0 2px 2px oklch(0% 0 none / 5%)) drop-shadow(0 12px 16px oklch(26% 0.05 265deg / 18%));
+      --_drop-shadow: var(--drop-shadow--sm);
+      --_drop-shadow--hocus: var(--drop-shadow--md);
 
       /* カードは subgrid にするのでコンテナにできない。カードの形は、一覧の幅で切り替える */
       container: --scoped / inline-size;
@@ -31,17 +30,16 @@
       }
     }
 
-    /* 見た目を切り替えるコンテナサイズクエリは、フラグを宣言するこの要素にだけ書く */
     ._card {
       --_density: --compact;
 
       display: block grid;
       grid-template-columns: calc(96 / 16 * 1rem) 1fr;
       grid-template-rows: auto 1fr;
-      gap: 4px 12px;
+      gap: calc(var(--spacing--xxxs) * 1px) calc(var(--spacing--xs) * 1px);
 
       /*
-       * サイドの列の幅（240px 相当）より広く、一覧の列の最小幅（280px 相当）より狭い幅。
+       * 狭い置き場所（240px 相当）より広く、一覧の列の最小幅（280px 相当）より狭い幅。
        * 1列のときはカードの幅が一覧の幅と同じで、2列になるのは列が280px相当以上のときなので、一覧の幅で判断してよい
        */
       @container --scoped (inline-size >= calc(260 / 16 * 1rem)) {
@@ -51,21 +49,21 @@
 
         /* 画像、日付とカテゴリー、見出し、抜粋の4行を、一覧のグリッドの行に参加させる */
         grid-template-rows: subgrid;
-        row-gap: 12px;
-        padding: 16px;
+        row-gap: calc(var(--spacing--xs) * 1px);
+        padding: calc(var(--spacing--sm) * 1px);
         border: 1px solid var(--border--base);
         border-radius: var(--rounded--lg);
         background-color: var(--background--surface);
         filter: var(--_drop-shadow);
 
-        /* フォーカスの移動には、動きを付けない */
+        /* キーボードでフォーカスしたときは、影を一度で切り替える（no-motion-on-focus-visible） */
         &:not(:has(:focus-visible)) {
           transition-duration: var(--duration--base);
           transition-property: filter;
           transition-timing-function: var(--ease--out-quint);
         }
 
-        /* 見出しのリンクにホバーしたら、影を深くする。カードの位置は動かさない */
+        /* カードを動かすと、ホバーを受けるリンクの位置まで変わるので、影だけを変える */
         &:has(a:any-link:hover) {
           @media (any-hover) {
             filter: var(--_drop-shadow--hocus);
@@ -77,7 +75,6 @@
         }
       }
 
-      /* 画像が左の形では、日付とカテゴリー、見出しの2行にまたがらせる */
       & > img {
         @container style(--_density: --compact) {
           grid-row: span 2;
@@ -89,13 +86,13 @@
       inline-size: -webkit-fill-available;
       inline-size: stretch;
       aspect-ratio: 16 / 9;
-      border-radius: var(--rounded--md);
+      border-radius: var(--rounded--sm);
       object-fit: cover;
     }
 
     ._meta {
-      --cluster--row-gap: 4px;
-      --cluster--column-gap: 12px;
+      --cluster--row-gap: calc(var(--spacing--xxxs) * 1px);
+      --cluster--column-gap: calc(var(--spacing--xs) * 1px);
       --cluster--alignment: center;
 
       color: var(--foreground--muted);
@@ -104,15 +101,13 @@
     }
 
     time {
-      font-family: var(--font-family--latin);
       font-variant-numeric: tabular-nums;
     }
 
     ._category {
-      padding-inline: 8px;
+      padding-inline: calc(var(--spacing--xxs) * 1px);
+      border: 1px solid var(--border--base);
       border-radius: var(--rounded--sm);
-      background-color: var(--background--brand-subtle);
-      color: var(--foreground--brand);
       font-weight: var(--font-weight--bold);
     }
 
@@ -143,7 +138,7 @@
       font-size: calc(var(--text--body-compact--font-size) / 16 * 1rem);
       line-height: var(--text--body-compact--leading);
 
-      /* 画像が左の形では、抜粋を出さない */
+      /* 狭い形では、抜粋を出さずに見出しの行を確保する */
       @container style(--_density: --compact) {
         display: none;
       }

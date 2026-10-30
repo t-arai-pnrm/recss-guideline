@@ -50,9 +50,9 @@ import fallbackCss from '../../../demos/cascade/custom-property-fallback/style.c
 ```css title="🙆‍♂ Recommended: 祖先で宣言した値を、子孫で参照する"
 @scope (.scoped.notice) to (.scoped) {
   :scope {
-    --_accent: var(--foreground--accent);
+    --_accent: var(--foreground--base);
 
-    &[data-tone="danger"] {
+    &[data-variant="danger"] {
       --_accent: var(--foreground--danger);
     }
   }
@@ -63,7 +63,7 @@ import fallbackCss from '../../../demos/cascade/custom-property-fallback/style.c
 }
 ```
 
-`._title` は自分では `--_accent` を宣言していないので、ルートの値を継承します。ルートに `data-tone="danger"` を付けるとルートの値が変わり、`._title` のルールを変えなくても、`._title` の文字色は赤になります。
+`._title` は自分では `--_accent` を宣言していないので、ルートの値を継承します。ルートに `data-variant="danger"` を付けるとルートの値が変わり、`._title` のルールを変えなくても、`._title` の文字色は赤になります。
 
 注意が要るのは、カスタムプロパティの値に `var()` を書いた場合です。その `var()` は、宣言した要素の上で置き換えられてから子孫に継承されます。次の例では、`._title` で `--_accent` を変えても、下線の色は変わりません。
 
@@ -71,7 +71,7 @@ import fallbackCss from '../../../demos/cascade/custom-property-fallback/style.c
 /* 🙅‍♂ Not Recommended */
 @scope (.scoped.notice) to (.scoped) {
   :scope {
-    --_accent: var(--foreground--accent);
+    --_accent: var(--foreground--base);
     --_rule: 2px solid var(--_accent);
   }
 
@@ -83,7 +83,7 @@ import fallbackCss from '../../../demos/cascade/custom-property-fallback/style.c
 }
 ```
 
-`--_rule` の値は、ルートで `2px solid` と青の色に置き換えられ、その結果が `._title` に継承されます。`._title` で宣言した赤の `--_accent` は、すでに置き換えの済んだ `--_rule` には反映されないので、下線は青のままです。子孫ごとに変わる値を使いたいときは、`border-block-end: 2px solid var(--_accent)` のように、変わる部分を参照する宣言を子孫のルールに書きます。
+`--_rule` の値は、ルートで `2px solid` と文字色に置き換えられ、その結果が `._title` に継承されます。`._title` で宣言した赤の `--_accent` は、すでに置き換えの済んだ `--_rule` には反映されないので、下線はルートの文字色のままです。子孫ごとに変わる値を使いたいときは、`border-block-end: 2px solid var(--_accent)` のように、変わる部分を参照する宣言を子孫のルールに書きます。
 
 単位を含む値は、置き換えのときに計算されません。`--_size: 1em` は `1em` という並びのまま継承され、`var(--_size)` を書いた要素で長さに計算されます。`@property` で型を登録すると、この振る舞いが変わります（「[10-5 公開プロパティと内部プロパティ](/components/custom-properties/)」）。
 

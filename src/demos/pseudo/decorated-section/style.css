@@ -1,8 +1,6 @@
 @layer components {
   @scope (.scoped.feature-section) to (.scoped) {
     :scope {
-      --_accent: var(--foreground--accent);
-
       display: block grid;
       gap: 16px;
     }
@@ -10,15 +8,15 @@
     h2 {
       display: block flex;
       gap: 12px;
-      align-items: center;
+      align-items: start;
       font-size: calc(var(--text--title--font-size) / 16 * 1rem);
       line-height: var(--text--title--leading);
 
-      /* 見出しの前の縦線。空の擬似要素はフレックスアイテムになり、高さが効く。幅は線の太さで決まる */
+      /* 空の擬似要素はフレックスアイテムになるので、高さが働く。見出しが2行になっても、線は1行目にそろう */
       &::before {
         content: "";
         block-size: 1lh;
-        border-inline-start: 4px solid var(--_accent);
+        border-inline-start: 4px solid;
       }
     }
 
@@ -35,13 +33,13 @@
       /* チェックの記号は装飾なので、代替テキストを空にして読み上げない */
       &::before {
         content: "✓" / "";
-        color: var(--_accent);
+        color: var(--foreground--muted);
         font-weight: var(--font-weight--bold);
       }
     }
 
     a {
-      color: var(--_accent);
+      color: var(--foreground--accent);
 
       /* 行き先はリンクの文字で伝わるので、矢印は読み上げない */
       &::after {

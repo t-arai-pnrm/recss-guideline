@@ -85,7 +85,7 @@
   kind: spec
   rule: フォーカスリングを `box-shadow` だけで描かない。
   reason: 強制カラーモードでは `box-shadow` が `none` になり、フォーカスの位置が見えなくなるため。
-  note: '`box-shadow` は、`outline` で描いたリングを補う用途に限って使います。'
+  note: '`box-shadow` は、`outline` で描いたリングを補う用途に限って使います。強制カラーモードのために `outline-color: transparent` で `outline` を残し、通常の表示のリングを `box-shadow` で描く書き方（第15章の `transparent-outline-for-custom-focus`）は、強制カラーモードで `outline` がリングになるので、この禁止に当たりません。'
   aiProne: true
   page: reset/base-styles
   since: 0.1.0
@@ -180,7 +180,7 @@
   kind: judgment
   rule: 'ベーススタイルで、要素全体に `display`、`position`、`max-inline-size` のようなレイアウトのプロパティを指定しない（例：`div { display: flex; }`、`* { position: relative; }`）。'
   reason: レイアウトは文脈によって必要なものが変わるので、ほかの文脈で打ち消しの指定が増え、打ち消し忘れによる不具合も起きやすいため。
-  note: '全称セレクタの `min-inline-size: 0`（8-2）は、フレックスアイテムとグリッドアイテムの最小幅だけを変える例外です。'
+  note: '全称セレクタの `min-inline-size: 0`（8-2）は、フレックスアイテムとグリッドアイテムの最小幅だけを変える例外です。リセット CSS やベーススタイルで、ブラウザのデフォルトの余白を `unset` で消す指定（例：`h1 { margin-block: unset; }`）は、前提をそろえる平坦化で、新しいレイアウトを足す指定ではないので対象外です。'
   page: reset/global-pitfalls
   since: 0.1.0
 
@@ -198,7 +198,7 @@
   level: 必須
   kind: spec
   rule: 'リストのマーカーは、`list-style: none` ではなく `list-style-type: ""` で消す。'
-  reason: 'Safari の VoiceOver は、`list-style: none` を指定したリストをリストとして読み上げないため。'
+  reason: 'Safari の VoiceOver で、`list-style: none` を指定したリストが、リストとして読み上げられないことがあるため。'
   note: kiso.css を使えば、`ul`、`ol`、`menu` のマーカーは消えています。
   aiProne: true
   page: reset/global-pitfalls

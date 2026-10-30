@@ -10,7 +10,7 @@
  * @prop {length} --stack--gap [0] - 子要素の間隔
  *
  * @example
- * <ul class="cluster" style="--cluster--gap: calc(var(--spacing--xxs) / 16 * 1rem)">
+ * <ul class="cluster" style="--cluster--gap: calc(var(--spacing--xxs) * 1px)">
  *   <li>…</li>
  * </ul>
  */
@@ -45,8 +45,8 @@
     li {
       padding-block: 4px;
       padding-inline: 12px;
+      border: 1px solid var(--border--base);
       border-radius: var(--rounded--full);
-      background-color: var(--background--active);
       font-size: calc(var(--text--body-compact--font-size) / 16 * 1rem);
       line-height: var(--text--body-compact--leading);
     }
@@ -68,7 +68,6 @@
       padding-inline: 20px;
       border-color: var(--border--strong);
       border-radius: var(--rounded--sm);
-      color: var(--foreground--base);
     }
 
     ._submit-button {

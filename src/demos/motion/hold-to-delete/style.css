@@ -38,7 +38,6 @@
       padding: unset;
       border: 1px solid currentColor;
       border-radius: var(--rounded--md);
-      background-color: transparent;
       color: var(--foreground--danger);
       font-weight: var(--font-weight--bold);
 

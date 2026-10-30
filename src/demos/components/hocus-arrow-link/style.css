@@ -1,17 +1,32 @@
 @layer components {
-  @scope (.scoped.link-menu) to (.scoped) {
+  @scope (.scoped.related-navigation) to (.scoped) {
     :scope {
       --_background: transparent;
       --_background--hocus: var(--background--hover);
+      --_rule-width: 1px;
     }
 
     ul {
+      display: block grid;
+      gap: var(--_rule-width);
       max-inline-size: calc(400 / 16 * 1rem);
-      border-block-start: 1px solid var(--border--base);
+      padding-block-end: var(--_rule-width);
+      border-block-start: var(--_rule-width) solid var(--border--base);
+
+      @media (forced-colors: active) {
+        gap: unset;
+        padding-block-end: unset;
+      }
     }
 
     li {
-      border-block-end: 1px solid var(--border--base);
+      /* 項目の下の gap に線を描き、リンクのフォーカスリングを切り取らないよう、左右には広げない */
+      box-shadow: 0 var(--_rule-width) 0 var(--border--base);
+
+      /* 強制カラーモードでは box-shadow が消えるので、gap の代わりに枠線で区切る */
+      @media (forced-colors: active) {
+        border-block-end: var(--_rule-width) solid;
+      }
     }
 
     a {
@@ -26,7 +41,6 @@
       background-color: var(--_background);
       color: var(--foreground--base);
 
-      /* 要素自身の見た目は、状態のセレクタに直接書く */
       &:any-link:hover {
         @media (any-hover) {
           --_hocus: --true;
@@ -41,7 +55,7 @@
         background-color: var(--_background--hocus);
       }
 
-      /* 矢印。擬似要素のスタイルクエリは、元の要素（a）を問い合わせる */
+      /* 擬似要素は自分のフラグを持たず、名前なしの style() は元の要素（a）を問い合わせる */
       &::after {
         --_icon-size: 0.5em;
 
@@ -50,7 +64,7 @@
         inline-size: var(--_icon-size);
         aspect-ratio: 1;
 
-        /* 1行目の行の高さの中で、上下の中央に置く */
+        /* ラベルが折り返しても1行目にそろえるため、1lh を基準にする */
         margin-block: calc((1lh - var(--_icon-size)) / 2);
         margin-inline-start: auto;
         border-block-start: 2px solid var(--foreground--accent);
@@ -62,7 +76,7 @@
         }
       }
 
-      /* キーボードでフォーカスしたときは、トランジションを掛けない */
+      /* キーボードの移動では一度で動かし、遅れて見えないようにする */
       &:not(:focus-visible)::after {
         @media (prefers-reduced-motion: no-preference) {
           transition-duration: var(--duration--fast);

@@ -28,8 +28,8 @@ import hidingJs from '../../../demos/interaction/hiding-methods/script.js?raw';
 <!-- 支援技術からだけ消す：隣のテキストと同じ意味のアイコン -->
 <svg class="icon" aria-hidden="true">…</svg>
 
-<!-- 両方から消す：閉じたパネル -->
-<div class="_panel" hidden>…</div>
+<!-- 両方から消す：閉じたメニュー。開閉の処理の初期化に成功してから、スクリプトで付ける -->
+<ul class="_menu" hidden>…</ul>
 
 <!-- 見た目を残して、操作、フォーカス、支援技術から外す：ドロワーを開いている間の背面 -->
 <main inert>…</main>
@@ -57,7 +57,7 @@ import hidingJs from '../../../demos/interaction/hiding-methods/script.js?raw';
 
 ## `visibility: hidden` で場所を残して消す
 
-`visibility: hidden` は、場所を残したまま、見た目と支援技術の両方から消します。フォーカスもできません。`display` と違い、トランジションの中で切り替わる時点が決まっているので、閉じるアニメーションを終えてから隠すパネルに向いています（「[18-8 重ねて出すパネルと順に出す要素](/motion/overlays-and-stagger/)」）。
+`visibility: hidden` は、場所を残したまま、見た目と支援技術の両方から消します。フォーカスもできません。`visibility` のトランジションでは、見えている側の値がトランジションの間ずっと保たれるので、何も書き足さなくても、閉じるアニメーションを終えてから隠れます。`display` が同じ時点で切り替わるのは、`transition-behavior: allow-discrete` を書いたときだけです。閉じるアニメーションを終えてから隠すパネルには、`visibility` が手軽です（「[18-8 重ねて出すパネルと順に出す要素](/motion/overlays-and-stagger/)」）。
 
 ```css title="🙅‍♂ Not Recommended: visibility: hidden の中で、子要素だけ visible に戻す" issue="behavior"
 /* 🙅‍♂ Not Recommended */
@@ -92,12 +92,13 @@ import hidingJs from '../../../demos/interaction/hiding-methods/script.js?raw';
     padding: unset;
     border: unset;
     opacity: 0;
+    white-space: nowrap;
     pointer-events: none;
   }
 }
 ```
 
-広く使われている定義は、1pxの箱を `clip` や `clip-path` で切り取る形です。本書が4pxにしているのは、1pxの箱では環境によって読み上げられない可能性があるためです。{/* 要検証: ブラウザ。1px の箱が読み上げられない環境の有無（スクリーンリーダーとブラウザの組み合わせ） */}`position: fixed` の要素は、通常、ビューポートを基準に置かれるので、祖先の配置に左右されにくく、横スクロールの原因にもなりません。ただし、`transform` や `filter`、`contain: layout` などを指定した祖先があると、その祖先が基準になります。変形や包含を使う部品の中に置くときは、隠したテキストが表示やスクロールに影響しないかを確かめます。`contain: strict` で、中の文字が箱の大きさに影響せず、箱の外にも描かれないようにし、`pointer-events: none` で、透明な箱がクリックを受けないようにしています。
+広く使われている定義は、1pxの箱を `clip` や `clip-path` で切り取る形です。本書が4pxにしているのは、1pxの箱では環境によって読み上げられない可能性があるためです。{/* 要検証: ブラウザ。1px の箱が読み上げられない環境の有無（スクリーンリーダーとブラウザの組み合わせ） */}`white-space: nowrap` は、狭い箱の中で文章を語ごとに折り返させないための宣言です。折り返すと、スクリーンリーダーによっては語の間の空白を読み落とし、語を続けて読み上げるためです。{/* 要検証: ブラウザ。折り返した英文の読み上げ（VoiceOver と NVDA） */}`position: fixed` の要素は、通常、ビューポートを基準に置かれるので、祖先の配置に左右されにくく、横スクロールの原因にもなりません。ただし、`transform` や `filter`、`contain: layout` などを指定した祖先があると、その祖先が基準になります。変形や包含を使う部品の中に置くときは、隠したテキストが表示やスクロールに影響しないかを確かめます。`contain: strict` で、中の文字が箱の大きさに影響せず、箱の外にも描かれないようにし、`pointer-events: none` で、透明な箱がクリックを受けないようにしています。
 
 `display: revert` と `visibility: unset` は、コンポーネントが同じ要素に `display: none` や `visibility: hidden` を指定していても、読み上げの対象に戻すための宣言です。ユーティリティは `utilities` レイヤーに置くので、どのコンポーネントの指定よりも優先され、`!important` は要りません（「[4-3 カスケードレイヤーで順位を決める](/cascade/layers/)」）。ユーティリティにする範囲は「[10-3 コンポジションとユーティリティ](/components/compositions-and-utilities/)」で説明しています。
 
@@ -118,6 +119,7 @@ import hidingJs from '../../../demos/interaction/hiding-methods/script.js?raw';
       padding: unset;
       border: unset;
       opacity: 0;
+      white-space: nowrap;
       pointer-events: none;
     }
   }
@@ -163,9 +165,9 @@ CSSから同じ状態にする `interactivity: inert` もありますが、Basel
 | `aria-hidden="true"` | 残る | 取る | 消える（フォーカスできる要素には付けない） | できる |
 | `inert` 属性 | 残る | 取る | 消える | できない |
 | `opacity: 0` | 消える | 取る | 残る | できる |
-| `clip-path: inset(50%)` | 消える | 取る | 残る | できる |
+| `clip-path: inset(50%)` | 消える | 取る | 残る | フォーカスはできる（切り抜いた外側は押せない） |
 
-`opacity: 0` と `clip-path` は、描画の結果を変えるだけで、要素の存在は変えません。そのため、見えなくなった要素も、読み上げとフォーカスの対象に残ります。閉じたメニューを透明にするだけだと、Tabキーで見えないリンクにフォーカスが移り、キーボードで操作するユーザーにはフォーカスが消えたように見えます。
+`opacity: 0` と `clip-path` は、描画の結果を変えるだけで、要素の存在は変えません。そのため、見えなくなった要素も、読み上げとフォーカスの対象に残ります。`clip-path` で切り抜いた外側はポインターの操作を受けないので、全体を切り抜いた要素は押せませんが、Tabキーではフォーカスが移ります（「[17-2 押せる範囲とタッチ操作](/interaction/hit-area-and-touch/)」）。閉じたメニューを透明にするだけだと、Tabキーで見えないリンクにフォーカスが移り、キーボードで操作するユーザーにはフォーカスが消えたように見えます。
 
 ```css title="🙅‍♂ Not Recommended: 閉じたメニューを透明にするだけで隠す" issue="behavior"
 /* 🙅‍♂ Not Recommended */

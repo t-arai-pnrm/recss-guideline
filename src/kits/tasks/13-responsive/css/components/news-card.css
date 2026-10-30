@@ -1,14 +1,19 @@
 /**
  * お知らせのカード。
  * 一覧としての並べ方は、置く側のレイアウトが受け持つ。
- * カードの幅が480px以上のときだけ、見出しを大きくする。
+ * カードの中身の幅が480px相当以上のときだけ、日付を見出しの右に並べる。
+ * 見出しの文字サイズは、カードの中身の幅に合わせて20pxから24pxまで連続的に変える。
  *
  * @prop {color}  --news-card--accent  [var(--foreground--base)]         - 見出しの色
  * @prop {length} --news-card--padding [calc(var(--spacing--md) * 1px)] - 内側の余白
  *
  * @example
  * <article class="scoped news-card" style="--news-card--padding: calc(var(--spacing--sm) * 1px)">
- *   ...
+ *   <div class="_header">
+ *     <h2>...</h2>
+ *     <time datetime="...">...</time>
+ *   </div>
+ *   <p>...</p>
  * </article>
  */
 
@@ -25,13 +30,22 @@
     background-color: var(--background--surface);
   }
 
+  ._header {
+    display: block grid;
+    gap: calc(var(--spacing--xxs) * 1px) calc(var(--spacing--sm) * 1px);
+
+    /* 見出しの最小幅 320px 相当・隙間 16px・日付の幅 144px 相当が並ぶ幅 */
+    @container --scoped (inline-size >= calc(320 / 16 * 1rem + 16px + 144 / 16 * 1rem)) {
+      grid-template-columns: 1fr auto;
+      align-items: baseline;
+    }
+  }
+
   h2 {
     color: var(--_accent);
-    font-size: calc(20 / 16 * 1rem);
 
-    @container --scoped (inline-size >= calc(480 / 16 * 1rem)) {
-      font-size: calc(24 / 16 * 1rem);
-    }
+    /* デザインの2つの大きさ（狭いカードの20px、広いカードの24px）の間を、置かれた幅に合わせて補う */
+    font-size: clamp(20 / 16 * 1rem, 1.25cqi + 16 / 16 * 1rem, 24 / 16 * 1rem);
   }
 
   time {

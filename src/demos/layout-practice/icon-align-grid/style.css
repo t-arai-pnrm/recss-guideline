@@ -44,7 +44,6 @@
     ._check {
       --_icon-size: 1em;
 
-      /* アイコンの列と文章の列に分ける */
       display: block grid;
       grid-template-columns: var(--_icon-size) 1fr;
       column-gap: 0.5em;
@@ -59,35 +58,31 @@
         inline-size: var(--_icon-size);
         aspect-ratio: 1;
 
-        /* 1行目の行の高さの中で、上下の中央に置く */
+        /* 文章が折り返しても、アイコンを1行目にそろえるため */
         margin-block: calc((1lh - var(--_icon-size)) / 2);
         background-color: var(--background--current);
       }
     }
 
-    ._menu {
+    ._links {
       border-block-start: 1px solid var(--border--base);
     }
 
-    ._menu-item {
+    ._link-item {
       border-block-end: 1px solid var(--border--base);
     }
 
     a {
       --_icon-size: 1.5em;
 
-      /* 文章の列と、アイコンの列を作る */
       display: block grid;
       grid-template-columns: 1fr var(--_icon-size);
       column-gap: 1.5em;
       padding-block: 12px;
 
-      /* 丸い枠と矢印を、同じエリアに重ねる */
       &::before,
       &::after {
         content: "";
-
-        /* 1行目の右の列に置く */
         grid-area: 1 / 2;
         inline-size: var(--_icon-size);
         aspect-ratio: 1;
@@ -122,7 +117,6 @@
       background-color: var(--background--inverse);
       color: var(--foreground--inverse);
 
-      /* 左の列を埋める空の擬似要素 */
       &::before {
         content: "";
       }

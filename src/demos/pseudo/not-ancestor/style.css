@@ -13,7 +13,8 @@
     }
 
     h3 {
-      font-size: calc(18 / 16 * 1rem);
+      font-size: calc(var(--text--subtitle--font-size) / 16 * 1rem);
+      line-height: var(--text--subtitle--leading);
     }
 
     a {
@@ -23,14 +24,14 @@
     [data-selector="not-inside"] a {
       /* 左：h2 か h3 の子孫であるリンクを除く */
       &:not(:is(h2, h3) *) {
-        text-decoration-line: underline;
+        text-decoration-line: revert;
       }
     }
 
     /* 右：h2 でも h3 でもない祖先を持つリンク。section が当てはまるので、見出しの中のリンクも選ばれる */
     :not(h2, h3) a {
       &:is([data-selector="not-ancestor"] *) {
-        text-decoration-line: underline;
+        text-decoration-line: revert;
       }
     }
   }

@@ -47,6 +47,8 @@ CSSの行は、`line-height` の高さを持つ箱として並びます。行の
   --leading--normal: 1.6;
   --leading--relaxed: 1.75;
   --leading--loose: 2;
+  --text--body--leading: var(--leading--relaxed);
+  --text--title--leading: var(--leading--snug);
 }
 
 @layer base {
@@ -57,14 +59,16 @@ CSSの行は、`line-height` の高さを持つ箱として並びます。行の
 
 @scope (.scoped.article-body) to (.scoped) {
   :scope {
-    line-height: var(--leading--relaxed);
+    line-height: var(--text--body--leading);
   }
 
   h2 {
-    line-height: var(--leading--snug);
+    line-height: var(--text--title--leading);
   }
 }
 ```
+
+コンポーネントからは、段階のトークンを直接参照せず、本文や見出しのような役割のトークン（`--text--body--leading` など）を参照します。役割に段階を割り当てておけば、見出しの行の高さを変えるときに、直すのは役割の定義の1か所で済みます。役割のトークンは「[14-5 文字の役割と色](/typography/text-roles/)」で説明しています。
 
 デザインの中で1か所だけ使われている `1.8` のような値は、トークンに加えず、その場に直接書きます。トークンを増やしすぎると、一覧から選ぶだけで取り決めに沿えるという利点が失われるからです。トークンの粒度は「[10-4 デザイントークン](/components/design-tokens/)」で説明しています。
 
@@ -101,7 +105,7 @@ CSSの行は、`line-height` の高さを持つ箱として並びます。行の
 
 `text-box-trim` には、上下の両方を削る `trim-both`、上だけを削る `trim-start`、下だけを削る `trim-end` があります。ハーフレディングをなくしたいなら `trim-both` を使います。画像と見出しを横に並べて上端をそろえたいときは、`trim-start` だけで足ります（このページの後半で説明します）。
 
-どこまで削るかは `text-box-edge` で決めます。デフォルト値の `auto` は `text` として扱われ、フォントの文字の領域（アセントとディセント）の上端と下端で切り取ります。英文では、大文字の上端とベースラインで切り取る `cap alphabetic` が適していますが、和文に使うと詰まりすぎるので、和文はデフォルト値のままにします。上のユーティリティは、英語の要素でだけ `text-box-edge` を変えています。
+どこまで削るかは `text-box-edge` で決めます。デフォルト値の `auto` は `text` として扱われ、フォントの文字の領域（アセントとディセント）の上端と下端で切り取ります。英文では、大文字の上端とベースラインで切り取る `cap alphabetic` が適していますが、和文に使うと詰まりすぎるので、和文はデフォルト値のままにします。上のユーティリティは、英語の要素でだけ `text-box-edge` を変えています。{/* 要検証: ブラウザ。Firefoxで、英文の text-box-edge: cap alphabetic が大文字の上端とベースラインで切り取るか（web-features の text-box は、cap と alphabetic の値に Firefox の対応を載せていない） */}
 
 次のデモでは、同じバッジと段落を、ハーフレディングが残った状態と、`.-trim-both` で取り除いた状態で並べています。背景色の範囲を比べると、上下の余白が `padding` の値だけになっているのが分かります。英語のバッジは、大文字の上端とベースラインで切り取られるので、和文のバッジより低くなります。
 
@@ -143,7 +147,7 @@ CSS Inline Layout Module Level 3では、`text-box-trim` を指定できるの�
 
 ```html title="🙆‍♂ Recommended: アイコンとラベルを別の要素にする"
 <button class="scoped action-button" type="button" lang="en">
-  <svg class="_icon" aria-hidden="true">/* ... */</svg>
+  <svg class="_icon" aria-hidden="true"><!-- ... --></svg>
   <span class="_label">Download</span>
 </button>
 ```
@@ -182,13 +186,13 @@ CSS Inline Layout Module Level 3では、`text-box-trim` を指定できるの�
 
 画像と文章を2カラムで横に並べるときは、文章の側の先頭の要素に `text-box-trim: trim-start` を指定して、画像の上端と文字の上端をそろえます。グリッドで画像と見出しを同じ行に置いても、見出しの1行目の上にはハーフレディングが残るので、文字の上端は画像の上端より下がります。28pxの見出しで `line-height` が1.4なら、1emを基準にして約5.6pxのずれです。見出しの文字が大きいほど、このずれは目立ちます。
 
-次の例では、HTMLを見出し、画像、本文の順に書き、狭い幅では縦に積みます。コンテナの幅が画像の列とテキストの列の最小幅を足した値を超えたら、`--_density` のフラグを `--spacious` に切り替え、画像を左の列の2行分に置きます。見出しの文字サイズも、フラグが `--spacious` のときに22pxから28pxにします。本文の行を `1fr` にしているので、見出しの行は見出しの高さだけになり、見出しが画像の上端の横に来ます。ハーフレディングを取り除くのは、見出しに付けた `.-trim-start` です。
+次の例では、HTMLを見出し、画像、本文の順に書き、狭い幅では縦に積みます。コンテナの幅が画像の列とテキストの列の最小幅を足した値を超えたら、`--_density` のフラグを `--spacious` に切り替え、画像を左の列の2行分に置きます。見出しの文字サイズも、フラグが `--spacious` のときに20pxから28pxにします。本文の行を `1fr` にしているので、見出しの行は見出しの高さだけになり、見出しが画像の上端の横に来ます。ハーフレディングを取り除くのは、見出しに付けた `.-trim-start` です。
 
 ```html title="🙆‍♂ Recommended: 画像の横に来る見出しに .-trim-start を付ける"
 <article class="scoped media-text">
   <div class="_body">
     <h2 class="_heading | -trim-start">見出し</h2>
-    <img class="_image" width="480" height="360" alt="" src="/* ... */">
+    <img class="_image" width="480" height="360" alt="" src="…">
     <div class="_paragraphs">
       <p>本文</p>
     </div>
@@ -208,8 +212,6 @@ CSS Inline Layout Module Level 3では、`text-box-trim` を指定できるの�
 
     display: block grid;
     reading-flow: grid-rows;
-
-    /* 狭いときは、見出し、画像、本文の順に縦に積む */
     grid-template:
       "--heading"
       "--image"
@@ -220,11 +222,10 @@ CSS Inline Layout Module Level 3では、`text-box-trim` を指定できるの�
     @container --scoped (inline-size >= calc(240 / 16 * 1rem + 24px + 240 / 16 * 1rem)) {
       --_density: --spacious;
 
-      /* 画像を左の列に置き、右の列の上に見出し、その下に本文を置く */
       grid-template:
         "--image --heading"
         "--image --paragraphs" 1fr
-        / minmax(calc(240 / 16 * 1rem), 2fr) minmax(calc(240 / 16 * 1rem), 3fr);
+        / minmax(min(100%, calc(240 / 16 * 1rem)), 2fr) minmax(min(100%, calc(240 / 16 * 1rem)), 3fr);
       align-content: start;
     }
 
@@ -242,11 +243,11 @@ CSS Inline Layout Module Level 3では、`text-box-trim` を指定できるの�
   }
 
   ._heading {
-    font-size: calc(22 / 16 * 1rem);
-    line-height: var(--leading--snug);
+    font-size: calc(var(--text--title--font-size) / 16 * 1rem);
+    line-height: var(--text--title--leading);
 
     @container style(--_density: --spacious) {
-      font-size: calc(28 / 16 * 1rem);
+      font-size: calc(var(--text--display--font-size) / 16 * 1rem);
     }
   }
 }

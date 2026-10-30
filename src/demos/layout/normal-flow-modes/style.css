@@ -3,7 +3,7 @@
     ._parent {
       padding: 8px;
       border: 1px dashed var(--border--strong);
-      background-color: var(--background--hover);
+      background-color: var(--background--surface);
 
       &[data-mode="flex"] {
         display: block flex;

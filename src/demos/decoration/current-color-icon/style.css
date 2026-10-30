@@ -25,9 +25,8 @@
     }
 
     ._icon {
-      inline-size: 1.25em;
+      inline-size: 1em;
       aspect-ratio: 1;
-      fill: currentColor;
     }
   }
 }

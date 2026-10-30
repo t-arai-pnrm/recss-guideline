@@ -1,4 +1,4 @@
-/* デモを見せるための足場：比べる2つの正方形を横に並べて、区画の中央に置く */
+/* デモを見せるための足場：比べる2つの正方形を横に並べて、区画の中央に置く。左の正方形には、比べる border-radius の角丸を付ける */
 @layer components {
   @scope (.scoped.squircle-radius-demo) to (.scoped) {
     section {
@@ -8,6 +8,20 @@
     ._pair {
       display: block flex;
       gap: 12px;
+    }
+
+    ._box {
+      &[data-radius="8"] {
+        border-radius: 8px;
+      }
+
+      &[data-radius="24"] {
+        border-radius: 24px;
+      }
+
+      &[data-radius="32"] {
+        border-radius: 32px;
+      }
     }
   }
 }

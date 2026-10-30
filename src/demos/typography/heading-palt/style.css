@@ -34,7 +34,7 @@
     }
 
     ._body-text {
-      line-height: var(--leading--relaxed);
+      line-height: var(--text--body--leading);
     }
   }
 }

@@ -19,7 +19,7 @@
       @container --scoped (inline-size >= calc((72 + 112 + 176 + 40 + 72 + 72) / 16 * 1rem + 12px * 2 * 6)) {
         --_density: --spacious;
 
-        display: block table;
+        display: revert-layer;
       }
     }
 
@@ -71,6 +71,7 @@
     }
 
     td {
+      /* 列の名前と値を1行の両端に並べるため、折り返さない */
       @container style(--_density: --compact) {
         display: block flex;
         gap: 16px;

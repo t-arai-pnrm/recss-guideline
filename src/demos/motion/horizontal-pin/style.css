@@ -25,7 +25,12 @@
       --_scroller-width: calc(var(--_column-width) * var(--_column-count) + var(--_column-gap) * (var(--_column-count) - 1));
 
       container: --scoped / inline-size;
-      background-color: var(--background--active);
+      background-color: var(--background--surface);
+    }
+
+    ._title {
+      padding-block: 16px;
+      padding-inline: 16px;
     }
 
     /* 動かさない環境では、横にスクロールして見る */
@@ -34,7 +39,7 @@
       overscroll-behavior-inline: contain;
 
       @supports (animation-timeline: view()) and (animation-range: contain) {
-        @media (prefers-reduced-motion: no-preference) {
+        @media screen and (prefers-reduced-motion: no-preference) {
           /* スクロールコンテナを作らずに、はみ出した列を切り取る */
           overflow: clip;
 
@@ -52,7 +57,7 @@
       column-gap: var(--_column-gap);
 
       @supports (animation-timeline: view()) and (animation-range: contain) {
-        @media (prefers-reduced-motion: no-preference) {
+        @media screen and (prefers-reduced-motion: no-preference) {
           /* 自身の幅からコンテナの幅を引いた分だけ左へ動かし、最後の列を右端にそろえる */
           --translate-to--x-value: calc(-100% + 100cqi);
 
@@ -68,10 +73,17 @@
           animation-range: contain 0% contain 100%;
         }
       }
+
+      /* 印刷では横に流さず、列を縦に並べてすべてを紙に収める */
+      @media print {
+        grid-auto-flow: row;
+        row-gap: var(--_column-gap);
+      }
     }
 
     img {
-      inline-size: 100%;
+      inline-size: -webkit-fill-available;
+      inline-size: stretch;
     }
   }
 }

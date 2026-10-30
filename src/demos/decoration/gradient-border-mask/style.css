@@ -3,18 +3,8 @@
  *
  * @prop {length} --gradient-frame--border-width [2px]                - 枠線の幅
  * @prop {length} --gradient-frame--radius       [var(--rounded--lg)] - 角丸の半径
- * @prop {image}  --gradient-frame--gradient     [linear-gradient(in oklch 90deg, var(--color--accent--500), var(--color--accent--700))] - 枠線のグラデーション
+ * @prop {image}  --gradient-frame--gradient     [linear-gradient(in oklch 90deg, var(--foreground--base), var(--foreground--muted))] - 枠線のグラデーション
  */
-@layer tokens {
-  :root {
-    --color--accent--500: oklch(62% 0.19 250deg);
-    --color--accent--700: oklch(55% 0.22 300deg);
-    --rounded--lg: 16px;
-    --background--base: oklch(100% 0 0deg);
-    --z--backwards: -1;
-  }
-}
-
 @layer components {
   @scope (.scoped.gradient-frame) to (.scoped) {
     :scope {
@@ -22,7 +12,7 @@
       --_radius: var(--gradient-frame--radius, var(--rounded--lg));
       --_gradient: var(
         --gradient-frame--gradient,
-        linear-gradient(in oklch 90deg, var(--color--accent--500), var(--color--accent--700))
+        linear-gradient(in oklch 90deg, var(--foreground--base), var(--foreground--muted))
       );
 
       position: relative;

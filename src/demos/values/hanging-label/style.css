@@ -35,8 +35,8 @@
       inline-size: fit-content;
       padding: 2px 8px;
       border-radius: var(--rounded--sm);
-      background-color: var(--background--accent);
-      color: var(--foreground--on-accent);
+      background-color: var(--background--inverse);
+      color: var(--foreground--inverse);
       font-size: calc(var(--text--caption--font-size) / 16 * 1rem);
       font-weight: var(--font-weight--bold);
       line-height: var(--text--caption--leading);

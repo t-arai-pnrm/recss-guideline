@@ -25,6 +25,7 @@ import Guideline from '../../../components/Guideline.astro';
     isolation: isolate;
 
     &:has(._heading-link:focus-visible) {
+      box-shadow: 0 0 0 6px Canvas;
       outline: 3px solid CanvasText;
       outline-offset: 3px;
     }
@@ -51,7 +52,7 @@ import Guideline from '../../../components/Guideline.astro';
 }
 ```
 
-カードに `position: relative` を指定し、`::after` の配置の基準にします。フォーカスリングは、リンクの周りではなく `:has(._heading-link:focus-visible)` でカードの外周に出します。見出しのリンクにフォーカスしたとき、押せる範囲（カード全体）とリングの範囲が一致するからです。カードの中にほかのリンクを置くときは、`position: relative` と `z-index: var(--z--forwards)` で `::after` より手前に重ねます。
+カードに `position: relative` を指定し、`::after` の配置の基準にします。フォーカスリングは、リンクの周りではなく `:has(._heading-link:focus-visible)` でカードの外周に出します。見出しのリンクにフォーカスしたとき、押せる範囲（カード全体）とリングの範囲が一致するからです。リングの形は、ベーススタイルの二重のリング（「[8-2 ベーススタイルに書くもの](/reset/base-styles/)」）と同じにし、ページのほかの要素とそろえます。カテゴリーのリンクにフォーカスしたときは、カードではなくカテゴリーのリンクにリングが出ます。`:has()` の引数を `._heading-link:focus-visible` に絞っているからです。カードの中にほかのリンクを置くときは、`position: relative` と `z-index: var(--z--forwards)` で `::after` より手前に重ねます。
 
 リンク自身のリングのうち、ベーススタイルで内側に描いた `box-shadow` は、`initial` で初期値の `none` に戻します。`outline` は `outline: none` で消さずに、色だけを透明にします。強制カラーモードでは `outline` の色がシステムカラーに置き換わるので、リングの形が残ります。`outline: none` で消すと、強制カラーモードでリングが描かれなくなるので使いません（「[8-3 グローバルに書いてはいけないもの](/reset/global-pitfalls/)」のルール `no-outline-none`）。
 

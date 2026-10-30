@@ -23,7 +23,6 @@ SNSや技術ブログで流れてくるCSSのTipsは、新しい書き方を知�
 ```css title="🙅‍♂ Not Recommended: ::first-line で見出しの1行目と2行目を描き分ける" issue="behavior"
 /* 🙅‍♂ Not Recommended */
 h2 {
-  color: var(--foreground--accent);
   font-size: calc(32 / 16 * 1rem);
   text-align: center;
 
@@ -44,7 +43,7 @@ h2 {
 
 ```html
 <section class="scoped about-section">
-  <hgroup class="_section-heading">
+  <hgroup>
     <h2>私たちについて</h2>
     <p class="_heading-en" lang="en">About</p>
   </hgroup>
@@ -54,14 +53,14 @@ h2 {
 
 ```css title="🙆‍♂ Recommended: hgroup で見出しと英語の表記を別の要素にする"
 @scope (.scoped.about-section) to (.scoped) {
-  ._section-heading {
+  hgroup {
     display: block grid;
     gap: 8px;
     text-align: center;
+    text-wrap: balance;
   }
 
   h2 {
-    color: var(--foreground--accent);
     font-size: calc(32 / 16 * 1rem);
   }
 
@@ -119,7 +118,7 @@ h2 {
 
 <Baseline id="justify-self-block" name="ブロックレイアウトの justify-self" />
 
-Chromeだけで確かめていると、このTipsはどちらも正しく動いているように見えます。SafariとFirefoxで確かめて初めて、2つ目のTipsでは要素が左へ寄ったままだと気づけます。対象のブラウザの決め方と、Chromeだけで確かめない理由は「[1-2 ブラウザサポートとプログレッシブ・エンハンスメント](/principles/browser-support/)」で説明しています。
+Chromeだけで確かめていると、このTipsはどちらも正しく動いているように見えます。SafariとFirefoxで確かめて初めて、1つ目のTipsでは中身が縦にだけ中央に寄り、2つ目のTipsでは要素が左へ寄ったままだと気づけます。対象のブラウザの決め方と、Chromeだけで確かめない理由は「[1-2 ブラウザサポートとプログレッシブ・エンハンスメント](/principles/browser-support/)」で説明しています。
 
 このTipsからは、対応状況のほかにも学べることがあります。これまで、`justify-items` はGridの中でしか働かなかったので、`display` をGridから通常のブロックに戻せば、指定が残っていても影響はありませんでした。ブロックレイアウトでも働くようになると、戻し忘れた指定が、ブロックに戻した後のレイアウトにも影響します。
 

@@ -23,7 +23,7 @@ sidebar:
 | `@function`、`math.div()` | `calc()`、`min()`、`max()`、`clamp()` の式 | [6-3](/values/math-functions/) |
 | `@extend` とプレースホルダ | トークンの共有、HTMLに付けるコンポジションとユーティリティのクラス | [10-2](/components/boundaries/)、[10-3](/components/compositions-and-utilities/) |
 | `@each` と `@for` | 公開プロパティと `style` 属性 | [10-3](/components/compositions-and-utilities/)、[10-5](/components/custom-properties/) |
-| `darken()`、`lighten()`、`rgba($color, 0.5)`、`mix()` | 相対カラー構文と `color-mix()` | [15-1](/color-media/color/) |
+| `darken()`、`lighten()`、`rgba($color, 0.5)`、`mix()` | 相対カラー構文と `color-mix()` | [15-2](/color-media/relative-color/) |
 | `@use`、`@import` とパーシャル | エントリーポイントの `@import url("…") layer(…)` | [4-3](/cascade/layers/) |
 | メディアクエリのmixin | 範囲構文とremの式を、各セレクタの中に書く | [13-5](/responsive/media-queries/) |
 | `//` のコメント | `/* */` | [9-10](/notation/comments/) |
@@ -148,15 +148,16 @@ mixinは、置き換え先が用途によって分かれます。要素を積む
 <p class="_excerpt | -line-clamp" style="--line-clamp--limit: 2">…</p>
 ```
 
-ホバーのmixinは、置き換えるというより、書き方そのものを変えます。以前の私のmixinは、`(hover: hover) and (pointer: fine)` で判定していました。本書では `@media (any-hover)` の中にホバーを書き、同じ見た目を `:focus-visible` にも指定します。条件はmixinにまとめず、各セレクタの中に直接書きます（「[17-1 ホバーとフォーカスを表す](/interaction/states-and-focus/)」）。色は、プリミティブの段階（`600`、`700`）を使い分けず、セマンティクスの `--background--accent` から相対カラー構文で明るさを下げた色をホバーとフォーカスに使います。
+ホバーのmixinは、置き換えるというより、書き方そのものを変えます。以前の私のmixinは、`(hover: hover) and (pointer: fine)` で判定していました。本書では `@media (any-hover)` の中にホバーを書き、同じ見た目を `:focus-visible` にも指定します。条件はmixinにまとめず、各セレクタの中に直接書きます（「[17-1 ホバーとフォーカスを表す](/interaction/states-and-focus/)」）。色は、プリミティブの段階（`600`、`700`）を使い分けず、文字色で塗るセマンティクスの `--background--inverse` を、`color-mix()` でページの背景に寄せた色をホバーとフォーカスに使います。
 
 ```css title="🙆‍♂ Recommended: ホバーのmixinの代わりに、条件をセレクタの中に書く"
 @scope (.scoped.save-button) to (.scoped) {
   :scope {
-    --_background: var(--background--accent);
-    --_background--hocus: oklch(from var(--background--accent) calc(l - 0.1) c h);
+    --_background: var(--background--inverse);
+    --_background--hocus: color-mix(in oklab, var(--background--inverse) 80%, var(--background--base));
 
     background-color: var(--_background);
+    color: var(--foreground--inverse);
 
     &:focus-visible {
       background-color: var(--_background--hocus);
@@ -221,31 +222,31 @@ pxをremに変換する関数は、`calc(24 / 16 * 1rem)` の式に置き換え�
 
 ```scss title="Sass：色を加工する関数"
 .tag {
-  border-color: rgba($color-accent, 0.1);
-  background-color: darken($color-accent, 10%);
+  border: 1px solid rgba($color-text, 0.1);
+  background-color: darken($color-surface, 5%);
 }
 ```
 
 ```css title="🙆‍♂ Recommended: 相対カラー構文と color-mix() で、元の色から作る"
 ._tag {
-  border-color: oklch(from var(--background--accent) l c h / 10%);
-  background-color: oklch(from var(--background--accent) calc(l - 0.15) c h);
+  border: 1px solid oklch(from var(--foreground--base) l c h / 10%);
+  background-color: oklch(from var(--background--surface) calc(l - 0.05) c h);
 }
 
 ._badge {
-  background-color: color-mix(in oklab, var(--background--accent) 12%, var(--background--base));
+  background-color: color-mix(in oklab, var(--foreground--base) 12%, var(--background--base));
 }
 ```
 
-`._tag` は、相対カラー構文で1つの色の成分を変えています。`._badge` は、`color-mix()` でアクセントカラーとページの背景の間を取り、淡い背景を作っています。混ぜる2つの色がどちらも不透明なので、結果も不透明な色になり、重ねる面によって色が変わりません。文字色は、半透明の色で薄くせず、背景に合わせた不透明なセマンティクスのトークンから選びます（「[14-5 文字の役割と色](/typography/text-roles/)」）。
+`._tag` は、相対カラー構文で1つの色の成分を変えています。`._badge` は、`color-mix()` で文字色とページの背景の間を取り、淡い背景を作っています。混ぜる2つの色がどちらも不透明なので、結果も不透明な色になり、重ねる面によって色が変わりません。文字色は、半透明の色で薄くせず、背景に合わせた不透明なセマンティクスのトークンから選びます（「[14-5 文字の役割と色](/typography/text-roles/)」）。
 
 Sassの色の関数はビルドの時点で値を計算しますが、相対カラー構文と `color-mix()` はブラウザの中で計算されます。元の色のトークンを1か所直せば、派生させた色もすべて追従し、`light-dark()` で切り替わる色からも派生色を作れます。なお、Sassの `darken()` はHSLの明度を変える関数なので、同じ数値を書いても同じ色にはなりません。見た目はブラウザで確かめます。
 
 ## ファイルの分割は @import … layer() にする
 
-Sassの `@use` や `@import` で分けていたパーシャルは、CSSの `@import` で読み込みます。エントリーポイントのファイルの先頭で、レイヤーの順番を `@layer` 文で宣言し、各ファイルを `@import url("…") layer(…)` で割り当てます。ファイルの中で `@layer` を書く必要はなく、どのファイルがどのレイヤーに入るのかを1か所で確認できます。
+Sassの `@use` や `@import` で分けていたパーシャルは、CSSの `@import` で読み込みます。Sassがビルドでファイルを1つにまとめていたように、エントリーポイントの `@import` もビルドで展開します（「[4-3 カスケードレイヤーで順位を決める](/cascade/layers/#rule-import-resolved-at-build)」のルール `import-resolved-at-build`）。エントリーポイントのファイルの先頭で、レイヤーの順番を `@layer` 文で宣言し、各ファイルを `@import url("…") layer(…)` で割り当てます。ファイルの中で `@layer` を書く必要はなく、どのファイルがどのレイヤーに入るのかを1か所で確認できます。
 
-```css title="🙆‍♂ Recommended: エントリーポイントで、ファイルをレイヤーに割り当てる"
+```css title="🙆‍♂ Recommended: ビルドの入力にするエントリーポイントで、ファイルをレイヤーに割り当てる"
 @layer tokens, reset, base, vendors, compositions, pages, components, patterns, utilities;
 
 @import url("kiso.css") layer(reset);
@@ -265,8 +266,8 @@ Sassの `@use` や `@import` で分けていたパーシャルは、CSSの `@imp
 .layout {
   display: grid;
 
-  @include mq(md) {
-    grid-template-columns: 1fr 240px;
+  @include mq(lg) {
+    grid-template-columns: 200px 1fr 240px;
   }
 }
 ```
@@ -277,15 +278,15 @@ Sassの `@use` や `@import` で分けていたパーシャルは、CSSの `@imp
     display: block grid;
     gap: 32px;
 
-    /* 本文の最小幅 560px 相当 + サイドバー 240px 相当 + 隙間 32px */
-    @media (width >= calc(560 / 16 * 1rem + 240 / 16 * 1rem + 32px)) {
-      grid-template-columns: 1fr calc(240 / 16 * 1rem);
+    /* ナビゲーション 200px 相当 + 本文の最小幅 560px 相当 + サイドバー 240px 相当 + 隙間 32px × 2 */
+    @media (width >= calc(200 / 16 * 1rem + 560 / 16 * 1rem + 240 / 16 * 1rem + 32px * 2)) {
+      grid-template-columns: calc(200 / 16 * 1rem) 1fr calc(240 / 16 * 1rem);
     }
   }
 }
 ```
 
-名前の付いたブレイクポイントを使い回す代わりに、閾値は「本文の最小幅＋サイドバーの幅＋隙間」のように、レイアウトが成り立つ条件の式で書きます。pxで指定した隙間は、remへ換算せず、pxのまま足します。値の根拠がコードに残り、どこを直せばよいかも分かります（「[13-2 ブレイクポイントの決め方](/responsive/breakpoints/)」）。コンポーネントの中の切り替えには、メディアクエリではなくコンテナサイズクエリを使います（「[13-3 コンテナサイズクエリ](/responsive/container-size-queries/)」）。
+名前の付いたブレイクポイントを使い回す代わりに、閾値は「ナビゲーションの幅＋本文の最小幅＋サイドバーの幅＋隙間」のように、レイアウトが成り立つ条件の式で書きます。メインとサイドの2つを並べるだけなら、閾値を書かずに「[12-6 sidebar](/compositions/sidebar/)」で組みます。pxで指定した隙間は、remへ換算せず、pxのまま足します。値の根拠がコードに残り、どこを直せばよいかも分かります（「[13-2 ブレイクポイントの決め方](/responsive/breakpoints/)」）。コンポーネントの中の切り替えには、メディアクエリではなくコンテナサイズクエリを使います（「[13-3 コンテナサイズクエリ](/responsive/container-size-queries/)」）。
 
 カンプ上のピクセル値をSassの関数で `vw` へ換算し、ページ全体の寸法を決めていたコードは、素のCSSへ移すときにそのまま置き換えず、書き直します。カンプの幅に対する比率で全体を拡大・縮小すると、狭い画面で文字が読めなくなり、ズームや文字サイズの設定も反映されにくくなるからです。理由と代わりの方法は「[13-7 カンプの幅で全体を拡大・縮小しない](/responsive/design-comp-pattern/)」で説明しています。
 

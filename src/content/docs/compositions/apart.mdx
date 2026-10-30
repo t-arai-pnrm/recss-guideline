@@ -55,7 +55,7 @@ import wrapCss from '../../../demos/compositions/apart-wrap/style.css?raw';
  * @prop {keyword} --apart--alignment  [normal] - 交差軸の配置（align-items）
  *
  * @example
- * <header class="apart" style="--apart--column-gap: calc(var(--spacing--lg) / 16 * 1rem); --apart--alignment: center">
+ * <header class="apart" style="--apart--column-gap: calc(var(--spacing--lg) * 1px); --apart--alignment: center">
  *   <a href="/">ロゴ</a>
  *   <nav>ナビゲーション</nav>
  * </header>
@@ -79,16 +79,16 @@ import wrapCss from '../../../demos/compositions/apart-wrap/style.css?raw';
 
 `--apart--alignment` は、交差軸の配置（`align-items`）です。デフォルト値の `normal` は、Flexboxでは `stretch` として扱われ、子の高さが行の高さまで引き伸ばされます。ロゴとナビゲーションのように高さの違う要素を並べるなら、`center` を渡して中央にそろえます。`justify-content` は公開プロパティにしていません。両端に分けることが `apart` の役割そのものなので、変えたいときは別のコンポジションを選びます。
 
-使う側は、HTMLにクラス名を書き、値を `style` 属性で渡します。余白のトークンは単位なしの数値で持っているので、`calc(var(--spacing--lg) / 16 * 1rem)` の形でremに変換して渡します。トークンを単位なしの数値で持つ理由は「[10-4 デザイントークン](/components/design-tokens/)」で説明しています。
+使う側は、HTMLにクラス名を書き、値を `style` 属性で渡します。余白のトークンは単位なしの数値で持っているので、`calc(var(--spacing--lg) * 1px)` の形でpxに変換して渡します。トークンを単位なしの数値で持つ理由は「[10-4 デザイントークン](/components/design-tokens/)」で説明しています。
 
 ```html
 <header
   class="scoped site-header | apart"
-  style="--apart--row-gap: calc(var(--spacing--xs) / 16 * 1rem); --apart--column-gap: calc(var(--spacing--lg) / 16 * 1rem); --apart--alignment: center"
+  style="--apart--row-gap: calc(var(--spacing--xs) * 1px); --apart--column-gap: calc(var(--spacing--lg) * 1px); --apart--alignment: center"
 >
   <a class="_logo" href="/">Sample Studio</a>
   <nav aria-label="グローバル">
-    <ul class="cluster" style="--cluster--gap: calc(var(--spacing--sm) / 16 * 1rem)">
+    <ul class="cluster" style="--cluster--gap: calc(var(--spacing--sm) * 1px)">
       <li><a href="/service/">事業内容</a></li>
       <!-- ... -->
     </ul>
@@ -107,14 +107,15 @@ import wrapCss from '../../../demos/compositions/apart-wrap/style.css?raw';
 ```css title="🙆‍♂ Recommended: 配置は apart に任せ、コンポーネントは見た目だけを持つ"
 @scope (.scoped.site-header) to (.scoped) {
   :scope {
-    padding-block: calc(16 / 16 * 1rem);
-    padding-inline: calc(24 / 16 * 1rem);
-    border-block-end: 1px solid oklch(85% 0 0deg);
+    padding-block: calc(var(--spacing--sm) * 1px);
+    padding-inline: calc(var(--spacing--md) * 1px);
+    border-block-end: 1px solid var(--border--base);
   }
 
   ._logo {
-    font-size: calc(20 / 16 * 1rem);
-    font-weight: 700;
+    font-size: calc(var(--text--title--font-size) / 16 * 1rem);
+    font-weight: var(--font-weight--bold);
+    line-height: var(--text--title--leading);
   }
 }
 ```
@@ -123,7 +124,7 @@ import wrapCss from '../../../demos/compositions/apart-wrap/style.css?raw';
 
 ## 折り返したときの並び方
 
-`apart` の子が1行に収まるかどうかは、子の幅と列の間隔の合計で決まります。たとえば、ロゴが160px相当、ナビゲーションが400px相当、列の間隔が32px相当なら、`apart` の幅が592px相当を下回ったときにナビゲーションが2行目へ折り返します。Flexboxは、子を縮める前に、子の本来の幅（`max-content`）で行に入るかどうかを判定するからです。
+`apart` の子が1行に収まるかどうかは、子の幅と列の間隔の合計で決まります。たとえば、ロゴが160px相当、ナビゲーションが400px相当、列の間隔が32pxなら、`apart` の幅が592px相当を下回ったときにナビゲーションが2行目へ折り返します。Flexboxは、子を縮める前に、子の本来の幅（`max-content`）で行に入るかどうかを判定するからです。
 
 折り返したナビゲーションは、2行目の行頭（左端）に置かれます。`justify-content: space-between` は、行に要素が1つしかないときは `flex-start` と同じ配置になるからです。「両端に分ける」という指定は、2つ以上の要素が同じ行にあるときにだけ意味を持ちます。狭い画面でロゴとナビゲーションが左端にそろうのは、多くのヘッダーで自然な見え方です。2行目も右端に寄せたいときの書き方は、この節の後半で説明します。
 
@@ -158,7 +159,7 @@ import wrapCss from '../../../demos/compositions/apart-wrap/style.css?raw';
   :scope {
     display: block flex;
     flex-wrap: wrap;
-    gap: calc(12 / 16 * 1rem) calc(32 / 16 * 1rem);
+    gap: calc(var(--spacing--xs) * 1px) calc(var(--spacing--lg) * 1px);
 
     & > nav {
       margin-inline-start: auto;

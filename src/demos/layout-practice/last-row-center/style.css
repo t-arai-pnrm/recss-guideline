@@ -1,12 +1,3 @@
-@layer pages {
-  @scope (.scoped.demo-layout) to (.scoped) {
-    h2 {
-      font-size: calc(var(--text--subtitle--font-size) / 16 * 1rem);
-      line-height: var(--text--subtitle--leading);
-    }
-  }
-}
-
 @layer components {
   @scope (.scoped.product-list) to (.scoped) {
     :scope {
@@ -40,7 +31,7 @@
     li {
       padding: 16px;
       border-radius: var(--rounded--md);
-      background-color: var(--background--active);
+      background-color: var(--background--surface);
       text-align: center;
     }
   }
@@ -73,7 +64,7 @@
     li {
       padding: 16px;
       border-radius: var(--rounded--md);
-      background-color: var(--background--active);
+      background-color: var(--background--surface);
       text-align: center;
     }
   }

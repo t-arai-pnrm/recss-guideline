@@ -1,9 +1,5 @@
 @layer components {
   @scope (.scoped.placeholder-shown-scope) to (.scoped) {
-    :scope {
-      --_accent: var(--foreground--accent);
-    }
-
     fieldset {
       padding: 12px;
       border: 1px solid var(--border--base);
@@ -32,13 +28,12 @@
       /* 比べるための悪い例：placeholder 属性のない空の欄も、入力済みの見た目になる */
       &:is([data-negated] *):not(:placeholder-shown) {
         border-width: 2px;
-        border-color: var(--_accent);
+        border-color: var(--foreground--base);
       }
 
       /* 未入力の見た目は、placeholder 属性のある欄にだけ当たる */
       &:is([data-fixed] *):placeholder-shown {
         border-style: dashed;
-        background-color: var(--background--hover);
       }
     }
   }

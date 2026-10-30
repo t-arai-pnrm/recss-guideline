@@ -68,7 +68,7 @@ import Guideline from '../../../components/Guideline.astro';
 
 この例では、kiso.cssのようなリセットと、ベーススタイルをまだ読み込んでいません。既存のCSSが指定していないプロパティには、`reset` と `base` のスタイルがそのまま当たるので、既存のページの表示が変わるからです。リセットとベーススタイルは、既存のページの表示を確かめられる段階で足します。
 
-新しいコンポーネントは、`@scope (.scoped.<名前>) to (.scoped)` の中に書きます。既存のマークアップと同じページに置いても、`._item` のような子要素のセレクタは、このコンポーネントの中の要素にしか当たりません。既存のCSSを書いた人が同じクラス名を使っていても、`scoped` と名前の組み合わせを持つルートの外には届きません。
+新しいコンポーネントは、`@scope (.scoped.<名前>) to (.scoped)` の中に書きます。既存のマークアップと同じページに置いても、`._title` のような子要素のセレクタは、このコンポーネントの中の要素にしか当たりません。既存のCSSを書いた人が同じクラス名を使っていても、`scoped` と名前の組み合わせを持つルートの外には届きません。
 
 ```css title="🙆‍♂ Recommended: 新しいコンポーネントを @scope で既存のマークアップから切り離す"
 @scope (.scoped.news-list) to (.scoped) {
@@ -76,13 +76,13 @@ import Guideline from '../../../components/Guideline.astro';
     display: block grid;
   }
 
-  ._item {
-    border-block-end: 1px solid;
+  ._title {
+    font-weight: var(--font-weight--bold);
   }
 }
 ```
 
-レイヤーが守るのは、コンポーネントが宣言したプロパティだけです。既存のCSSに `.content li { margin-block-end: 20px; }` のような指定があるとします。新しいコンポーネントをその `.content` の中に置くと、コンポーネントが `margin-block-end` を宣言していない限り、既存の値が当たります。こうした流れ込みは、表示を確かめて、コンポーネントの側で値を宣言して防ぎます。
+レイヤーが守るのは、コンポーネントが宣言したプロパティだけです。既存のCSSに `.content li { margin-block-end: 20px; }` のような指定があるとします。新しいコンポーネントをその `.content` の中に置くと、コンポーネントが `margin-block-end` を宣言していない限り、既存の値が当たります。こうした流れ込みは、表示を確かめて、コンポーネントの側で値を宣言して防ぎます。このとき、`revert-layer` では既存の値は消えません。`revert-layer` は前のレイヤーまでで決まる値に戻すので、既存のCSSを入れた `vendors` の `20px` に戻ります。既存の値を取り消してブラウザのデフォルトに戻すなら `revert` を、デザインで決めた値にするならその値を宣言します。
 
 既存のCSSを読み込み直せない場合もあります。CMSの本体やプラグインのCSS、ほかのチームが管理するテンプレートの `<link>` のように、自分で読み込み方を変えられないCSSです。この場合は、レイヤーを使わず、読み込む順番で9つの分類を保ちます（ルール [`no-layers-with-unlayered-css`](/cascade/layers/#rule-no-layers-with-unlayered-css)）。考え方は「[4-3 カスケードレイヤーで順位を決める](/cascade/layers/)」で説明しています。{/* CMSの節を公開したらリンクする: /operations/cms/ */}既存のCSSが強いセレクタや `!important` で新しいコンポーネントに流れ込み、直せない場合だけ、4-3の例外の書き方（`all: revert-layer !important` で遮断する方法）を使います。
 
@@ -95,7 +95,7 @@ import Guideline from '../../../components/Guideline.astro';
 ```css title="🙅‍♂ Not Recommended: 置く側のセレクタで、カードの中の見出しを選ぶ" issue="convention"
 /* 🙅‍♂ Not Recommended */
 .p-campaign .c-card__title {
-  color: var(--color--red--600);
+  color: var(--foreground--danger);
 }
 ```
 
@@ -103,7 +103,7 @@ import Guideline from '../../../components/Guideline.astro';
 
 ```css title="🙆‍♂ Recommended: BEMの名前のまま、外から変える値を公開プロパティで受け取る"
 .c-card {
-  --_accent: var(--c-card--accent, var(--color--accent--600));
+  --_accent: var(--c-card--accent, var(--foreground--base));
 
   border-block-start: 4px solid var(--_accent);
 }
@@ -115,7 +115,7 @@ import Guideline from '../../../components/Guideline.astro';
 
 ```css title="🙆‍♂ Recommended: 置く側は、カードの中を選ばずに値だけを渡す"
 .p-campaign__item {
-  --c-card--accent: var(--color--red--600);
+  --c-card--accent: var(--foreground--danger);
 }
 ```
 

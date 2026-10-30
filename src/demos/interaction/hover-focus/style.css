@@ -32,23 +32,21 @@
       color: var(--foreground--inverse);
 
       &:disabled {
-        --_background: var(--background--active);
+        --_background: var(--background--surface);
 
+        border-color: var(--border--base);
         color: var(--foreground--muted);
       }
 
-      /* キーボードでフォーカスしたときも、ホバーと同じ見た目にする */
       &:focus-visible {
         --_background: var(--_fill--hocus);
       }
 
       /* キーボードでフォーカスを移したときは、一度で切り替える */
       &:not(:focus-visible) {
-        @media (prefers-reduced-motion: no-preference) {
-          transition-duration: var(--duration--fast);
-          transition-property: background-color;
-          transition-timing-function: var(--ease--out-quint);
-        }
+        transition-duration: var(--duration--fast);
+        transition-property: background-color;
+        transition-timing-function: var(--ease--out-quint);
       }
 
       /* 無効にしたボタンは、ホバーしても反応させない */
@@ -91,11 +89,9 @@
       }
 
       &:not(:focus-visible) {
-        @media (prefers-reduced-motion: no-preference) {
-          transition-duration: var(--duration--fast);
-          transition-property: color, text-decoration-thickness;
-          transition-timing-function: var(--ease--out-quint);
-        }
+        transition-duration: var(--duration--fast);
+        transition-property: color, text-decoration-thickness;
+        transition-timing-function: var(--ease--out-quint);
       }
     }
   }

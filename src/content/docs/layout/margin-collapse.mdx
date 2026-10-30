@@ -59,7 +59,7 @@ import blockedCss from '../../../demos/layout/margin-collapse-blocked/style.css?
 ```css title="🙅‍♂ Not Recommended: 背景の内側の余白を、最初の子の margin で取ろうとする" issue="behavior"
 /* 🙅‍♂ Not Recommended */
 ._section {
-  background-color: oklch(96% 0.02 250deg);
+  background-color: var(--background--surface);
 }
 
 ._heading {
@@ -129,7 +129,7 @@ import blockedCss from '../../../demos/layout/margin-collapse-blocked/style.css?
 ```css title="🙆‍♂ Recommended: 親の padding が挟まると、子の margin は親の内側に留まる"
 ._section {
   padding-block: 16px;
-  background-color: oklch(92% 0.04 250deg);
+  background-color: var(--background--surface);
 }
 ```
 

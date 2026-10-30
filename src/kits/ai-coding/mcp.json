@@ -3,7 +3,7 @@
     "recss-guideline": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "recss-guideline-mcp@0.82.0"]
+      "args": ["-y", "recss-guideline-mcp@0.83.0"]
     },
     "playwright": {
       "type": "stdio",

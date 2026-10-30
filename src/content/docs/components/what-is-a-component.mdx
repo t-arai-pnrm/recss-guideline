@@ -44,7 +44,7 @@ import candidatesCss from '../../../demos/components/component-candidates/style.
 
 逆向きの誤りもあります。見た目が共通だという理由だけで、新しいコンポーネントを作ることです。次の例では、角丸と背景色を持つ箱を `rounded-box` というコンポーネントにして、商品カードの中身を包んでいます。
 
-```css title="🙅‍♂ Not Recommended: 見た目だけをまとめた wrapper をコンポーネントにする" issue="convention"
+```css title="🙅‍♂ Not Recommended: 見た目だけをまとめた wrapper をコンポーネントにする" issue="behavior"
 /* 🙅‍♂ Not Recommended */
 @scope (.scoped.rounded-box) to (.scoped) {
   :scope {
@@ -86,7 +86,7 @@ import candidatesCss from '../../../demos/components/component-candidates/style.
 
 コンポーネントが役に立つのは、HTMLの構造、条件分岐、JavaScriptの振る舞いを1か所で管理したいときです。見た目だけなら、CSSのクラスを1つ書けば、すべての要素に同じスタイルが当たります。見た目を1か所で管理するためにコンポーネントを作る必要はありません。
 
-CSSの側では、コンポーネントの契約を3つの仕組みで表します。ルートの `scoped <名前>` と `@scope` は、どこまでがそのコンポーネントの見た目の責任かという境界です。外から変えてよい値は、`--<コンポーネント>--<プロパティ>` の公開プロパティにして、CSSの入力点を明示します（「[10-5 公開プロパティと内部プロパティ](/components/custom-properties/)」）。バリエーションは `data-variant` のようなdata属性で受け取り、`:scope[data-variant="featured"]` のように選びます。
+CSSの側では、コンポーネントの契約を3つの仕組みで表します。ルートの `scoped <名前>` と `@scope` は、どこまでがそのコンポーネントの見た目の責任かという境界です。外から変えてよい値は、`--<コンポーネント>--<プロパティ>` の公開プロパティにして、CSSの入力点を明示します（「[10-5 公開プロパティと内部プロパティ](/components/custom-properties/)」）。バリエーションは `data-variant` のようなdata属性で受け取り、`:scope` の中に `&[data-variant="featured"]` と書いて選びます。
 
 コンポーネントと似た言葉に、パターンがあります。本書のパターンは、`section-heading` のような静的で再利用できる見た目の断片で、HTMLの構造と入力点を持ちません（「[10-3 コンポジションとユーティリティ](/components/compositions-and-utilities/)」）。何度も使われる断片が、自動的にコンポーネントになるわけではありません。
 
@@ -161,6 +161,7 @@ Atomic Designの用語で言えば、Button、Link、Iconのようなatomはコ�
 @scope (.scoped.product-card) to (.scoped) {
   header {
     display: block flex;
+    flex-wrap: wrap;
     justify-content: space-between;
   }
 
@@ -170,6 +171,7 @@ Atomic Designの用語で言えば、Button、Link、Iconのようなatomはコ�
 
   footer {
     display: block flex;
+    flex-wrap: wrap;
     justify-content: end;
   }
 }
@@ -210,12 +212,12 @@ Atomic Designの用語で言えば、Button、Link、Iconのようなatomはコ�
     --grid--column-min-width: calc(280 / 16 * 1rem);
     --grid--column-max-count: 2;
 
-    & > ._card {
+    & > li {
       grid-row: span 4;
     }
   }
 
-  ._card {
+  li {
     display: block grid;
     grid-template-rows: subgrid;
   }
@@ -224,7 +226,7 @@ Atomic Designの用語で言えば、Button、Link、Iconのようなatomはコ�
 
 ```html
 <ul class="scoped article-cards | grid">
-  <li class="_card">
+  <li>
     <img src="…" alt="" width="640" height="360">
     <p class="_meta">…</p>
     <h3>…</h3>

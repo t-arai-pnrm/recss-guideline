@@ -1,7 +1,7 @@
 @layer components {
   @scope (.scoped.video-thumb) to (.scoped) {
     ._media {
-      /* ラベルの包含ブロックにする */
+      /* ラベルをサムネイルの中央に置くため、サムネイルを包含ブロックにする */
       position: relative;
       max-inline-size: calc(480 / 16 * 1rem);
       aspect-ratio: 16 / 9;
@@ -17,7 +17,7 @@
     }
 
     ._label {
-      /* 内容の大きさに縮める */
+      /* 上下左右の inset を 0 にすると箱が広がるので、内容の大きさに縮めて margin: auto の余りを作る */
       inline-size: fit-content;
       block-size: fit-content;
       padding-block: 8px;

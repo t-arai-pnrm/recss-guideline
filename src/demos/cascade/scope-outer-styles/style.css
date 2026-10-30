@@ -1,4 +1,4 @@
-/* 本文エリアの CSS（CMS が出力するものを想定し、vendors レイヤーに入れている） */
+/* CMS が出力する本文エリアの CSS を想定。自分で読み込めるので、コンポーネントより弱い vendors に入れる */
 @layer vendors {
   .entry-content h2 {
     padding-inline-start: 8px;

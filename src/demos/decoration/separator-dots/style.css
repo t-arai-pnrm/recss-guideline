@@ -31,9 +31,5 @@
       font-size: calc(var(--text--body-compact--font-size) / 16 * 1rem);
       line-height: var(--text--body-compact--leading);
     }
-
-    a {
-      color: inherit;
-    }
   }
 }

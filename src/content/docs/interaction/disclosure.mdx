@@ -110,7 +110,7 @@ viewer.addEventListener('command', (event) => {
 
 そこで、背面の要素だけを不活性にします。不活性になった要素は、クリックとフォーカスができなくなり、アクセシビリティツリーからも外れます。この状態は、HTMLでは `inert` 属性で、CSSでは `interactivity: inert` で指定できます。2025年3月の時点で、私はこの場面をCSSで次のように書いていました。
 
-```css title="🙅‍♂ Not Recommended: ページ全体を起点にした :has() で、ヘッダー以外を不活性にする" issue="convention"
+```css title="🙅‍♂ Not Recommended: ページ全体を起点にした :has() で、ヘッダー以外を不活性にする" issue="behavior"
 /* 🙅‍♂ Not Recommended */
 body:has(.drawer-button[aria-expanded="true"]) {
   & :not(.global-header, .global-header *) {
@@ -119,7 +119,7 @@ body:has(.drawer-button[aria-expanded="true"]) {
 }
 ```
 
-このコードには、本書の規約と合わない点が3つあります。1つ目は、`:has()` の起点が `body` で、引数も子孫全体を調べる形になっていることです。DOMが変わるたびに `body` の子孫全体を調べ直すので、要素の多いページではスタイルの再計算が重くなります（第5章「[5-3 :has() で祖先と前の兄弟を選ぶ](/pseudo/has/)」）。2つ目は、ヘッダーが `<div>` などで包まれている場合に、その祖先も `:not()` に一致して不活性になることです。`interactivity` は継承し、子孫から打ち消せないので、ヘッダーごと操作できなくなります。
+このコードには、問題が3つあります。1つ目は、`:has()` の起点が `body` で、引数も子孫全体を調べる形になっていることです。DOMが変わるたびに `body` の子孫全体を調べ直すので、要素の多いページではスタイルの再計算が重くなります（第5章「[5-3 :has() で祖先と前の兄弟を選ぶ](/pseudo/has/)」）。2つ目は、ヘッダーが `<div>` などで包まれている場合に、その祖先も `:not()` に一致して不活性になることです。`interactivity` は継承し、子孫から打ち消せないので、ヘッダーごと操作できなくなります。
 
 3つ目は、未対応の環境で機能が損なわれることです。`interactivity` に対応していない環境では、ドロワーが開いている間も背面を操作できてしまい、フォーカスがドロワーの外へ出て、見えないリンクを操作することになります。開閉のボタンの `aria-expanded` はJavaScriptで切り替えているので、本書では、同じ処理の中で背面の要素に `inert` 属性を付けることを基本にします。`inert` 属性は、主要なブラウザで使えます。
 
@@ -130,18 +130,26 @@ const button = document.querySelector('.global-header ._drawer-button');
 const drawer = document.querySelector('.global-header ._drawer');
 const background = document.querySelectorAll('body > :not(.global-header)');
 
+const setExpanded = (expanded) => {
+  button.setAttribute('aria-expanded', String(expanded));
+  drawer.hidden = !expanded;
+  for (const element of background) element.inert = expanded;
+};
+
 const initializeDrawer = () => {
   if (!button || !drawer) return;
   button.setAttribute('aria-controls', drawer.id);
-  button.setAttribute('aria-expanded', 'false');
-  drawer.hidden = true;
+  setExpanded(false);
   button.hidden = false;
 
   button.addEventListener('click', () => {
-    const expanded = button.getAttribute('aria-expanded') !== 'true';
-    button.setAttribute('aria-expanded', String(expanded));
-    drawer.hidden = !expanded;
-    for (const element of background) element.inert = expanded;
+    setExpanded(button.getAttribute('aria-expanded') !== 'true');
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape' || button.getAttribute('aria-expanded') !== 'true') return;
+    setExpanded(false);
+    button.focus();
   });
 };
 
@@ -152,7 +160,9 @@ initializeDrawer();
 
 開閉では、ドロワーの `hidden` 属性と、`body` の直下の要素のうちヘッダー以外の `inert` を切り替えます。ヘッダーが `body` の直下にある構造が前提で、ヘッダーを包む要素がある場合は、その要素の兄弟を対象にします。
 
-次のデモでは、上のスクリプトをそのまま動かしています。まずドロワーを閉じたままTabキーを押し、本文のリンクにフォーカスが移ることを確かめてください。「メニュー」ボタンでドロワーを開いてからTabキーを押すと、フォーカスはヘッダーのボタンからドロワーのリンクへ移り、最後のリンクの次は、灰色になった本文のリンクを飛ばしてデモの外へ出ます。
+背面を不活性にしている間、ドロワーはモーダルのダイアログと同じように振る舞います。利用者はダイアログと同じくEscキーで閉じられると期待するので、Escキーでも閉じ、フォーカスを開閉のボタンへ戻します。`<dialog>` と違ってブラウザはこの操作を受け持たないので、`keydown` イベントで書き足します。
+
+次のデモでは、上のスクリプトをそのまま動かしています。まずドロワーを閉じたままTabキーを押し、本文のリンクにフォーカスが移ることを確かめてください。「メニュー」ボタンでドロワーを開いてからTabキーを押すと、フォーカスはヘッダーのボタンからドロワーのリンクへ移り、最後のリンクの次は、灰色になった本文のリンクを飛ばしてデモの外へ出ます。開いている間にEscキーを押すと、ドロワーが閉じ、フォーカスは「メニュー」ボタンに戻ります。
 
 <Demo title="ドロワーを開いている間は、背面の本文に inert 属性が付き、リンクにフォーカスが移らない" html={drawerHtml} css={drawerCss} js={drawerJs} widths={[]} />
 
@@ -258,12 +268,12 @@ const initializeDisclosure = (link) => {
 @scope (.scoped.shipping-section) to (.scoped) {
   ._panel-inner {
     padding: 16px;
-    background-color: var(--background--surface);
+    background-color: var(--background--base);
   }
 }
 ```
 
-次のデモは、上のHTMLに開閉の処理を加えたもので、パネルは閉じた状態で始まります。閉じたまま、Ctrl+F（macOSでは⌘F）で「置き配」を検索してみてください。パネルが自動で開き、見出しの記号が `aria-expanded` に合わせて「−」に変わります。見出しのリンクを押すか、フォーカスしてEnterキーかSpaceキーを押しても開閉できます。
+次のデモは、上のHTMLに開閉の処理を加えたもので、パネルは閉じた状態で始まります。閉じたまま、Ctrl+F（macOSでは⌘F）で「置き配」を検索してみてください。パネルが自動で開き、見出しの記号が `aria-expanded` に合わせて「−」に変わります。見出しのリンクを押すか、フォーカスしてEnterキーかSpaceキーを押しても開閉できます。セクションの角丸は、ルートの `overflow: clip` で切り取らずに、見出しのリンクとパネルの内側の要素の角丸で合わせています。ルートで切り取ると、幅いっぱいに広げた見出しのリンクのフォーカスリングまで切り取られるからです。
 
 <Demo title='hidden="until-found" で閉じたパネルが、ページ内検索で自動で開く' html={untilFoundHtml} css={untilFoundCss} js={untilFoundJs} widths={[]} />
 
@@ -281,8 +291,8 @@ Safariは、`hidden="until-found"` に対応していません。未対応の環
 | JavaScriptは有効だが初期化に失敗 | 開閉の処理のスクリプトを読み込めないようにする | パネルは隠されずに表示され、見出しのリンクに `role="button"` や `aria-expanded` が付かない |
 | `hidden="until-found"` に対応したブラウザ | 閉じたパネルの中の語をページ内検索する | パネルが自動で開き、`aria-expanded` が `true` になる |
 | Safari（`closedby` 属性と `hidden="until-found"` が未対応） | ダイアログを閉じ、閉じたパネルの中の語を検索する | Escキーと閉じるボタンでダイアログが閉じる。パネルの中身は検索で見つからないが、見出しのリンクで開ける |
-| キーボードだけの操作 | ダイアログを開いて閉じ、`<summary>` を操作する | 開いたダイアログの外は操作できず、閉じると開く前のボタンにフォーカスが戻る。`<details>` もキーボードで開閉できる |
-| ドロワーを開いた状態 | Tabキーだけで操作する | フォーカスはヘッダーのボタンとドロワーのリンクに移り、背面の本文やフッターのリンクには止まらない |
+| キーボードだけの操作 | ダイアログを開いて閉じ、`<summary>` と開閉する見出しのリンクを操作する | 開いたダイアログの外は操作できず、閉じると開く前のボタンにフォーカスが戻る。`<details>` もキーボードで開閉できる。フォーカスリングが祖先の `overflow` で切り取られずに見える |
+| ドロワーを開いた状態 | Tabキーだけで操作し、Escキーを押す | フォーカスはヘッダーのボタンとドロワーのリンクに移り、背面の本文やフッターのリンクには止まらない。Escキーで閉じ、フォーカスが開閉のボタンに戻る |
 | 動きを減らす設定 | ダイアログと `<details>` を開閉する | `<details>` の高さと不透明度は動かず、ダイアログのフェードだけが残る |
 | 強制カラーモード | ダイアログを開き、開閉の状態を見比べる | ダイアログの範囲と、開いている項目が見分けられる |
 

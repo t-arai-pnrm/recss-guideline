@@ -19,7 +19,6 @@
       gap: 8px;
     }
 
-    /* 2種類のリンクに共通するスタイル */
     a {
       display: block flow;
       padding-block: 8px;
@@ -28,36 +27,36 @@
 
       /* 🙅‍♂ 共通の状態で文字色を変えると、a:focus-visible（0.1.1）と a:any-link:hover（0.2.1）が ._sub-link（0.1.0）の色に勝つ */
       &:focus-visible {
-        color: var(--foreground--accent);
+        color: var(--foreground--base);
         text-decoration-line: revert;
       }
 
       &:any-link:hover {
         @media (any-hover) {
-          color: var(--foreground--accent);
+          color: var(--foreground--base);
           text-decoration-line: revert;
         }
       }
     }
 
     ._main-link {
-      color: var(--foreground--base);
+      color: var(--foreground--muted);
       font-weight: var(--font-weight--bold);
     }
 
     ._sub-link {
-      background-color: var(--background--accent);
-      color: var(--foreground--on-accent);
+      background-color: var(--background--inverse);
+      color: var(--foreground--inverse);
       font-size: calc(var(--text--body-compact--font-size) / 16 * 1rem);
       line-height: var(--text--body-compact--leading);
 
       &:focus-visible {
-        background-color: oklch(from var(--background--accent) calc(l - 0.1) c h);
+        background-color: color-mix(in oklab, var(--background--inverse) 80%, var(--background--base));
       }
 
       &:any-link:hover {
         @media (any-hover) {
-          background-color: oklch(from var(--background--accent) calc(l - 0.1) c h);
+          background-color: color-mix(in oklab, var(--background--inverse) 80%, var(--background--base));
         }
       }
     }

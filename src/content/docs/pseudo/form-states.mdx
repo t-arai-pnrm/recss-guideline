@@ -61,27 +61,30 @@ input {
 
 `:user-valid` と `:user-invalid` は、ユーザーが値を変えて入力欄を離れた後か、送信しようとした後にだけ当てはまります。エラーの見た目を `:invalid` ではなく `:user-invalid` に指定する理由と書き方は、第17章「[17-7 フォーム部品](/interaction/forms/)」のルール `user-invalid-for-errors` で説明しています。正しく入力できたことを示す見た目も、同じ理由で `:valid` ではなく `:user-valid` に指定します。
 
-```css title="🙆‍♂ Recommended: エラーと入力済みの見た目を、ユーザーの操作の後に限る"
+```css title="🙆‍♂ Recommended: エラーと入力済みの見た目を、ユーザーの操作の後に限る" from="pseudo/user-invalid-timing"
 @scope (.scoped.contact-form) to (.scoped) {
   input {
     &:user-invalid {
-      border-color: oklch(50% 0.2 25deg);
+      border-width: 2px;
+      border-color: var(--foreground--danger);
     }
 
     &:user-valid {
-      border-color: oklch(50% 0.13 150deg);
+      border-color: var(--foreground--success);
     }
   }
 }
 ```
 
-次のデモの2つの欄は、どちらも `required` を付けたメールアドレスの欄です。上の `:invalid` の欄は、何も操作していないうちからエラーの色になります。下の `:user-invalid` の欄は、不正な値を入れて欄を離れるか、空のまま「送信する」を押すまで、エラーの色になりません。
+エラーの枠線は、色を変えるだけでなく太くしています。色の違いを見分けにくい人にも、状態の変化を伝えるためです。何が誤りかは、枠線ではなく文言で伝えます。エラーの文言の置き方は「[17-7 フォーム部品](/interaction/forms/)」で説明しています。
+
+次のデモの2つの欄は、どちらも `required` を付けたメールアドレスの欄です。上の `:invalid` の欄は、何も操作していないうちからエラーの太い枠線で表示されます。下の `:user-invalid` の欄は、不正な値を入れて欄を離れるか、空のまま「送信する」を押すまで、エラーの見た目になりません。
 
 <Demo title=":invalid は開いた時点で、:user-invalid は操作の後にエラーの見た目になる" html={userInvalidHtml} css={userInvalidCss} widths={[]} />
 
 <Baseline id="user-pseudos" name=":user-valid と :user-invalid" />
 
-`:required` と `:optional` は、`required` 属性の有無だけで決まります。値が入っているかどうかは関係しません。値によらない見た目、たとえばラベルの横の「必須」の印に使います。`:valid` と `:invalid`、`:required` と `:optional` は、どちらも以前からすべての主要なブラウザで使えます。
+`:required` と `:optional` は、`required` 属性の有無だけで決まります。値が入っているかどうかは関係しません。値によらない、入力欄自身の見た目に使います。ラベルの横の「必須」の印は、`:required` が入力欄にしか当たらず、生成コンテンツでは読み上げにも伝わらないので、HTMLに書きます（「[5-8 生成コンテンツと装飾の擬似要素](/pseudo/generated-content/)」）。`:valid` と `:invalid`、`:required` と `:optional` は、どちらも以前からすべての主要なブラウザで使えます。
 
 <Baseline id="form-validity-pseudos" />
 
@@ -107,7 +110,7 @@ input {
 
 上の例で `&:indeterminate` と書かずに `[type="checkbox"]` を加えているのは、ラジオボタンを除くためです。スコープの中にラジオボタンがあると、まだ何も選んでいないグループのラジオボタンが、すべて `:indeterminate` に当てはまります。中間の状態の印は、未選択のラジオボタンに付けるものではありません。
 
-次のデモでは、お知らせの一部だけを選ぶと、スクリプトが「すべて選ぶ」の `indeterminate` を `true` にし、横線の印が付きます。下の「配信の頻度」のラジオボタンは、どれも選んでいないので `:indeterminate` に当てはまりますが、`[type="checkbox"]` で除いているので印は付きません。チェックと中間の状態は背景色が同じなので、内側の余白と横線の形で区別しています。
+次のデモでは、お知らせの一部だけを選ぶと、スクリプトが「すべて選ぶ」の `indeterminate` を `true` にし、横線の印が付きます。下の「配信の頻度」のラジオボタンは、どれも選んでいないので `:indeterminate` に当てはまりますが、`[type="checkbox"]` で除いているので印は付きません。チェックと中間の状態は背景色が同じなので、内側の余白と横線の形で区別しています。強制カラーモードでは背景色、影、グラデーションが描かれず、3つの状態が同じ四角になるので、`appearance` を `revert` に戻してブラウザのチェックボックスで表示します。{/* 要検証: ブラウザ。強制カラーモードで、appearance: revert に戻したチェックボックスの3つの状態を見分けられること */}
 
 <Demo title="一部だけを選んだときに、「すべて選ぶ」のチェックボックスを中間の状態にする" html={selectAllHtml} css={selectAllCss} js={selectAllJs} widths={[]} />
 
@@ -137,7 +140,7 @@ input {
   input {
     &[readonly] {
       border-color: transparent;
-      background-color: var(--background--accent-subtle);
+      background-color: var(--background--surface);
     }
 
     &:disabled {
@@ -147,7 +150,7 @@ input {
 }
 ```
 
-次のデモは、同じ4つの部品を、1つ目の枠では `&:read-only` で、2つ目の枠では `&[readonly]` と `&:disabled` で選んだものです。1つ目では、灰色の背景と赤い輪郭が、会員番号の欄だけでなく、無効にした紹介コードの欄とチェックボックスにも付きます。2つ目では、読み取り専用の欄と無効の欄が、別々の見た目になります。
+次のデモは、同じ4つの部品を、1つ目の枠では `&:read-only` で、2つ目の枠では `&[readonly]` と `&:disabled` で選んだものです。1つ目では、赤い輪郭が、会員番号の欄だけでなく、無効にした紹介コードの欄とチェックボックスにも付きます。2つ目では、読み取り専用の欄は枠線のない面に、無効の欄は灰色の文字になり、別々の見た目になります。
 
 <Demo title=":read-only は無効の欄とチェックボックスにも当たり、[readonly] は読み取り専用の欄だけに当たる" html={readOnlyHtml} css={readOnlyCss} />
 
@@ -163,7 +166,7 @@ input {
 /* 🙅‍♂ Not Recommended */
 input {
   &:not(:placeholder-shown) {
-    border-color: var(--foreground--accent);
+    border-color: var(--foreground--base);
   }
 }
 ```
@@ -204,7 +207,7 @@ input {
 
 <Baseline id="file-selector-button" />
 
-次のデモは、ここまでの擬似クラスと擬似要素を組み合わせたフォームです。未入力の欄は点線の枠になり、表示名を入力すると実線に変わります。会員番号は `readonly` なので青みのある背景、紹介コードは `disabled` なので灰色です。メールアドレスを空のまま「保存する」を押すか、不正な値を入れて欄を離れると、エラーの見た目になります。
+次のデモは、ここまでの擬似クラスと擬似要素を組み合わせたフォームです。未入力の欄は点線の枠になり、表示名を入力すると実線に変わります。会員番号は `readonly` なので枠線がなく、紹介コードは `disabled` なので灰色の文字です。メールアドレスを空のまま「保存する」を押すか、不正な値を入れて欄を離れると、エラーの太い枠線になります。
 
 <Demo title="未入力、入力済み、読み取り専用、無効、エラーで見た目が変わる入力欄" html={profileHtml} css={profileCss} />
 
@@ -220,13 +223,15 @@ input {
 @scope (.scoped.profile-form) to (.scoped) {
   input {
     &:is(:user-invalid, [aria-invalid="true"]) {
+      border-width: 2px;
       border-color: var(--foreground--danger);
     }
   }
 
   button {
     &:is(:disabled, [aria-disabled="true"]) {
-      background-color: var(--background--active);
+      background-color: unset;
+      color: var(--foreground--muted);
     }
   }
 }
@@ -234,7 +239,7 @@ input {
 
 kiso.cssも、`:where(:disabled, [aria-disabled="true" i])` に `cursor: default` を指定して、両方を同じ状態として扱っています。なお、`aria-disabled="true"` はクリックやキー操作を止めません。操作を止める処理は、JavaScriptで別に書きます。
 
-次のデモでは、「登録する」ボタンに `aria-disabled="true"` を付けておき、利用規約に同意するとスクリプトで `false` に変えます。隣の「下書きを保存する」は `disabled` 属性で無効にしたボタンです。2つの見た目は同じですが、Tabキーでフォーカスできるのは「登録する」だけです。「サーバーのエラーを再現する」を押すと、ユーザー名の入力欄に `aria-invalid="true"` が付き、メールアドレスを空のまま登録しようとしたときの `:user-invalid` と同じ色の枠線になります。
+次のデモでは、「登録する」ボタンに `aria-disabled="true"` を付けておき、利用規約に同意するとスクリプトで `false` に変えます。隣の「下書きを保存する」は `disabled` 属性で無効にしたボタンです。2つの見た目は同じですが、Tabキーでフォーカスできるのは「登録する」だけです。「サーバーのエラーを再現する」を押すと、ユーザー名の入力欄に `aria-invalid="true"` が付き、メールアドレスを空のまま登録しようとしたときの `:user-invalid` と同じ太い枠線になり、下にエラーの文言が出ます。
 
 <Demo title="aria-disabled と aria-invalid の状態を、:disabled と :user-invalid と同じ見た目にする" html={ariaStatesHtml} css={ariaStatesCss} js={ariaStatesJs} widths={[]} />
 

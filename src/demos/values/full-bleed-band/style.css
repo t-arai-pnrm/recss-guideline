@@ -1,11 +1,12 @@
 @layer components {
   @scope (.scoped.feature-band) to (.scoped) {
-    /* 左右の列が余白になり、中央の列に内容を置く */
+    /* 背景は端まで広げたまま、内容の幅だけを抑えるため、左右の列を余白にする */
     :scope {
       display: block grid;
       grid-template-columns: minmax(16px, 1fr) minmax(0, calc(480 / 16 * 1rem)) minmax(16px, 1fr);
       padding-block: 24px;
-      background-color: var(--background--active);
+      border-block: 1px solid var(--border--base);
+      background-color: var(--background--surface);
 
       & > * {
         grid-column: 2;

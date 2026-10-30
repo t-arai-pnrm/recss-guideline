@@ -1,15 +1,7 @@
 @layer components {
-  @scope (.scoped.safe-triangle-demo) to (.scoped) {
-    /* 右に開くサブメニューの幅を空けておく */
-    ._case {
-      padding-inline-end: calc(120 / 16 * 1rem);
-    }
-  }
-
   @scope (.scoped.action-menu) to (.scoped) {
     :scope {
       --_border: var(--border--base);
-      --_background--hocus: var(--background--hover);
       --_safe-triangle: --false;
 
       position: relative;
@@ -21,31 +13,42 @@
       &[data-safe-triangle] {
         --_safe-triangle: --true;
       }
+
+      /* 包含ブロックはメニューのルートなので、配置はルートのネストに書く */
+      & ._submenu {
+        position: absolute;
+        inset-block-start: -1px;
+        inset-inline-start: 100%;
+      }
     }
 
     ._item {
-      --_hocus: --false;
+      --_has-hocus: --false;
 
       &:has(:focus-visible) {
-        --_hocus: --true;
+        --_has-hocus: --true;
       }
 
       &:has(> ._trigger:enabled:hover, > ._submenu:hover) {
         @media (any-hover) {
-          --_hocus: --true;
+          --_has-hocus: --true;
         }
       }
     }
 
-    ._trigger {
-      inline-size: 100%;
+    ._trigger,
+    ._action {
+      inline-size: -webkit-fill-available;
+      inline-size: stretch;
       padding-block: 8px;
       padding-inline: 12px;
       border-color: transparent;
       text-align: start;
+    }
 
-      @container style(--_hocus: --true) {
-        background-color: var(--_background--hocus);
+    ._trigger {
+      @container style(--_has-hocus: --true) {
+        background-color: var(--background--hover);
       }
 
       &::before {
@@ -70,31 +73,28 @@
     }
 
     ._submenu {
-      position: absolute;
-      inset-block-start: -1px;
-      inset-inline-start: 100%;
       display: none;
       inline-size: calc(120 / 16 * 1rem);
       border: 1px solid var(--_border);
       background-color: var(--background--raised);
 
-      @container style(--_hocus: --true) {
+      @container style(--_has-hocus: --true) {
+        display: block grid;
+      }
+
+      &:is(._trigger[aria-expanded="true"] + *) {
         display: block grid;
       }
     }
 
-    a {
-      display: block flow;
-      padding-block: 8px;
-      padding-inline: 12px;
-
+    ._action {
       &:focus-visible {
-        background-color: var(--_background--hocus);
+        background-color: var(--background--hover);
       }
 
-      &:any-link:hover {
+      &:enabled:hover {
         @media (any-hover) {
-          background-color: var(--_background--hocus);
+          background-color: var(--background--hover);
         }
       }
     }

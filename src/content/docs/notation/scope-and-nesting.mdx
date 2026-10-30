@@ -114,7 +114,7 @@ BlockのModifierがElementの見た目を変える場合は、2通りの書き�
 
 3つ目は、FLOCSSの `c-` のような接頭辞を使い、下限を `to ([class|="c"])` にする案です。接頭辞はすでに多くの現場で守られているので、規則としては浸透させやすい案です。しかし、FLOCSSのLayout、Component、Projectの区別をComponentに集約しなければなりません。どれをLayoutにするかの線引きは人によって違い、区別しても得られるものは少ないからです。
 
-```css title="🙅‍♂ Not Recommended: 接頭辞を下限にする（本書では採らない）" issue="convention"
+```css title="🙅‍♂ Not Recommended: 接頭辞を下限にする（本書では採らない）" issue="behavior"
 /* 🙅‍♂ Not Recommended */
 @scope (.c-media-card) to ([class|="c"]) {
   :scope {

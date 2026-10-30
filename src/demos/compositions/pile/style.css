@@ -31,9 +31,12 @@
 @layer components {
   @scope (.scoped.hero) to (.scoped) {
     :scope {
-      /* 画像を読み込めなかったときも、白い文字が読めるようにする */
-      background-color: oklch(32% 0.03 250deg);
-      color: oklch(100% 0 0deg);
+      --_scrim: oklch(0% 0 none);
+
+      /* 画像を読み込めなかったときも文字が読めるように、文字色と対比する色にする。1行目は contrast-color() に未対応の環境で使う値 */
+      background-color: oklch(from currentColor sign(0.7 - l) 0 h);
+      background-color: contrast-color(currentColor);
+      color: oklch(100% 0 none);
 
       /*
        * 擬似要素は `> *` で選ばれないので、自分で同じエリアに置く。
@@ -42,12 +45,14 @@
       &::before {
         content: "";
         grid-area: --pile;
-        background-image: linear-gradient(oklch(0% 0 0deg / 55%), oklch(0% 0 0deg / 75%));
+        background-image: linear-gradient(color-mix(in oklab, var(--_scrim) 55%, transparent), color-mix(in oklab, var(--_scrim) 75%, transparent));
       }
     }
 
     img {
       z-index: var(--z--backwards);
+
+      /* 1行目は stretch に未対応の環境で使う値 */
       inline-size: -webkit-fill-available;
       inline-size: stretch;
       block-size: 100%;
@@ -56,12 +61,12 @@
 
     ._body {
       max-inline-size: calc(560 / 16 * 1rem);
-      padding: calc(var(--spacing--lg) / 16 * 1rem);
+      padding: calc(var(--spacing--lg) * 1px);
     }
 
     h2 {
-      font-size: calc(24 / 16 * 1rem);
-      line-height: var(--leading--snug);
+      font-size: calc(var(--text--title--font-size) / 16 * 1rem);
+      line-height: var(--text--title--leading);
     }
   }
 }

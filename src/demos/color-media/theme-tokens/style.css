@@ -1,9 +1,9 @@
 @layer tokens {
   :root {
-    --background--base: light-dark(var(--color--neutral--100), var(--color--neutral--900));
-    --background--accent: light-dark(var(--color--accent--600), var(--color--accent--400));
-    --foreground--base: light-dark(var(--color--neutral--950), var(--color--neutral--50));
-    --foreground--muted: light-dark(var(--color--neutral--600), var(--color--neutral--400));
+    --background--base: light-dark(var(--color--neutral--50), var(--color--neutral--900));
+    --background--inverse: light-dark(var(--color--neutral--900), var(--color--neutral--100));
+    --foreground--base: light-dark(var(--color--neutral--900), var(--color--neutral--100));
+    --foreground--muted: light-dark(var(--color--neutral--500), var(--color--neutral--400));
   }
 }
 
@@ -36,7 +36,7 @@
 @layer components {
   @scope (.scoped.notice-card) to (.scoped) {
     :scope {
-      --_accent: var(--background--accent);
+      --_emphasis: var(--background--inverse);
 
       display: block grid;
       gap: 8px;
@@ -50,14 +50,15 @@
     ._badge {
       padding-inline: 8px;
       border-radius: var(--rounded--full);
-      background-color: oklch(from var(--_accent) l c h / 20%);
+      background-color: oklch(from var(--_emphasis) l c h / 10%);
       font-size: calc(var(--text--caption--font-size) / 16 * 1rem);
       font-weight: var(--font-weight--bold);
       line-height: var(--text--caption--leading);
     }
 
     h2 {
-      font-size: calc(18 / 16 * 1rem);
+      font-size: calc(var(--text--title--font-size) / 16 * 1rem);
+      line-height: var(--text--title--leading);
     }
 
     ._description {
@@ -69,10 +70,10 @@
       padding-inline: 16px;
       border-color: transparent;
       border-radius: var(--rounded--sm);
-      background-color: var(--_accent);
+      background-color: var(--_emphasis);
 
-      /* アクセントカラーを差し替えても、文字色を選び直さずに済むようにする */
-      color: oklch(from var(--_accent) sign(0.7 - l) 0 h);
+      /* 背景の色を差し替えても、文字色を選び直さずに済むようにする */
+      color: oklch(from var(--_emphasis) sign(0.7 - l) 0 h);
     }
   }
 }

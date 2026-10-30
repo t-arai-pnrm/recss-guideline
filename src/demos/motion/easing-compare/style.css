@@ -19,15 +19,15 @@
       font-size: calc(var(--text--body-compact--font-size) / 16 * 1rem);
       line-height: var(--text--body-compact--leading);
 
-      &.-ease-in {
+      &[data-ease="ease-in"] {
         --_ease: ease-in;
       }
 
-      &.-out-quint {
+      &[data-ease="out-quint"] {
         --_ease: var(--ease--out-quint);
       }
 
-      &.-out-expo {
+      &[data-ease="out-expo"] {
         --_ease: var(--ease--out-expo);
       }
     }
@@ -35,16 +35,17 @@
     ._track {
       container: --track / inline-size;
       padding: 4px;
+      border: 1px solid var(--border--base);
       border-radius: var(--rounded--full);
-      background-color: var(--background--active);
+      background-color: var(--background--surface);
     }
 
     ._dot {
       display: block flow;
       inline-size: 24px;
       aspect-ratio: 1;
-      border-radius: 50%;
-      background-color: var(--background--accent);
+      border-radius: var(--rounded--full);
+      background-color: var(--foreground--base);
 
       /* 動きを比べるためのデモなので、動きを減らす設定でも動かす。違いが見えやすいよう、長めの240msにする */
       transition-duration: var(--duration--slow);

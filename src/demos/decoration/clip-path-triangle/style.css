@@ -7,6 +7,16 @@
   }
 }
 
+@layer base {
+  :root {
+    --background--current: currentColor;
+
+    @media (forced-colors: active) {
+      --background--current: CanvasText;
+    }
+  }
+}
+
 @layer pages {
   @scope (.scoped.shape-demo) to (.scoped) {
     :scope {
@@ -29,7 +39,7 @@
     ._shape {
       inline-size: 40px;
       aspect-ratio: 1;
-      background-color: var(--background--inverse);
+      background-color: var(--background--current);
 
       &[data-shape="top"] {
         clip-path: var(--shape--triangle-top);
@@ -66,8 +76,6 @@
         --_size: 16px;
 
         content: "";
-
-        /* ツールチップの下端の中央から、下へ突き出す */
         position: absolute;
         inset-block-start: 100%;
         inset-inline-start: 50%;

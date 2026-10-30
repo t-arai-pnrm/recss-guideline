@@ -39,19 +39,19 @@
       }
     }
 
-    /* ボタンの上に出し、下端の中央（ボタンのある側）から広げる */
+    /* ボタンの上に出し、下端の中央（ボタンのある側）から広げる。未対応の環境では画面の中央に出るので、起点も中央のままにする */
     ._tooltip {
       margin: revert;
       padding-block: 4px;
       padding-inline: 8px;
       font-size: calc(var(--text--body-compact--font-size) / 16 * 1rem);
       line-height: var(--text--body-compact--leading);
-      transform-origin: 50% 100%;
 
       @supports (position-area: block-start) {
         position-area: block-start;
         margin-block: 8px;
         margin-inline: 0;
+        transform-origin: 50% 100%;
       }
 
       @media (prefers-reduced-motion: no-preference) {
@@ -59,16 +59,21 @@
       }
     }
 
-    /* ボタンの下に出し、左上の角（ボタンのある側）から広げる */
+    /* ボタンの下に出し、行頭側の上の角（ボタンのある側）から広げる */
     ul {
       margin: revert;
       padding-block: 4px;
-      transform-origin: 0% 0%;
 
       @supports (position-area: block-end span-inline-end) {
         position-area: block-end span-inline-end;
         margin-block: 8px;
         margin-inline: 0;
+        transform-origin: 0% 0%;
+
+        /* transform-origin には論理キーワードがないので、右から左へ書く言語では左右を入れ替える */
+        &:dir(rtl) {
+          transform-origin: 100% 0%;
+        }
       }
 
       @media (prefers-reduced-motion: no-preference) {

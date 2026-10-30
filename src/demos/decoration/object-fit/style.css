@@ -5,7 +5,9 @@
       inline-size: stretch;
       aspect-ratio: 1;
       border-radius: var(--rounded--md);
-      background-color: var(--background--active);
+      background-color: var(--background--surface);
+      outline: 1px solid var(--border--base);
+      outline-offset: -1px;
 
       &[data-fit="cover"] {
         object-fit: cover;

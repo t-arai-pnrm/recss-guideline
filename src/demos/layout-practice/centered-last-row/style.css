@@ -9,12 +9,12 @@
       --_column-min-width: calc(160 / 16 * 1rem);
       --_column-max-count: 8;
 
-      /* 並べられる列の数をフラグにする。閾値は、最小幅160px相当の列と24pxの隙間から導く */
+      /* カードの側が閾値を持たずに列の数を読めるように、クエリの結果をフラグにする */
       --_columns: --one;
 
       display: block grid;
 
-      /* 列の最小幅を下回らず、多くても8列まで並べ、カードのない列は auto-fit で畳む */
+      /* 広い画面でカードが小さくなりすぎないように、列の数に上限を設ける */
       grid-template-columns: repeat(
         auto-fit,
         minmax(
@@ -40,7 +40,6 @@
         --_columns: --eight;
       }
 
-      /* 2列分の幅があれば、すべてのカードが2列分を占める */
       & > * {
         @container not style(--_columns: --one) {
           grid-column-end: span 2;
@@ -92,11 +91,12 @@
       gap: 4px;
       padding: 16px;
       border-radius: var(--rounded--lg);
-      background-color: var(--background--active);
+      background-color: var(--background--surface);
     }
 
     h2 {
-      font-size: calc(18 / 16 * 1rem);
+      font-size: calc(var(--text--subtitle--font-size) / 16 * 1rem);
+      line-height: var(--text--subtitle--leading);
     }
 
     ._category {

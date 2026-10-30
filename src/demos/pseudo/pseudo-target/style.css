@@ -12,12 +12,12 @@
 
     p {
       /* 条件に当てはまる段落の箱全体に当たる */
-      &:first-of-type:is(._class-example *) {
+      &:is([data-example="class"] *):first-of-type {
         background-color: var(--_highlight);
       }
 
       /* すべての段落の1行目だけに当たる */
-      &:is(._element-example *)::first-line {
+      &:is([data-example="element"] *)::first-line {
         background-color: var(--_highlight);
       }
     }

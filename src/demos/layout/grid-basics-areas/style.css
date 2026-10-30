@@ -13,7 +13,7 @@
         "--body";
       gap: 16px;
 
-      /* 広いときは、テンプレートだけを書き換えて、画像を左、見出しと本文を右に置く */
+      /* 子の配置の指定を1か所に保つため、広いときはテンプレートだけを書き換える */
       @container --scoped (inline-size >= calc(560 / 16 * 1rem)) {
         grid-template:
           "--image --heading"

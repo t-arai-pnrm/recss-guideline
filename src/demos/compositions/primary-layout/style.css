@@ -108,7 +108,8 @@
     p {
       padding-block: 12px;
       padding-inline: 16px;
-      background-color: var(--background--active);
+      border: 1px solid var(--border--base);
+      background-color: var(--background--surface);
       font-size: calc(var(--text--body-compact--font-size) / 16 * 1rem);
       line-height: var(--text--body-compact--leading);
     }

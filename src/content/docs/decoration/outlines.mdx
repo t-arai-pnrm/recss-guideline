@@ -82,7 +82,7 @@ import balloonCss from '../../../demos/decoration/balloon-shape/style.css?raw';
 
 <Demo title="選んでいるタブの輪郭を、shape() で反り返らせて描く" html={shapeTabHtml} css={shapeTabCss} frame={shapeTabFrame} />
 
-このデモでは、選んでいるタブにだけ背景色を付けるため、擬似要素の背景色を `--_background` から受け取っています。選んでいないタブでは透明なので、輪郭は描かれていても見えません。
+このデモでは、選んでいるタブにだけ背景色を付けるため、擬似要素の背景色を `--_background` から受け取っています。選んでいないタブでは透明なので、輪郭は描かれていても見えません。タブの列を狭い幅で横にスクロールさせる指定は、「[16-8 角の形を変える](/decoration/shapes/#下の端が反り返るタブ)」のデモと同じです。
 
 擬似要素をタブより左右に半径の分だけ広げ、その輪郭を `shape()` で切り抜いています。左下から始めて、外側へ反った曲線、左上の角丸、上の辺、右上の角丸、右下の反った曲線の順に、輪郭を一周します。`curve to 終点 with 制御点` は2次ベジェ曲線なので、正確な四分円ではありませんが、この大きさの角では見分けがつきません。{/* 要確認: 出典なし */}
 
@@ -104,7 +104,7 @@ import balloonCss from '../../../demos/decoration/balloon-shape/style.css?raw';
     --_border-color: var(--balloon--border-color, var(--border--strong));
     --_radius: var(--balloon--radius, var(--rounded--lg));
     --_arrow-half-width: calc(var(--balloon--arrow-width, 24px) / 2);
-    --_arrow-height: calc(var(--_arrow-half-width) * tan(60deg)); /* 正三角形の高さ */
+    --_arrow-height: calc(var(--_arrow-half-width) * tan(60deg));
     --_arrow-position: var(--balloon--arrow-position, 50%);
     --_shape: shape(
       from var(--_radius) 0,
@@ -124,7 +124,7 @@ import balloonCss from '../../../demos/decoration/balloon-shape/style.css?raw';
 
     clip-path: var(--_shape);
     padding-block: var(--_padding-block) calc(var(--_padding-block) + var(--_arrow-height));
-    background-color: var(--background--active);
+    background-color: var(--background--surface);
 
     @supports (border-shape: shape(from 0 0, hline to 0)) {
       border: var(--_border-width) solid var(--_border-color);
@@ -151,15 +151,14 @@ import balloonCss from '../../../demos/decoration/balloon-shape/style.css?raw';
 ```css title="🙆‍♂ Recommended: 対応している環境だけ、枠線をグラデーションにする" from="decoration/gradient-border"
 @scope (.scoped.feature-card) to (.scoped) {
   :scope {
-    border: 2px solid var(--color--accent--500);
+    border: 2px solid var(--foreground--muted);
     border-radius: var(--rounded--lg);
     background-color: var(--background--base);
 
     @supports (background-clip: border-area) {
       border-color: transparent;
-      background:
-        linear-gradient(in oklch 90deg, var(--color--accent--500), var(--color--accent--700)) border-area,
-        var(--background--base);
+      background-image: linear-gradient(in oklch 90deg, var(--foreground--base), var(--foreground--muted)), none;
+      background-clip: border-area, border-box;
     }
   }
 }
@@ -168,6 +167,8 @@ import balloonCss from '../../../demos/decoration/balloon-shape/style.css?raw';
 <Demo title="対応している環境では、枠線がグラデーションになる" html={gradientBorderHtml} css={gradientBorderCss} />
 
 `border-color: transparent` は、`@supports` の中に書きます。外に書くと、未対応の環境では背景が枠線の部分に切り抜かれないまま枠線だけが透明になり、枠線が消えるからです。`@supports` で分けておけば、未対応の環境では単色の枠線として表示されます。グラデーションの枠線は装飾なので、多くの場合は単色の枠線で足ります。
+
+背景は、一括指定の `background` を使わず、`background-image` と `background-clip` に分けて書きます（「[16-1 画像の配置と比率](/decoration/images/)」）。2つ目の層に `none` を置くのは、背景色が最後の層の `background-clip` で切り抜かれるからです。層が1つだけだと、`background-color` も `border-area` で切り抜かれ、枠線の内側が背景色で塗られません。2つ目の層の切り抜きを `border-box` にしておけば、外の `background-color` の背景色は要素全体を塗ります。{/* 要検証: ブラウザ。Chrome と Safari で、2つ目の層を none にしたとき、背景色が要素全体を塗ること */}
 
 `border-area` は、Safari 18.2以降とChrome 150以降が対応しています。Firefoxは未対応です。
 
@@ -184,7 +185,7 @@ import balloonCss from '../../../demos/decoration/balloon-shape/style.css?raw';
     --_radius: var(--gradient-frame--radius, var(--rounded--lg));
     --_gradient: var(
       --gradient-frame--gradient,
-      linear-gradient(in oklch 90deg, var(--color--accent--500), var(--color--accent--700))
+      linear-gradient(in oklch 90deg, var(--foreground--base), var(--foreground--muted))
     );
 
     position: relative;
@@ -210,7 +211,7 @@ import balloonCss from '../../../demos/decoration/balloon-shape/style.css?raw';
 }
 ```
 
-<Demo scheme="light" title="擬似要素とマスクで、どの環境でもグラデーションの枠線を描く" html={gradientBorderMaskHtml} css={gradientBorderMaskCss} />
+<Demo title="擬似要素とマスクで、どの環境でもグラデーションの枠線を描く" html={gradientBorderMaskHtml} css={gradientBorderMaskCss} />
 
 枠線を描くのは `::before` です。`inset: 0` でルートと同じ大きさに広げ、透明な枠線を付けて、`background-origin: border-box` で枠線の外側からグラデーションを敷きます。`mask-image` には2枚の単色の画像を指定し、`mask-clip` で1枚目を `padding-box`、2枚目を `border-box` に切り抜きます。2枚を `mask-composite: exclude` で合成すると、2枚の重なる内側が消え、枠線の部分だけが残ります。`conic-gradient(#000)` は単色の画像を短く書くための指定です。マスクに使われるのは画像の不透明度だけなので、`#000` の色は表示されません（「[16-4 clip-pathとマスクで見せる範囲を決める](/decoration/clipping-and-masks/)」）。
 
@@ -242,9 +243,8 @@ import balloonCss from '../../../demos/decoration/balloon-shape/style.css?raw';
 @scope (.scoped.donut-chart) to (.scoped) {
   :scope {
     --_value: min(var(--donut-chart--value, 0%), 100%);
-    --_basis-width: 200px;
     --_border-width: 16px;
-    --_foreground: var(--donut-chart--foreground, var(--color--accent--500));
+    --_foreground: var(--donut-chart--foreground, var(--foreground--base));
 
     container: --scoped / inline-size;
     display: block grid;
@@ -271,9 +271,9 @@ import balloonCss from '../../../demos/decoration/balloon-shape/style.css?raw';
       mask-clip: padding-box, border-box;
       mask-composite: exclude;
       border: var(--_border-width) solid transparent;
-      border-radius: calc(infinity * 1px);
+      border-radius: var(--rounded--full);
       forced-color-adjust: none; /* 強制カラーモードでもグラデーションを画像として表示する */
-      background-image: conic-gradient(currentColor var(--count-up--value), var(--color--neutral--200) 0);
+      background-image: conic-gradient(currentColor var(--count-up--value), var(--border--base) 0);
       background-origin: border-box;
     }
 
@@ -282,7 +282,8 @@ import balloonCss from '../../../demos/decoration/balloon-shape/style.css?raw';
       place-self: center;
       padding: var(--_border-width);
       counter-reset: --value calc(var(--count-up--value) / 1%);
-      font-size: calc(32px / var(--_basis-width) * 100cqi);
+      font-size: clamp(1rem, 16cqi, 2rem);
+      font-weight: var(--font-weight--bold);
       font-variant-numeric: tabular-nums;
     }
   }
@@ -305,7 +306,7 @@ import balloonCss from '../../../demos/decoration/balloon-shape/style.css?raw';
 
 `::before` が輪です。前の例のグラデーションの枠線と同じく、透明な枠線を付け、`padding-box` と `border-box` に切り抜いた2枚のマスクを `exclude` で合成して、枠線の部分だけを残しています。そこに枠線の外側から（`background-origin: border-box`）`conic-gradient()` を敷くので、枠線の太さがそのまま輪の太さになります。
 
-`::after` が中心の数値です。`calc(var(--count-up--value) / 1%)` は、割合を1%で割った単位のない数値を返し（「[6-4 計算関数を応用する](/values/advanced-math-functions/#rule-typed-arithmetic-to-unitless)」）、`counter()` がその数値を文字にします。`counter-reset` は整数を受け取るので、`calc()` の結果は整数に丸められます。`--count-up--value` に42%を指定すると、FirefoxとSafariで「42」と表示されました。文字の大きさは、コンテナの幅（`100cqi`）に、グラフの幅が `--_basis-width`（200px）のとき32pxとなる比を掛けて決めています。グラフをどの大きさで置いても、輪と数値の大きさの比が変わりません。`tabular-nums` で数字の幅をそろえるのは、数値が増える間も文字の位置を左右に揺らさないためです。
+`::after` が中心の数値です。`calc(var(--count-up--value) / 1%)` は、割合を1%で割った単位のない数値を返し（「[6-4 計算関数を応用する](/values/advanced-math-functions/#rule-typed-arithmetic-to-unitless)」）、`counter()` がその数値を文字にします。`counter-reset` は整数を受け取るので、`calc()` の結果は整数に丸められます。`--count-up--value` に42%を指定すると、FirefoxとSafariで「42」と表示されました。文字の大きさは、コンテナの幅の16%（`16cqi`）にしています。グラフの幅が200pxのとき32pxになり、グラフをどの大きさで置いても、輪と数値の大きさの比が変わりません。ただし、`cqi` だけで決めると、ブラウザの既定の文字サイズを大きくしても数値が大きくならないので、`clamp()` で最小値と最大値を `rem` にしています（「[6-1 pxとremを使い分ける](/values/px-and-rem/#rule-font-size-in-rem)」）。`tabular-nums` で数字の幅をそろえるのは、数値が増える間も文字の位置を左右に揺らさないためです。
 
 割合は、0%から数え上げて表示します。`--count-up--value` は、`@property` で `<percentage>` の型を登録しています。型のないカスタムプロパティは、途中の値を補間できず、値が一瞬で切り替わります。`@keyframes` には `from` だけを書き、終わりの値は擬似要素で指定した値を使います（「[18-6 @keyframesを設計する](/motion/keyframes/#自明な-from-と-to-を省略する)」）。輪と数値は同じ `@keyframes` で動くので、輪が伸びるのに合わせて数値も増えます。トランジションではなく `@keyframes` を使うのは、トランジションは値が変わったときにしか動かず、ページを開いたときの表示では何も起きないからです。数値が一定の速さで増えるように、イージングは `linear` にしています。動かすのは、`prefers-reduced-motion: no-preference` のときだけです。
 
@@ -318,6 +319,8 @@ import balloonCss from '../../../demos/decoration/balloon-shape/style.css?raw';
 `@supports` の条件には、実際に使う値の形を書きます。`@supports (background-clip: border-area)` のように値まで書くと、プロパティにだけ対応していて値に対応していない環境も、未対応として扱えます。`shape()` の条件は、`shape(from 0 0, hline to 0)` のように、構文として成り立つ最も短い形にしておくと読みやすくなります。
 
 強制カラーモードでは、グラデーションの `background-image` が表示されなくなり、`border-color` はシステムカラーに置き換わります。そのため、`border-area` のグラデーションの枠線は、透明にした枠線がシステムカラーで描かれ、境界は残ります。擬似要素とマスクで描く枠線も、グラデーションは消えますが、擬似要素の透明な枠線がシステムカラーに置き換わり、マスクで残した枠線の形のまま描かれます。{/* 要検証: ブラウザ。擬似要素とマスクで描く枠線の強制カラーモードでの表示 */}枠線は境界を示す装飾で、システムカラーの単色でも役割を果たすので、`forced-color-adjust: none` は指定しません。一方、何も指定しないとドーナツグラフはグラデーションごと消えてしまうので、輪の擬似要素にだけ `forced-color-adjust: none` を指定し、グラフを画像として表示させます。グラフは色の組み合わせで割合を表す図なので、システムカラーに置き換えると図として成り立たないからです。中心の数値には指定しないので、文字はユーザーの選んだ配色で表示されます。{/* 要検証: ブラウザ。強制カラーモードでの輪の表示 */}強制カラーモードで置き換わる色の一覧は、「[15-5 強制カラーモードとコントラスト](/color-media/forced-colors/)」で説明しています。
+
+面の続きとして描いた図形は、強制カラーモードでは面と同じ扱いになります。反り返るタブの輪郭は背面の擬似要素の背景色なので、ページの背景色に置き換わって見えなくなります。選んでいるタブは、文字の太さと `aria-current` で区別できます。吹き出しは、`border-shape` に対応した環境では枠線がシステムカラーで輪郭に沿って描かれ、未対応の環境では塗りが背景色に置き換わって、文章だけが残ります。どちらも面の背景として塗る図形なので、`--background--current` では塗りません。面の上の文字と同じ色になり、文字が読めなくなるからです。{/* 要検証: ブラウザ。強制カラーモードでの反り返るタブと吹き出しの表示 */}
 
 `clip-path` で作った形は、要素の当たり判定も切り抜きます。切り抜いた外側はクリックできないので、タブの反り返りのような装飾は、この節の例のように背面の擬似要素に描き、タブ本体の当たり判定を変えないようにします。
 

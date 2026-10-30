@@ -47,7 +47,8 @@
       grid-auto-flow: column;
       gap: 8px;
       overflow-x: auto;
-      padding-block: 4px;
+      padding: 6px;
+      scroll-padding-inline: var(--_fade);
 
       /* スクロールできないと、タイムラインが非アクティブになり、アニメーションが当たらない。幅は初期値の0のままになる */
       @supports (animation-timeline: scroll()) and (animation-range: 0 32px) {
@@ -69,10 +70,8 @@
       padding: 4px 12px;
       border: 1px solid var(--border--base);
       border-radius: var(--rounded--full);
-      color: inherit;
       font-size: calc(var(--text--body-compact--font-size) / 16 * 1rem);
       line-height: var(--text--body-compact--leading);
-      text-decoration-line: none;
 
       &:focus-visible {
         background-color: var(--background--hover);

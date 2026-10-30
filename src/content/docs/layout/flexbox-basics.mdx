@@ -25,6 +25,7 @@ import flexOneCss from '../../../demos/layout/flexbox-flex-one/style.css?raw';
 import flexOneFrame from '../../../demos/layout/flexbox-flex-one/frame.css?raw';
 import minSizeHtml from '../../../demos/layout/flexbox-min-size/index.html?raw';
 import minSizeCss from '../../../demos/layout/flexbox-min-size/style.css?raw';
+import minSizeFrame from '../../../demos/layout/flexbox-min-size/frame.css?raw';
 import wrapGapHtml from '../../../demos/layout/flexbox-wrap-gap/index.html?raw';
 import wrapGapCss from '../../../demos/layout/flexbox-wrap-gap/style.css?raw';
 import orderHtml from '../../../demos/layout/flexbox-order/index.html?raw';
@@ -126,6 +127,7 @@ Flexboxは、まず各アイテムの仮の大きさを `flex-basis` で決め�
 部品の中では、伸ばすアイテムと大きさを変えないアイテムを分けて指定します。アイコン、本文、ボタンを1行に並べるなら、アイコンは `flex-shrink: 0` で縮む計算から外し、本文は `flex-grow: 1` で余りを受け取ります。
 
 ```css title="🙆‍♂ Recommended: アイコン、伸びる本文、ボタンを1行に並べる"
+/* 並べる項目は3つで増えないので折り返さず、幅の不足は本文の折り返しで吸収する */
 ._notice {
   display: block flex;
 
@@ -173,7 +175,7 @@ Flexboxは、まず各アイテムの仮の大きさを `flex-basis` で決め�
 }
 ```
 
-`inline-size` は子自身の大きさなので、親のルールの中にネストせず、子のルールに書きます（「[9-6 ネストの判断基準](/notation/nesting-criteria/)」）。`flex-basis` を書くのは、`flex: 1` のように伸び縮みの起点を0にするときと、「[12-6 sidebar](/compositions/sidebar/)」のように主軸の大きさを折り返しの閾値として計算に使わせるときです。どちらも主軸の大きさとして書く値なので、向きを変えても意図はずれません。
+`inline-size` は子自身の大きさなので、親のルールの中にネストせず、子のルールに書きます（「[9-6 ネストの判断基準](/notation/nesting-criteria/)」）。`flex-basis` を書くのは、3つの場面です。`flex: 1` のように伸び縮みの起点を0にするとき、「[12-6 sidebar](/compositions/sidebar/)」のように折り返しの閾値の計算に使わせるとき、後の「[縮める順番を `flex-shrink` で決める](#縮める順番を-flex-shrink-で決める)」のように縮む量の比の計算に使わせるときです。どれも主軸の大きさとして書く値なので、向きを変えても意図はずれません。
 
 `flex-basis` と `inline-size` は、最終的な大きさではなく、伸び縮みを計算する前の仮の大きさです。計算した大きさは、最後に `min-inline-size` と `max-inline-size` の範囲に収められます。`max-inline-size` が `flex-basis` より小さければ、`max-inline-size` の大きさになります。`min-inline-size` と `max-inline-size` が矛盾すれば、`min-inline-size` が勝ちます。優先順位は、`min-*`、`max-*`、`flex-basis` と `inline-size` の順です（「[7-4 大きさの決まり方](/layout/sizing/)」）。
 
@@ -232,7 +234,7 @@ Flexboxは、まず各アイテムの仮の大きさを `flex-basis` で決め�
 
 `overflow` を `hidden` や `auto` にしてスクロールコンテナになったアイテムは、自動の最小幅が0になります。ただし、`overflow: hidden` で止めると中身が切り取られ、URLや入力欄の一部が見えなくなります。隠すのではなく、最小幅を0にして、中身を折り返させるかスクロールさせます。
 
-本書のベーススタイルは、全称セレクタの `min-inline-size: 0` で、この問題を前もって防いでいます（「[8-2 ベーススタイルに書くもの](/reset/base-styles/)」）。使わない環境では、はみ出すアイテムに個別に指定します。要素の縮みすぎを `flex-shrink: 0` ではなく `min-inline-size: fit-content` で防ぐ理由は、「[11-3 サイズと内容の変化に耐える](/layout-practice/defensive/)」で説明しています。
+本書のベーススタイルは、全称セレクタの `min-inline-size: 0` で、この問題を前もって防いでいます（「[8-2 ベーススタイルに書くもの](/reset/base-styles/)」）。使わない環境では、はみ出すアイテムに個別に指定します。文字を含む要素の縮みすぎを、`flex-shrink: 0` ではなく `min-inline-size: fit-content` で防ぐ理由は、「[11-3 サイズと内容の変化に耐える](/layout-practice/defensive/)」で説明しています。アイコンや画像のように大きさを変えたくない要素は、上の例のように `flex-shrink: 0` で縮む計算から外します。
 
 ```css title="🙆‍♂ Recommended: 長いURLを含む本文を、最小幅を0にして折り返させる" from="layout/flexbox-min-size"
 ._body {
@@ -241,9 +243,9 @@ Flexboxは、まず各アイテムの仮の大きさを `flex-basis` で決め�
 }
 ```
 
-次のデモは、ベーススタイルを使わない環境で、アイコンと長いURLを幅280pxまでのコンテナに並べたものです。1段目では本文が自動の最小幅で止まり、URLがコンテナの外へはみ出します。2段目では、本文が最小幅0まで縮み、URLが行の途中で折り返します。
+次のデモは、ベーススタイルを使わない環境で、アイコンと長いURLを幅280pxまでのコンテナに並べたものです。URLは折り返して複数行になります。そのため、アイコンは `align-items: center` ではなく、`margin-block: calc((1lh - 24px) / 2)` で1行目の中央に置いています（[`icon-first-line-with-lh`](/layout-practice/icon-alignment/#rule-icon-first-line-with-lh)）。1段目では本文が自動の最小幅で止まり、URLがコンテナの外へはみ出します。2段目では、本文が最小幅0まで縮み、URLが行の途中で折り返します。
 
-<Demo title="自動の最小幅で縮まない本文と、min-inline-size: 0 で縮む本文" html={minSizeHtml} css={minSizeCss} base="none" scheme="light" widths={[]} />
+<Demo title="自動の最小幅で縮まない本文と、min-inline-size: 0 で縮む本文" html={minSizeHtml} css={minSizeCss} frame={minSizeFrame} base="none" scheme="light" widths={[]} />
 
 `flex-direction: column` では、同じことが高さで起き、`min-block-size: auto` が中身の高さとして扱われます。高さを決めた縦のFlexboxで、スクロールさせたいアイテムがはみ出すときは、そのアイテムに `overflow: auto` か `min-block-size: 0` を指定します。
 
@@ -311,7 +313,7 @@ FlexboxとGridは、大きさを決める向きが違います。Flexboxはア�
 
 ずれる原因は、Flexboxが余りを配る先が内容の領域だからです。`border-box` で `flex-basis` が0なら、`border` の外周までの幅を0にしようとします。しかし、内容の領域の幅は0より小さくならないので、アイテムは `padding` と `border` の合計の幅から始まります（「[7-3 ボックスモデルの基礎](/layout/box-model/)」の補足）。余りは、コンテナの幅からこの大きさを引いて求められ、各アイテムの内容の領域に1：1で足されるので、最初の `padding` と `border` の差がそのまま残ります。この計算の手順は、仕様の「[Determine the flex base size and hypothetical main size of each item](https://drafts.csswg.org/css-flexbox-1/#algo-main-item)」に定められています。
 
-仕様の編集者草案は、この点を改めています（CSSWGの議論は「[[css-flexbox] Flex basis and box-sizing #316](https://github.com/w3c/csswg-drafts/issues/316)」）。`flex-basis` の大きさを決める段階では内容の領域の幅が0より小さくなるのを許し、`border-box` で0を指定したアイテムは、`padding` を含めた外側の大きさを0として扱います。この規則なら、余りが配られた後の外側の幅はそろいます。しかし、Chromeで確かめた限りでは、内容の領域を0で止める従来の計算のままで、幅は `padding` の差の分だけずれます。{/* 要検証: ブラウザ。Safari と Firefox の挙動 */}
+仕様の編集者草案は、この点を改めています（CSSWGの議論は「[[css-flexbox] Flex basis and box-sizing #316](https://github.com/w3c/csswg-drafts/issues/316)」）。`flex-basis` の大きさを決める段階では内容の領域の幅が0より小さくなるのを許し、`border-box` で0を指定したアイテムは、`padding` を含めた外側の大きさを0として扱います。この規則なら、余りが配られた後の外側の幅はそろいます。しかし、Chromeで確かめた限りでは、内容の領域を0で止める従来の計算のままで、幅は `padding` の差の分だけずれます。{/* 要確認: 出典なし。編集者草案の該当の変更 */}{/* 要検証: ブラウザ。Safari と Firefox の挙動 */}
 
 列の幅を確実にそろえたいときは、Gridで親が列を決めます。`grid-template-columns: repeat(3, 1fr)` は、先にコンテナの幅を3等分して列を作り、アイテムをその列の中に置きます。`padding` は列の内側に収まるので、`padding` の大きいアイテムは、幅ではなく内容の領域が狭くなります。`minmax(0, 1fr)` ではなく `1fr` と書く理由は、「[11-3 サイズと内容の変化に耐える](/layout-practice/defensive/)」で説明しています。
 
@@ -338,12 +340,14 @@ FlexboxとGridは、大きさを決める向きが違います。Flexboxはア�
 ._item-group {
   display: block grid;
   grid-template-columns: repeat(3, 1fr);
+}
 
-  & > :nth-child(odd) {
+._item {
+  &:nth-child(odd) {
     padding-inline: 1rem;
   }
 
-  & > :nth-child(even) {
+  &:nth-child(even) {
     padding-inline: 3rem;
   }
 }
@@ -378,9 +382,11 @@ FlexboxとGridは、大きさを決める向きが違います。Flexboxはア�
 }
 
 ._side {
-  min-inline-size: calc(240 / 16 * 1rem);
+  min-inline-size: min(100%, calc(240 / 16 * 1rem));
 }
 ```
+
+サイドの最小幅は `min(100%, …)` で包み、コンテナが240px相当より狭い場所では、コンテナの幅を上限にしています（[`minmax-min-capped-at-100-percent`](/layout-practice/defensive/#rule-minmax-min-capped-at-100-percent)）。
 
 次のデモは、サイドの `flex-shrink` だけを変えた2つの段を並べたものです。幅を1280px、1120px、960pxにすると、各列にその列の幅が出ます。赤い点線はメインの `flex-basis`（800px）の位置で、メインが点線より手前で終わっていれば、メインが縮んでいます。1120では、1段目のメインが点線の手前の約699pxまで狭くなり、2段目ではメインが点線の位置の800pxを保ったまま、サイドだけが約248pxまで縮みます。
 

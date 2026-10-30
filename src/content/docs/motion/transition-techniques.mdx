@@ -31,8 +31,8 @@ import holdJs from '../../../demos/motion/hold-to-delete/script.js?raw';
 ```css title="🙆‍♂ Recommended: 押したときは素早く、戻るときはゆっくり変える"
 @scope (.scoped.like-button) to (.scoped) {
   :scope {
-    --_background: var(--color--accent--600);
-    --_background--pressed: var(--color--accent--700);
+    --_background: var(--background--inverse);
+    --_background--pressed: color-mix(in oklab, var(--background--inverse) 80%, var(--background--base));
 
     background-color: var(--_background);
 
@@ -96,7 +96,7 @@ import holdJs from '../../../demos/motion/hold-to-delete/script.js?raw';
 
 ボタンの文字と同じ文字を `data-label` 属性から擬似要素に入れ、危険を表す色で塗った層として、文字と同じグリッドのセルに重ねます。`clip-path: inset(0 100% 0 0)` は右から幅の100%を切り落とすので、押す前の層は見えません。押している間は、後で説明するJavaScriptがボタンに `data-holding="true"` を付け、`--_holding` が `--true` になります。擬似要素は `@container style()` でその値を問い合わせて、`inset(0)` まで左から広がります。押している状態を `:active` で受け取らないのは、マウスのボタンを押したままボタンの外へ動かしても `:active` が当たり続けるからです。外へ出た時点で判定を中止しても、`:active` で広げていると進み具合は伸び続けます。擬似要素の見た目を要素の状態で切り替えるときに、状態のフラグを立てる書き方は「[10-6 スタイルクエリで状態を伝える](/components/style-queries/)」で説明しています。
 
-2秒は、このデモのために選んだ例示の値であり、一般に推奨する長さではありません。UIの動きの速さではなく、確定までに押し続けてもらう時間なので、誤って押したときに離す余裕と、待たされる長さの兼ね合いで、操作の重さに合わせて決めます。値はボタンの公開用のカスタムプロパティ `--hold-button--duration` で受け取り、使う側から変えられるようにしています。受け取った値は内部用の `--_duration` に入れ、トランジションの再生時間と、JavaScriptの判定の両方がそこから読みます。`--hold-button--duration` は、`@property` で `<time>` 型に登録し、初期値を `2s` にしています。登録していないカスタムプロパティは、`calc(1s + 1s)` のような書き方を文字の並びのまま返すので、JavaScriptで時間に直せません。登録すると、計算した `2s` として読めるので、表示と判定の時間がそろいます。時間でない値を書いたときは、初期値の2秒になります。進み具合の動きは、機能的な動きの再生時間の上限と、`linear` を一定の速さで続く動きに限るルールの例外です。どちらもルールの補足に書いています（「[18-3 イージングと再生時間](/motion/easing-and-duration/)」）。
+2秒は、このデモのために選んだ例示の値であり、一般に推奨する長さではありません。UIの動きの速さではなく、確定までに押し続けてもらう時間なので、誤って押したときに離す余裕と、待たされる長さの兼ね合いで、操作の重さに合わせて決めます。値はボタンの公開用のカスタムプロパティ `--hold-button--duration` で受け取り、使う側から変えられるようにしています。受け取った値は内部用の `--_duration` に入れ、トランジションの再生時間と、JavaScriptの判定の両方がそこから読みます。`--hold-button--duration` は、`@property` で `<time>` 型に登録し、初期値を `2s` にしています。登録していないカスタムプロパティは、`calc(1s + 1s)` のような書き方を文字の並びのまま返すので、JavaScriptで時間に直せません。登録すると、計算した `2s` として読めるので、表示と判定の時間がそろいます。時間でない値を書いたときは、初期値の2秒になります。進み具合の動きは、機能的な動きの再生時間の上限の対象外で、`linear` を一定の速さで続く動きに限るルールの例外です。どちらもルールの補足に書いています（「[18-3 イージングと再生時間](/motion/easing-and-duration/)」）。
 
 この例では、進み具合の表示を動きを減らす設定でも残すので、トランジションを条件の外に書いています。進み具合は、小さなボタンの中で、あとどれだけ押し続ければ確定できるかという残りの時間を伝える情報で、なくすと押している間に何も手がかりがなくなるからです。「[18-2 動きを減らす設定に対応する](/motion/reduced-motion/)」で、プログレスバーの表示を変えないのと同じ扱いです。ボタン自体の位置と大きさは変わらず、移動や拡大も足しません。`transition-property` を `clip-path` に絞っているので、ほかのプロパティは動きません。
 
@@ -132,8 +132,17 @@ const cancel = () => {
 const finish = () => {
   const wasReady = ready;
   cancel();
-  if (wasReady) remove();
+  if (!wasReady) return;
+  confirmed = true;
+  remove();
 };
+
+// 押し切って離したあとに起きる click では、確認のダイアログを開かない
+button.addEventListener('click', (event) => {
+  if (!confirmed) return;
+  confirmed = false;
+  event.preventDefault();
+});
 
 button.addEventListener('pointerdown', start);
 button.addEventListener('pointerup', finish);
@@ -146,7 +155,7 @@ button.addEventListener('blur', cancel);
 
 キーボードでは、ボタンにフォーカスしてSpaceキーを押し続ける操作を、同じ判定で扱います。`keydown` で `start()` を、`keyup` で `finish()` を呼びます。押し続けている間に繰り返し起きる `keydown` は、`event.repeat` で除きます。一方、Enterキーは押した時点で `click` を起こすので、長押しの判定を始めません。スクリーンリーダーでボタンを押す操作は、多くの場合 `click` だけを起こし、押し続ける状態を作れません。{/* 要検証: ブラウザ。Firefox と Safari で、Space キーを押し続けたときの keydown、keyup、click の順序。iOS の Safari と Android の Chrome で、タッチの長押しが pointercancel や contextmenu で中断されないこと */}
 
-長押しだけを確定の手段にすると、Enterキーやスクリーンリーダーの利用者は削除できません。そのため、押してすぐに離したときや、Enterキーやスクリーンリーダーでボタンを押したときは、確認のダイアログを開いて、そこから削除できるようにします。デモでは、ボタンに `command="show-modal"` を付けてダイアログを開き、押し切って離したあとに起きる `click` だけを `preventDefault()` で取り消しています。`command` 属性と、ダイアログの `closedby` 属性に対応していないブラウザのためには、ポリフィルを読み込みます（「[17-6 開閉するUI](/interaction/disclosure/)」）。ボタンの下には、2つの操作の方法を書いた説明を置き、`aria-describedby` でボタンに結び付けています。
+長押しだけを確定の手段にすると、Enterキーやスクリーンリーダーの利用者は削除できません。そのため、押してすぐに離したときや、Enterキーやスクリーンリーダーでボタンを押したときは、確認のダイアログを開いて、そこから削除できるようにします。デモでは、ボタンに `command="show-modal"` を付けてダイアログを開き、上の例の `click` の処理で、押し切って離したあとに起きる `click` だけを `preventDefault()` で取り消しています。`command` 属性と、ダイアログの `closedby` 属性に対応していないブラウザのためには、ポリフィルを読み込みます（「[17-6 開閉するUI](/interaction/disclosure/)」）。ボタンの下には、2つの操作の方法を書いた説明を置き、`aria-describedby` でボタンに結び付けています。
 
 次のデモでは、ボタンを押し続けると、赤い層が左から2秒かけて広がり、広がりきると「離すと削除します。」と表示されます。そのままボタンの上で離すと「下書きを削除しました。」と表示されます。広がりきってからボタンの外へポインターを動かすと、層は消え、離しても削除されません。途中で離すと層はすぐに消えて確認のダイアログが開き、押し直すと層は左端から広がり直します。Spaceキーを押し続けても同じように広がり、Enterキーで押すとダイアログが開きます。動きを減らす設定でも、層は同じように広がります。
 
@@ -175,12 +184,9 @@ button.addEventListener('blur', cancel);
   }
 
   ._copied-icon {
-    opacity: 0;
-    filter: blur(4px);
-
-    &:is(:scope[data-copied="true"] *) {
-      opacity: 1;
-      filter: none;
+    &:not(:is(:scope[data-copied="true"] *)) {
+      opacity: 0;
+      filter: blur(4px);
     }
   }
 
@@ -193,7 +199,7 @@ button.addEventListener('blur', cancel);
 }
 ```
 
-2つのアイコンは、グリッドの同じセルに置いて重ねています。`filter` の `none` と `blur(4px)` の間は、`blur(0)` から補間されます。位置と大きさを変えない変化なので、フェードと同じく、動きを減らす設定の条件の外に書いています。ぼかしの半径を大きくすると描画の負荷が増えるので、数pxにとどめます（「[18-10 動きの負荷を抑える](/motion/performance/)」）。
+2つのアイコンは、グリッドの同じセルに置いて重ねています。隠す値は、コピーしていない状態の `:not()` の側に書き、表示するときは要素本来の値（`opacity: 1`、`filter: none`）へ戻します。`filter` の `none` と `blur(4px)` の間は、`blur(0)` から補間されます。位置と大きさを変えない変化なので、フェードと同じく、動きを減らす設定の条件の外に書いています。ぼかしの半径を大きくすると描画の負荷が増えるので、数pxにとどめます（「[18-10 動きの負荷を抑える](/motion/performance/)」）。
 
 次のデモでは、ボタンを押すと `data-copied` 属性が `true` になり、コピーのアイコンがチェックの印に切り替わって、1.5秒後に戻ります。デモのボタンは属性を切り替えるだけで、実際には何もコピーしません。左のボタンは不透明度だけを、右のボタンは不透明度とぼかしを動かしています。左は切り替えの途中で四角とチェックの印が重なって見え、右は輪郭がぼけて、1つの形が別の形に変わったように見えます。比べるために、ぼかしの半径を公開用のカスタムプロパティで受け取り、左のボタンだけ0にしています。
 
@@ -210,9 +216,12 @@ button.addEventListener('blur', cancel);
 @scope (.scoped.link-card) to (.scoped) {
   :scope {
     border: 1px solid var(--border--base);
-    transition-duration: var(--duration--base);
-    transition-property: translate, filter, border-color;
-    transition-timing-function: var(--ease--out-quint);
+
+    &:not(:focus-visible) {
+      transition-duration: var(--duration--base);
+      transition-property: translate, filter, border-color;
+      transition-timing-function: var(--ease--out-quint);
+    }
 
     &:any-link:hover {
       @media (any-hover) {
@@ -242,32 +251,39 @@ button.addEventListener('blur', cancel);
 
 @scope (.scoped.link-card) to (.scoped) {
   :scope {
-    display: block grid;
+    --_hocus: --false;
+    --_focus-visible: --false;
 
-    &:not(:focus-visible) {
-      transition-duration: var(--duration--base);
-      transition-property: --link-card--progress;
-      transition-timing-function: var(--ease--out-quint);
-    }
+    display: block grid;
 
     &:any-link:hover {
       @media (any-hover) {
-        --link-card--progress: 1;
+        --_hocus: --true;
       }
     }
 
     &:focus-visible {
-      --link-card--progress: 1;
+      --_hocus: --true;
+      --_focus-visible: --true;
     }
   }
 
   ._surface {
     --_lift: 0px;
-    --link-card--progress: inherit;
 
     border: 1px solid color-mix(in oklab, var(--foreground--accent) calc(var(--link-card--progress) * 100%), var(--border--base));
     filter: drop-shadow(0 calc(var(--link-card--progress) * 8px) calc(var(--link-card--progress) * 12px) color-mix(in oklab, var(--shadow--color) calc(var(--link-card--progress) * 100%), transparent));
     translate: 0 calc(var(--link-card--progress) * var(--_lift));
+
+    @container style(--_focus-visible: --false) {
+      transition-duration: var(--duration--base);
+      transition-property: --link-card--progress;
+      transition-timing-function: var(--ease--out-quint);
+    }
+
+    @container style(--_hocus: --true) {
+      --link-card--progress: 1;
+    }
 
     @media (prefers-reduced-motion: no-preference) {
       --_lift: -4px;
@@ -276,9 +292,9 @@ button.addEventListener('blur', cancel);
 }
 ```
 
-状態のセレクタが書き換えるのは `--link-card--progress` の1つだけです。3つのプロパティの値は、進み具合を掛けた式として `._surface` のルールに1回ずつ書くので、持ち上げる距離や影の大きさを変えるときに直す場所は1か所です。動きに加わるプロパティを足しても、`transition-property` は変えずに済みます。
+状態のセレクタが立てるのは `--_hocus` のフラグだけで、`._surface` がフラグを問い合わせて `--link-card--progress` を1にします。3つのプロパティの値は、進み具合を掛けた式として `._surface` のルールに1回ずつ書くので、持ち上げる距離や影の大きさを変えるときに直す場所は1か所です。動きに加わるプロパティを足しても、`transition-property` は変えずに済みます。
 
-進み具合を書き換えるのはリンクで、持ち上がるのは内側の `._surface` です。ホバーを受けるリンク自身を持ち上げると、カードの下端にあるカーソルが外れてホバーが解け、カードが戻るとまた当たる繰り返しで、ちらつきます（「[17-1 ホバーとフォーカスを表す](/interaction/states-and-focus/)」）。トランジションは `&:not(:focus-visible)` の中に書いているので、キーボードでフォーカスしたときは、進み具合が一度で1に切り替わります。フォーカスが離れて戻るときと、ホバーのときは、なめらかに動きます。
+フラグを立てるのはリンクで、進み具合を切り替えて持ち上がるのは内側の `._surface` です。親のホバーとフォーカスで子の見た目を変える書き方は、「[10-6 スタイルクエリで状態を伝える](/components/style-queries/)」のフラグの形にそろえています。ホバーを受けるリンク自身を持ち上げると、カードの下端にあるカーソルが外れてホバーが解け、カードが戻るとまた当たる繰り返しで、ちらつきます（「[17-1 ホバーとフォーカスを表す](/interaction/states-and-focus/)」）。キーボードでフォーカスしたときは、2つ目のフラグ `--_focus-visible` も立てます。`._surface` のトランジションは `@container style(--_focus-visible: --false)` の中に書いているので、キーボードでフォーカスしたときは、進み具合が一度で1に切り替わります。フォーカスが離れて戻るときと、ホバーのときは、なめらかに動きます。
 
 動きを減らす設定には、移動の距離を係数にして対応します。`--_lift` は `0px` を基本にし、`prefers-reduced-motion: no-preference` のときだけ `-4px` にします。動きを減らす設定のときは、カードは持ち上がらず、影と枠線の色だけが変わります。影と枠線の変化は要素の位置と大きさを変えないので、トランジションは条件の外に書いています。1つの値で動かす書き方では、プロパティごとにトランジションを外せないので、移動や拡大に当たる値だけをこのように係数で止めます（「[18-2 動きを減らす設定に対応する](/motion/reduced-motion/)」）。
 
@@ -290,7 +306,7 @@ button.addEventListener('blur', cancel);
 
 ### 1つの値で動かすときの注意点
 
-動かすカスタムプロパティは、`inherits: false` で登録します。継承するカスタムプロパティを動かすと、その値を受け継ぐ子孫の要素すべてで、スタイルの計算がフレームごとに繰り返されるからです（「[18-10 動きの負荷を抑える](/motion/performance/)」）。継承しないので、子孫の要素が値を参照するには、その要素で `inherit` を宣言して受け取ります。上の例では、動かす `._surface` だけが `--link-card--progress: inherit` で受け取り、計算に使う3つのプロパティをそこに書いています。`._surface` の中の見出しと説明は値を受け取らないので、フレームごとにスタイルを計算し直すのは、リンクと `._surface` だけです。
+動かすカスタムプロパティは、`inherits: false` で登録します。継承するカスタムプロパティを動かすと、その値を受け継ぐ子孫の要素すべてで、スタイルの計算がフレームごとに繰り返されるからです（「[18-10 動きの負荷を抑える](/motion/performance/)」）。継承しないので、値を切り替える要素と、値を使って動かす要素を同じにします。上の例では、`._surface` が自分で `--link-card--progress` を切り替え、計算に使う3つのプロパティもそこに書いています。`._surface` の中の見出しと説明は値を受け継がないので、フレームごとにスタイルを計算し直すのは `._surface` だけです。
 
 `translate` や `filter` をカスタムプロパティを介して動かすと、合成の処理だけでは済まず、値の計算がフレームごとにメインスレッドで行われます。Chromeで、このデモの動きをパフォーマンスのトレースで記録すると、スタイルの計算は毎フレーム起き、描き直しは `border-color` の変化の分だけ毎フレーム起きました。この書き方を選ぶのは、枠線の色のように、もともと描画のやり直しが必要な値を一緒に動かす場合です。動かすのが `translate`、`opacity`、`filter` だけなら、ルール [`animated-property-no-inherit`](/components/custom-properties/#rule-animated-property-no-inherit) のとおり、カスタムプロパティを介さずに直接トランジションさせます。
 

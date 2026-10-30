@@ -14,9 +14,9 @@
       padding: 16px;
       border-radius: var(--rounded--lg);
 
-      &[data-surface="raised"] {
+      &[data-surface="surface"] {
         box-shadow: var(--shadow--sm);
-        background-color: var(--background--raised);
+        background-color: var(--background--surface);
 
         @media (forced-colors: active) {
           outline: 1px solid;
@@ -24,7 +24,7 @@
       }
 
       &[data-surface="gradient"] {
-        background-image: linear-gradient(in oklab to right, var(--background--raised), var(--background--inverse));
+        background-image: linear-gradient(in oklab to right, var(--background--surface), var(--background--inverse));
       }
     }
 
@@ -79,6 +79,7 @@
       display: block grid;
       place-items: center;
       mask-image: var(--_mask);
+      border: 1px solid transparent;
       border-radius: var(--rounded--full);
       background-color: var(--foreground--muted);
       color: var(--foreground--inverse);
@@ -87,11 +88,18 @@
     }
 
     ._badge {
+      --_background: var(--foreground--success);
+
       inline-size: var(--_badge-size);
       aspect-ratio: 1;
       border-radius: var(--rounded--full);
       box-shadow: var(--_ring);
-      background-color: var(--foreground--success);
+      background-color: var(--_background);
+
+      /* 強制カラーモードでは背景色がページの背景色に置き換わり、バッジが消えるので、文字のシステムカラーで塗る */
+      @media (forced-colors: active) {
+        --_background: CanvasText;
+      }
     }
   }
 
@@ -131,6 +139,7 @@
       place-items: center;
       inline-size: var(--_size);
       aspect-ratio: 1;
+      border: 1px solid transparent;
       border-radius: var(--rounded--full);
       box-shadow: var(--_ring);
       background-color: var(--foreground--muted);
@@ -157,6 +166,7 @@
     padding: unset;
     border: unset;
     opacity: 0;
+    white-space: nowrap;
     pointer-events: none;
   }
 }

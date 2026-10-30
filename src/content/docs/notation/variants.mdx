@@ -113,14 +113,14 @@ AIに名前を付けさせると、`.media-card__title` のようなBEMの名前
 
 1つのコンポーネントが、互いに関係のない2つの観点で変わることがあります。状態を示すバッジなら、「注意」や「完了」のような種類と、本文の中に置くための小さいサイズは、別々に選ばれます。本書では、この独立して選ばれる観点を、バリエーションの軸と呼びます。`data-variant` に書ける値は1つなので、軸が2つになると書き方を決めておく必要があります。
 
-2つの軸の値を、空白で区切って `data-variant` に詰める書き方は勧めません。`[data-variant="warning"]` は値の完全一致なので、`data-variant="warning small"` の要素には当たりません。そのため、`[data-variant~="warning"]` のように、空白で区切った単語の1つに一致するセレクタを使うことになります。
+2つの軸の値を、空白で区切って `data-variant` に詰める書き方は勧めません。`[data-variant="success"]` は値の完全一致なので、`data-variant="success small"` の要素には当たりません。そのため、`[data-variant~="success"]` のように、空白で区切った単語の1つに一致するセレクタを使うことになります。
 
 ```css title="🙅‍♂ Not Recommended: 2つの軸の値を data-variant に詰める" issue="convention"
 /* 🙅‍♂ Not Recommended */
 @scope (.scoped.status-badge) to (.scoped) {
   :scope {
-    &[data-variant~="warning"] {
-      color: var(--color--accent--700);
+    &[data-variant~="success"] {
+      color: var(--foreground--success);
     }
 
     &[data-variant~="small"] {
@@ -130,12 +130,12 @@ AIに名前を付けさせると、`.media-card__title` のようなBEMの名前
 }
 ```
 
-この書き方では、HTMLの `data-variant="warning small"` を読んでも、2つの値が別々の軸なのか、1組で意味を持つ値なのかが分かりません。新しい値を足すときも、その値がどちらの軸に属し、どの値と同時に指定できるのかを、CSSを読んで確かめることになります。値の並び順も決まらないので、`"small warning"` と書かれた要素が混ざっても気付きにくくなります。
+この書き方では、HTMLの `data-variant="success small"` を読んでも、2つの値が別々の軸なのか、1組で意味を持つ値なのかが分かりません。新しい値を足すときも、その値がどちらの軸に属し、どの値と同時に指定できるのかを、CSSを読んで確かめることになります。値の並び順も決まらないので、`"small success"` と書かれた要素が混ざっても気付きにくくなります。
 
 軸ごとに属性を分ければ、この問題は起きません。見た目の種類を表す軸には `data-variant` を使い、それと組み合わせる軸には、`data-size` のように軸の名前を属性名にします。1つの属性には1つの値だけを書くので、セレクタは完全一致で書けます。属性名を見れば軸が分かり、同じ属性に2つの値を書けないことが、同じ軸の値は同時に選べないことをそのまま表します。
 
 ```html title="🙆‍♂ Recommended: 軸ごとに別の属性で値を渡す"
-<span class="scoped status-badge" data-variant="warning" data-size="small">要確認</span>
+<span class="scoped status-badge" data-variant="success" data-size="small">完了</span>
 ```
 
 ```css title="🙆‍♂ Recommended: 軸ごとに、別のプロパティを変える"
@@ -147,8 +147,8 @@ AIに名前を付けさせると、`.media-card__title` のようなBEMの名前
     color: var(--foreground--base);
     font-size: calc(14 / 16 * 1rem);
 
-    &[data-variant="warning"] {
-      color: var(--color--accent--700);
+    &[data-variant="success"] {
+      color: var(--foreground--success);
     }
 
     &[data-size="small"] {
@@ -160,7 +160,7 @@ AIに名前を付けさせると、`.media-card__title` のようなBEMの名前
 }
 ```
 
-軸ごとのスタイルを独立に書いておけば、「注意で、しかも小さい」のような組み合わせのためのセレクタは要りません。種類が3つ、大きさが2つなら組み合わせは6通りですが、CSSに書くのは軸ごとの値の数だけです。ただし、`&[data-variant="warning"]` と `&[data-size="small"]` の詳細度はどちらも `0.2.0` なので、2つの軸が同じプロパティを変えると、後に書いたほうが勝ちます。そこで、軸ごとに変えるプロパティを分けます。この例では、種類の軸は `color` だけを、大きさの軸は余白と文字の大きさだけを変えています。
+軸ごとのスタイルを独立に書いておけば、「完了で、しかも小さい」のような組み合わせのためのセレクタは要りません。種類が3つ、大きさが2つなら組み合わせは6通りですが、CSSに書くのは軸ごとの値の数だけです。ただし、`&[data-variant="success"]` と `&[data-size="small"]` の詳細度はどちらも `0.2.0` なので、2つの軸が同じプロパティを変えると、後に書いたほうが勝ちます。そこで、軸ごとに変えるプロパティを分けます。この例では、種類の軸は `color` だけを、大きさの軸は余白と文字の大きさだけを変えています。
 
 種類の軸が `color` だけで済んでいるのは、`border` の色を省略しているからです。`border-color` の初期値は文字色（`currentColor`）なので、文字色を変えれば枠線の色も変わります。アイコンを文字色に合わせる書き方は、「[16-3 アイコンとSVG](/decoration/icons-and-masks/)」で説明しています。
 

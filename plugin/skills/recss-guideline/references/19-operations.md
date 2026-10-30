@@ -1,8 +1,8 @@
 # 第19章 実務での運用：ルール
 
-- ガイドラインのバージョン: 0.82.0（2026-10-30 生成）
+- ガイドラインのバージョン: 0.83.0（2026-10-30 生成）
 - ルールの数: 29
-- 本文: 約7.2万字
+- 本文: 約7.8万字
 - 読む条件: Stylelint、レビュー、CMSの本文エリアやWYSIWYG、既存のサイトへの導入
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
@@ -12,12 +12,12 @@
 
 ## この章の節
 
-- `operations` 第19章 実務での運用（約7,000字）https://t-arai-pnrm.github.io/recss-guideline/operations/
-- `operations/stylelint` 19-1 Stylelintでルールを守る（約1.5万字）https://t-arai-pnrm.github.io/recss-guideline/operations/stylelint/
-- `operations/review` 19-2 レビューの進め方（約4,700字）https://t-arai-pnrm.github.io/recss-guideline/operations/review/
+- `operations` 第19章 実務での運用（約1.1万字）https://t-arai-pnrm.github.io/recss-guideline/operations/
+- `operations/stylelint` 19-1 Stylelintでルールを守る（約1.6万字）https://t-arai-pnrm.github.io/recss-guideline/operations/stylelint/
+- `operations/review` 19-2 レビューの進め方（約4,800字）https://t-arai-pnrm.github.io/recss-guideline/operations/review/
 - `operations/verification` 19-3 表示と操作を確かめる（約1.5万字）https://t-arai-pnrm.github.io/recss-guideline/operations/verification/
-- `operations/devtools` 19-4 表示の崩れを開発者ツールで調べる（約9,600字）https://t-arai-pnrm.github.io/recss-guideline/operations/devtools/
-- `operations/wysiwyg` 19-5 CMSのWYSIWYG本文にスタイルを当てる（約8,500字）https://t-arai-pnrm.github.io/recss-guideline/operations/wysiwyg/
+- `operations/devtools` 19-4 表示の崩れを開発者ツールで調べる（約9,800字）https://t-arai-pnrm.github.io/recss-guideline/operations/devtools/
+- `operations/wysiwyg` 19-5 CMSのWYSIWYG本文にスタイルを当てる（約8,900字）https://t-arai-pnrm.github.io/recss-guideline/operations/wysiwyg/
 - `operations/adoption` 19-6 既存のサイトに段階的に導入する（約1.2万字）https://t-arai-pnrm.github.io/recss-guideline/operations/adoption/
 
 ## 19-1 Stylelintでルールを守る
@@ -32,6 +32,7 @@ https://t-arai-pnrm.github.io/recss-guideline/operations/stylelint/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/operations/stylelint/#rule-no-disabling-to-silence
 - 【必須・本書の規約】ルールを無効にするときは、`stylelint-disable-next-line` とルール名で1行・1つのルールに絞り、直前のコメントに理由を書く。（`disable-one-line-with-reason`）
   - 理由: 範囲を広げると、同じ場所にある別の誤りまで見逃すうえ、なぜ無効にしたのかが後から分からなくなるため。
+  - 補足: 1つの宣言が2つ以上のルールに掛かるときは、`-next-line` のコメントを同じ行に2つ書けないので、1つのコメントにルール名を並べます。ルールが報告しない宣言には、無効にするコメントを書きません。不要な無効化は `stylelint --report-needless-disables` で見つけられます。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/operations/stylelint/#rule-disable-one-line-with-reason
 - 【推奨・実装上の判断】プロパティの並び順のように自動で直せる違反は、手で直さず、`stylelint --fix` とエディタの保存時の自動修正に任せる。（`autofix-mechanical-issues`）
   - 理由: 整形はツールの仕事で、人が手作業でそろえると時間がかかるうえ、漏れが出るため。

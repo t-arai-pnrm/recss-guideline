@@ -21,7 +21,7 @@ import revertKeywordsCss from '../../../demos/cascade/revert-keywords/style.css?
 
 本書では、この仕組みのうちレイヤーと書いた順番で優先順位を設計し、詳細度はできるだけ低く一定に保ちます。`!important` は、詳細度の競争に勝つためには使いません。
 
-この節のコード例は、カスケードの仕組みだけを見せるために、`.button` のような素のクラスで書いています。本書の規約で決めているレイヤーの構成と `@scope` の書き方は、「[4-3 カスケードレイヤーで順位を決める](/cascade/layers/)」と「[4-4 @scopeでスタイルを閉じ込める](/cascade/scope/)」で、仕組みを説明したあとに示します。
+この節のコード例は、カスケードの仕組みだけを見せるために、`.cta-link` のような素のクラスで書いています。本書の規約で決めているレイヤーの構成と `@scope` の書き方は、「[4-3 カスケードレイヤーで順位を決める](/cascade/layers/)」と「[4-4 @scopeでスタイルを閉じ込める](/cascade/scope/)」で、仕組みを説明したあとに示します。
 
 ## 詳細度で上書きを重ねると何が起きるか
 
@@ -35,22 +35,22 @@ a:visited {
 }
 
 /* 0.1.0 なので、上の 0.1.1 に負ける */
-.button {
-  color: var(--foreground--on-accent);
+.cta-link {
+  color: var(--foreground--inverse);
 }
 
 /* 勝つために祖先のクラスを足す */
-.site-header .button {
-  color: var(--foreground--on-accent);
+.site-header .cta-link {
+  color: var(--foreground--inverse);
 }
 
 /* それでも負ける場面が出たので !important を付ける */
-.site-header .button.-small {
-  color: var(--foreground--on-accent) !important;
+.site-header .cta-link[data-size="small"] {
+  color: var(--foreground--inverse) !important;
 }
 ```
 
-`a:link` の詳細度は、タイプセレクタ1つと擬似クラス1つで「0.1.1」になります。ボタンのクラス `.button` は「0.1.0」なので、リンクで作ったボタンの文字色を変えられません。そこで祖先のクラスを足して「0.2.0」にし、さらに負ける場面が出ると `!important` を付ける、という流れが生まれます。
+`a:link` の詳細度は、タイプセレクタ1つと擬似クラス1つで「0.1.1」になります。ボタンの形をしたリンクのクラス `.cta-link` は「0.1.0」なので、その文字色を変えられません。そこで祖先のクラスを足して「0.2.0」にし、さらに負ける場面が出ると `!important` を付ける、という流れが生まれます。
 
 こうした上書きは、1回ごとには小さな対応です。しかし、次に誰かが上書きするときには、さらに高い詳細度か `!important` が必要になります。上書きする側は、上書きされる側より強くなければならないので、詳細度の競争は一方向にしか進まず、最後は `!important` 同士の競争になります。私は、この詳細度の問題こそがCSSを破綻させるいちばんの原因だと考えています。
 
@@ -78,12 +78,12 @@ a:visited {
 
 ```css
 /* 詳細度（IDの数.クラスなどの数.タイプセレクタなどの数） */
-p {}                    /* 0.0.1 */
-.button {}              /* 0.1.0 */
-a:link {}               /* 0.1.1 */
-.site-header .button {} /* 0.2.0 */
-#main {}                /* 1.0.0 */
-:where(a:link) {}       /* 0.0.0 */
+p {}                      /* 0.0.1 */
+.cta-link {}              /* 0.1.0 */
+a:link {}                 /* 0.1.1 */
+.site-header .cta-link {} /* 0.2.0 */
+#main {}                  /* 1.0.0 */
+:where(a:link) {}         /* 0.0.0 */
 ```
 
 スコープの近さは、`@scope` とともに加わった比べ方です。詳細度が同じ宣言どうしでは、スコープのルートが対象の要素に近いほうが勝ちます。レイヤー、詳細度、スコープの近さのすべてで差がつかなかったときに、最後に書いた宣言が勝ちます。`@scope` の使い方は「[4-4 @scopeでスタイルを閉じ込める](/cascade/scope/)」で説明します。
@@ -96,7 +96,7 @@ a:link {}               /* 0.1.1 */
 
 詳細度の目安は2つです。ベーススタイルは、`base` レイヤーに素のセレクタで書きます。後のレイヤーの指定は詳細度に関係なく勝つので、`a:any-link`（0.1.1）のままでも、コンポーネントのクラス1つで上書きできます。コンポーネントの中は、クラス1つ分（0.1.0）を基本にします。本書では、コンポーネントのスタイルを `@scope` の中に書くので、クラスを1つ書けばちょうど0.1.0になります（「[4-4 @scopeでスタイルを閉じ込める](/cascade/scope/)」）。セレクタの書き方は「[4-2 セレクタで詳細度を設計する](/cascade/selectors/)」で詳しく説明します。
 
-リセットCSSのkiso.cssは、すべてのセレクタを `:where()` で包んで詳細度を0にしています。レイヤーなしで読み込まれても上書きしやすくするためです。CMSと共存する場合のようにレイヤーを使えない環境では、ベーススタイルのセレクタも同じように `:where()` で包みます（[4-2 セレクタで詳細度を設計する](/cascade/selectors/)）{/* CMSの節を公開したらリンクする: /operations/cms/ */}。
+リセットCSSのkiso.cssは、全称セレクタなどの一部を除き、セレクタを `:where()` で包んで詳細度を0にしています。レイヤーなしで読み込まれても上書きしやすくするためです。CMSと共存する場合のようにレイヤーを使えない環境では、ベーススタイルのセレクタも同じように `:where()` で包みます（[4-2 セレクタで詳細度を設計する](/cascade/selectors/)）{/* CMSの節を公開したらリンクする: /operations/cms/ */}。
 
 ```css title="🙆‍♂ Recommended: 順番はレイヤーで決め、詳細度は低くそろえる" from="cascade/layer-over-specificity"
 @layer base {
@@ -108,17 +108,17 @@ a:link {}               /* 0.1.1 */
 }
 
 @layer components {
-  .button {
+  .cta-link {
     color: var(--foreground--inverse);
   }
 }
 ```
 
-このコードでは、ベースのリンクの色が0.1.1、ボタンの色が0.1.0です。詳細度ではリンクの色のほうが高くても、`components` レイヤーが `base` レイヤーより後ろにあるので、ボタンの色が勝ちます。レイヤーで順番を決めておけば、上書きのために詳細度を上げる工夫は要りません。
+このコードでは、ベースのリンクの色が0.1.1、`.cta-link` の色が0.1.0です。詳細度ではベースのリンクの色のほうが高くても、`components` レイヤーが `base` レイヤーより後ろにあるので、`.cta-link` の色が勝ちます。レイヤーで順番を決めておけば、上書きのために詳細度を上げる工夫は要りません。
 
-次のデモでは、リンクで作ったボタンの文字がボタンの文字色になり、`base` レイヤーのリンクの青は使われません。
+次のデモでは、ボタンの形をしたリンクの文字が `.cta-link` の文字色になり、`base` レイヤーのリンクの青は使われません。
 
-<Demo title="base の a:any-link（0.1.1）より、components のボタン（0.1.0）の色が勝つ" html={layerOverSpecificityHtml} css={layerOverSpecificityCss} frame={layerOverSpecificityFrame} widths={[]} />
+<Demo title="base の a:any-link（0.1.1）より、components の .cta-link（0.1.0）の色が勝つ" html={layerOverSpecificityHtml} css={layerOverSpecificityCss} frame={layerOverSpecificityFrame} widths={[]} />
 
 なお、この節のほかのコード例では、説明に関係しない `@layer` の記述を省略しています。
 
@@ -134,7 +134,7 @@ a:link {}               /* 0.1.1 */
 
 <Demo title="継承するプロパティはルートでまとめて指定する" html={inheritRootHtml} css={inheritRootCss} widths={[]} />
 
-この例では、カードの中の文章はすべてルートの色とサイズを受け継ぎ、見出しだけが違う値を持ちます。デモでは、段落と日付がルートの灰色の14pxで、見出しだけが濃い色の18pxで表示されます。本文の段落や日付にクラスを付けて、色を指定し直す必要はありません。
+この例では、カードの中の文章はすべてルートの色とサイズを受け継ぎ、見出しだけが違う値を持ちます。デモでは、段落と日付がルートの灰色の14pxで、見出しだけが濃い色の20pxで表示されます。本文の段落や日付にクラスを付けて、色を指定し直す必要はありません。
 
 ## 戻したい先をキーワードで選ぶ
 
@@ -150,16 +150,19 @@ a:link {}               /* 0.1.1 */
 
 リセットCSSで消したものを一部の場所だけ元に戻すときにも、`revert` を使います。kiso.cssはリストのマーカーを `list-style-type: ""` で消しているので、記事の本文のようにマーカーが必要な場所では、次のように戻します。
 
-```css title="🙆‍♂ Recommended: リセットで消したマーカーを、ブラウザのデフォルトに戻す" from="cascade/revert-keywords"
-.article-body {
-  & ul,
-  & ol {
+```css title="🙆‍♂ Recommended: リセットで消したマーカーと字下げを、ブラウザのデフォルトに戻す" from="cascade/revert-keywords"
+@scope (.wysiwyg) {
+  ul,
+  ol {
+    padding-inline-start: revert;
     list-style-type: revert;
   }
 }
 ```
 
-ここで `revert-layer` を使うと、kiso.cssを入れた `reset` レイヤーの値（マーカーなし）に戻るので、マーカーは表示されません。どちらのキーワードも「元に戻す」ものですが、戻る先が違います。次のデモでは、2つのリストの違いは `list-style-type` のキーワードだけです。`revert` のリストには項目の先頭にマーカーが表示され、`revert-layer` のリストにはマーカーが表示されません。
+`.wysiwyg` は、CMSで入力する本文エリアに付けるクラスです（「[19-5 CMSのWYSIWYG本文にスタイルを当てる](/operations/wysiwyg/)」）。kiso.cssはリストの字下げも消しているので、マーカーを表示する場所がなくならないように、`padding-inline-start` も一緒に戻します。
+
+ここで `list-style-type` に `revert-layer` を使うと、kiso.cssを入れた `reset` レイヤーの値（マーカーなし）に戻るので、マーカーは表示されません。どちらのキーワードも「元に戻す」ものですが、戻る先が違います。次のデモでは、2つのリストの違いは `list-style-type` のキーワードだけです。`revert` のリストには項目の先頭にマーカーが表示され、`revert-layer` のリストにはマーカーが表示されません。
 
 <Demo title="revert はブラウザのデフォルトに、revert-layer は reset レイヤーの値に戻る" html={revertKeywordsHtml} css={revertKeywordsCss} widths={[]} />
 
@@ -187,9 +190,9 @@ a:link {}               /* 0.1.1 */
 }
 ```
 
-`hidden` 属性を付けた要素は、どのコンポーネントが `display` を指定していても隠れなければなりません。kiso.cssを `reset` レイヤーに入れると、この `!important` はいちばん前のレイヤーのものになります。後ろのレイヤーで `display: block !important` と書いても、要素は隠れたままです。kiso.cssは、閉じている `<dialog>` と開いていないポップオーバーにも、同じ理由で `!important` を使っています。
+`hidden` 属性を付けた要素は、どのコンポーネントが `display` を指定していても隠れなければなりません。kiso.cssを `reset` レイヤーに入れると、この `!important` は、後ろにある `base` 以降のどのレイヤーの `!important` よりも強くなります。後ろのレイヤーで `display: block !important` と書いても、要素は隠れたままです。kiso.cssは、閉じている `<dialog>` と開いていないポップオーバーにも、同じ理由で `!important` を使っています。
 
-このほかに `!important` を使うのは、強制カラーモードでSVGの色をシステムカラーに固定する場合と、CMSが要素に直接出力する `style` 属性を打ち消す場合です。どちらも、セレクタでは勝てない相手を上書きするための例外です。前者は「[15-5 強制カラーモードとコントラスト](/color-media/forced-colors/)」で扱います。後者の場合は、打ち消す対象と理由をコメントに残し、後から消してよいかを判断できるようにします。
+このほかに `!important` を使う場面は3つあります。強制カラーモードでSVGの色をシステムカラーに固定する場合、CMSが要素に直接出力する `style` 属性を打ち消す場合、レイヤーを使えない既存のサイトで壊れた既存のCSSから新しいコンポーネントを切り離す場合です。どれも、セレクタでは勝てない相手を上書きするための例外です。1つ目は「[15-5 強制カラーモードとコントラスト](/color-media/forced-colors/)」で、3つ目は「[4-3 カスケードレイヤーで順位を決める](/cascade/layers/)」で扱います。2つ目の場合は、打ち消す対象と理由をコメントに残し、後から消してよいかを判断できるようにします。
 
 以前の私は、ユーティリティクラスだけは `!important` を使ってよいと考えていました。いまは、ユーティリティクラスにも `!important` を付けません。`utilities` を最後のレイヤーにすれば、`!important` なしでコンポーネントのスタイルに勝つからです。
 

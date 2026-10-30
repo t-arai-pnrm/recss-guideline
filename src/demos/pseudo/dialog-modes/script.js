@@ -1,3 +1,8 @@
+// command 属性と commandfor 属性に対応していないブラウザでも、ボタンでダイアログを開閉できるようにポリフィルを読み込む
+if (!('command' in HTMLButtonElement.prototype)) {
+  import('https://cdn.jsdelivr.net/npm/invokers-polyfill@1.0.4/invoker.min.js');
+}
+
 const launcher = document.querySelector('.scoped.help-launcher');
 const dialog = launcher.querySelector('dialog');
 

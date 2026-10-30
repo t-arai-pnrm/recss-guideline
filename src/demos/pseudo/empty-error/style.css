@@ -1,9 +1,5 @@
 @layer components {
   @scope (.scoped.empty-error) to (.scoped) {
-    :scope {
-      align-items: start;
-    }
-
     ._case {
       padding: 12px;
       border: 1px dashed var(--border--strong);

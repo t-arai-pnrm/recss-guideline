@@ -43,8 +43,8 @@ import Guideline from '../../../components/Guideline.astro';
 
 ```css title="🙆‍♂ Recommended: 分類を先頭に置いて名前を付ける"
 :root {
-  --color--neutral--100: oklch(97% 0 0deg);
-  --color--neutral--900: oklch(20.5% 0 0deg);
+  --color--neutral--100: oklch(97% 0 none);
+  --color--neutral--900: oklch(20.5% 0 none);
   --color--accent--600: oklch(54% 0.22 260deg);
   --spacing--xxs: 8;
   --spacing--sm: 16;
@@ -72,7 +72,7 @@ import Guideline from '../../../components/Guideline.astro';
 @scope (.scoped.media-object) to (.scoped) {
   :scope {
     display: block grid;
-    gap: calc(var(--spacing--sm) / 16 * 1rem);
+    gap: calc(var(--spacing--sm) * 1px);
     padding: calc(var(--spacing--md) * 1px);
   }
 }
@@ -82,7 +82,7 @@ import Guideline from '../../../components/Guideline.astro';
 
 レスポンシブな環境では、余白が `%` やコンテナ単位と組み合わさることも多く、`px` と `rem` の二択では片付けられません。トークンを単なる数値にしておけば、`calc(var(--spacing--md) * 1px)` でpxに、`calc(var(--spacing--md) / 16 * 1rem)` でremに変換できます。`clamp()` の最小値や最大値の式にも、そのまま使えます。Tailwind CSSの作者も、単位付きで余白のスケールを設計したことを後悔していると述べています。
 
-余白のスケールは、`xxxs` の4から `xxxl` の80まで、4、8、12、16、24、32、40、64、80の9段階にしています。すべての余白をトークンで書く必要はありません。レスポンシブな余白には `%` や `cqi` が組み合わさることも多いので、私はレビューでも、余白がトークンを使っていないことはあまり指摘しません。
+余白のスケールは、`xxxs` の4から `xxxl` の80まで、4、8、12、16、24、32、40、64、80の9段階にしています。スケールに沿う余白は、トークンで書きます。ただし、`%` や `cqi` と組み合わせて計算する余白は、その場に直接書いてかまいません（ルール `use-defined-tokens`）。レスポンシブな余白には、こうした組み合わせが多いからです。
 
 ## 色のトークンの層
 
@@ -94,13 +94,13 @@ import Guideline from '../../../components/Guideline.astro';
 
 ```css title="🙆‍♂ Recommended: セマンティクスのトークンから、プリミティブを参照する"
 :root {
-  --color--neutral--50: oklch(98.5% 0 0deg);
-  --color--neutral--100: oklch(97% 0 0deg);
-  --color--neutral--400: oklch(70.8% 0 0deg);
-  --color--neutral--500: oklch(55.6% 0 0deg);
-  --color--neutral--900: oklch(20.5% 0 0deg);
+  --color--neutral--50: oklch(98.5% 0 none);
+  --color--neutral--100: oklch(97% 0 none);
+  --color--neutral--400: oklch(70.8% 0 none);
+  --color--neutral--500: oklch(55.6% 0 none);
+  --color--neutral--900: oklch(20.5% 0 none);
   --background--base: light-dark(var(--color--neutral--50), var(--color--neutral--900));
-  --background--surface: light-dark(oklch(100% 0 0deg), oklch(from var(--color--neutral--900) calc(l + 0.05) c h));
+  --background--surface: light-dark(oklch(100% 0 none), oklch(from var(--color--neutral--900) calc(l + 0.05) c h));
   --foreground--base: light-dark(var(--color--neutral--900), var(--color--neutral--100));
   --foreground--muted: light-dark(var(--color--neutral--500), var(--color--neutral--400));
   --border--base: color-mix(in oklab, var(--foreground--base) 12%, transparent);
@@ -174,8 +174,8 @@ import Guideline from '../../../components/Guideline.astro';
 
 ```css title="🙆‍♂ Recommended: 影の形はスケールにし、各層の色だけをセマンティクスにする"
 :root {
-  --shadow--color: light-dark(oklch(0% 0 0deg / 6%), oklch(0% 0 0deg / 18%));
-  --shadow--ring-color: light-dark(oklch(0% 0 0deg / 6%), oklch(0% 0 0deg / 24%));
+  --shadow--color: light-dark(oklch(0% 0 none / 6%), oklch(0% 0 none / 18%));
+  --shadow--ring-color: light-dark(oklch(0% 0 none / 6%), oklch(0% 0 none / 24%));
   --shadow--sm:
     0 0 0 1px var(--shadow--ring-color),
     0 1px 1px -0.5px var(--shadow--color),
@@ -207,9 +207,9 @@ import Guideline from '../../../components/Guideline.astro';
 }
 ```
 
-再生時間も、`--duration--fast`、`--duration--base`、`--duration--slow` のような段階のトークンにします。サイトの中で動きの速さがそろい、「全体的にもう少しゆっくりにしたい」という調整もトークンの値を変えるだけで済みます。本書では、`--duration--fast`（80ms）をホバーとフォーカス、`--duration--base`（160ms）をメニューとタブ、`--duration--slow`（240ms）をダイアログに使います。画面に現れる動きと出ていく動きには `out` 系、画面の上にあるものの移動には `in-out` 系を使います（「[18-3 イージングと再生時間](/motion/easing-and-duration/)」）。`--duration--instant` は動きを減らす設定で再生時間を短くするとき、`--duration--press` はボタンを押したときの縮小に使います。`--duration--reveal` は、要素が画面に入った時点で一度だけ再生する演出のための、長めの値です。弾むような動きのように `cubic-bezier()` で表せないイージングは、`linear()` 関数で定義し、再生時間とセットでトークンにします。
+再生時間も、`--duration--fast`、`--duration--base`、`--duration--slow` のような段階のトークンにします。サイトの中で動きの速さがそろい、「全体的にもう少しゆっくりにしたい」という調整もトークンの値を変えるだけで済みます。本書では、`--duration--fast`（80ms）をホバー、`--duration--base`（160ms）をメニュー、`--duration--slow`（240ms）をダイアログに使います。続けて押すタブの切り替えには、`--duration--fast` から `--duration--base` までの値を選びます。キーボードのフォーカスでは動かしません。画面に現れる動きと出ていく動きには `out` 系、画面の上にあるものの移動には `in-out` 系を使います（「[18-3 イージングと再生時間](/motion/easing-and-duration/)」）。`--duration--instant` は動きを減らす設定で再生時間を短くするとき、`--duration--press` はボタンを押したときの縮小に使います。`--duration--reveal` は、要素が画面に入った時点で一度だけ再生する演出のための、長めの値です。弾むような動きのように `cubic-bezier()` で表せないイージングは、`linear()` 関数で定義し、再生時間とセットでトークンにします。
 
-ドロワーやボトムシートのように、画面の端から大きく滑り込むUIには、専用のイージングを1つ用意します。`--ease--out-drawer: cubic-bezier(0.32, 0.72, 0, 1)` のように、出だしが速く、終わりにかけて長く減速する曲線にすると、移動する距離が長くても、操作にすぐ応じて動き出したように見えます。名前の種類の部分には、強さの代わりに用途を入れています。
+ドロワーやボトムシートのように、画面の端から大きく滑り込むUIには、専用のイージングを1つ用意します。`--ease--out-drawer: cubic-bezier(0.32, 0.72, 0, 1)` のように、出だしが速く、終わりにかけて長く減速する曲線にすると、移動する距離が長くても、操作にすぐ応じて動き出したように見えます。名前の種類の部分には、強さの代わりに用途を入れています。イージングのトークンの一覧と使い分けは、「[18-3 イージングと再生時間](/motion/easing-and-duration/)」にあります。
 
 トランジションを書くときは、`transition-duration: var(--duration--base)` のように、個別のプロパティにトークンを渡します。動きを減らす設定への対応を含めたモーションの書き方は、第18章「[モーション](/motion/)」で説明します。
 

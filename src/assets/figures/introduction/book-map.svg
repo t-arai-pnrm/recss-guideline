@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 390" width="480" height="390">
   <title>記事カードでつなぐ、本書の設計と検証の道筋</title>
   <rect class="_box -accent" x="8" y="8" width="464" height="56" rx="6"/>
-  <text class="_text-accent" x="24" y="31" font-size="14" font-weight="700">記事カード：変更を受け持つ場所を決める</text>
+  <text class="_text-accent" x="24" y="31" font-size="14" font-weight="700">記事カード：範囲を区切り、条件を選び、確かめる</text>
   <text class="_text-muted" x="24" y="51" font-size="12">見た目が崩れたら、何が変わったかを確かめる</text>
   <path class="_arrow" d="M240 64 V84"/><polygon class="_arrowhead" points="240,90 236,82 244,82"/>
   <rect class="_box" x="8" y="92" width="224" height="75" rx="6"/>
@@ -22,5 +22,5 @@
   <rect class="_box -accent" x="8" y="314" width="464" height="68" rx="6"/>
   <text class="_text-accent" x="22" y="337" font-size="13" font-weight="700">確かめて直す（第19章）</text>
   <text class="_text-muted" x="22" y="358" font-size="12">長い見出し、画像なし、狭い置き場所、操作の状態を試す</text>
-  <text class="_text-muted" x="22" y="376" font-size="12">変えた要件を受け持つ場所だけを直す</text>
+  <text class="_text-muted" x="22" y="376" font-size="12">条件と結果を記録し、期待と違う箇所を直す</text>
 </svg>

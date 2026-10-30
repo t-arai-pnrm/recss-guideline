@@ -47,12 +47,12 @@ Gridなら、親が `grid-auto-flow: column` で子を列として並べ、`grid
  * 子要素をインライン方向に1列に並べ、入りきらない分を横にスクロールさせる。
  * 項目の幅は、子ではなく reel を付けた要素が決める。
  *
- * @prop {length} --reel--item-size [max-content] - 項目の幅（grid-auto-columns）
- * @prop {length} --reel--gap       [0]           - 項目の間隔
- * @prop {length} --reel--inset     [0]           - 両端の余白と、スナップで止まる位置の内側の余白
+ * @prop {length | keyword} --reel--item-size [max-content] - 項目の幅（grid-auto-columns）
+ * @prop {length}           --reel--gap       [0]           - 項目の間隔
+ * @prop {length}           --reel--inset     [0]           - 両端の余白と、スナップで止まる位置の内側の余白
  *
  * @example
- * <ul class="reel" style="--reel--item-size: min(80%, calc(280 / 16 * 1rem)); --reel--gap: calc(var(--spacing--sm) / 16 * 1rem)">
+ * <ul class="reel" style="--reel--item-size: min(80%, calc(280 / 16 * 1rem)); --reel--gap: calc(var(--spacing--sm) * 1px)">
  *   <li>…</li>
  * </ul>
  */
@@ -85,10 +85,10 @@ Gridなら、親が `grid-auto-flow: column` で子を列として並べ、`grid
 ```html title="🙆‍♂ Recommended: 項目の幅と間隔を、使う側から渡す"
 <ul
   class="scoped related-articles | reel"
-  style="--reel--item-size: min(80%, calc(280 / 16 * 1rem)); --reel--gap: calc(var(--spacing--sm) / 16 * 1rem)"
+  style="--reel--item-size: min(80%, calc(280 / 16 * 1rem)); --reel--gap: calc(var(--spacing--sm) * 1px)"
 >
-  <li class="_item">…</li>
-  <li class="_item">…</li>
+  <li>…</li>
+  <li>…</li>
 </ul>
 ```
 
@@ -105,7 +105,7 @@ Gridなら、親が `grid-auto-flow: column` で子を列として並べ、`grid
   :scope {
     scroll-snap-type: inline mandatory;
 
-    & > ._item {
+    & > li {
       scroll-snap-align: start;
     }
   }
@@ -114,7 +114,7 @@ Gridなら、親が `grid-auto-flow: column` で子を列として並べ、`grid
 
 スナップは、`reel` ではなく、使う側のコンポーネントで付けます。カードのように1つずつ見せたい項目では、`mandatory` で必ずどれかの項目の先頭に止めると、カードが途中で切れたまま止まりません。タグのように小さな項目では、止まる位置が細かすぎて、少しずつ送りたいときに引き戻されるので、スナップを付けません。画面より大きな項目を並べるときは、止める位置の近くでだけ止める `proximity` にします。`mandatory` では、項目の途中を読もうとしても、端まで送られてしまうからです。
 
-次のデモの2つの列は、同じカードを同じ `reel` で並べ、2つ目の列だけに `data-snap` 属性でスナップを付けています。幅を480pxにして2つ目の列を少しだけ送ると、指を離したところで次のカードの先頭まで送られます。1つ目の列は、送った位置のまま止まります。
+次のデモの2つの列は、同じカードを同じ `reel` で並べ、2つ目の列だけに `data-snap` 属性でスナップを付けています。幅を480pxにして2つ目の列を送ると、カードの半分より多く送ったときは次のカードの先頭まで進み、少しだけなら元のカードの先頭まで戻ります。{/* 要検証: ブラウザ。mandatory のスナップで少しだけ送ったとき、元のカードの先頭へ戻るか */}1つ目の列は、送った位置のまま止まります。
 
 <Demo title="同じカードの列で、スナップの有無を比べる" html={reelHtml} css={reelCss} widths={[320, 480, 768]} />
 
@@ -135,6 +135,8 @@ Gridなら、親が `grid-auto-flow: column` で子を列として並べ、`grid
 ```
 
 「[12-11 primary-layout](/compositions/primary-layout/)」の中では、`full-column` を付けた子が画面の端まで広がります。本文の左端までの距離は、ガターの最小幅（`20px`）と、画面の幅からコンテンツ幅を引いた残りの半分のうち、大きいほうです。`padding` の `%` は包含ブロックの幅を、`scroll-padding` の `%` はスクロールポート（スクロールで表示される範囲）の幅を基準にします。全幅に置いた `reel` では2つの幅が同じなので、`100%` を含む同じ式を両方に使えます。負の `margin` で外へ広げるときは2つの幅がずれるので、「[11-6 重なりと全幅](/layout-practice/layering/)」のようにコンテナ単位で書きます。
+
+この式が本文の左端と一致しない幅もあります。`primary-layout` は、中央の列が最大幅に達した後、差の列を均等に広げながらコンテンツ幅を最大値に近づけます。そのあいだはコンテンツ幅が最大値より狭く、本文の左端が式の値より内側に来ます。このデモの値では、画面の幅が640pxから760pxのあいだがこれに当たり、最初のカードが見出しより最大で13pxほど左から始まります。640px以下と760px以上では一致します。
 
 次のデモでは、幅を1024pxにすると、見出しと最初のカードが、どちらも左から192pxの位置にそろいます。カードを1枚分送ると、次のカードが同じ192pxの位置で止まります。末尾まで送ったときも、最後のカードの後ろに同じ192pxの余白が残ります。
 

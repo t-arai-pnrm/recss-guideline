@@ -35,7 +35,8 @@ import spotlightJs from '../../../demos/motion/spotlight/script.js?raw';
 | 高 | `opacity`、`translate`、`scale`、`rotate`、これらを動かすスクロール駆動アニメーション | 起きない | コンポジタ |
 | 確かめて使う | `clip-path`、`background-color`、`filter` の `brightness()` など | 値によっては起きない（Chrome） | 値によってはコンポジタ（Chrome） |
 | 確かめて使う | `filter` の `drop-shadow()`、`blur()` | 起きない（Chrome） | メイン（Chrome） |
-| 中 | JavaScriptから変形や不透明度を更新する方法、FLIP | 起きない | メイン |
+| 中 | JavaScriptから毎フレーム変形や不透明度を更新する方法 | 起きない | メイン |
+| 中 | FLIP | 測るときに1回レイアウトが起き、再生中は起きない | 再生をトランジションやWeb Animations APIで行えばコンポジタ |
 | 低 | `color`、`border-color`、`box-shadow` など | 起きる。負荷は描く面積による | メイン |
 | 避ける | `inline-size`、`block-size`、`padding`、`inset` など | レイアウトから起きる | メイン |
 | リスク大 | 大きな `blur()` や `backdrop-filter`、巨大な合成レイヤー、グローバルなカスタムプロパティの毎フレームの更新、`scrollTop` を毎フレーム読む実装 | 条件しだいで大きく重くなる | 条件による |
@@ -48,7 +49,7 @@ Chromeで、それぞれを1秒間トランジションさせ、パフォーマ�
 
 同じ版で、角丸を付けた切り抜きを大きさ0から動かす場合（`inset(0 100% 0 0 round 12px)` から `inset(0 round 12px)` へ）は、毎フレーム描き直しが起き、進行もメインスレッドで計算されました。角丸のない `inset()` や、0にならない範囲の間で動かす場合は、描き直しは起きませんでした。切り抜きを動かしたら、後の見出しで説明するPaint flashingを使って確かめます。
 
-中の段は、JavaScriptで値を計算し、変形や不透明度として反映する方法です。値の計算はメインスレッドで行われますが、レイアウトとペイントは起きません。FLIPは、変化の前後で要素の位置を測り、その差を `translate` と `scale` で打ち消してから、打ち消しを解いて動かす方法です。位置を測るときに一度だけレイアウトが起きますが、動いている間は変形しか変わりません。
+中の段の1つ目は、JavaScriptで毎フレーム値を計算し、変形や不透明度として反映する方法です。値の計算はメインスレッドで行われますが、レイアウトとペイントは起きません。FLIPは、変化の前後で要素の位置を測り、その差を `translate` と `scale` で打ち消してから、打ち消しを解いて動かす方法です。位置を測るときに一度だけレイアウトが起きますが、動いている間は変形しか変わらず、打ち消しを解く動きをトランジションやWeb Animations APIで再生すれば、進行はコンポジタのスレッドで計算されます。
 
 ペイントが起きるプロパティは、負荷が描く面積で決まります。ボタンのホバーで文字色を変えるような、小さい要素の短い変化なら問題になりません。避けたいのは、大きくぼかした `box-shadow` を動かすことです。ぼかしを含む影は描くのに時間がかかり、動いている間は描き直しが続きます。影を動かすときは、`box-shadow` の代わりに `filter: drop-shadow()` の値を動かします。`drop-shadow()` と `box-shadow` の見た目の違いと、影のトークンとの関係は「[16-5 面・影・角丸](/decoration/surfaces/)」で説明しています。
 
@@ -62,8 +63,10 @@ Chromeで、それぞれを1秒間トランジションさせ、パフォーマ�
 /* 🙅‍♂ Not Recommended */
 @scope (.scoped.site-header) to (.scoped) {
   :scope {
-    position: sticky;
-    inset-block-start: 0;
+    @media (height >= calc(600 / 16 * 1rem)) {
+      position: sticky;
+      inset-block-start: 0;
+    }
 
     @media (prefers-reduced-motion: no-preference) {
       transition-duration: var(--duration--base);
@@ -78,13 +81,15 @@ Chromeで、それぞれを1秒間トランジションさせ、パフォーマ�
 }
 ```
 
-同じ動きは `translate` で作れます。`translate` の割合は要素自身の大きさが基準なので、`-100%` と書けば、ヘッダーの高さが変わっても全体を隠せます。トランジションの間は変形しか変わらないので、合成だけで動きます。すでに画面にあるものを動かすので、イージングはease-in-out系にしています（「[18-3 イージングと再生時間](/motion/easing-and-duration/)」）。
+同じ動きは `translate` で作れます。`translate` の割合は要素自身の大きさが基準なので、`-100%` と書けば、ヘッダーの高さが変わっても全体を隠せます。トランジションの間は変形しか変わらないので、合成だけで動きます。すでに画面にあるものを動かすので、イージングはease-in-out系にしています（「[18-3 イージングと再生時間](/motion/easing-and-duration/)」）。ヘッダーを固定するのは、ビューポートの高さが十分なときだけです（「[11-7 固定ヘッダー](/layout-practice/sticky-header/)」）。
 
 ```css title="🙆‍♂ Recommended: translate を動かして隠す"
 @scope (.scoped.site-header) to (.scoped) {
   :scope {
-    position: sticky;
-    inset-block-start: 0;
+    @media (height >= calc(600 / 16 * 1rem)) {
+      position: sticky;
+      inset-block-start: 0;
+    }
 
     @media (prefers-reduced-motion: no-preference) {
       transition-duration: var(--duration--base);
@@ -92,12 +97,16 @@ Chromeで、それぞれを1秒間トランジションさせ、パフォーマ�
       transition-timing-function: var(--ease--in-out-quint);
     }
 
-    &[data-hidden="true"] {
-      translate: 0 -100%;
+    &[data-hidden="true"]:not(:focus-within) {
+      @media screen {
+        translate: 0 -100%;
+      }
     }
   }
 }
 ```
+
+隠す条件には `:not(:focus-within)` を加え、ヘッダーの中のリンクにキーボードでフォーカスが移ったときは画面に戻します。隠したまま画面の外でフォーカスを受けると、どこにフォーカスがあるのか見えなくなるからです。印刷ではスクロールの向きに意味がないので、隠す指定は `@media screen` に限ります。
 
 変形は、`transform` の関数ではなく、`translate`、`rotate`、`scale` の個別のプロパティで書きます。変形ごとに値を変えられ、トランジションの対象も `transition-property: translate` のように動かす変形だけに絞れるからです。理由の詳細は「[9-8 モダンな記法にそろえる](/notation/modern-syntax/)」で説明しています。合成で処理されるのは、`transform` でも個別のプロパティでも同じです。
 
@@ -133,7 +142,7 @@ document.addEventListener('pointermove', (event) => {
 });
 ```
 
-値は、それを使う要素だけに書き込みます。さらに、`@property` で `inherits: false` を指定して登録し、子孫に値を受け継がせないようにします。こうすると、値が変わっても計算し直すのはその要素だけです。名前は、`style` 属性で外から渡す値なので、公開プロパティの形にしています。
+値は、それを使う要素だけに書き込みます。さらに、`@property` で `inherits: false` を指定して登録し、子孫に値を受け継がせないようにします。こうすると、値が変わっても計算し直すのはその要素だけです。名前は公開プロパティの形にしています。`@property` の登録は文書全体に及ぶので、内部用の短い名前で登録すると、同じ名前を別の意味で使うほかのコンポーネントにも型が適用されるからです（「[18-5 トランジションを応用する](/motion/transition-techniques/)」）。
 
 ```css title="🙆‍♂ Recommended: ポインターの位置を、継承しないカスタムプロパティで受ける" from="motion/spotlight"
 @property --spotlight--x {

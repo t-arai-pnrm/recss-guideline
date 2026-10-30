@@ -9,7 +9,7 @@
         gap: 8px;
       }
 
-      /* 幅を中身に合わせ、残りの幅を左右の margin に等分する */
+      /* 中身の幅に縮めた箱の残りの幅を、左右の margin に等分する */
       & > ._box[data-margin="center"] {
         margin-inline: auto;
       }

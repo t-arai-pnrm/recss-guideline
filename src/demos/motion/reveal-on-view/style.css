@@ -67,7 +67,8 @@
     }
 
     ._title {
-      font-size: calc(18 / 16 * 1rem);
+      font-size: calc(var(--text--title--font-size) / 16 * 1rem);
+      line-height: var(--text--title--leading);
     }
   }
 }

@@ -6,7 +6,6 @@
       gap: 12px;
       align-items: start;
 
-      /* 絞り込みの欄だけを、残りの幅いっぱいまで伸ばす */
       & > ._filter-outer {
         flex: 1 calc(240 / 16 * 1rem);
       }
@@ -15,14 +14,11 @@
 
   @scope (.scoped.filter-details) to (.scoped) {
     :scope {
-      --_accent: var(--foreground--accent);
-
       border: 1px solid var(--border--base);
       border-radius: var(--rounded--md);
 
-      /* 開いている間は、枠線をアクセントの色にする */
       &[open] {
-        border-color: var(--_accent);
+        border-color: var(--border--strong);
       }
     }
 
@@ -31,9 +27,9 @@
       padding-inline: 16px;
       font-weight: var(--font-weight--bold);
 
-      /* ルートの details が開いている間だけ、見出しの部分に背景を付ける */
+      /* 開いた中身との境目を、見出しの側の面で示す */
       &:is(:scope[open] *) {
-        background-color: var(--background--accent-subtle);
+        background-color: var(--background--surface);
       }
     }
 
@@ -46,10 +42,6 @@
   }
 
   @scope (.scoped.sort-menu) to (.scoped) {
-    :scope {
-      --_accent: var(--foreground--accent);
-    }
-
     button {
       padding-block: 8px;
       padding-inline: 16px;
@@ -57,10 +49,9 @@
       border-radius: var(--rounded--md);
       font-weight: var(--font-weight--bold);
 
-      /* 直後のポップオーバーを表示している間は、押された見た目にする */
+      /* ブラウザが外側のクリックや Esc キーで閉じたときも、見た目が一緒に戻る */
       &:has(+ :popover-open) {
-        border-color: var(--_accent);
-        background-color: var(--background--accent-subtle);
+        background-color: var(--background--active);
       }
     }
 

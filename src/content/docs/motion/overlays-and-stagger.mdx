@@ -26,16 +26,25 @@ import tooltipJs from '../../../demos/motion/tooltip-delay/script.js?raw';
 
 メガメニューやドロップダウンのパネルのように、ページの上に重ねて出すパネルは、高さではなく `clip-path: inset()` の切り抜きを動かして、上端から下へ巻き取るように現します。「[18-7 出現と退場](/motion/entry-and-exit/#details-の開閉を動かす)」の `<details>` のアコーディオンは、開いた分だけ後ろの内容を押し下げ、その動きで開閉の位置関係を伝えていました。重ねて出すパネルは後ろの内容を動かさないので、高さを動かす理由がありません。切り抜きを変えてもパネルの大きさは変わらないので、レイアウトは起きず、本文の位置もそのまま保たれます。
 
-隠し方も、パネルの置き方で変わります。`popover` 属性のパネルは閉じると `display: none` になるので、18-7のポップオーバーやダイアログと同じく、`display` と `overlay` を `allow-discrete` でトランジションの対象にします。ただし、トップレイヤーに出すポップオーバーをヘッダーの下端に合わせて置くには、アンカー位置指定が要ります。アンカー位置指定はBaselineになっていないので、ここではパネルをヘッダーの中に絶対配置で置き、開閉の状態をボタンの `aria-expanded` で表します（「[17-6 開閉するUI](/interaction/disclosure/)」のドロワーと同じ形です）。この置き方では、閉じている間も `display` は変わらないので、`visibility: hidden` で隠します。
+隠し方も、パネルの置き方で変わります。`popover` 属性のパネルは閉じると `display: none` になるので、18-7のポップオーバーやダイアログと同じく、`display` と `overlay` を `allow-discrete` でトランジションの対象にします。ただし、トップレイヤーに出すポップオーバーをヘッダーの下端に合わせて置くには、アンカー位置指定が要ります。アンカー位置指定はBaselineになっていないので、ここではパネルをヘッダーの中に絶対配置で置き、開閉の状態をボタンの `aria-expanded` で表します。この置き方では、閉じている間も `display` は変わらないので、`visibility: hidden` で隠します。
+
+初期のHTMLでは、ボタンに `hidden` を付けて隠し、`aria-expanded` も書きません。パネルのリンクは通常の流れに並ぶので、スクリプトが動かない環境でもたどれます。初期化のスクリプトがボタンを出して `aria-expanded="false"` を付けたときだけ、パネルを重ねて置き、閉じた状態で隠します。初期のHTMLで内容を隠さず、操作の部品を後から出す考え方は、「[17-6 開閉するUI](/interaction/disclosure/)」のドロワーと同じです。
 
 ```css title="🙆‍♂ Recommended: 切り抜きを上端から広げ、閉じたパネルを visibility で隠す" from="motion/mega-menu-clip"
 @scope (.scoped.mega-header) to (.scoped) {
+  :scope {
+    position: relative;
+
+    & ._panel:is(._menu-button[aria-expanded] + *) {
+      position: absolute;
+      inset-inline: 0;
+      inset-block-start: 100%;
+    }
+  }
+
   ._panel {
     --_clip-from: inset(0 -24px -24px);
 
-    position: absolute;
-    inset-inline: 0;
-    inset-block-start: 100%;
     clip-path: inset(0 -24px -24px);
     box-shadow: var(--shadow--md);
     transition-duration: var(--duration--slow);
@@ -46,7 +55,7 @@ import tooltipJs from '../../../demos/motion/tooltip-delay/script.js?raw';
       --_clip-from: inset(0 -24px 100%);
     }
 
-    &:not(:is(._menu-button[aria-expanded="true"] + *)) {
+    &:is(._menu-button[aria-expanded="false"] + *) {
       visibility: hidden;
       clip-path: var(--_clip-from);
       opacity: 0;
@@ -56,6 +65,8 @@ import tooltipJs from '../../../demos/motion/tooltip-delay/script.js?raw';
 ```
 
 `inset()` は、上、右、下、左の順に、要素の各辺から内側へ切り取る量を指定する関数です。閉じた状態では下から100%を切り取るので、見える範囲は上端の高さ0の帯になり、開くと下の辺が下がって全体が見えます。左右と下を負の値にしているのは、`clip-path` が影まで含めて切り取るからです。開いた状態を `none` にしないのも、`none` と `inset()` の間は補間されず、一瞬で切り替わるからです。
+
+絶対配置の基準はパネルの親の `li` ではなくヘッダーなので、`position: absolute` と `inset` は、基準になるヘッダーのルートのネストに `& ._panel` で書いています。
 
 `clip-path` で見えなくしただけでは、パネルの中のリンクはフォーカスと読み上げの対象に残ります。Tabキーを押すと見えないリンクにフォーカスが移り、キーボードの利用者にはフォーカスが消えたように見えます。`visibility: hidden` を指定すると、中の要素はフォーカスを受け取らず、アクセシビリティツリーからも外れます（隠し方の比較は「[17-5 要素を隠す方法を選ぶ](/interaction/hiding-elements/)」）。
 
@@ -123,7 +134,7 @@ CSSで書けるのは、初回の遅延だけです。表示した状態のル�
 @scope (.scoped.format-toolbar) to (.scoped) {
   :scope {
     --_tooltip-delay: 400ms;
-    --_tooltip-duration: var(--duration--fast);
+    --_tooltip-duration: var(--duration--base);
 
     @media (prefers-reduced-motion: reduce) {
       --_tooltip-duration: var(--duration--instant);
@@ -136,30 +147,32 @@ CSSで書けるのは、初回の遅延だけです。表示した状態のル�
   }
 
   ._tooltip {
-    opacity: 0;
     transition-duration: var(--_tooltip-duration);
     transition-property: opacity;
     transition-timing-function: var(--ease--out-quad);
 
+    &:not(:is(._item[data-open] *)) {
+      opacity: 0;
+    }
+
     &:is(._item[data-open] *) {
-      opacity: 1;
       transition-delay: var(--_tooltip-delay);
     }
   }
 }
 ```
 
-`transition-delay` は、`data-open` が付いた状態のルールにだけ書いています。表示するときは400ms待ってからフェードし、`data-open` が外れたときは、基本のルールの遅延0ですぐに消えます。動きを減らす設定のときは、フェードの再生時間を50msに短くします（「[18-2 動きを減らす設定に対応する](/motion/reduced-motion/)」）。
+`transition-delay` は、`data-open` が付いた状態のルールにだけ書いています。表示するときは400ms待ってからフェードし、`data-open` が外れたときは、基本のルールの遅延0ですぐに消えます。隠す値は閉じた状態の `:not()` の側に書き、表示するときは要素本来の不透明度に戻します。フェードの再生時間は、18-3の表のツールチップと同じ160msです。動きを減らす設定のときは、50msに短くします（「[18-2 動きを減らす設定に対応する](/motion/reduced-motion/)」）。
 
 次のデモでは、ボタンの上でポインターを止めると、400ms後にツールチップが現れます。そのまま隣のボタンへ移ると、遅延なしで一度に切り替わります。ボタンから離れて400ms以上たつと、ウォームアップが終わり、次は再び遅れて現れます。JavaScriptは、遅延が明けて表示が始まった時点（`transitionstart`）で `data-warm` を付け、最後に離れてからクールダウンの時間がたった時点で外します。Tabキーでフォーカスしたときにも表示し、Escキーで閉じられます。
 
 <Demo title="ツールバーのツールチップを、初回だけ400ms遅らせ、続けて触れている間はすぐに表示する" html={tooltipHtml} css={tooltipCss} js={tooltipJs} widths={[]} />
 
-表示の条件は、ホバーとフォーカスを別々に覚え、どちらもなくなったときに閉じます。Tabキーでフォーカスして開いたツールチップは、あとからポインターが通ってその項目を離れても、フォーカスが残っていれば閉じません。ツールチップの上へポインターを動かして読み続けられるよう、ツールチップは `pointer-events: auto` にし、ボタンとの隙間も擬似要素でツールチップの一部にしています。ツールチップは項目の子孫なので、ボタンからツールチップへ移っても、項目の `pointerleave` は起きません。Escキーを押すと、ホバーやフォーカスが続いていても閉じ、入り直すまで開きません。この3つの動きは、WCAG 2.2の達成基準1.4.13が求める条件に対応します。追加で表示される内容へポインターを動かして読めること、Escで閉じられること、表示のきっかけが残る間は消えないことです。
+表示の条件は、ホバーとフォーカスを別々に覚え、どちらもなくなったときに閉じます。Tabキーでフォーカスして開いたツールチップは、あとからポインターが通ってその項目を離れても、フォーカスが残っていれば閉じません。ツールチップの上へポインターを動かして読み続けられるよう、`pointer-events: none` は閉じている間だけにし、ボタンとの隙間も擬似要素でツールチップの一部にしています。ツールチップは項目の子孫なので、ボタンからツールチップへ移っても、項目の `pointerleave` は起きません。Escキーを押すと、ホバーやフォーカスが続いていても閉じ、入り直すまで開きません。この3つの動きは、WCAG 2.2の達成基準1.4.13が求める条件に対応します。追加で表示される内容へポインターを動かして読めること、Escで閉じられること、表示のきっかけが残る間は消えないことです。
 
 ツールチップをホバーで表示するHTMLの仕組みには `interestfor` 属性がありますが、Chrome系のブラウザだけが対応しているので、本書では扱っていません（「[第5章 擬似クラスと擬似要素](/pseudo/)」）。そのため、デモでは、表示の状態もJavaScriptで切り替えています。
 
-## この節で使ったルール
+## ガイドライン
 
 この節の書き方は、ほかの節のルールを組み合わせたもので、この節だけのルールは置いていません。使ったルールは次のとおりです。
 

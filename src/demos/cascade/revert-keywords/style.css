@@ -2,7 +2,7 @@
   @scope (.scoped.keyword-compare) to (.scoped) {
     ul {
       /* kiso.css が消した字下げを、マーカーの置き場所として戻す */
-      padding-inline-start: 1.5em;
+      padding-inline-start: revert;
 
       &[data-keyword="revert"] {
         list-style-type: revert;

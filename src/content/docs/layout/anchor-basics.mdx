@@ -80,7 +80,7 @@ import functionsCss from '../../../demos/layout/anchor-functions/style.css?raw';
 
 アンカーには、配置する要素より先にレイアウトが済んでいる要素しかなれません。具体的には、アンカーが配置する要素の包含ブロックの中にあり、同じ包含ブロックに置かれた絶対配置の要素どうしなら、アンカーが文書の順で先にある必要があります。包含ブロックを作っている要素そのものと、その外にある要素は、アンカーにできません。条件を満たすアンカーがなければ、`position-area` は働かず、要素は通常の絶対配置の位置に置かれます。
 
-同じ名前のアンカーが複数あるときは、条件を満たすもののうち、文書の順で最後の要素が選ばれます。入力欄の説明のようなコンポーネントを繰り返し置くと、別の入力欄が基準に選ばれることがあります。`anchor-scope` は、名前が届く範囲を、指定した要素の子孫に限るプロパティです。`anchor-scope: --field-note` で特定の名前を、`anchor-scope: all` ですべての名前を限ります。繰り返し置くコンポーネントでの使い方は、11-8で扱います。
+同じ名前のアンカーが複数あるときは、条件を満たすもののうち、文書の順で最後の要素が選ばれます。上の例のようにコンポーネントのルートを包含ブロックにしておけば、ほかのコンポーネントの入力欄は候補に入らないので、コンポーネントを繰り返し置いても名前は衝突しません。衝突するのは、項目ごとにアンカーを置いたリストのように、1つの包含ブロックの中に同じ名前のアンカーが複数あるときと、包含ブロックがビューポートや初期包含ブロックのように広いときです。`anchor-scope` は、名前が届く範囲を、指定した要素の子孫に限るプロパティです。`anchor-scope: --field-note` で特定の名前を、`anchor-scope: all` ですべての名前を限ります。繰り返し置くコンポーネントでの使い方は、11-8で扱います。
 
 <Baseline id="anchor-positioning" compatKey="css.properties.anchor-scope" name="anchor-scope" />
 
@@ -109,7 +109,7 @@ import functionsCss from '../../../demos/layout/anchor-functions/style.css?raw';
 </span>
 ```
 
-`margin` の2つの指定は、未対応の環境のためのものです。理由は、あとの「未対応の環境では読める位置に置く」で説明します。次のデモでボタンを押すと、ポップオーバーがボタンの下に開きます。
+`margin` の2つの指定のうち、`margin: revert` は未対応の環境のため、`@supports` の中の指定し直しは、対応していても `auto` の `margin` を0として扱わない古い版のためです。理由は、あとの「未対応の環境では読める位置に置く」で説明します。次のデモでボタンを押すと、ポップオーバーがボタンの下に開きます。
 
 <Demo title="名前を付けずに、開いたボタンの下にポップオーバーを置く" html={popoverHtml} css={popoverCss} height="160px" />
 
@@ -128,7 +128,7 @@ import functionsCss from '../../../demos/layout/anchor-functions/style.css?raw';
   position: relative;
 
   & > ._note {
-    @supports (anchor-name: --field-note) {
+    @supports (inset-block-start: anchor(--field-note end)) {
       position: absolute;
       inset-block-start: anchor(--field-note end);
       inset-inline-start: anchor(--field-note start);

@@ -44,7 +44,7 @@ import collapseCss from '../../../demos/responsive/overflow-collapse-nav/style.c
 
 まず、ナビゲーションのリスト `._nav-list` を、横方向へスクロールできる要素にします。`overflow-x: auto` を指定し、`scroll-timeline: --nav-list inline` で、行方向のスクロール位置を進み具合にしたタイムラインを作って名前を付けます。仕様では、スクロールできるはみ出しがない間、スクロールタイムラインは無効（inactive）です。無効なタイムラインと結び付けたアニメーションは、効果を持ちません。そのため、アニメーションが働くのは、項目が1行に収まらず溢れている間だけです。
 
-アニメーションは、ヘッダーのルートに結び付けます。ルートの値は継承され、子孫の要素がスタイルクエリで読めるからです。スクロールタイムラインの名前は、既定ではそれを作った要素とその子孫からしか参照できません。ルートに `timeline-scope: --nav-list` を指定すると、子孫のリストが作ったタイムラインを、ルートの `animation-timeline` から参照できます。`animation` の一括指定は `animation-timeline` を初期値に戻すので、`animation-timeline` は `animation` より後に書きます。
+アニメーションは、ヘッダーのルートに結び付けます。ルートの値は継承され、子孫の要素がスタイルクエリで読めるからです。スクロールタイムラインの名前は、既定ではそれを作った要素とその子孫からしか参照できません。ルートに `timeline-scope: --nav-list` を指定すると、子孫のリストが作ったタイムラインを、ルートの `animation-timeline` から参照できます。アニメーションは、`animation-name` などのロングハンドで書きます。一括指定の `animation` は `animation-timeline` を初期値に戻すので、後から一括指定を足すと、タイムラインとの結び付きが外れるからです（ルール `animation-longhand-fill-mode`）。
 
 ```css title="🙆‍♂ Recommended: ナビゲーションが溢れている間だけ、ルートのフラグを --true にする"
 @keyframes --site-header--detect-overflow {
@@ -58,7 +58,9 @@ import collapseCss from '../../../demos/responsive/overflow-collapse-nav/style.c
   :scope {
     --_overflowing: --false;
 
-    animation: --site-header--detect-overflow linear both;
+    animation-name: --site-header--detect-overflow;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
     animation-timeline: --nav-list;
     timeline-scope: --nav-list;
   }
@@ -116,7 +118,7 @@ import collapseCss from '../../../demos/responsive/overflow-collapse-nav/style.c
 
 メニューのボタンとお問い合わせのリンクは、`._end` のGridの同じセルに重ねています。どちらか一方だけが見え、もう一方も場所を残しているので、切り替わってもヘッダーの高さと右端の位置は変わりません。
 
-`visibility: hidden` の要素は、フォーカスの移動と支援技術の読み上げからも外れます。隠したナビゲーションの項目には、メニューのボタンから開くドロワーでたどり着けるようにし、ドロワーにも同じ項目を置きます。ドロワーの開閉と、開いている間に背面を操作させない方法は「[17-6 開閉するUI](/interaction/disclosure/)」で説明しています。
+`visibility: hidden` の要素は、フォーカスの移動と支援技術の読み上げからも外れます。隠したナビゲーションの項目には、メニューのボタンから開くドロワーでたどり着けるようにし、ドロワーにも同じ項目を置きます。お問い合わせのリンクも、ヘッダーと一緒に隠れるので、ドロワーに置きます。ドロワーの開閉と、開いている間に背面を操作させない方法は「[17-6 開閉するUI](/interaction/disclosure/#ドロワーの背面を不活性にする方法)」で説明しています。17-6のとおり、ドロワーは初期のHTMLでは表示しておき、開閉のボタンを出すのはスクリプトの初期化が済んでからにします。ヘッダーの項目をCSSだけで隠す環境でスクリプトが動かなくても、ドロワーの項目にはたどり着けます。{/* 要検証: ブラウザ。Firefoxでスクリプトを止めたとき、ドロワーの項目とお問い合わせのリンクにたどり着けること */}
 
 ## ナビゲーションの列だけを縮める
 

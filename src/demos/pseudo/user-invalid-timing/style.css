@@ -1,9 +1,6 @@
 @layer components {
   @scope (.scoped.user-invalid-timing) to (.scoped) {
     :scope {
-      --_error: var(--foreground--danger);
-      --_valid: var(--foreground--success);
-
       display: block grid;
       gap: 24px;
     }
@@ -30,18 +27,20 @@
 
       /* 比べるための悪い例：ページを開いた時点で、空の必須の欄がエラーになる */
       &:is([data-invalid] *):invalid {
-        border-color: var(--_error);
+        border-width: 2px;
+        border-color: var(--foreground--danger);
         background-color: color-mix(in oklab, var(--foreground--danger) 8%, transparent);
       }
 
-      /* 入力して欄を離れた後か、送信しようとした後にだけエラーにする */
+      /* 操作する前の空の欄を、誤りとして責めないため。枠線を太くして、色のほかにも違いを付ける */
       &:is([data-fixed] *):user-invalid {
-        border-color: var(--_error);
+        border-width: 2px;
+        border-color: var(--foreground--danger);
         background-color: color-mix(in oklab, var(--foreground--danger) 8%, transparent);
       }
 
       &:is([data-fixed] *):user-valid {
-        border-color: var(--_valid);
+        border-color: var(--foreground--success);
       }
     }
 

@@ -3,9 +3,9 @@
     ._flexbox {
       display: block flex;
 
-      /* 計算を追いやすいよう、コンテナの幅を 480px に固定する */
+      /* 計算を追いやすいよう、コンテナの幅を 480px に固定する。枠は幅に含まれない outline で描く */
       inline-size: 480px;
-      border: 1px dashed var(--border--strong);
+      outline: 1px dashed var(--border--strong);
 
       &[data-case="grow"] > * {
         flex-grow: 1;

@@ -49,6 +49,16 @@ import primaryLayoutCss from '../../../demos/compositions/primary-layout/style.c
 `primary-layout` は、列が9本のグリッドです。両端の2本がガターの列、中央の1本がナロー幅の列で、その間の6本が段階の差を作る列です。各列の境界の線に名前を付け、子は線の名前で置き場所を選びます。
 
 ```css title="🙆‍♂ Recommended: 線に名前を付けた9本の列で、5段階の幅を作る"
+/**
+ * 左右のガターと5段階の幅の列を持つグリッド。子はデフォルトでコンテンツ幅に置き、クラスで幅を選ぶ。
+ *
+ * @prop {length} --primary-layout--content-max-width [calc(1680 / 16 * 1rem)] - コンテンツ幅の最大値
+ * @prop {length} --primary-layout--gutter            [20px]                   - 左右のガターの最小幅
+ * @prop {length} --primary-layout--narrow-reduction  [20px]                   - ナロー幅とコンテンツ幅の片側の差（上限）
+ * @prop {length} --primary-layout--wide-increase     [60px]                   - コンテンツ幅とワイド幅の片側の差（上限）
+ * @prop {length} --primary-layout--ex-wide-increase  [40px]                   - ワイド幅と超ワイド幅の片側の差（上限）
+ * @prop {length} --primary-layout--row-gap           [0px]                    - 行の間隔
+ */
 .primary-layout {
   --_c--content-max-width: var(--primary-layout--content-max-width, calc(1680 / 16 * 1rem));
   --_c--gutter: var(--primary-layout--gutter, 20px);
@@ -151,7 +161,7 @@ import primaryLayoutCss from '../../../demos/compositions/primary-layout/style.c
 ```html
 <div
   class="primary-layout"
-  style="--primary-layout--content-max-width: calc(960 / 16 * 1rem); --primary-layout--row-gap: calc(var(--spacing--md) / 16 * 1rem)"
+  style="--primary-layout--content-max-width: calc(960 / 16 * 1rem); --primary-layout--row-gap: calc(var(--spacing--md) * 1px)"
 >
   <!-- ... -->
 </div>
@@ -195,7 +205,7 @@ import primaryLayoutCss from '../../../demos/compositions/primary-layout/style.c
 ```html
 <article
   class="scoped article-page | primary-layout"
-  style="--primary-layout--row-gap: calc(var(--spacing--md) / 16 * 1rem)"
+  style="--primary-layout--row-gap: calc(var(--spacing--md) * 1px)"
 >
   <h1>記事のタイトル</h1>
   <figure class="_hero | full-column">...</figure>

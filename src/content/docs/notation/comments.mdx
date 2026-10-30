@@ -49,8 +49,7 @@ AIに書かせたコードには、宣言を1つずつ言い換えたコメン�
 
 ```css title="🙆‍♂ Recommended: 理由と、ほかの方法をとらない理由を書く"
 @layer reset {
-  ul,
-  ol {
+  :where(ul, ol, menu) {
     /*
      * Safari では list-style: none にすると、スクリーンリーダーが
      * リストとして読み上げないため、マーカーだけを消す。
@@ -60,16 +59,16 @@ AIに書かせたコードには、宣言を1つずつ言い換えたコメン�
   }
 }
 
-._sitemap-list {
-  & > li {
-    /* Safari は段組みの中のマージンを正しく計算しないので、padding で間隔を空ける */
-    padding-block: 8px;
-    break-inside: avoid;
+@scope (.scoped.filter-chip) to (.scoped) {
+  :scope {
+    /* 強制カラーモードでは背景色が消えるので、透明な枠線で範囲を残す */
+    border: 1px solid transparent;
+    background-color: var(--background--surface);
   }
 }
 ```
 
-1つ目のコメントは、`list-style: none` という一般的な書き方を使わない理由を説明しています。コメントがなければ、後から読んだ人が「`list-style: none` のほうが分かりやすい」と書き換えてしまうかもしれません。根拠になる資料は `@see` で示します。2つ目のコメントも、`margin` ではなく `padding` を使う理由を残しています。どちらも、コードだけでは伝わらない判断です。
+1つ目は、本書が使うリセットCSSのkiso.cssにあるコメントと同じ内容です。`list-style: none` という一般的な書き方を使わない理由を説明しています。コメントがなければ、後から読んだ人が「`list-style: none` のほうが分かりやすい」と書き換えてしまうかもしれません。根拠になる資料は `@see` で示します。2つ目のコメントは、見えない枠線を残す理由を説明しています。コメントがなければ、見た目に影響しない宣言として消されるかもしれません。どちらも、コードだけでは伝わらない判断です。
 
 「なぜ別の方法をとらないか」は、一見すると不自然なコードほど必要になります。論理プロパティの規約に反して物理プロパティを使う、ベンダープレフィックスを書く、Stylelintのルールを無効にするといった箇所です。理由が書かれていなければ、読んだ人は規約どおりに直してよいのか判断できません。反対に、規約どおりの書き方には理由を書く必要はありません。
 
@@ -137,7 +136,7 @@ AIに書かせたコードには、宣言を1つずつ言い換えたコメン�
 /* 🙅‍♂ Not Recommended */
 ._award {
   padding-block-end: 16px;
-  border-block-end: 1px solid oklch(85% 0 0deg);
+  border-block-end: 1px solid var(--border--base);
 
   /*
    * 以前のテンプレートでは、先頭の項目の上余白だけを 0 にしていた。
@@ -152,7 +151,7 @@ AIに書かせたコードには、宣言を1つずつ言い換えたコメン�
 ```css title="🙆‍♂ Recommended: 今のコードの理由だけを書く"
 ._award {
   padding-block-end: 16px;
-  border-block-end: 1px solid oklch(85% 0 0deg);
+  border-block-end: 1px solid var(--border--base);
 
   /* 先頭の項目の上には罫線がないので、上の余白は罫線のある2つ目以降にだけ付ける */
   &:not(:first-child) {
@@ -202,8 +201,11 @@ AIに書かせたコードには、宣言を1つずつ言い換えたコメン�
 
 ```css title="🙆‍♂ Recommended: TODO は先頭に大文字で書く"
 ._heading {
-  /* TODO: 見出しの文言が確定したら、text-wrap の指定を見直す */
-  text-wrap: balance;
+  /* TODO: 見出しの文言が確定したら、折り返しの指定を見直す */
+  @supports (word-break: auto-phrase) {
+    text-wrap: balance;
+    word-break: auto-phrase;
+  }
 }
 ```
 

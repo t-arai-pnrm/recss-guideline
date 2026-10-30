@@ -50,9 +50,9 @@ AIに指示すれば、既存のコード全体へ規約を一度に適用する
 ```css title="🙅‍♂ Not Recommended: 見た目が似ているカードを1つにまとめ、修飾クラスで分岐する" issue="convention"
 /* 🙅‍♂ Not Recommended */
 .card {
-  padding: 16px;
-  border-radius: 8px;
-  background-color: oklch(97% 0 0deg);
+  padding: calc(var(--spacing--md) * 1px);
+  border-radius: var(--rounded--lg);
+  background-color: var(--background--surface);
 }
 
 .card--product .card__price {
@@ -70,11 +70,11 @@ AIに指示すれば、既存のコード全体へ規約を一度に適用する
 
 このように1つにまとめると、商品のカードだけを変えたいときにも、記事のカードに影響しないかを毎回確かめる必要があります。どちらかのカードが不要になっても、共通の部分と絡み合っているので、安心して消せません。
 
-```css title="🙆‍♂ Recommended: 別のコンポーネントとして書き、そろえたい値だけをトークンで共有する"
+```css title="🙆‍♂ Recommended: 別のコンポーネントとして書き、そろえたい見た目はトークンで共有する"
 @scope (.scoped.product-card) to (.scoped) {
   :scope {
-    padding: 16px;
-    border-radius: 8px;
+    padding: calc(var(--spacing--md) * 1px);
+    border-radius: var(--rounded--lg);
     background-color: var(--background--surface);
   }
 
@@ -85,18 +85,18 @@ AIに指示すれば、既存のコード全体へ規約を一度に適用する
 
 @scope (.scoped.article-card) to (.scoped) {
   :scope {
-    padding: 16px;
-    border-radius: 8px;
+    padding: calc(var(--spacing--md) * 1px);
+    border-radius: var(--rounded--lg);
     background-color: var(--background--surface);
   }
 
   time {
-    font-size: calc(14 / 16 * 1rem);
+    font-size: calc(var(--text--body-compact--font-size) / 16 * 1rem);
   }
 }
 ```
 
-この例では、部品ごとに独立して変更する余白と角丸を直接書き、そろって変える背景色だけをトークンで共有しています。`padding` と `border-radius` は重複していますが、これは意図したものです。それぞれのカードは、相手を気にせず変更したり削除したりできます。「カード類の背景色をまとめて変えたい」といった、そろって変わるべき値だけをトークンで共有します。トークンの設計は「[10-4 デザイントークン](/components/design-tokens/)」で説明します。
+この例では、2つのカードが余白と角丸と背景色のトークンを参照しています。宣言は重複していますが、これは意図したものです。「カード類の背景色をまとめて変えたい」という依頼にはトークンの値を変えるだけで対応でき、片方のカードだけ余白を変えたいときは、そのカードの宣言を別のトークンに書き換えれば済みます。同じトークンを参照していても、コンポーネントは別のままなので、それぞれのカードは相手を気にせず変更したり削除したりできます。トークンの設計は「[10-4 デザイントークン](/components/design-tokens/)」で説明します。
 
 共通化の粒度は、大きめから始めます。たとえば「左に画像、右に文章」という配置が何度か出てきたからといって、その配置だけを部品にすると、似た配置を見つけるたびに部品が増えていきます。配置の共通点は部品の境界とは限らず、部品が散らばるほど、どれをどこで使うかを把握できなくなって破綻します。共通化するなら、商品の詳細や記事の一覧のように、役割が名前で言える単位にします。
 
@@ -114,7 +114,7 @@ AIに指示すれば、既存のコード全体へ規約を一度に適用する
 
 つまり、`div` が親の幅いっぱいになるのは、`width: 100%` と同じ指定が働いているからではありません。ブロックレベルの要素の `auto` は、包含ブロックの幅から自分の `margin`、`border`、`padding` を差し引いた残りを内容の幅にします。一方の `100%` は、包含ブロックの幅をそのまま内容（`border-box` なら枠線まで）の幅にするので、`margin` があればその分だけはみ出します。見た目が同じでも、2つは別の計算です。
 
-`height: 100%` は、親の高さが明示的に指定されているときにしか期待どおりに動きません。親が `min-height` のように最小値だけを決めている場合には成り立たず、flexやgridのアイテムであれば、指定しなくても `stretch` で高さいっぱいに広がります。
+`height: 100%` は、親の高さが明示的に指定されているときにしか期待どおりに動きません。親が `min-height` のように最小値だけを決めている場合には成り立ちません。横に並べたフレックスアイテムやグリッドアイテムであれば、指定しなくても、`align-self` の既定の振る舞い（`stretch`）で行や領域の高さいっぱいに広がります。
 
 ```css title="🙅‍♂ Not Recommended: 何にでも width: 100% と height: 100% を指定する" issue="behavior"
 /* 🙅‍♂ Not Recommended */
@@ -139,7 +139,7 @@ AIに指示すれば、既存のコード全体へ規約を一度に適用する
 
 幅を広げる指定が要るのは、`display: block` にしても自然には広がらない `<img>` のような置換要素や、`<textarea>` や `<button>` のようなフォーム部品です。行方向のフレックスアイテムと、左右の位置を片方しか決めていない絶対配置の要素も、中身の幅に縮みます。`min(320px, 100%)` のように、はみ出しを防ぐための `100%` は問題ありません。`inline-block` の要素を幅いっぱいに広げたいなら、`width: 100%` を足す前に、外側の表示形式を `block` に変えられないかを検討します。そうすれば、`vertical-align` によって下にできる隙間もなくなります。
 
-幅を広げる指定が本当に要る場面では、`100%` ではなく `stretch` を使います。子要素を親の高さにそろえたいだけなら、`height: 100%` を書かずに、親をGridにして伸ばします。どちらも、`margin` が加わったときや親が最小値しか決めていないときに崩れない書き方です。書き方と各ブラウザの対応状況は「[7-4 大きさの決まり方](/layout/sizing/#幅いっぱいに広げる-stretch)」で説明します。Tailwind CSSの `w-full` や `h-full` も同じで、生成AIの出力ではとくに乱用されがちです。生成されたコードにこれらがあったら、1つずつ必要かどうかを確かめます。
+幅を広げる指定が本当に要る場面では、`100%` ではなく `stretch` を使います。`stretch` に未対応のブラウザもあるので、前に `-webkit-fill-available` を書いておきます。子要素を親の高さにそろえたいだけなら、`height: 100%` を書かずに、親をGridにして伸ばします。どちらも、`margin` が加わったときや親が最小値しか決めていないときに崩れない書き方です。書き方と各ブラウザの対応状況は「[7-4 大きさの決まり方](/layout/sizing/#幅いっぱいに広げる-stretch)」で説明します。Tailwind CSSの `w-full` や `h-full` も同じで、生成AIの出力ではとくに乱用されがちです。生成されたコードにこれらがあったら、1つずつ必要かどうかを確かめます。
 
 ### デフォルト値を指定し直さない
 
@@ -149,7 +149,7 @@ AIに指示すれば、既存のコード全体へ規約を一度に適用する
 
 ```css title="🙅‍♂ Not Recommended: デフォルト値を書き写して戻す" issue="convention"
 /* 🙅‍♂ Not Recommended */
-@scope (.scoped.prose) to (.scoped) {
+@scope (.scoped.article-body) to (.scoped) {
   ul {
     padding-inline-start: 40px;
     list-style-type: disc;
@@ -158,7 +158,7 @@ AIに指示すれば、既存のコード全体へ規約を一度に適用する
 ```
 
 ```css title="🙆‍♂ Recommended: 戻り先をキーワードで示す"
-@scope (.scoped.prose) to (.scoped) {
+@scope (.scoped.article-body) to (.scoped) {
   ul {
     padding-inline-start: revert;
     list-style-type: revert;
@@ -180,22 +180,28 @@ AIに指示すれば、既存のコード全体へ規約を一度に適用する
 /* 🙅‍♂ Not Recommended */
 ._article {
   & > ._figure {
-    max-inline-size: calc(480 / 16 * 1rem);
     margin: 0 auto;
-    background: oklch(100% 0 0deg);
   }
+}
+
+._figure {
+  max-inline-size: calc(480 / 16 * 1rem);
+  background: var(--background--surface);
 }
 ```
 
-`background: oklch(100% 0 0deg)` は、`background-color` だけでなく、`background-image` や `background-size` などもまとめて初期値に戻します。別の場所で設定した背景画像があれば、それも消えます。`margin: 0 auto` は、左右の中央寄せのために、本来触る必要のない上下のマージンまで `0` にします。子要素の間にマージンで余白を入れるレイアウトの中に置くと、その余白を打ち消してしまいます。
+`background: var(--background--surface)` は、`background-color` だけでなく、`background-image` や `background-size` などもまとめて初期値に戻します。別の場所で設定した背景画像があれば、それも消えます。`margin: 0 auto` は、左右の中央寄せのために、本来触る必要のない上下のマージンまで `0` にします。子要素の間にマージンで余白を入れるレイアウトの中に置くと、その余白を打ち消してしまいます。
 
 ```css title="🙆‍♂ Recommended: 変えたいサブプロパティだけをロングハンドで指定する"
 ._article {
   & > ._figure {
-    max-inline-size: calc(480 / 16 * 1rem);
     margin-inline: auto;
-    background-color: oklch(100% 0 0deg);
   }
+}
+
+._figure {
+  max-inline-size: calc(480 / 16 * 1rem);
+  background-color: var(--background--surface);
 }
 ```
 

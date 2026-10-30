@@ -18,7 +18,6 @@ import newsHtml from '../../../demos/layout/news-list/index.html?raw';
 import newsCss from '../../../demos/layout/news-list/style.css?raw';
 import imageCardHtml from '../../../demos/layout/image-card-fit-content/index.html?raw';
 import imageCardCss from '../../../demos/layout/image-card-fit-content/style.css?raw';
-import imageCardFrame from '../../../demos/layout/image-card-fit-content/frame.css?raw';
 
 Gridでアイテムをそろえる方法は、そろえる範囲で選びます。1つのセルの中やコンテナの中での位置は、配置のプロパティの `*-items` と `*-content` で、そろえる対象を区別して指定します。並べたカードの中の見出しやボタン、一覧の項目の中の列のように、別々のアイテムの中身をそろえるときは、サブグリッドで親のトラックを共有させます。列の幅は、列ごとに可変か不変かを決めてから、`max-content`、`fit-content()`、`1fr` で書きます。
 
@@ -120,19 +119,17 @@ article {
 サブグリッドは、列をそろえるときにも使えます。日付、カテゴリ、タイトルを1行ずつ並べるニュースの一覧を考えます。列の幅を決める前に、それぞれの列が可変か不変かを考えます。日付は途中で改行されると読みにくいので、改行しない不変の列です。カテゴリは長すぎると窮屈になるので、上限を決めた可変の列にします。タイトルは、残りの幅をすべて使う可変の列です。
 
 ```css title="🙆‍♂ Recommended: 列ごとに可変か不変かを決め、項目の列をサブグリッドでそろえる" from="layout/news-list"
-.news-list {
-  & > ._list {
-    display: block grid;
-    grid-template-columns: max-content fit-content(calc(160 / 16 * 1rem)) 1fr;
-    column-gap: 24px;
+ul {
+  display: block grid;
+  grid-template-columns: max-content fit-content(calc(160 / 16 * 1rem)) 1fr;
+  column-gap: 24px;
 
-    & > ._item {
-      grid-column: 1 / -1;
-    }
+  & > li {
+    grid-column: 1 / -1;
   }
 }
 
-._item {
+li {
   display: block grid;
   grid-template-columns: subgrid;
   align-items: baseline;
@@ -163,22 +160,28 @@ article {
   display: block grid;
   reading-flow: grid-rows;
   grid-template:
-    "--image --image   --image"
-    ".       --heading .      "
-    ".       --body    .      "
+    "--figure --figure  --figure"
+    ".        .         .       " 1rlh
+    ".        --heading .       "
+    ".        .         .       " 1rlh
+    ".        --body    .       "
+    ".        .         .       " 1rlh
     / 24px 1fr 24px;
 
   @container --scoped (inline-size >= calc(240 / 16 * 1rem + 32px + 240 / 16 * 1rem + 32px)) {
     --_density: --spacious;
 
     grid-template:
-      "--image . --heading ."
-      "--image . --body    ." 1fr
-      / fit-content(calc(480 / 16 * 1rem)) 32px minmax(calc(240 / 16 * 1rem), 1fr) 32px;
+      "--figure . .         ." 1.5rlh
+      "--figure . --heading ."
+      "--figure . .         ." 1.5rlh
+      "--figure . --body    ." 1fr
+      "--figure . .         ." 1.5rlh
+      / fit-content(calc(480 / 16 * 1rem)) 32px minmax(min(100%, calc(240 / 16 * 1rem)), 1fr) 32px;
   }
 
   & > ._figure {
-    grid-area: --image;
+    grid-area: --figure;
   }
 
   & > ._heading {
@@ -190,32 +193,31 @@ article {
   }
 }
 
-._figure {
-  & > img {
-    inline-size: 100%;
+img {
+  inline-size: -webkit-fill-available;
+  inline-size: stretch;
 
-    @container style(--_density: --spacious) {
-      inline-size: auto;
-    }
+  @container style(--_density: --spacious) {
+    inline-size: initial;
   }
+}
 
-  & > figcaption {
-    contain: inline-size;
-  }
+figcaption {
+  contain: inline-size;
 }
 ```
 
-広い場所では、画像の列の `fit-content(calc(480 / 16 * 1rem))` が、`width` 属性で決まる画像の幅をそのまま列の幅にします。幅300pxと400pxの画像の列はその幅になり、幅500pxの画像の列は480px相当で止まります。画像は、ベーススタイルの `max-inline-size: 100%` で列の幅まで縮みます。テキストの列は、`1fr` ではなく `minmax(calc(240 / 16 * 1rem), 1fr)` にしています。Gridは、`fr` の列に幅を配る前に、`fit-content()` の列を上限まで広げます。テキストの列に下限がないと、大きな画像のカードでテキストの列が極端に細くなるからです。
+広い場所では、画像の列の `fit-content(calc(480 / 16 * 1rem))` が、`width` 属性で決まる画像の幅をそのまま列の幅にします。幅300pxと400pxの画像の列はその幅になり、幅500pxの画像の列は480px相当で止まります。画像は、ベーススタイルの `max-inline-size: 100%` で列の幅まで縮みます。テキストの列は、`1fr` ではなく `minmax(min(100%, calc(240 / 16 * 1rem)), 1fr)` にしています。Gridは、`fr` の列に幅を配る前に、`fit-content()` の列を上限まで広げます。テキストの列に下限がないと、大きな画像のカードでテキストの列が極端に細くなるからです。下限を `min(100%, …)` で包むのは、どの場所に置かれても、下限が親の幅を超えないようにするためです（[`minmax-min-capped-at-100-percent`](/layout-practice/defensive/#rule-minmax-min-capped-at-100-percent)）。テキストの上下の余白は、空の行（`1rlh` と `1.5rlh`）で作っています。
 
 `figcaption` の `contain: inline-size` は、キャプションの長さで画像の列が広がるのを防ぐ指定です。`fit-content()` が合わせる `max-content` は、画像だけでなくキャプションの1行の長さも含みます。指定がないと、長いキャプションを付けた画像の列は、画像の幅に関係なく上限まで広がります。`contain: inline-size` を指定した要素は、中身を幅の計算に含めないので、列の幅は画像だけで決まり、キャプションはその幅の中で折り返します。
 
 <Baseline id="contain-inline-size" />
 
-狭い場所では、画像を上に置いて縦に積み、画像を `inline-size: 100%` で列の幅まで広げます。広い場所では、フラグ `--_density` が `--spacious` に切り替わり、画像の幅を `auto`（`width` 属性の幅）に戻します。HTMLには見出しを先に書き、見た目では画像を先に表示するので、`reading-flow: grid-rows` を指定しています。HTMLを文書構造の順番で書き、見た目の順番をエリアで変える書き方は「[7-8 Gridの基礎](/layout/grid-basics/#rule-source-order-for-reading)」で説明しています。
+狭い場所では、画像を上に置いて縦に積み、画像を `stretch` で列の幅まで広げます。広い場所では、フラグ `--_density` が `--spacious` に切り替わり、画像の幅を `initial`（初期値の `auto`。`width` 属性の幅）に戻します。エリアの名前は、置く子要素のクラス `._figure` にそろえて `--figure` にしています。HTMLには見出しを先に書き、見た目では画像を先に表示するので、`reading-flow: grid-rows` を指定しています。HTMLを文書構造の順番で書き、見た目の順番をエリアで変える書き方は「[7-8 Gridの基礎](/layout/grid-basics/#rule-source-order-for-reading)」で説明しています。
 
 次のデモでは、幅300px、400px、500pxの画像のカードを並べています。幅を1024pxにすると、画像の列がそれぞれの画像の幅と480px相当の上限で決まり、長いキャプションを付けた2枚目も画像の幅のままです。
 
-<Demo title="fit-content() で、画像の列を画像の幅に合わせる" html={imageCardHtml} css={imageCardCss} frame={imageCardFrame} />
+<Demo title="fit-content() で、画像の列を画像の幅に合わせる" html={imageCardHtml} css={imageCardCss} />
 
 ## 補足と注意点
 

@@ -13,7 +13,13 @@
     :scope {
       --_translate-from: 0;
 
+      /* Safari で閉じる途中の配置が崩れないように、18-7 と同じく位置を明示する */
+      position: fixed;
+      inset: 0;
       z-index: var(--z--top);
+      display: block grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 16px;
       inline-size: min(100% - 48px, calc(320 / 16 * 1rem));
       block-size: 100%;
       margin-inline-end: 0;
@@ -21,22 +27,36 @@
       background-color: var(--background--overlay);
       transition-duration: var(--duration--slow);
       transition-property: display, overlay, opacity, translate;
-      transition-timing-function: var(--ease--out-quint);
+      transition-timing-function: var(--ease--out-drawer);
       transition-behavior: allow-discrete;
 
       /* 動きを減らす設定のときは、起点が 0 のままなので、フェードだけが残る */
       @media (prefers-reduced-motion: no-preference) {
         --_translate-from: 100% 0;
+
+        /* translate には論理の値がないので、行末が左になる右から左へ書く言語では向きを反転する */
+        &:dir(rtl) {
+          --_translate-from: -100% 0;
+        }
+      }
+
+      /* 背景は、ドロワーと同じ再生時間とイージングで、同時に濃くなり同時に消える */
+      &::backdrop {
+        transition-duration: inherit;
+        transition-property: opacity;
+        transition-timing-function: inherit;
       }
 
       &:modal {
-        display: block grid;
-        grid-template-rows: auto 1fr auto;
-        gap: 16px;
-
         @starting-style {
           opacity: 0;
           translate: var(--_translate-from);
+        }
+      }
+
+      &:modal::backdrop {
+        @starting-style {
+          opacity: 0;
         }
       }
 
@@ -45,13 +65,18 @@
         translate: var(--_translate-from);
       }
 
+      &:not(:modal)::backdrop {
+        opacity: 0;
+      }
+
       & > button {
         justify-self: end;
       }
     }
 
     h2 {
-      font-size: calc(18 / 16 * 1rem);
+      font-size: calc(var(--text--title--font-size) / 16 * 1rem);
+      line-height: var(--text--title--leading);
     }
 
     ul {

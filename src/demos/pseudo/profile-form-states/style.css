@@ -35,25 +35,23 @@
       /* 未入力の状態は placeholder 属性のある入力欄にだけ当たる */
       &:placeholder-shown {
         border-style: dashed;
-        background-color: var(--background--hover);
       }
 
       /* readonly は値を送信するので、無効とは別の見た目にする */
       &[readonly] {
         border-color: transparent;
-        background-color: var(--background--accent-subtle);
       }
 
       /* 未入力の破線を、前のレイヤー（kiso.css）の実線に戻す */
       &:disabled {
         border-style: revert-layer;
         border-color: var(--border--strong);
-        background-color: var(--background--active);
         color: var(--foreground--muted);
       }
 
-      /* 入力して離れた後や、送信しようとした後にだけエラーの見た目にする */
+      /* 操作する前の空の欄を、誤りとして責めないため。枠線を太くして、色のほかにも違いを付ける */
       &:user-invalid {
+        border-width: 2px;
         border-style: revert-layer;
         border-color: var(--_error);
         background-color: color-mix(in oklab, var(--foreground--danger) 8%, transparent);

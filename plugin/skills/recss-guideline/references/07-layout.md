@@ -1,8 +1,8 @@
 # 第7章 レイアウトの仕組み：ルール
 
-- ガイドラインのバージョン: 0.82.0（2026-10-30 生成）
+- ガイドラインのバージョン: 0.83.0（2026-10-30 生成）
 - ルールの数: 41
-- 本文: 約27万字
+- 本文: 約27.5万字
 - 読む条件: display、Flexbox、Grid、position、margin、ボックスモデル、幅と高さ
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
@@ -12,18 +12,18 @@
 
 ## この章の節
 
-- `layout` 第7章 レイアウトの仕組み（約7,100字）https://t-arai-pnrm.github.io/recss-guideline/layout/
+- `layout` 第7章 レイアウトの仕組み（約7,200字）https://t-arai-pnrm.github.io/recss-guideline/layout/
 - `layout/fundamentals` 7-1 レイアウトの基礎（約1.9万字）https://t-arai-pnrm.github.io/recss-guideline/layout/fundamentals/
-- `layout/normal-flow` 7-2 通常フローの基礎（約2.3万字）https://t-arai-pnrm.github.io/recss-guideline/layout/normal-flow/
-- `layout/box-model` 7-3 ボックスモデルの基礎（約1.8万字）https://t-arai-pnrm.github.io/recss-guideline/layout/box-model/
+- `layout/normal-flow` 7-2 通常フローの基礎（約2.4万字）https://t-arai-pnrm.github.io/recss-guideline/layout/normal-flow/
+- `layout/box-model` 7-3 ボックスモデルの基礎（約1.9万字）https://t-arai-pnrm.github.io/recss-guideline/layout/box-model/
 - `layout/sizing` 7-4 大きさの決まり方（約1.2万字）https://t-arai-pnrm.github.io/recss-guideline/layout/sizing/
-- `layout/margin-role` 7-5 marginの役割（約1.4万字）https://t-arai-pnrm.github.io/recss-guideline/layout/margin-role/
+- `layout/margin-role` 7-5 marginの役割（約1.5万字）https://t-arai-pnrm.github.io/recss-guideline/layout/margin-role/
 - `layout/margin-collapse` 7-6 マージンの相殺（約1.6万字）https://t-arai-pnrm.github.io/recss-guideline/layout/margin-collapse/
-- `layout/flexbox-basics` 7-7 Flexboxの基礎（約4.1万字）https://t-arai-pnrm.github.io/recss-guideline/layout/flexbox-basics/
+- `layout/flexbox-basics` 7-7 Flexboxの基礎（約4.2万字）https://t-arai-pnrm.github.io/recss-guideline/layout/flexbox-basics/
 - `layout/grid-basics` 7-8 Gridの基礎（約2.5万字）https://t-arai-pnrm.github.io/recss-guideline/layout/grid-basics/
-- `layout/grid-alignment` 7-9 Gridでアイテムをそろえる（約2.3万字）https://t-arai-pnrm.github.io/recss-guideline/layout/grid-alignment/
+- `layout/grid-alignment` 7-9 Gridでアイテムをそろえる（約2.4万字）https://t-arai-pnrm.github.io/recss-guideline/layout/grid-alignment/
 - `layout/positioning` 7-10 positionの基礎（約2.8万字）https://t-arai-pnrm.github.io/recss-guideline/layout/positioning/
-- `layout/anchor-basics` 7-11 アンカーポジショニングの基礎（約2.6万字）https://t-arai-pnrm.github.io/recss-guideline/layout/anchor-basics/
+- `layout/anchor-basics` 7-11 アンカーポジショニングの基礎（約2.7万字）https://t-arai-pnrm.github.io/recss-guideline/layout/anchor-basics/
 - `layout/display-contents` 7-12 display: contentsで箱をなくす（約1.7万字）https://t-arai-pnrm.github.io/recss-guideline/layout/display-contents/
 
 ## 7-1 レイアウトの基礎
@@ -44,7 +44,7 @@ https://t-arai-pnrm.github.io/recss-guideline/layout/normal-flow/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout/normal-flow/#rule-no-inline-block-for-rows
 - 【非推奨・実装上の判断】`gap`、`align-items`、`justify-content` のように Flexbox や Grid でだけ働くプロパティを、`display` が `flex` でも `grid` でもない通常フローの要素に書かない。（`no-flex-grid-props-in-flow`）
   - 理由: 通常フローのブロックコンテナではこれらのプロパティは何も変えず、書いてあると間隔や配置がそこで決まっていると読まれて、実際の指定（子の `margin` など）を見誤らせるため。
-  - 補足: `align-content` は、ブロックコンテナでも中身をブロック方向にそろえるので、この対象から外れます。`justify-items` と `justify-self` も、仕様ではブロックコンテナで働きますが、対応しているのは Chrome と Edge だけなので、Baseline になるまではこの対象に含めます（ルール `no-justify-self-in-block-layout`）。`gap` は段組み（`column-count` など）でも働きます。
+  - 補足: `align-content` は、ブロックコンテナでも中身をブロック方向にそろえるので、この対象から外れます。`justify-items` と `justify-self` は、Chrome と Edge ではブロックコンテナでも働くので、このルールではなく、ルール `no-justify-self-in-block-layout`（禁止）で扱います。`gap` は段組み（`column-count` など）でも働きます。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout/normal-flow/#rule-no-flex-grid-props-in-flow
 
 ## 7-3 ボックスモデルの基礎
@@ -94,7 +94,7 @@ https://t-arai-pnrm.github.io/recss-guideline/layout/margin-role/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout/margin-role/#rule-margin-collapse-padding-for-inner-space
 - 【推奨・実装上の判断】段落や見出しのような文字の要素には文字のスタイルだけを書き、横方向の `margin` と `padding` を付けず、`display` も構造上の理由なく変えない。文字を左右から離す余白は、包む要素の `padding` か親の `gap` で作る。（`text-elements-text-styles-only`）
   - 理由: 文字の要素ごとに横の余白を付けると、同じ領域のほかの要素と左右の端がそろわず、要素の種類が増えるたびに同じ値を書き足すことになるため。`display` を変えると、`margin` の相殺や行の折り返し方が変わり、余白の書き分けが成り立たなくなる。
-  - 補足: 押せる範囲を広げるために `<a>` を `display: block flow` にして `padding` を付ける場合（17-2）と、`code` やバッジのように背景や枠線を持つインラインの要素が `padding-inline` を持つ場合は対象外です。
+  - 補足: 押せる範囲を広げるために `<a>` を `display: block flow` にして `padding` を付ける場合（17-2）と、`code` やバッジのように背景や枠線を持つインラインの要素が `padding-inline` を持つ場合は対象外です。本文の段落の行の長さを `max-inline-size: 40ic` のように文字数で決める指定も、文字を左右から離す余白ではないので対象外です（8-3）。編集者が要素を足せない CMS の本文エリアの見出しに付ける横の余白も対象外です（19-5）。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout/margin-role/#rule-text-elements-text-styles-only
 
 ## 7-6 マージンの相殺
@@ -110,7 +110,7 @@ https://t-arai-pnrm.github.io/recss-guideline/layout/margin-collapse/
 
 https://t-arai-pnrm.github.io/recss-guideline/layout/flexbox-basics/
 
-- 【推奨・実装上の判断】フレックスアイテムの大きさは `inline-size` や `block-size` で指定し、`flex-basis` は `auto` のままにする。`flex-basis` を書くのは、`flex: 1` のように伸び縮みの起点を決めるときと、折り返しの閾値のように主軸の大きさとして計算に使わせるときだけにする。（`flexbox-size-with-inline-size`）
+- 【推奨・実装上の判断】フレックスアイテムの大きさは `inline-size` や `block-size` で指定し、`flex-basis` は `auto` のままにする。`flex-basis` を書くのは、`flex: 1` のように伸び縮みの起点を決めるときと、折り返しの閾値や縮む量の比のように主軸の大きさとして計算に使わせるときだけにする。（`flexbox-size-with-inline-size`）
   - 理由: `flex-basis` は主軸の大きさなので、`flex-direction` を `column` に変えると、幅のつもりで書いた値が高さになるため。`inline-size` なら、並べる向きを変えても意味が変わらない。
   - 補足: `flex-basis` と `inline-size` は伸び縮みの前の仮の大きさで、最後は `min-*` と `max-*` の範囲に収められます。優先順位は `min-*`、`max-*`、`flex-basis` と `inline-size` の順です。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout/flexbox-basics/#rule-flexbox-size-with-inline-size
@@ -126,7 +126,7 @@ https://t-arai-pnrm.github.io/recss-guideline/layout/flexbox-basics/
   - 理由: 読み上げの順番とキーボードでフォーカスが移る順番は HTML の順番のままなので、見た目の順番と食い違うため。
   - 補足: 順番に意味がなく、フォーカスできる要素も含まない並び（装飾の画像と本文など）は対象外です。見た目の順番に合わせてフォーカスを移す `reading-flow` は、Baseline ではありません。それでも並べ替えるときは、ルール `reading-flow-when-reordered` に従って `reading-flow` を指定します。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout/flexbox-basics/#rule-flexbox-no-visual-reorder
-- 【推奨・実装上の判断】2カラムのどちらを先に縮めるかを決めるときは、先に縮める列に `flex-shrink: 9999` のような大きな値と `min-inline-size` を指定し、もう一方の列に `flex-shrink: 0` を指定しない。（`large-flex-shrink-for-shrink-order`）
+- 【推奨・実装上の判断】2カラムのどちらを先に縮めるかを決めるときは、先に縮める列に `flex-shrink: 9999` のような大きな値と、`min(100%, …)` で親の幅を上限にした `min-inline-size` を指定し、もう一方の列に `flex-shrink: 0` を指定しない。（`large-flex-shrink-for-shrink-order`）
   - 理由: 不足は `flex-shrink` と `flex-basis` の積の比で配られるので、大きな値の列がほぼすべてを受け持ち、最小幅に届いてから残りがもう一方に配られるため。`flex-shrink: 0` はどの幅でも縮まなくなり、狭い幅ではみ出す。
   - 補足: 縦に積む切り替えは、コンテナサイズクエリや `sidebar` の折り返しで別に行います。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout/flexbox-basics/#rule-large-flex-shrink-for-shrink-order
@@ -176,7 +176,7 @@ https://t-arai-pnrm.github.io/recss-guideline/layout/grid-alignment/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout/grid-alignment/#rule-subgrid-span-rows
 - 【推奨・実装上の判断】グリッドの列の幅は、列ごとに可変か不変かを決めてから、`max-content`（改行させない）、`fit-content()`（上限まで中身に合わせる）、`1fr`（残りをすべて使う）のように指定する。（`column-width-by-variability`）
   - 理由: 中身の長さが変わっても、どの列が伸び、どの列が伸びないかがコードから読み取れ、意図どおりに振る舞うため。
-  - 補足: 一覧の項目は `grid-template-columns: subgrid` で親の列に参加させると、すべての項目で列の位置がそろいます。`fit-content()` の列は `fr` の列より先に上限まで広がるので、隣の `fr` の列には `minmax(下限, 1fr)` で下限を付けます。
+  - 補足: 一覧の項目は `grid-template-columns: subgrid` で親の列に参加させると、すべての項目で列の位置がそろいます。`fit-content()` の列は `fr` の列より先に上限まで広がるので、隣の `fr` の列には `minmax(min(100%, 下限), 1fr)` で下限を付けます（ルール `minmax-min-capped-at-100-percent`）。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout/grid-alignment/#rule-column-width-by-variability
 - 【推奨・仕様にもとづく制約】`fit-content()` などの中身の幅で決まるトラックに画像とキャプションを置くときは、キャプションに `contain: inline-size` を指定し、列の幅を画像だけで決める。（`contain-caption-in-intrinsic-track`）
   - 理由: キャプションの1行の長さも `max-content` に含まれ、長いキャプションが画像の幅に関係なく列を上限まで押し広げるため。
@@ -232,7 +232,7 @@ https://t-arai-pnrm.github.io/recss-guideline/layout/display-contents/
 
 - 【推奨・実装上の判断】`display: contents` は、サブグリッドに参加させるときや、幅によってラッパーの箱を出し入れするときなど、箱をなくす理由があるときだけ使う。画面の幅で並びを変えるだけなら `grid-template` のエリアで組む。（`display-contents-with-reason`）
   - 理由: 箱をなくした要素はブラウザによってロールを失い、Flexbox で構造を変えると `order` も必要になって、読み上げやフォーカスの順番が見た目と食い違いやすいため。
-  - 補足: エリアで組むときは、テンプレートを `--_template` に入れてコンテナサイズクエリの中で差し替え、同じルールに `reading-flow` を指定します（ルール `reading-flow-when-reordered`）。レイアウトのためだけのラッパーは足しません。
+  - 補足: エリアで組むときは、コンテナサイズクエリの中で `grid-template` を書き換え、同じルールに `reading-flow` を指定します（ルール `reading-flow-when-reordered`）。レイアウトのためだけのラッパーは足しません。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout/display-contents/#rule-display-contents-with-reason
 - 【推奨・仕様にもとづく制約】`display: contents` で箱をなくす要素は、ロールを持たない `div` か `span` に限るか、`role` 属性でロールを明示して読み上げを確かめる。（`display-contents-keep-role`）
   - 理由: `display: contents` を指定した要素は、ブラウザによっては見出しやリストなどの暗黙のロールが失われることがあるため。

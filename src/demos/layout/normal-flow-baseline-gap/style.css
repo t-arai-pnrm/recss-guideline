@@ -2,7 +2,7 @@
   @scope (.scoped.normal-flow-baseline-gap) to (.scoped) {
     /* 背景色で、画像の下に残る空きを見えるようにする */
     ._frame {
-      background-color: var(--background--active);
+      background-color: var(--background--accent-subtle);
     }
 
     ._image {

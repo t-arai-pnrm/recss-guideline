@@ -40,10 +40,10 @@
         inline-size: var(--_icon-size);
         aspect-ratio: 1;
 
-        /* 1行目の行の高さの中で、上下の中央に置く */
+        /* 文章が折り返しても、アイコンを1行目にそろえるため */
         margin-block: calc((1lh - var(--_icon-size)) / 2);
 
-        /* 項目の padding の中へ戻す */
+        /* アイコンの幅の分だけ、文章の幅を狭めないため */
         margin-inline-start: calc(var(--_icon-offset) * -1);
 
         /* 強制カラーモードではグラデーションが消え、CanvasText で描かれる */
@@ -75,7 +75,7 @@
         content: "";
         position: absolute;
 
-        /* 項目の padding に、1行目の行の高さとアイコンの差の半分を足す */
+        /* inset は項目の padding を含む領域の上端から測るので、padding も足す */
         inset-block-start: calc(var(--_padding-block) + (1lh - var(--_icon-size)) / 2);
         inset-inline-start: 0;
         mask-image: var(--icon--check);

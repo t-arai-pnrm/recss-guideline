@@ -19,13 +19,13 @@ import Guideline from '../../../components/Guideline.astro';
 ```css title="🙅‍♂ Not Recommended: 書き足した順番のまま並んだ宣言" issue="convention"
 /* 🙅‍♂ Not Recommended */
 ._card {
-  color: oklch(20% 0 0deg);
+  color: var(--foreground--base);
   padding: 16px;
   display: block grid;
-  border-radius: 8px;
+  border-radius: var(--rounded--md);
   font-size: calc(14 / 16 * 1rem);
   position: relative;
-  border: 1px solid oklch(85% 0 0deg);
+  border: 1px solid var(--border--base);
   gap: 12px;
 }
 ```
@@ -55,10 +55,10 @@ taks-stylelint-orderは、CSSの仕様のモジュールを単位に、プロパ
   gap: 12px;
   inline-size: min(100%, calc(360 / 16 * 1rem));
   padding: var(--_padding);
-  border: 1px solid oklch(85% 0 0deg);
-  border-radius: 8px;
-  background-color: oklch(100% 0 0deg);
-  color: oklch(20% 0 0deg);
+  border: 1px solid var(--border--base);
+  border-radius: var(--rounded--md);
+  background-color: var(--background--surface);
+  color: var(--foreground--base);
   font-size: calc(14 / 16 * 1rem);
   line-height: 1.6;
 }
@@ -79,7 +79,7 @@ taks-stylelint-orderは、CSSの仕様のモジュールを単位に、プロパ
     }
 
     &[aria-current="page"] {
-      font-weight: 700;
+      font-weight: var(--font-weight--bold);
     }
   }
 }

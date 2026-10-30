@@ -9,7 +9,7 @@ sidebar:
 import Baseline from '../../../components/Baseline.astro';
 import Guideline from '../../../components/Guideline.astro';
 
-文字を「…」で打ち切るときは、`text-overflow: ellipsis` に `white-space: nowrap` と `overflow-inline: clip` を組み合わせ、全文を読める手段を別に用意します。金額や数量のような数値は切り詰めません。データを読み込む間に置く仮の表示（スケルトン）は、`aspect-ratio` と `lh` 単位で、読み込み後の内容と同じ寸法にします。
+文字を「…」で打ち切るときは、`text-overflow: ellipsis` に `white-space: nowrap` と `overflow-x: clip` を組み合わせ、全文を読める手段を別に用意します。金額や数量のような数値は切り詰めません。データを読み込む間に置く仮の表示（スケルトン）は、`aspect-ratio` と `lh` 単位で、読み込み後の内容と同じ寸法にします。
 
 この節は、「[11-3 サイズと内容の変化に耐える](/layout-practice/defensive/)」の続きです。11-3では、想定より長い文字や要素の数の変化で崩れないように書く方法を説明しました。この節では、内容が場所に入りきらないときと、内容がまだ届いていないときの2つの場面を扱います。
 
@@ -23,21 +23,17 @@ import Guideline from '../../../components/Guideline.astro';
 
 ## 1行に収まらない文字を打ち切る
 
-1行に収まらない文字を「…」で打ち切るときは、`text-overflow: ellipsis` を使います。ただし、このプロパティだけでは何も起きません。行を折り返さない指定（`white-space: nowrap`）と、行方向のはみ出しを切り取る指定（`overflow-inline: clip`）がそろったときに、切り取られる位置へ「…」を表示します。
+1行に収まらない文字を「…」で打ち切るときは、`text-overflow: ellipsis` を使います。ただし、このプロパティだけでは何も起きません。行を折り返さない指定（`white-space: nowrap`）と、横方向のはみ出しを切り取る指定（`overflow-x: clip`）がそろったときに、切り取られる位置へ「…」を表示します。
 
 ```css title="🙆‍♂ Recommended: 1行に収まらない文字を「…」で打ち切る"
 ._file-name {
-  overflow-inline: clip;
+  overflow-x: clip;
   text-overflow: ellipsis;
   white-space: nowrap;
-
-  @supports not (overflow-inline: clip) {
-    overflow-x: clip;
-  }
 }
 ```
 
-`white-space: nowrap` はルール `no-nowrap-without-reason` で避けている指定ですが、切り詰めは指定する明確な理由にあたります。はみ出しを `hidden` ではなく `clip` で切り取るのは、「[11-4 はみ出しとスクロール](/layout-practice/overflow/#overflow-hidden-より-clip-を優先する)」と同じく、スクロールコンテナを作らないためです。Chromeでは、`overflow-inline: clip` だけでも「…」が表示されることを確かめました。FirefoxとSafariでも、`overflow-x: clip` と `text-overflow: ellipsis` の組み合わせで「…」が表示されました。本書の対象のSafari 18では確かめていません。{/* 要検証: ブラウザ。Safari 18 の overflow-x: clip と text-overflow の組み合わせ */}
+`white-space: nowrap` はルール `no-nowrap-without-reason` で避けている指定ですが、切り詰めは指定する明確な理由にあたります。はみ出しを `hidden` ではなく `clip` で切り取るのは、「[11-4 はみ出しとスクロール](/layout-practice/overflow/#overflow-hidden-より-clip-を優先する)」と同じく、スクロールコンテナを作らないためです。論理プロパティの `overflow-inline` はSafari 26から対応したので、物理の `overflow-x` で書きます（「[9-9 論理プロパティと論理値](/notation/logical-properties/)」）。FirefoxとSafariで、`overflow-x: clip` と `text-overflow: ellipsis` の組み合わせで「…」が表示されることを確かめました。本書の対象のSafari 18では確かめていません。{/* 要検証: ブラウザ。Safari 18 の overflow-x: clip と text-overflow の組み合わせ */}
 
 フレックスアイテムやグリッドアイテムの中で切り詰めるときは、アイテムの最小幅が0でなければ、切り詰める前に親が押し広げられます。本書では、ベーススタイルの全称セレクタの `min-inline-size: 0` で、アイテムの最小幅を0にしています（「[8-2 ベーススタイルに書くもの](/reset/base-styles/#rule-global-min-inline-size-zero)」）。
 
@@ -53,23 +49,20 @@ import Guideline from '../../../components/Guideline.astro';
 
 ```css title="🙆‍♂ Recommended: 名前は切り詰め、金額は切り詰めずに数字の幅をそろえる"
 ._item {
+  /* 名前を切り詰めて、金額と同じ行に収めるため、折り返さない */
   display: block flex;
   gap: 16px;
   align-items: baseline;
 
-  & > ._item-name {
-    flex-grow: 1;
+  & > ._item-price {
+    margin-inline-start: auto;
   }
 }
 
 ._item-name {
-  overflow-inline: clip;
+  overflow-x: clip;
   text-overflow: ellipsis;
   white-space: nowrap;
-
-  @supports not (overflow-inline: clip) {
-    overflow-x: clip;
-  }
 }
 
 ._item-price {
@@ -78,7 +71,7 @@ import Guideline from '../../../components/Guideline.astro';
 }
 ```
 
-金額の要素は、`min-inline-size: fit-content` で中身の幅より縮まないようにしています（「[11-3 サイズと内容の変化に耐える](/layout-practice/defensive/)」の「縮ませたくない要素を守る」）。名前の要素は最小幅が0なので、行に収まらない分だけ縮み、末尾が「…」になります。
+金額の要素は、`min-inline-size: fit-content` で中身の幅より縮まないようにしています（「[11-3 サイズと内容の変化に耐える](/layout-practice/defensive/)」の「縮ませたくない要素を守る」）。名前の要素は最小幅が0なので、行に収まらない分だけ縮み、末尾が「…」になります。名前が短いときは、金額の `auto` の `margin` が余った幅を吸収し、金額は行末に寄ります。
 
 `font-variant-numeric: tabular-nums` は、数字をすべて同じ幅で表示する指定です。書体によっては、「1」が「0」より狭いというように、数字の幅が字ごとに違います。そのまま金額を縦に並べると、桁の位置がずれて大小を比べにくくなります。
 
@@ -109,28 +102,30 @@ import Guideline from '../../../components/Guideline.astro';
   :scope {
     display: block grid;
     gap: 8px;
-    line-height: var(--leading--normal);
   }
 
   ._media {
     aspect-ratio: 16 / 9;
-    background-color: var(--color--neutral--100);
+    background-color: var(--background--surface);
   }
 
   ._title {
     block-size: 2lh;
-    background-color: var(--color--neutral--100);
-    font-size: calc(20 / 16 * 1rem);
+    background-color: var(--background--surface);
+    font-size: calc(var(--text--title--font-size) / 16 * 1rem);
+    line-height: var(--text--title--leading);
   }
 
   ._excerpt {
     block-size: 3lh;
-    background-color: var(--color--neutral--100);
+    background-color: var(--background--surface);
+    font-size: calc(var(--text--body--font-size) / 16 * 1rem);
+    line-height: var(--text--body--leading);
   }
 }
 ```
 
-この例は、画像、2行の見出し、3行の抜粋が並ぶカードのスケルトンです。`gap`、`line-height`、見出しの文字サイズには、読み込み後のカードと同じ値を指定します。`lh` は要素自身の文字サイズと行送りから決まるので、見出しのように文字サイズの違う要素では、スケルトンの側にも同じ文字サイズが要ります。行数を制限している見出しなら、上限の行数で場所を取ります。
+この例は、画像、2行の見出し、3行の抜粋が並ぶカードのスケルトンです。`gap` と、見出しと抜粋の文字サイズと行送りには、読み込み後のカードと同じ値を指定します。文字のトークンを読み込み後のカードと同じ役割（見出しは `title`、抜粋は `body`）で参照すれば、トークンの値を変えてもスケルトンの寸法がずれません。`lh` は要素自身の文字サイズと行送りから決まるので、見出しのように文字サイズの違う要素では、スケルトンの側にも同じ文字サイズが要ります。行数を制限している見出しなら、上限の行数で場所を取ります。
 
 実際の行数が上限より少なければ、差し替わったときに寸法は縮みます。読み込み後のカードでも見出しに `min-block-size: 2lh` を指定しておけば、この差はなくなり、一覧に並べたカードの見出しの高さもそろいます。{/* 要確認: 出典なし */}
 

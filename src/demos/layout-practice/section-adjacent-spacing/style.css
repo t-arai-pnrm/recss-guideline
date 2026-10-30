@@ -4,22 +4,13 @@
  * @prop {length} --campaign-section--padding-block-start [48px] - 上の余白
  */
 @layer components {
-  /* 2つのページを比べるための枠のラベル */
-  @scope (.scoped.section-join-demo) to (.scoped) {
-    p {
-      color: var(--foreground--muted);
-      font-size: calc(var(--text--caption--font-size) / 16 * 1rem);
-      line-height: var(--text--caption--leading);
-    }
-  }
-
   @scope (.scoped.news-section) to (.scoped) {
     :scope {
       display: block grid;
       gap: 8px;
       padding-block: 48px;
       padding-inline: 16px;
-      background-color: var(--background--active);
+      background-color: var(--background--surface);
     }
   }
 
@@ -33,7 +24,7 @@
       padding-inline: 16px;
 
       /* お知らせのセクションと同じ背景 */
-      background-color: var(--background--active);
+      background-color: var(--background--surface);
     }
   }
 
@@ -54,7 +45,7 @@
     ._sections {
       /* 比べるために、data-spacing="joined" の側にだけ指定する */
       &[data-spacing="joined"] > ._news-outer + ._campaign-outer {
-        /* 同じ背景のお知らせが前にあるときは、キャンペーンの上の余白を詰める */
+        /* 同じ背景が続くと面の境目が見えず、2つ分の余白が1つの面の中の空白に見えるため */
         --campaign-section--padding-block-start: 0px;
       }
     }

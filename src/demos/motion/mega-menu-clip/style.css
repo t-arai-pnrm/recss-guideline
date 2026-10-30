@@ -9,6 +9,13 @@
       align-items: center;
       padding-block-end: 12px;
       border-block-end: 1px solid var(--border--base);
+
+      /* 初期化を終えてボタンに aria-expanded が付いたら、パネルをヘッダーの下端に重ねて置く。基準はヘッダー */
+      & ._panel:is(._menu-button[aria-expanded] + *) {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: 100%;
+      }
     }
 
     ._logo {
@@ -34,13 +41,9 @@
       }
     }
 
-    /* ヘッダーの下端に重ねて置く。高さは変えず、見える範囲だけを clip-path で動かす */
+    /* 高さは変えず、見える範囲だけを clip-path で動かす */
     ._panel {
       --_clip-from: inset(0 -24px -24px);
-
-      position: absolute;
-      inset-inline: 0;
-      inset-block-start: 100%;
 
       /* 左右と下に負の値を指定し、影を切り取らない */
       clip-path: inset(0 -24px -24px);
@@ -61,8 +64,11 @@
         --_clip-from: inset(0 -24px 100%);
       }
 
-      /* 閉じた状態。visibility: hidden で、中のリンクをフォーカスと読み上げから外す */
-      &:not(:is(._menu-button[aria-expanded="true"] + *)) {
+      /*
+       * 閉じた状態。visibility: hidden で、中のリンクをフォーカスと読み上げから外す。
+       * スクリプトが動かず aria-expanded が付かないときは、パネルを隠さない
+       */
+      &:is(._menu-button[aria-expanded="false"] + *) {
         visibility: hidden;
         clip-path: var(--_clip-from);
         opacity: 0;

@@ -2,12 +2,12 @@
  * ポップオーバーで開くメニュー。
  * 開閉は popover 属性で動き、カスタム要素の JavaScript はホバーで開く処理などを足すだけにする。
  *
- * @prop {color} --popover-menu--accent [var(--foreground--accent)] - メニューを開いている間のボタンの枠線の色
+ * @prop {color} --popover-navigation--accent [var(--foreground--accent)] - メニューを開いている間のボタンの枠線の色
  */
 @layer components {
-  @scope (popover-menu.scoped) to (.scoped) {
+  @scope (popover-navigation.scoped) to (.scoped) {
     :scope {
-      --_accent: var(--popover-menu--accent, var(--foreground--accent));
+      --_accent: var(--popover-navigation--accent, var(--foreground--accent));
       --_border-color: var(--border--base);
       --_background--hocus: var(--background--hover);
 
@@ -32,7 +32,7 @@
         background-color: var(--_background--hocus);
       }
 
-      /* メニューを開いている間は、押された見た目にする */
+      /* どのボタンのパネルが開いているかを示すため、開いている間は押された見た目にする */
       &:has(+ :popover-open) {
         border-color: var(--_accent);
         background-color: var(--_background--hocus);
@@ -49,7 +49,6 @@
       box-shadow: var(--shadow--lg);
       background-color: var(--background--raised);
 
-      /* 対応する環境では、ボタンの下に左端をそろえて出す */
       @supports (position-area: block-end span-inline-end) {
         position-area: block-end span-inline-end;
         margin-block: 8px;

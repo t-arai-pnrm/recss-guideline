@@ -41,7 +41,7 @@
 
   /* 主ボタンのように、文字色で塗る面 */
   --background--inverse: light-dark(var(--color--neutral--900), var(--color--neutral--100));
-  --background--accent: light-dark(var(--color--accent--600), var(--color--accent--500));
+  --background--accent: var(--color--accent--600);
 
   /* 選んだ状態や範囲を示す淡い青。半透明にして、どの面の上でもなじませる */
   --background--accent-subtle: color-mix(in oklab, var(--foreground--accent) 12%, transparent);

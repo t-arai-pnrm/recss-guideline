@@ -30,6 +30,11 @@
     gap: var(--cluster--gap, var(--cluster--row-gap, 0)) var(--cluster--gap, var(--cluster--column-gap, 0));
     justify-content: var(--cluster--justification, normal);
     align-items: var(--cluster--alignment, normal);
+
+    /* 最後の行に子が1つだけ取り残されないよう、各行の長さをそろえる */
+    @supports (flex-wrap: balance) {
+      flex-wrap: balance;
+    }
   }
 
   /* 幅が閾値以上なら指定の列数で並べ、閾値を下回ったら 1 列にする。 */
@@ -45,7 +50,7 @@
 
     display: block grid;
 
-    /* 閾値より狭いと sign() が -1 になり、列の最小幅が 100%（1 列）になる */
+    /* クエリを使わずに1列へ切り替えるため、閾値より狭いときは列の最小幅を 100% にする */
     grid-template-columns: repeat(
       auto-fit,
       minmax(max(var(--_c--column-preferred-width), sign(100% - var(--_c--threshold)) * -100%), 1fr)
@@ -59,8 +64,9 @@
     li {
       padding-block: 4px;
       padding-inline: 12px;
+      border: 1px solid var(--border--base);
       border-radius: var(--rounded--full);
-      background-color: var(--background--active);
+      background-color: var(--background--surface);
       font-size: calc(var(--text--body-compact--font-size) / 16 * 1rem);
       line-height: var(--text--body-compact--leading);
     }
@@ -72,7 +78,8 @@
     }
 
     h2 {
-      font-size: calc(18 / 16 * 1rem);
+      font-size: calc(var(--text--subtitle--font-size) / 16 * 1rem);
+      line-height: var(--text--subtitle--leading);
     }
   }
 }

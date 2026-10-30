@@ -105,6 +105,21 @@ kiso.cssは、`:root` に `overflow-wrap: anywhere` を指定しています。�
     max-block-size: calc(320 / 16 * 1rem);
     isolation: isolate;
     scrollbar-gutter: stable;
+
+    & thead th {
+      position: sticky;
+      inset-block-start: 0;
+    }
+
+    & thead th:first-child {
+      inset-inline-start: 0;
+      z-index: var(--z--forwards);
+    }
+
+    & tbody th {
+      position: sticky;
+      inset-inline-start: 0;
+    }
   }
 
   table {
@@ -119,26 +134,18 @@ kiso.cssは、`:root` に `overflow-wrap: anywhere` を指定しています。�
 
   th {
     &:is(thead *) {
-      position: sticky;
-      inset-block-start: 0;
       background-color: var(--background--base);
     }
 
-    &:is(thead *):first-child {
-      inset-inline-start: 0;
-      z-index: var(--z--forwards);
-    }
-
     &:is(tbody *) {
-      position: sticky;
-      inset-inline-start: 0;
+      border-inline-end: 1px solid var(--border--base);
       background-color: var(--background--surface);
     }
   }
 }
 ```
 
-留めたセルには、不透明な背景色を指定します。背景がないと、下を通るセルの文字が透けて見えるからです。`z-index` を指定するのは、縦と横の両方に留める左上の角のセルだけです。列の見出しは横に、行の見出しは縦に動いて、どちらも角のセルの下にだけ入ります。角のセルを前に出せば、ほかの留めたセルどうしは重ならないため、`z-index` を指定せずDOMの順番どおりに描かせてかまいません。内部の要素に相対的な `z-index` を指定するため、ルートには `isolation: isolate` を指定します（「[10-2 コンポーネントの境界を守る](/components/boundaries/)」）。
+留めたセルには、不透明な背景色を指定します。背景がないと、下を通るセルの文字が透けて見えるからです。`z-index` を指定するのは、縦と横の両方に留める左上の角のセルだけです。列の見出しは横に、行の見出しは縦に動いて、どちらも角のセルの下にだけ入ります。角のセルを前に出せば、ほかの留めたセルどうしは重ならないため、`z-index` を指定せずDOMの順番どおりに描かせてかまいません。内部の要素に相対的な `z-index` を指定するため、ルートには `isolation: isolate` を指定します（「[10-2 コンポーネントの境界を守る](/components/boundaries/)」）。セルを留める `position: sticky` と `inset`、角のセルの `z-index` は、基準になるスクロールコンテナ（ルート）のネストに `& thead th` のように書きます。セルが留まる位置は、セル自身ではなく、スクロールさせるルートとの関係で決まるからです。留めたセルの背景色と枠線は、セル自身の見た目なので、セルのルールに書きます。
 
 ## 数値の列をそろえる
 
@@ -198,7 +205,7 @@ kiso.cssは、`:root` に `overflow-wrap: anywhere` を指定しています。�
     @container --scoped (inline-size >= calc((72 + 112 + 176 + 40 + 72 + 72) / 16 * 1rem + 12px * 2 * 6)) {
       --_density: --spacious;
 
-      display: block table;
+      display: revert-layer;
     }
   }
 
@@ -210,6 +217,7 @@ kiso.cssは、`:root` に `overflow-wrap: anywhere` を指定しています。�
   }
 
   td {
+    /* 列の名前と値を1行の両端に並べるため、折り返さない */
     @container style(--_density: --compact) {
       display: block flex;
       gap: 16px;
@@ -229,7 +237,7 @@ kiso.cssは、`:root` に `overflow-wrap: anywhere` を指定しています。�
 
 閾値はルートの直下の `table` に1回だけ書き、`--_density` を、狭いときの `--compact` から広いときの `--spacious` に切り替えます。子孫の要素は、この値をスタイルクエリ（祖先の要素で宣言したカスタムプロパティの値を条件にするクエリ）で読みます。仕組みは「[10-6 スタイルクエリで状態を伝える](/components/style-queries/)」で説明しています。`table` 自身は、自分で宣言した `--_density` をスタイルクエリで読めないので、`display` の切り替えはコンテナサイズクエリの中に書きます。
 
-子孫の要素では、縦に積む指定を `@container style(--_density: --compact)` の中に書いています。表は、表の形がブラウザの既定のスタイルで、縦に積む形のほうが指定の多い形です。縦積みの指定をクエリの外に書くと、広い幅ではその指定をひとつずつ打ち消して、表の形へ戻さなければなりません。狭いときの条件の中に書けば、広い幅では子孫の要素がブラウザの既定のスタイルのまま表の形になり、打ち消すのは `table` 自身の `display` だけで済みます。
+子孫の要素では、縦に積む指定を `@container style(--_density: --compact)` の中に書いています。表は、表の形がブラウザの既定のスタイルで、縦に積む形のほうが指定の多い形です。縦積みの指定をクエリの外に書くと、広い幅ではその指定をひとつずつ打ち消して、表の形へ戻さなければなりません。狭いときの条件の中に書けば、広い幅では子孫の要素がブラウザの既定のスタイルのまま表の形になり、打ち消すのは `table` 自身の `display` だけで済みます。その `display` も `revert-layer` で、ブラウザの既定の表の形に戻します（「[4-1 カスケード・詳細度・継承](/cascade/cascade-basics/#rule-explicit-rollback-keyword)」）。
 
 縦に積んだときは、各セルの値の前に列の名前を表示します。列の名前は、`::before` の `content` ではなく、HTMLの `<span class="_label" aria-hidden="true">` に書きます。意味のある文字はHTMLに書くという本書の方針に合わせるためです（「[5-8 生成コンテンツと装飾の擬似要素](/pseudo/generated-content/)」）。`aria-hidden` を付けるのは、`role` で残した列の見出しと重ねて読み上げないためです。`thead` を `display: none` で消すと、列の見出しとの関連づけまで失われるおそれがあります。そこで `thead` は、視覚的にだけ隠します。{/* 要確認: 出典なし */}
 

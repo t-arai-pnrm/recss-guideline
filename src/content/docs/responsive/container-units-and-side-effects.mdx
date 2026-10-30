@@ -85,6 +85,14 @@ gridアイテムで避けるのは、`auto`、`max-content`、`fit-content()` �
     }
   }
 
+  ._thumbnail {
+    aspect-ratio: 16 / 9;
+
+    @container style(--_density: --spacious) {
+      aspect-ratio: 1;
+    }
+  }
+
   ._body {
     container: --body / inline-size;
 
@@ -136,6 +144,14 @@ gridアイテムで避けるのは、`auto`、`max-content`、`fit-content()` �
 
       /* カードの幅が 400px で 120px、720px 以上で 200px */
       grid-template-columns: clamp(120 / 16 * 1rem, 25cqi + 20 / 16 * 1rem, 200 / 16 * 1rem) 1fr;
+    }
+  }
+
+  ._thumbnail {
+    aspect-ratio: 16 / 9;
+
+    @container style(--_density: --spacious) {
+      aspect-ratio: 1;
     }
   }
 

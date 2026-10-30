@@ -16,33 +16,31 @@
 
       display: block grid;
       reading-flow: grid-rows;
-
-      /* 狭いときは、画像を上に置き、テキストの左右に 24px の余白の列を取る */
       grid-template:
-        "--image --image   --image"
-        ".       .         .      " 1rlh
-        ".       --heading .      "
-        ".       .         .      " 1rlh
-        ".       --body    .      "
-        ".       .         .      " 1rlh
+        "--figure --figure  --figure"
+        ".        .         .       " 1rlh
+        ".        --heading .       "
+        ".        .         .       " 1rlh
+        ".        --body    .       "
+        ".        .         .       " 1rlh
         / 24px 1fr 24px;
 
-      /* 画像の列 240px 相当・隙間 32px・テキストの列の最小幅 240px 相当・右の余白 32px が並ぶ幅 */
+      /* 画像の列とテキストの列が、どちらも最小幅の 240px 相当を確保できる幅から横に並べる */
       @container --scoped (inline-size >= calc(240 / 16 * 1rem + 32px + 240 / 16 * 1rem + 32px)) {
         --_density: --spacious;
 
-        /* 画像の列は、画像の幅に合わせ、480px 相当で頭打ちにする */
+        /* 画像の幅はカードごとに違うので、画像の列は中身に合わせ、大きすぎる画像だけを上限で止める */
         grid-template:
-          "--image . .         ." 1.5rlh
-          "--image . --heading ."
-          "--image . .         ." 1.5rlh
-          "--image . --body    ." 1fr
-          "--image . .         ." 1.5rlh
-          / fit-content(calc(480 / 16 * 1rem)) 32px minmax(calc(240 / 16 * 1rem), 1fr) 32px;
+          "--figure . .         ." 1.5rlh
+          "--figure . --heading ."
+          "--figure . .         ." 1.5rlh
+          "--figure . --body    ." 1fr
+          "--figure . .         ." 1.5rlh
+          / fit-content(calc(480 / 16 * 1rem)) 32px minmax(min(100%, calc(240 / 16 * 1rem)), 1fr) 32px;
       }
 
       & > ._figure {
-        grid-area: --image;
+        grid-area: --figure;
       }
 
       & > ._heading {
@@ -55,11 +53,13 @@
     }
 
     img {
-      /* 縦に積むときは、画像を列の幅いっぱいに広げる */
-      inline-size: 100%;
+      /* 縦に積むときは画像の幅より列が広いことがあるので、列の幅まで広げる */
+      inline-size: -webkit-fill-available;
+      inline-size: stretch;
 
+      /* 横に並べるときは、画像の width 属性の幅で列の幅を決めさせる */
       @container style(--_density: --spacious) {
-        inline-size: auto;
+        inline-size: initial;
       }
     }
 

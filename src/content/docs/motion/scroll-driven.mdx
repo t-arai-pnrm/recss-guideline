@@ -69,15 +69,18 @@ Firefoxはスクロール駆動アニメーションに対応していません�
 
 `@supports` の条件には、`animation-timeline` だけでなく `animation-range` も加えます。2つに別々の版で対応したブラウザはありません（MDNのブラウザ互換性データで確認）。しかし、2つは別々のプロパティなので、`animation-timeline` にだけ対応した実装があれば、範囲の指定が無視されてタイムラインの全体で動き、見せたいタイミングとずれます。条件には、実際に使う値を書きます。`view()` のタイムラインなら `(animation-timeline: view()) and (animation-range: entry)` です。`scroll()` のタイムラインで長さの範囲を使うなら、`(animation-timeline: scroll()) and (animation-range: 0 80px)` と書きます。
 
-次の例は、ページを80pxスクロールするまでの間に、ヘッダーの背景をフェードインさせます。背景は擬似要素に描き、その `opacity` をスクロール量に合わせて変えます。
+次の例は、ページを80pxスクロールするまでの間に、ヘッダーの背景をフェードインさせます。背景は擬似要素に描き、その `opacity` をスクロール量に合わせて変えます。ヘッダーは、ビューポートの高さが十分なときだけ固定します（「[11-7 固定ヘッダー](/layout-practice/sticky-header/)」）。
 
 ```css title="🙆‍♂ Recommended: スクロールした量に合わせて、ヘッダーの背景を表示する" from="motion/scroll-header"
 @scope (.scoped.site-header) to (.scoped) {
   :scope {
-    position: sticky;
-    inset-block-start: 0;
     z-index: var(--z--header);
     isolation: isolate;
+
+    @media (height >= calc(600 / 16 * 1rem)) {
+      position: sticky;
+      inset-block-start: 0;
+    }
 
     &::after {
       content: "";
@@ -102,9 +105,9 @@ Firefoxはスクロール駆動アニメーションに対応していません�
 
 次のデモでは、枠の中をスクロールすると、80pxまでの間にヘッダーの背景が現れ、上へ戻すと薄くなります。スクロール駆動アニメーションに対応していない環境では、アニメーションが当たらないので、背景は最初から表示されています。
 
-<Demo title="スクロールした量に合わせて、ヘッダーの背景をフェードインする" html={headerHtml} css={headerCss} frame={headerFrame} scheme="light" height="320px" />
+<Demo title="スクロールした量に合わせて、ヘッダーの背景をフェードインする" html={headerHtml} css={headerCss} frame={headerFrame} scheme="light" height="640px" />
 
-`view()` では、範囲を名前で指定できます。`entry` は要素が画面に入る間、`exit` は出ていく間、`contain` は要素の全体が画面に収まっている間です。`animation-range: entry 0% entry 100%` のように、名前と割合を組み合わせて細かく絞ることもできます。範囲を絞ると、その前後にアニメーションの当たらない区間ができるので、ここでも `animation-fill-mode: both` を指定します。
+`view()` では、範囲を名前で指定できます。`entry` は要素が画面に入る間、`exit` は出ていく間、`contain` は要素の全体が画面に収まっている間（要素が画面より高いときは、要素が画面を覆っている間）です。`animation-range: entry 0% entry 100%` のように、名前と割合を組み合わせて細かく絞ることもできます。範囲を絞ると、その前後にアニメーションの当たらない区間ができるので、ここでも `animation-fill-mode: both` を指定します。
 
 次の例は、ヒーローの背景をパララックスで動かします。要素が画面に入り始めてから出終わるまでの全体を使うので、範囲は `cover` です。既定の範囲と同じでも、意図を示すために書いておきます。
 
@@ -196,7 +199,7 @@ Firefoxはスクロール駆動アニメーションに対応していません�
 
 ルートは、`view()` のタイムラインで自分の位置を測るだけで、自分は動きません。`--_in-view` は `@property` で登録していないので、キーフレームの間を補間できず、進み具合の50%の時点で `--false` から `--true` に切り替わります（CSS Custom Properties Level 1）。`linear` を指定しているので、切り替わるのは範囲のちょうど中間です。この例の範囲は `entry 0%` から `entry 60%` なので、`entry` の範囲の30%の位置で `--true` になります。このデモのように要素が表示領域より小さい場合は、要素の30%が画面に入った位置です。要素が表示領域より大きい場合は、`entry` の範囲は要素が表示領域を覆った時点で終わるので、表示領域の高さの30%まで入った位置になり、要素全体の30%ではありません（Scroll-driven Animations）。`animation-fill-mode: both` を指定しているので、範囲を過ぎたあとも `--true` のまま残ります。
 
-子の `._body` は、`animation-play-state: paused` と `animation-fill-mode: both` で、`@keyframes` の `from` の見た目のまま待機します。`--_in-view` が `--true` になると、`@container style()` の中の `running` が当てはまり、アニメーションが最後まで再生されます。`opacity: 0` を別に書かないので、開始の見た目を変えたいときは、`@keyframes` に渡すカスタムプロパティだけを変えればすみます。再生時間の `--duration--reveal`（600ms）は、機能的な動きの上限（300ms）を超えます。ページを読み進める間に一度だけ再生する、頻度の低い装飾なので、例外として扱います。
+子の `._body` は、`animation-play-state: paused` で止めているので、`@keyframes` の `from` の見た目のまま待機します。遅延のないアニメーションは、止めている間も時刻0の最初のフレームが当たるからです。`animation-fill-mode: both` は、再生を終えたあとに最後のフレームを保つために書いています。`--_in-view` が `--true` になると、`@container style()` の中の `running` が当てはまり、アニメーションが最後まで再生されます。`opacity: 0` を別に書かないので、開始の見た目を変えたいときは、`@keyframes` に渡すカスタムプロパティだけを変えればすみます。再生時間の `--duration--reveal`（600ms）は、機能的な動きの上限（300ms）を超えます。ページを読み進める間に一度だけ再生する、頻度の低い装飾なので、例外として扱います。
 
 `@container style()` は、名前を指定しなければ、いちばん近い祖先の要素の値を問い合わせます。要素は自分自身の値を問い合わせられないので、値を切り替える要素（ルート）と、再生する要素（`._body`）を分けています。`--fade-in` と `--translate-from` はサイト全体で使う `@keyframes` で、定義は「[18-6 @keyframesを設計する](/motion/keyframes/)」で説明しています。一方、`--_in-view` はコンポーネントの内部用のカスタムプロパティなので、それを切り替える `@keyframes` には、コンポーネントの名前を付けます。
 
@@ -216,7 +219,7 @@ Firefoxはスクロール駆動アニメーションに対応していません�
 
 Firefoxでも演出を出したいときと、スクロールを戻しても再生を途中で止めたくないときは、`IntersectionObserver` で属性を付けます。属性は、JavaScriptが外さない限り残るので、一度再生を始めたアニメーションは、スクロールの位置にかかわらず最後まで再生されます。
 
-この方法でも、`animation-play-state: paused` と `animation-fill-mode: both` を組み合わせます。一時停止していても、`both` によって `from` のキーフレームが描画されるので、要素は動き始める前の見た目で待機します。要素が画面に入り、JavaScriptが `data-revealed` を付けたら、`animation-play-state: initial` で一時停止を取り消して再生します。
+この方法でも、`animation-play-state: paused` と `animation-fill-mode: both` を組み合わせます。遅延のないアニメーションは、一時停止していても `from` のキーフレームが当たるので、要素は動き始める前の見た目で待機します。`both` は、再生を終えたあとの見た目を保つためのものです。要素が画面に入り、JavaScriptが `data-revealed` を付けたら、`animation-play-state: initial` で一時停止を取り消して再生します。
 
 ```css title="🙆‍♂ Recommended: 一時停止したアニメーションを、画面に入ったら再生する"
 @scope (.scoped.feature-list) to (.scoped) {
@@ -242,7 +245,7 @@ Firefoxでも演出を出したいときと、スクロールを戻しても再�
 
 待機中の見た目は、CSSだけの方法と同じく `@keyframes` の `from` が決めています。
 
-属性はJavaScriptで付けます。`data-motion-mode` は、`IntersectionObserver` で監視を始めたあとに付けます。
+属性はJavaScriptで付けます。要素の10%が画面に入ったら `data-revealed` を付けます。`rootMargin` で判定の範囲を狭める方法は、ページの末尾にある小さな要素が範囲に入らず、透明のまま残ることがあるので使いません。`data-motion-mode` は、`IntersectionObserver` で監視を始めたあとに付けます。
 
 ```js title="画面に入った要素に data-revealed を付ける JavaScript の例"
 const root = document.querySelector('.feature-list');
@@ -257,7 +260,7 @@ if (root && !reduced) {
         observer.unobserve(entry.target);
       }
     },
-    { rootMargin: '0px 0px -10% 0px' },
+    { threshold: 0.1 },
   );
   for (const item of root.querySelectorAll('li')) observer.observe(item);
 }
@@ -326,7 +329,7 @@ root?.setAttribute('data-motion-mode', reduced ? 'reduced' : 'motion');
     overscroll-behavior-inline: contain;
 
     @supports (animation-timeline: view()) and (animation-range: contain) {
-      @media (prefers-reduced-motion: no-preference) {
+      @media screen and (prefers-reduced-motion: no-preference) {
         overflow: clip;
         min-block-size: var(--_scroller-width);
         view-timeline-name: --horizontal-pin;
@@ -341,7 +344,7 @@ root?.setAttribute('data-motion-mode', reduced ? 'reduced' : 'motion');
     column-gap: var(--_column-gap);
 
     @supports (animation-timeline: view()) and (animation-range: contain) {
-      @media (prefers-reduced-motion: no-preference) {
+      @media screen and (prefers-reduced-motion: no-preference) {
         --translate-to--x-value: calc(-100% + 100cqi);
 
         position: sticky;
@@ -368,7 +371,9 @@ root?.setAttribute('data-motion-mode', reduced ? 'reduced' : 'motion');
 
 `ul` の高さは `min-block-size: 100svb` で、画面の高さを最小値にしています。コンポーネントの中でビューポート単位を使うのは例外ですが、この列は `sticky` で画面に留めるので、高さの基準も画面です。`dvb` を使うと、スクロール中にブラウザのUIが出入りするたびに高さが変わり、留めた列が上下にずれます（「[6-2 ビューポート単位とコンテナ単位](/values/viewport-and-container-units/)」）。
 
-留める指定と動かす指定は、どちらも `@supports` と `prefers-reduced-motion: no-preference` の中にまとめます。スクロールに合わせた横の移動は、画面の大部分を占める要素の移動なので、大きな変動にあたります（「[18-2 動きを減らす設定に対応する](/motion/reduced-motion/)」）。条件に合わないときは、`._body` が `overflow-x: auto` で横スクロールの領域となり、列を指やスクロールバーで動かして見ます。`sticky` と `._body` の高さを条件の外で指定すると、動かない環境では、列の先頭だけが留まって見えたまま、列の幅の分だけ縦のスクロールが続き、後ろの列を見る手段がなくなります。
+留める指定と動かす指定は、どちらも `@supports` と `screen and (prefers-reduced-motion: no-preference)` の中にまとめます。スクロールに合わせた横の移動は、画面の大部分を占める要素の移動なので、大きな変動にあたります（「[18-2 動きを減らす設定に対応する](/motion/reduced-motion/)」）。条件に合わないときは、`._body` が `overflow-x: auto` で横スクロールの領域となり、列を指やスクロールバーで動かして見ます。`sticky` と `._body` の高さを条件の外で指定すると、動かない環境では、列の先頭だけが留まって見えたまま、列の幅の分だけ縦のスクロールが続き、後ろの列を見る手段がなくなります。
+
+列の画像には、フォーカスできる要素がありません。キーボードでもスクロールできるよう、`._body` へ3つの属性を付けます。`role="region"`、`tabindex="0"`、区画の見出しを指す `aria-labelledby` です（「[12-12 reel](/compositions/reel/#キーボードで操作できるようにする)」）。留めて動かしている間も `._body` はTabキーで止まりますが、名前を読み上げるだけで、操作の妨げにはなりません。印刷ではスクロールで列が動かないので、留める指定は `screen` に限り、印刷のときは `@media print` で列を縦に並べます。
 
 <Demo title="縦のスクロールに合わせて、留めた画像の列が横に流れる" html={pinHtml} css={pinCss} frame={pinFrame} height="480px" />
 
@@ -411,6 +416,10 @@ window.addEventListener(
       @media screen and (scripting: enabled) {
         grid-template-areas: "--step";
         gap: initial;
+
+        & > ._step {
+          grid-area: --step;
+        }
       }
     }
   }
@@ -418,7 +427,6 @@ window.addEventListener(
   ._step {
     &:is(:scope[data-motion-mode="motion"] *) {
       @media screen and (scripting: enabled) {
-        grid-area: --step;
         opacity: 0;
       }
     }

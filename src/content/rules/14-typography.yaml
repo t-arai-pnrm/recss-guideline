@@ -292,9 +292,9 @@
 - id: line-clamp-with-overflow-clip
   level: 推奨
   kind: spec
-  rule: '行数を制限するときは、`-webkit-line-clamp` に `display: -webkit-box` と `-webkit-box-orient: block-axis` を組み合わせ、はみ出しは `overflow-block: clip` で隠す。'
+  rule: '行数を制限するときは、`-webkit-line-clamp` に `display: -webkit-box` と `-webkit-box-orient: block-axis` を組み合わせ、はみ出しは `overflow-y: clip` で隠す。'
   reason: '接頭辞のない `line-clamp` はまだ使えず、`overflow: hidden` ではぶら下げた約物が切れたり、スクロールバーが出たりするため。'
-  note: '`overflow-block` に対応していない Safari 18 のために、`@supports not (overflow-block: clip)` の中で `overflow-y: clip` を指定します。'
+  note: '論理プロパティの `overflow-block` には Safari が 26 から対応したので、`overflow-y` で書きます（`physical-only-where-no-logical`）。縦書きの要素では `overflow-x: clip` にします。'
   aiProne: true
   page: typography/size-and-line-breaks
   since: 0.1.0

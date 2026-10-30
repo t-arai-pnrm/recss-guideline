@@ -28,7 +28,7 @@ import featuredCss from '../../../demos/components/featured-product-card/style.c
 
 従来は、カードを置く側のセレクタからカードの中を選んで、特集の見た目を書いていました。
 
-```css title="🙅‍♂ Not Recommended: 置く側のセレクタごとに、カードの中を選んで特集の見た目を書く" issue="convention"
+```css title="🙅‍♂ Not Recommended: 置く側のセレクタごとに、カードの中を選んで特集の見た目を書く" issue="behavior"
 /* 🙅‍♂ Not Recommended */
 .pickup-section li:only-child .product-card ._title,
 .campaign-section li:only-child .product-card ._title {
@@ -83,10 +83,12 @@ section:has(> .card-wrapper:only-child) {
     display: block grid;
     padding: 16px;
 
+    /* 画像の列 240px 相当・隙間 24px・本文の最小幅 280px 相当に、左右の padding 16px を足した幅 */
     @container --scoped (inline-size >= calc(240 / 16 * 1rem + 24px + 280 / 16 * 1rem + 16px * 2)) {
       --_density: --spacious;
 
       grid-template-columns: calc(240 / 16 * 1rem) 1fr;
+      gap: 24px;
 
       @container style(--_featured: --true) {
         grid-template-columns: 1fr 1fr;
@@ -95,14 +97,14 @@ section:has(> .card-wrapper:only-child) {
   }
 
   ._title {
-    font-size: calc(18 / 16 * 1rem);
+    font-size: calc(var(--text--subtitle--font-size) / 16 * 1rem);
 
     @container style(--_density: --spacious) {
-      font-size: calc(22 / 16 * 1rem);
+      font-size: calc(var(--text--title--font-size) / 16 * 1rem);
     }
 
     @container style(--_density: --spacious) and style(--_featured: --true) {
-      font-size: calc(32 / 16 * 1rem);
+      font-size: calc(var(--text--display--font-size) / 16 * 1rem);
     }
   }
 }
@@ -184,11 +186,11 @@ section:has(> .card-wrapper:only-child) {
 }
 ```
 
-ここでもルート自身の見た目（影など）は、フラグではなく `&:has(…)` の中に直接書きます。ルートの子孫が読むだけなので、このフラグは `:scope` に置いてかまいません。`:scope` に置けないのは、サイズクエリでフラグを切り替える場合だけです。なお、`[open]` や `aria-expanded` のような属性で表す祖先の状態は、「[4-2 セレクタで詳細度を設計する](/cascade/selectors/)」の `&:is(:scope[open] *)` の形で子のルールの中に書けます。ホバーとフォーカスでフラグを使うのは、`@media (any-hover)` と `:focus-visible` の2つの条件を子ごとに書き写さないためです。
+ここでもルート自身の見た目（影など）は、フラグではなく `&:has(…)` の中に直接書きます。ルートの子孫が読むだけなので、このフラグは `:scope` に置いてかまいません。サイズクエリで切り替えるフラグだけは、`:scope` ではなく、クエリを書く子孫の要素に置きます（「[10-6 スタイルクエリで状態を伝える](/components/style-queries/)」）。なお、`[open]` や `aria-expanded` のような属性で表す祖先の状態は、「[4-2 セレクタで詳細度を設計する](/cascade/selectors/)」の `&:is(:scope[open] *)` の形で子のルールの中に書けます。ホバーとフォーカスでフラグを使うのは、`@media (any-hover)` と `:focus-visible` の2つの条件を子ごとに書き写さないためです。
 
 ## 補足と注意点
 
-公開プロパティは継承するので、特集のカードの中に同じ商品カードを入れ子にすると、内側のカードも `--true` を受け取ります。そうした構造がある場合は、カードの `:scope` の中に `& > * { --product-card--featured: initial; }` と書き、ルートの直下の要素で公開プロパティを未定義に戻します。内側のカードはフォールバックの `--false` を使い、ルート自身では宣言しないので、外から渡された値はこれまでどおり受け取れます。
+公開プロパティは継承するので、特集のカードの中に同じ商品カードを入れ子にすると、内側のカードも `--true` を受け取ります。そうした構造がある場合は、ルートの直下の `._layout` のルールに `--product-card--featured: initial;` と書き、公開プロパティを未定義に戻します。内側のカードはフォールバックの `--false` を使い、ルート自身では宣言しないので、外から渡された値はこれまでどおり受け取れます。
 
 スタイルクエリに対応していない環境では、`--_featured` を問い合わせる指定が適用されず、カードは通常の見た目のまま表示されます。特集は見た目の強弱の違いなので、内容は欠けません。置く側の `li` が宣言する公開プロパティも、継承されるだけで、それ自体は何も表示を変えません。
 

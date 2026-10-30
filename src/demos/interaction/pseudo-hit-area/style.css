@@ -2,7 +2,6 @@
   @scope (.scoped.close-demo) to (.scoped) {
     :scope {
       --_border: var(--border--base);
-      --_color--hocus: var(--foreground--accent);
     }
 
     ._header {
@@ -36,16 +35,16 @@
         inset: min(0px, (100% - var(--_hit-size)) / 2);
 
         /* デモでは、広げた範囲が分かるように破線で囲む */
-        outline: 1px dashed var(--_color--hocus);
+        outline: 1px dashed var(--foreground--muted);
       }
 
       &:focus-visible {
-        color: var(--_color--hocus);
+        background-color: var(--background--hover);
       }
 
       &:enabled:hover {
         @media (any-hover) {
-          color: var(--_color--hocus);
+          background-color: var(--background--hover);
         }
       }
     }

@@ -89,20 +89,23 @@ env(safe-area-inset-bottom, 16px)
 
 画面の下に固定する要素は、セーフエリアの影響をとくに受けます。「お問い合わせ」のような固定のバーや、ページの先頭へ戻るボタンを画面の下端に置くと、ホームインジケーターと重なります。ボタンを押すつもりで下端をスワイプすると、ホーム画面に戻ってしまいます。
 
-画面の下端に接するバーは、背景を端まで塗り、`padding-block-end` を `max()` で指定します。背景はホームインジケーターの後ろまで広がり、ボタンはセーフエリアの内側に収まります。左右の余白も、横向きの端末に備えて同じようにセーフエリアと比べます。
+画面の下端に接するバーは、背景を端まで塗り、下の余白を `max()` で指定します。背景はホームインジケーターの後ろまで広がり、ボタンはセーフエリアの内側に収まります。左右の余白も、横向きの端末に備えて同じようにセーフエリアと比べます。
 
 ```css title="🙆‍♂ Recommended: 下端に接するバーは、背景を端まで塗り、中身をセーフエリアの内側に置く"
 ._bar {
   position: fixed;
-  inset-inline: 0;
-  inset-block-end: 0;
 
-  /* セーフエリアは画面の物理的な左右にあるので、物理プロパティで書く */
+  /* セーフエリアは画面の物理的な下端と左右にあるので、物理プロパティで書く */
+  /* stylelint-disable-next-line logical-css/require-logical-properties */
+  bottom: 0;
+  inset-inline: 0;
   /* stylelint-disable-next-line logical-css/require-logical-properties */
   padding-right: max(16px, env(safe-area-inset-right));
   /* stylelint-disable-next-line logical-css/require-logical-properties */
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  /* stylelint-disable-next-line logical-css/require-logical-properties */
   padding-left: max(16px, env(safe-area-inset-left));
-  padding-block: 12px max(12px, env(safe-area-inset-bottom));
+  padding-block-start: 12px;
 }
 ```
 

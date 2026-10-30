@@ -127,21 +127,29 @@ HTMLの要素とも食い違っています。`menu` は、HTMLの `<menu>` 要�
 
 ```css title="🙆‍♂ Recommended: gutter と gap を別の値にする"
 @scope (.scoped.site-header) to (.scoped) {
+  :scope {
+    & > ._header-inner {
+      margin-inline: auto;
+    }
+  }
+
   ._header-inner {
     --_gutter: calc(var(--spacing--md) * 1px);
 
+    box-sizing: unset;
     max-inline-size: calc(1140 / 16 * 1rem);
     padding-inline: var(--_gutter);
   }
 
   ul {
     display: block flex;
+    flex-wrap: wrap;
     gap: calc(var(--spacing--sm) * 1px);
   }
 }
 ```
 
-`--_gutter` は画面の端との余白だけを表し、リンクの間隔は `gap` に別の値で書いています。ガターを広げても、リンクの間隔は変わりません。お問い合わせのリンクは、見た目がボタンでも `<a>` なので `_contact-link` です。
+`--_gutter` は画面の端との余白だけを表し、リンクの間隔は `gap` に別の値で書いています。ガターの値は、ほかの区画の `inner` と同じトークン `--spacing--md` を参照し、この区画だけの値にはしません。ガターを広げても、リンクの間隔は変わりません。お問い合わせのリンクは、見た目がボタンでも `<a>` なので `_contact-link` です。
 
 ## 省略語と数字
 

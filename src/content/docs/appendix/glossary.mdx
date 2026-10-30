@@ -118,7 +118,7 @@ sidebar:
 | ベタ組み | 全角の文字を1文字ずつ同じ幅の枠に収め、詰めずに並べる組み方です。本書では、和文の本文をベタ組みにします。 | [14-2](/typography/japanese-typesetting/) |
 | アキ | 文字と文字の間の空きです。本書では、和文と英数字の間や、約物の周りの空きを指します。 | [14-2](/typography/japanese-typesetting/) |
 | 約物 | 括弧や句読点のような記号です。開き括弧、閉じ括弧、読点、句点は、全角の幅の中に、半分ほどのアキを含んでいます。 | [14-2](/typography/japanese-typesetting/) |
-| `palt` | フォントが持つ文字ごとの幅の情報（プロポーショナルメトリクス）を使い、仮名や約物の周りのアキを詰めるOpenTypeの機能です。見出しにだけ使います。 | [14-2](/typography/japanese-typesetting/) |
+| `palt` | フォントが持つ文字ごとの幅の情報（プロポーショナルメトリクス）を使い、仮名や約物の周りのアキを詰めるOpenTypeの機能です。見出しと表の `caption` にだけ使います。 | [14-2](/typography/japanese-typesetting/) |
 
 ## 色とアクセシビリティ
 
@@ -127,7 +127,7 @@ sidebar:
 | 相対カラー構文 | `oklch(from 元の色 l c h / 10%)` のように、元の色を成分に分けて、一部だけを書き換えた色を作る構文です。 | [15-2](/color-media/relative-color/) |
 | 強制カラーモード | Windowsの「コントラスト テーマ」などを有効にしたときの表示モードです。ページの色が、ユーザーが選んだ少数のシステムカラーに置き換わります。 | [15-5](/color-media/forced-colors/) |
 | システムカラー | `Canvas`、`CanvasText`、`LinkText` のように、ユーザーの配色の設定から決まる色のキーワードです。 | [15-5](/color-media/forced-colors/) |
-| 動きを減らす設定 | OSにある、画面の動きを減らす設定です。CSSでは `prefers-reduced-motion` で調べ、本書では、装飾的な動きを `no-preference` のときだけ付けます。 | [18-2](/motion/reduced-motion/) |
+| 動きを減らす設定 | OSにある、画面の動きを減らす設定です。CSSでは `prefers-reduced-motion` で調べ、本書では、装飾的な動きのうちフェード以外を `no-preference` のときだけ付けます。 | [18-2](/motion/reduced-motion/) |
 
 ## 運用
 

@@ -14,23 +14,29 @@
       padding-block: 8px;
       padding-inline: 16px;
 
-      /* kiso.css の1px の枠線を消し、下辺にだけ線を引く */
-      border-style: unset;
-      border-block-end: 2px solid transparent;
+      /* 強制カラーモードでもタブの範囲が残るように、kiso.css の枠線は消さずに透明にする */
+      border-color: transparent;
+      border-block-end-width: 2px;
 
-      /* 選択中のタブは、aria-selected 属性で選ぶ */
       &[aria-selected="true"] {
-        border-color: currentColor;
+        border-block-end-color: currentColor;
         font-weight: var(--font-weight--bold);
       }
 
       &:enabled:not([aria-selected="true"]):focus-visible {
-        border-color: var(--border--base);
+        border-block-end-color: var(--border--base);
       }
 
       &:enabled:not([aria-selected="true"]):hover {
         @media (any-hover) {
-          border-color: var(--border--base);
+          border-block-end-color: var(--border--base);
+        }
+      }
+
+      /* 強制カラーモードでは透明な下線にも色が付くので、選んでいないタブの下線を背景の色にする */
+      &:not([aria-selected="true"]) {
+        @media (forced-colors: active) {
+          border-block-end-color: Canvas;
         }
       }
     }

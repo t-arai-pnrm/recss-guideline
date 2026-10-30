@@ -7,8 +7,9 @@
       align-items: start;
     }
 
+    /* 枠は、幅に含まれない outline で描き、内容の幅を 160px と 320px に保つ */
     ._parent {
-      border: 1px dashed var(--border--strong);
+      outline: 1px dashed var(--border--strong);
 
       &[data-size="narrow"] {
         inline-size: calc(160 / 16 * 1rem);

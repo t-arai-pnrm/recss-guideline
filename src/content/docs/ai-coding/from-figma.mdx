@@ -94,7 +94,7 @@ AIにFigmaを読ませる手順は、4つの段階に分かれます。大きな
 
 デザインの値は、CSSを書く前に、対応するトークンを決めておきます（`figma-values-to-tokens`）。カンプの値を1つずつ写すと、トークンと少しずつ違う値が増えます。
 
-```css title="🙅‍♂ Not Recommended: カンプの値をそのまま写す" issue="convention"
+```css title="🙅‍♂ Not Recommended: カンプの値をそのまま写す" issue="behavior"
 /* 🙅‍♂ Not Recommended */
 @scope (.scoped.article-cards) to (.scoped) {
   ._card {
@@ -141,7 +141,7 @@ AIにFigmaを読ませる手順は、4つの段階に分かれます。大きな
 
 ## 出力から読み取ること、読み取らないこと
 
-`get_design_context` の出力のうち、読み取るのは、要素の並び方と値です。Figmaのオートレイアウトは、要素を縦か横に並べ、間隔と内側の余白を指定する機能で、CSSのFlexboxやGridの考え方に近いものです。出力でも、オートレイアウトの部分は `flex flex-col gap-[20px]` のようにFlexboxと `gap` で表されるので、向きと間隔は `display: grid` や `gap` の指定に置き換えられます。
+`get_design_context` の出力のうち、読み取るのは、要素の並び方と値です。Figmaのオートレイアウトは、要素を縦か横に並べ、間隔と内側の余白を指定する機能で、CSSのFlexboxやGridの考え方に近いものです。出力でも、オートレイアウトの部分は `flex flex-col gap-[20px]` のようにFlexboxと `gap` で表されるので、向きと間隔は `display: block grid` や `gap` の指定に置き換えられます。
 
 読み取らないのは、絶対配置の座標と、固定の幅と高さです。オートレイアウトを使っていないフレームの要素は、フレームの左上からの座標で配置されていて、出力にもその座標が出ます。座標は、カンプの幅と内容でしか成り立たない値なので、計画の段階で、通常のフローやGridの並び方に読み替えます。オートレイアウトの部分の出力にも、カードの幅（`w-[380px]`）や、見出しを2行分で切る高さ（`h-[45px]` と `overflow-hidden`）、折り返しを止める `whitespace-nowrap` の混ざることがあります。どれもカンプの幅と文字数でしか成り立たないので、写しません（「[20-3 MCPサーバーを役割で使い分ける](/ai-coding/mcp-servers/)」の `no-verbatim-design-output`）。
 

@@ -88,10 +88,15 @@ AIが生成するコードでは、コンポーネントごとに `box-sizing: b
 この要素だけ `box-sizing: unset` にすれば、足し算は要りません。`content-box` では `max-inline-size` が内容の領域の幅を指すので、指定した最大幅がそのまま内容の幅になり、`padding` はその外側に付きます。画面が狭いときは、ブロックの `auto` の幅が `padding` を含めて親に収まるので、はみ出しもしません（ルール `unset-box-sizing-for-content-max-width`）。
 
 ```css title="🙆‍♂ Recommended: box-sizing を unset にして、最大幅を内容の幅にする"
+._content {
+  & > ._content-inner {
+    margin-inline: auto;
+  }
+}
+
 ._content-inner {
   box-sizing: unset;
   max-inline-size: calc(1140 / 16 * 1rem);
-  margin-inline: auto;
   padding-inline: 20px;
 }
 ```
@@ -108,7 +113,16 @@ AIが生成するコードでは、コンポーネントごとに `box-sizing: b
 
 `margin` には負の値を指定できます。`margin-block-start` を負にすると要素は前の要素に重なるように引き上げられ、幅が `auto` のブロックの `margin-inline` を負にすると、その分だけ横に広がります。負のマージンは、コンポジションの子に付いた余白を親の端で打ち消すといった、余白の調整に使います。要素を重ねる目的なら、Gridの同じエリアに置くほうが、重ねたどちらの大きさも親の高さに反映されます（「[11-6 重なりと全幅](/layout-practice/layering/#rule-grid-stack-before-absolute)」）。
 
-次の例では、カードの画像の左右に、カードの `padding` と同じ大きさの負の `margin` を付けています。画像の幅は `auto` のままなので、左右の `padding` の分だけ広がり、カードの端まで届きます。
+次の例では、カードの画像を `<figure class="_figure">` で包み、その左右に、カードの `padding` と同じ大きさの負の `margin` を付けています。`<figure>` はブロックで、幅は `auto` のままなので、左右の `padding` の分だけ広がり、カードの端まで届きます。中の `<img>` は、`stretch`（「[7-4 大きさの決まり方](/layout/sizing/)」）で `<figure>` の幅に広げます。
+
+```html
+<article class="scoped card">
+  <figure class="_figure">
+    <img class="_image" src="photo.jpg" alt="…">
+  </figure>
+  <p>…</p>
+</article>
+```
 
 ```css title="🙆‍♂ Recommended: 負の margin で、親の padding を越えて端まで広げる"
 .card {
@@ -116,11 +130,18 @@ AIが生成するコードでは、コンポーネントごとに `box-sizing: b
 
   padding: var(--_padding);
 
-  & > ._image {
+  & > ._figure {
     margin-inline: calc(var(--_padding) * -1);
   }
 }
+
+._image {
+  inline-size: -webkit-fill-available;
+  inline-size: stretch;
+}
 ```
+
+`<img>` に直接、負の `margin` を付けても広がりません。`<img>` のような置換要素の `auto` の幅は、`padding` を引いた残りではなく、画像そのものの幅だからです。kiso.cssの `max-inline-size: 100%` も、画像の幅をカードの内容の領域で頭打ちにします。
 
 `margin` の `auto` は、余った空間を受け取る値です。通常フローのブロックでは、`inline-size`、左右の `margin`、`padding`、`border` の合計が包含ブロックの幅と等しくなるように決まります。左右を `auto` にすると、余りが等分されて中央に寄ります（「[7-3 ボックスモデルの基礎](/layout/box-model/#rule-margin-inline-auto-centering)」）。通常フローでは上下の `auto` は0として扱われ、上下の中央寄せには使えません。
 
@@ -152,9 +173,12 @@ AIが生成するコードでは、コンポーネントごとに `box-sizing: b
 
   &[aria-selected="true"] {
     border-block-end-color: currentColor;
+    font-weight: var(--font-weight--bold);
   }
 }
 ```
+
+強制カラーモードでは、透明な `border` にも色が付きます（「[15-5 強制カラーモードとコントラスト](/color-media/forced-colors/)」）。選んでいないタブにも同じ下線が出るので、選んだタブは太字にして、線の色のほかにも手がかりを残しています。ラベルが和文だけなら、太字にしても字幅は変わりません。
 
 フォーカスリングを `outline` で描くのも、この性質によります。リングを付けても周りがずれず、強制カラーモードでも表示が残ります（「[8-2 ベーススタイルに書くもの](/reset/base-styles/)」）。
 

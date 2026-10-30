@@ -1,3 +1,16 @@
+// ボタンを押しても開けるように、初期化に成功してから開閉の状態を付ける
+const triggers = document.querySelectorAll('.scoped.action-menu ._trigger');
+
+for (const trigger of triggers) {
+  trigger.setAttribute('aria-expanded', 'false');
+
+  trigger.addEventListener('click', () => {
+    const expanded = trigger.getAttribute('aria-expanded') === 'true';
+    for (const other of triggers) other.setAttribute('aria-expanded', 'false');
+    trigger.setAttribute('aria-expanded', String(!expanded));
+  });
+}
+
 // 三角形の矩形は、カーソルの位置からサブメニューの左の辺まで。高さはサブメニューにそろえる
 for (const trigger of document.querySelectorAll('.scoped.action-menu[data-safe-triangle] ._trigger')) {
   const submenu = trigger.nextElementSibling;

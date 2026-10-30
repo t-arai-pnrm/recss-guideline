@@ -24,19 +24,19 @@
     --_c--column-count: var(--switcher--column-count, 3);
     --_c--column-min-width: var(--switcher--column-min-width, calc(320 / 16 * 1rem));
 
-    /* 列の最小幅で指定の列数を並べるのに必要な幅 */
+    /* 閾値を手で決めると列の値を変えたときに食い違うので、列の最小幅と列数から求める */
     --_c--threshold: calc(
       var(--_c--column-min-width) * var(--_c--column-count) + var(--_c--column-gap) * (var(--_c--column-count) - 1)
     );
 
-    /* 指定の列数でちょうど埋まる 1 列の幅。auto-fit がこれより多くの列を作らないようにする */
+    /* auto-fit が指定の列数より多くの列を作らないように、列の幅の下限にする */
     --_c--column-preferred-width: calc(
       (100% - var(--_c--column-gap) * (var(--_c--column-count) - 1)) / var(--_c--column-count)
     );
 
     display: block grid;
 
-    /* 閾値より狭いと sign() が -1 になり、列の最小幅が 100%（1 列）になる */
+    /* クエリを使わずに1列へ切り替えるため、閾値未満では列の最小幅を100%にする */
     grid-template-columns: repeat(
       auto-fit,
       minmax(max(var(--_c--column-preferred-width), sign(100% - var(--_c--threshold)) * -100%), 1fr)
@@ -49,14 +49,15 @@
   @scope (.scoped.feature-section) to (.scoped) {
     section,
     li {
-      padding: 16px;
+      padding: calc(var(--spacing--sm) * 1px);
       border: 1px solid var(--border--base);
       border-radius: var(--rounded--md);
       background-color: var(--background--surface);
     }
 
     h2 {
-      font-size: calc(18 / 16 * 1rem);
+      font-size: calc(var(--text--subtitle--font-size) / 16 * 1rem);
+      line-height: var(--text--subtitle--leading);
     }
   }
 }

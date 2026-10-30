@@ -7,6 +7,7 @@
     table {
       inline-size: -webkit-fill-available;
       inline-size: stretch;
+      min-inline-size: calc(360 / 16 * 1rem);
     }
 
     caption {
@@ -30,7 +31,7 @@
     tr {
       /* 隠した行も数えるので、見えている行の縞が崩れる */
       &:is(tbody *):nth-child(even) {
-        background-color: var(--background--active);
+        background-color: color-mix(in oklab, var(--foreground--base) 7%, transparent);
       }
     }
   }

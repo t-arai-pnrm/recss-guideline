@@ -8,7 +8,7 @@
     }
 
     ._placeholder {
-      background-image: repeating-linear-gradient(-45deg, var(--background--active) 0 8px, transparent 0 16px);
+      background-image: repeating-linear-gradient(-45deg, var(--border--base) 0 8px, transparent 0 16px);
     }
 
     ._paper {

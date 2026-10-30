@@ -1,22 +1,26 @@
 @layer components {
   @scope (.scoped.shipping-section) to (.scoped) {
     :scope {
-      overflow: clip;
+      --_inner-radius: calc(var(--rounded--lg) - 1px);
+
       border: 1px solid var(--border--base);
       border-radius: var(--rounded--lg);
       background-color: var(--background--surface);
     }
 
     h2 {
-      font-size: calc(18 / 16 * 1rem);
+      font-size: calc(var(--text--subtitle--font-size) / 16 * 1rem);
+      line-height: var(--text--subtitle--leading);
     }
 
+    /* ルートで overflow を切り取ると、幅いっぱいのリンクのフォーカスリングまで切り取られるので、角は各要素の角丸で合わせる */
     a {
       display: block flex;
       gap: 8px;
       justify-content: space-between;
       padding-block: 12px;
       padding-inline: 16px;
+      border-radius: var(--_inner-radius);
 
       &::after {
         content: "+" / "";
@@ -25,6 +29,16 @@
       &[aria-expanded="true"]::after {
         content: "−" / "";
       }
+
+      &:focus-visible {
+        background-color: var(--background--hover);
+      }
+
+      &:any-link:hover {
+        @media (any-hover) {
+          background-color: var(--background--hover);
+        }
+      }
     }
 
     /* 閉じていても描画されるパネル自体ではなく、内側の要素に余白と背景を付ける */
@@ -32,7 +46,9 @@
       display: block grid;
       gap: 8px;
       padding: 16px;
-      background-color: var(--background--hover);
+      border-end-end-radius: var(--_inner-radius);
+      border-end-start-radius: var(--_inner-radius);
+      background-color: var(--background--base);
     }
   }
 }

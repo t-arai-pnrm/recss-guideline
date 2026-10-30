@@ -12,7 +12,7 @@
  * @prop {length}  --masonry--tolerance        [normal]                - 同じ高さとみなす列の高さの差（flow-tolerance）
  *
  * @example
- * <ul class="masonry" style="--masonry--column-min-width: calc(240 / 16 * 1rem); --masonry--gap: calc(var(--spacing--sm) / 16 * 1rem)">
+ * <ul class="masonry" style="--masonry--column-min-width: calc(240 / 16 * 1rem); --masonry--gap: calc(var(--spacing--sm) * 1px)">
  *   <li>…</li>
  * </ul>
  */

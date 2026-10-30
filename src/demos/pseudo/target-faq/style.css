@@ -15,7 +15,7 @@
       padding-block: 8px;
       padding-inline: 16px;
       border-inline-start: 4px solid transparent;
-      background-color: var(--background--active);
+      background-color: var(--background--surface);
 
       /* ページ内リンクの移動先になっている間だけ、線を引く */
       &:target {
@@ -23,7 +23,7 @@
       }
 
       & > h3 + p {
-        margin-block-start: 4px;
+        margin-block-start: calc(4 / 16 * 1rem);
       }
     }
 

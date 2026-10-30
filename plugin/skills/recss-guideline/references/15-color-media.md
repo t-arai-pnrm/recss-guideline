@@ -1,8 +1,8 @@
 # 第15章 色：ルール
 
-- ガイドラインのバージョン: 0.82.0（2026-10-30 生成）
+- ガイドラインのバージョン: 0.83.0（2026-10-30 生成）
 - ルールの数: 23
-- 本文: 約9.2万字
+- 本文: 約9.3万字
 - 読む条件: 色の指定（oklch()、color-mix()、相対カラー構文）、ダークモード、強制カラーモード、コントラスト
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
@@ -104,9 +104,9 @@ https://t-arai-pnrm.github.io/recss-guideline/color-media/forced-colors/
   - 理由: 強制カラーモードでは `box-shadow` が `none` になり、境界が消えるため。
   - 補足: フォーカスリングについては、第8章の `focus-ring-not-box-shadow-only` を参照してください。区切り線や枠線を `box-shadow` で描くときは、`@media (forced-colors: active)` の中で同じ太さの `outline` を描きます（16-10）。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/color-media/forced-colors/#rule-no-box-shadow-only-boundary
-- 【必須・本書の規約】`mask-image` や `clip-path` で切り抜き、`background-color` で塗る図形は、`currentColor` を直接指定せず、強制カラーモードでシステムカラーに切り替わるカスタムプロパティ（`--background--current`）から色を受け取る。（`background-current-for-shapes`）
+- 【必須・本書の規約】`mask-image` や `clip-path` で切り抜き、文字色の代わりに `background-color` で塗るアイコンや記号は、`currentColor` を直接指定せず、強制カラーモードでシステムカラーに切り替わるカスタムプロパティ（`--background--current`）から色を受け取る。（`background-current-for-shapes`）
   - 理由: 強制カラーモードでは `background-color` がページの背景色に置き換わり、図形が見えなくなるため。
-  - 補足: 通常の文字の文脈でしか使わない図形は、`background-image` に `conic-gradient(currentColor 0 0)` を、`background-color` に `CanvasText` を指定する方法でも描けます。
+  - 補足: 通常の文字の文脈でしか使わない図形は、`background-image` に `conic-gradient(currentColor 0 0)` を、`background-color` に `CanvasText` を指定する方法でも描けます。タブの輪郭や吹き出しの本体のように、面の背景として塗る図形は対象外です。`--background--current` で塗ると、強制カラーモードで面の上の文字と同じ色になるからです。強制カラーモードで範囲を示す必要があるなら、透明な `border` を残します（16-9）。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/color-media/forced-colors/#rule-background-current-for-shapes
 - 【推奨・仕様にもとづく制約】強制カラーモードでは、管理している単色のインライン SVG アイコンの色を、塗りで描くものは `fill`、線で描くものは `stroke` だけ、文脈に合ったシステムカラーに `!important` で固定する。（`forced-colors-svg-system-colors`）
   - 理由: SVG の色は強制カラーモードでも置き換わるとは限らず、`currentColor` がシステムカラーにならない環境もあるため。すべての SVG に両方を指定すると、線のない図形に線が付くため。
@@ -121,14 +121,14 @@ https://t-arai-pnrm.github.io/recss-guideline/color-media/forced-colors/
   - 補足: 条件は `not (forced-colors: active)` ではなく、`(forced-colors: none)` と書きます。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/color-media/forced-colors/#rule-forced-colors-none-for-fragile-decoration
 - 【必須・仕様にもとづく制約】本文の中のリンク、フォーカスやホバーの状態、入力エラーのような情報を、色の違いだけで伝えない。（`no-color-only-information`）
-  - 理由: 色の見え方は人によって違い、グレースケールで表示している人もいるため（WCAG 2.1 の「色の使用」）。
+  - 理由: 色の見え方は人によって違い、グレースケールで表示している人もいるため（WCAG 2.2 の「色の使用」）。
   - 補足: 下線、太さ、アイコン、文言のような、色以外の手がかりを足します。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/color-media/forced-colors/#rule-no-color-only-information
 - 【推奨・実装上の判断】実装を終えたら、グレースケールの表示で、リンクや状態を見分けられるかを確かめる。（`grayscale-check`）
   - 理由: 色だけに頼った表現は、カラーの画面では気づきにくいため。
   - 補足: 基本は OS のグレースケール表示を使い、手早く確かめるときは `body` に `filter: grayscale(1)` を一時的に指定します。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/color-media/forced-colors/#rule-grayscale-check
-- 【必須・仕様にもとづく制約】文字と背景のコントラスト比は、WCAG 2.1 の AA（通常の文字で 4.5:1 以上、大きな文字で 3:1 以上）を満たす。（`text-contrast-aa`）
+- 【必須・仕様にもとづく制約】文字と背景のコントラスト比は、WCAG 2.2 の AA（通常の文字で 4.5:1 以上、大きな文字で 3:1 以上）を満たす。（`text-contrast-aa`）
   - 理由: 視力の弱い人や、明るい屋外で画面を見る人にも文字を読めるようにするため。
   - 補足: 薄い文字色のトークンは、組み合わせる背景のトークンごとに確かめます。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/color-media/forced-colors/#rule-text-contrast-aa

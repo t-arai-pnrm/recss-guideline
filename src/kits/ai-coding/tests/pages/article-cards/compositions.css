@@ -1,13 +1,6 @@
 /**
  * コンポジション。子の並べ方だけを受け持ち、間隔や幅は公開プロパティで受け取る。
  *
- * 12-6 sidebar：メインとサイドの2カラムにし、狭ければ縦に積む
- * @prop {length} --sidebar--main-min-width [calc(480 / 16 * 1rem)] - メインの最小幅（これを確保できないと縦に積む）
- * @prop {length} --sidebar--side-width     [calc(320 / 16 * 1rem)] - 横に並べたときのサイドの幅
- * @prop {length} --sidebar--gap            [なし]                   - 行と列の間隔（一括）。指定すると個別の指定より優先する
- * @prop {length} --sidebar--row-gap        [0px]                   - 縦に積んだときの間隔
- * @prop {length} --sidebar--column-gap     [0px]                   - 横に並べたときの間隔
- *
  * 12-7 grid：列の最小幅と最大数から列数を決める
  * @prop {keyword} --grid--mode             [auto-fill]             - repeat() のキーワード（auto-fill | auto-fit）
  * @prop {length}  --grid--column-min-width [calc(320 / 16 * 1rem)] - 列の最小幅（これより狭くなると列が減る）
@@ -24,28 +17,6 @@
  * @prop {keyword} --cluster--alignment     [normal] - 交差軸の配置（align-items）
  */
 @layer compositions {
-  /* 12-6 sidebar：メインとサイドの2カラムにし、狭ければ縦に積む */
-  .sidebar {
-    --_c--row-gap: var(--sidebar--gap, var(--sidebar--row-gap, 0px));
-    --_c--column-gap: var(--sidebar--gap, var(--sidebar--column-gap, 0px));
-    --_c--main-min-width: var(--sidebar--main-min-width, calc(480 / 16 * 1rem));
-    --_c--side-width: var(--sidebar--side-width, calc(320 / 16 * 1rem));
-
-    display: block flex;
-    flex-wrap: wrap;
-    gap: var(--_c--row-gap) var(--_c--column-gap);
-
-    & > .main-column {
-      flex-grow: 9999;
-      flex-basis: var(--_c--main-min-width);
-    }
-
-    & > .side-column {
-      flex-grow: 1;
-      flex-basis: var(--_c--side-width);
-    }
-  }
-
   /* 12-7 grid：列の最小幅と最大数から列数を決める */
   .grid {
     --_c--mode: var(--grid--mode, auto-fill);

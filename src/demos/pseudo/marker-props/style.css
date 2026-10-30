@@ -1,9 +1,5 @@
 @layer components {
   @scope (.scoped.marker-props) to (.scoped) {
-    :scope {
-      --_accent: var(--foreground--accent);
-    }
-
     ul {
       display: block grid;
       gap: 4px;
@@ -21,7 +17,7 @@
 
     li {
       &::marker {
-        color: var(--_accent);
+        color: var(--foreground--muted);
         font-size: 1.25em;
       }
 
@@ -33,7 +29,7 @@
 
       &:is([data-custom] > *)::before {
         content: "✓" / "";
-        color: var(--_accent);
+        color: var(--foreground--muted);
         font-weight: var(--font-weight--bold);
       }
     }

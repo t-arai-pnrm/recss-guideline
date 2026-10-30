@@ -1,0 +1,102 @@
+/**
+ * お知らせのカード。
+ * 一覧としての並べ方は、置く側のレイアウトが受け持つ。
+ * カードの中身の幅が480px相当以上のときだけ、日付を見出しの右に並べる。
+ * 見出しの文字サイズは、カードの中身の幅に合わせて title から headline の大きさまで連続的に変える。
+ *
+ * @prop {color}  --news-card--accent  [var(--foreground--base)]         - 見出しの色
+ * @prop {length} --news-card--padding [calc(var(--spacing--md) * 1px)] - 内側の余白
+ *
+ * @example
+ * <article class="scoped news-card" style="--news-card--padding: calc(var(--spacing--sm) * 1px)">
+ *   <div class="_header">
+ *     <h2><a href="...">...</a></h2>
+ *     <time datetime="...">...</time>
+ *   </div>
+ *   <p>...</p>
+ * </article>
+ */
+
+@scope (.scoped.news-card) to (.scoped) {
+  :scope {
+    --_accent: var(--news-card--accent, var(--foreground--base));
+    --_padding: var(--news-card--padding, calc(var(--spacing--md) * 1px));
+
+    container: --scoped / inline-size;
+    display: block grid;
+    gap: calc(var(--spacing--xxs) * 1px);
+    padding: var(--_padding);
+
+    /* 強制カラーモードでは背景色が消えるので、透明な枠線でカードの範囲を残す */
+    border: 1px solid transparent;
+    border-radius: var(--rounded--md);
+    background-color: var(--background--surface);
+    font-size: calc(var(--text--body--font-size) / 16 * 1rem);
+    line-height: var(--text--body--leading);
+  }
+
+  ._header {
+    display: block grid;
+    gap: calc(var(--spacing--xxs) * 1px) calc(var(--spacing--sm) * 1px);
+
+    /* 見出しの最小幅 320px 相当・隙間 16px・日付の幅 144px 相当が並ぶ幅 */
+    @container --scoped (inline-size >= calc(320 / 16 * 1rem + 16px + 144 / 16 * 1rem)) {
+      grid-template-columns: 1fr auto;
+      align-items: baseline;
+    }
+  }
+
+  h2 {
+    color: var(--_accent);
+
+    /* デザインの2つの大きさ（狭いカードの title、広いカードの headline）の間を、置かれた幅に合わせて補う */
+    font-size: clamp(var(--text--title--font-size) / 16 * 1rem, 1.25cqi + 16 / 16 * 1rem, var(--text--headline--font-size) / 16 * 1rem);
+    line-height: var(--text--title--leading);
+  }
+
+  a {
+    --_hocus: --false;
+    --_focus-visible: --false;
+
+    &:focus-visible {
+      --_hocus: --true;
+      --_focus-visible: --true;
+
+      text-decoration-line: underline;
+    }
+
+    &:any-link:hover {
+      @media (any-hover) {
+        --_hocus: --true;
+
+        text-decoration-line: underline;
+      }
+    }
+
+    &::after {
+      content: "→" / "";
+      display: inline flow-root;
+      padding-inline-start: 0.25em;
+
+      @container style(--_hocus: --true) {
+        @media (prefers-reduced-motion: no-preference) {
+          translate: 4px 0;
+        }
+      }
+
+      @container style(--_focus-visible: --false) {
+        @media (prefers-reduced-motion: no-preference) {
+          transition-duration: var(--duration--fast);
+          transition-property: translate;
+          transition-timing-function: var(--ease--out-quint);
+        }
+      }
+    }
+  }
+
+  time {
+    color: var(--foreground--muted);
+    font-size: calc(var(--text--caption--font-size) / 16 * 1rem);
+    line-height: var(--text--caption--leading);
+  }
+}

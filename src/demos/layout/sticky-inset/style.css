@@ -23,7 +23,7 @@
 
       /* 比較のため、1つ目の見出しだけ inset を指定しない */
       &[data-demo="without-inset"] {
-        inset-block-start: auto;
+        inset-block-start: initial;
       }
     }
   }

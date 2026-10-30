@@ -21,7 +21,7 @@
     }
 
     ._next {
-      background-color: var(--background--active);
+      background-color: var(--background--surface);
     }
   }
 }

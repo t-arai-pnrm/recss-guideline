@@ -40,7 +40,9 @@
       gap: 8px;
     }
   }
+}
 
+@layer pages {
   @scope (.scoped.page-main) to (.scoped) {
     :scope {
       display: block grid;

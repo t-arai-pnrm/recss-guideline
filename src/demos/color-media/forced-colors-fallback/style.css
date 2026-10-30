@@ -55,8 +55,8 @@
       padding-inline: 16px;
       border-color: transparent;
       border-radius: var(--rounded--sm);
-      background-color: var(--background--accent);
-      color: var(--foreground--on-accent);
+      background-color: var(--background--inverse);
+      color: var(--foreground--inverse);
 
       &[data-fallback="none"] {
         --_icon-color: currentColor;

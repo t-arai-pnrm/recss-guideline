@@ -3,9 +3,8 @@
     :scope {
       padding: 16px;
       border-radius: var(--rounded--md);
-      background-color: var(--background--active);
+      background-color: var(--background--surface);
 
-      /* 余白は、前に要素があるときだけ、後ろの要素の上に付ける */
       & > * + * {
         margin-block-start: 16px;
       }
@@ -15,15 +14,9 @@
       }
     }
 
-    /* 要素の箱の範囲を見せる */
-    h2,
-    p,
-    ul {
-      outline: 1px dashed var(--border--strong);
-    }
-
     h2 {
-      font-size: calc(18 / 16 * 1rem);
+      font-size: calc(var(--text--subtitle--font-size) / 16 * 1rem);
+      line-height: var(--text--subtitle--leading);
     }
 
     ul {

@@ -24,11 +24,12 @@ CSSでは、1つの見た目を作る方法が複数あり、どれが適切か�
 
 「中央に寄せる」という作業1つをとっても、文脈によって適切な方法が変わります。中央に寄せたいのは、テキストのようなインラインの内容なのか、ブロックの要素そのものなのか。その要素は通常の流れの中に置くのか、モーダルのように流れから切り離して置くのか。寄せたいのは1つの要素だけなのか、続く要素もまとめてなのか。これらの答えによって、使うプロパティが決まります。
 
-見出しのテキストを中央に寄せるなら、多くの人は `text-align: center` を指定すると思います。テキストを中央に寄せるという目的なら、これで正解です。
+見出しのテキストを中央に寄せるなら、多くの人は `text-align: center` を指定すると思います。テキストを中央に寄せるという目的なら、これで正解です。見出しが複数行になっても中央に寄せるなら、`text-wrap: balance` と組にして、最後の行だけが短く残らないようにします（「[14-4 文字サイズと改行](/typography/size-and-line-breaks/#rule-center-with-balance)」）。
 
 ```css title="🙆‍♂ Recommended: テキストを中央に寄せる"
 ._section-title {
   text-align: center;
+  text-wrap: balance;
 }
 ```
 
@@ -37,9 +38,12 @@ CSSでは、1つの見た目を作る方法が複数あり、どれが適切か�
 ```css title="🙆‍♂ Recommended: 見出しの要素を中身の幅にして、中央に寄せる"
 ._section {
   & > ._section-title {
-    inline-size: fit-content;
     margin-inline: auto;
   }
+}
+
+._section-title {
+  inline-size: fit-content;
 }
 ```
 
@@ -52,7 +56,7 @@ CSSでは、1つの見た目を作る方法が複数あり、どれが適切か�
 ```css title="🙆‍♂ Recommended: 最後の行のカードも、列の幅をそろえて並べる" from="principles/grid-or-flex"
 ._grid {
   display: block grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 200 / 16 * 1rem), 1fr));
   gap: 16px;
 }
 ```
@@ -63,9 +67,9 @@ CSSでは、1つの見た目を作る方法が複数あり、どれが適切か�
   flex-wrap: wrap;
   gap: 16px;
 
-  & > ._card {
+  & > li {
     flex-grow: 1;
-    flex-basis: 200px;
+    flex-basis: calc(200 / 16 * 1rem);
   }
 }
 ```

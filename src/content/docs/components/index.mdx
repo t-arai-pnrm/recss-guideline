@@ -90,7 +90,7 @@ sidebar:
 }
 ```
 
-並べる側には、「[10-3 コンポジションとユーティリティ](/components/compositions-and-utilities/)」の `stack` を使います。`stack` のCSSを `css/compositions/stack.css` に置き、エントリーポイントで `layer(compositions)` として読み込みます。値は、置く側の `ul` の `style` 属性で渡します。サイドバーの `ul` に書いた `--news-card--padding` は、継承で中の2枚のカードにまとめて届きます。
+並べる側には、「[10-3 コンポジションとユーティリティ](/components/compositions-and-utilities/)」の `stack` を使います。`stack` のCSSを `css/compositions/stack.css` に置き、エントリーポイントで `layer(compositions)` として読み込みます。値は、置く側の `ul` の `style` 属性で渡します。カードの間隔は段落の間ではなく部品の間なので、文字の大きさに追従させず、pxで渡します（「[6-1 pxとremを使い分ける](/values/px-and-rem/)」）。サイドバーの `ul` に書いた `--news-card--padding` は、継承で中の2枚のカードにまとめて届きます。
 
 ```html title="index.html の body の中"
 <main>

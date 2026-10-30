@@ -1,7 +1,7 @@
 @layer components {
   @scope (.scoped.position-values) to (.scoped) {
     ._box {
-      /* absolute の B の包含ブロックを、この枠にする */
+      /* absolute の B を枠の角から置くため、この枠を包含ブロックにする */
       position: relative;
       padding: 8px;
       border: 1px dashed var(--border--strong);

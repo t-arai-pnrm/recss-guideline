@@ -58,7 +58,7 @@ aside h3 {
 
 ## `:where()` で詳細度を0にする
 
-`:where()` は、`:is()` と同じ要素を選び、詳細度だけを0にします。どのクラスからでも上書きされる前提のスタイルを書くための擬似クラスで、本書で使うのは、`@layer` を使えない場面のベーススタイルと、上書きされる前提のデフォルト値です。CMSと共存する場合のようにレイヤーを使えない環境では、ベーススタイルのセレクタを `:where(a:any-link)` のように包みます（[4-2 セレクタで詳細度を設計する](/cascade/selectors/)）{/* CMSの節を公開したらリンクする: /operations/cms/ */}。リセットCSSのkiso.cssも、レイヤーなしで読み込まれても上書きしやすいように、すべてのセレクタを `:where()` で書いています。
+`:where()` は、`:is()` と同じ要素を選び、詳細度だけを0にします。どのクラスからでも上書きされる前提のスタイルを書くための擬似クラスで、本書で使うのは、`@layer` を使えない場面のベーススタイルと、上書きされる前提のデフォルト値です。CMSと共存する場合のようにレイヤーを使えない環境では、ベーススタイルのセレクタを `:where(a:any-link)` のように包みます（[4-2 セレクタで詳細度を設計する](/cascade/selectors/)）{/* CMSの節を公開したらリンクする: /operations/cms/ */}。リセットCSSのkiso.cssも、レイヤーなしで読み込まれても上書きしやすいように、全称セレクタなどの一部を除き、セレクタを `:where()` で書いています。
 
 コンポーネントの中では、セレクタの一部だけを `:where()` で包めます。`& > :where(._heading)` は、直下の子を選ぶ部分の詳細度を0にするので、全体は親の0.1.0のままです。反対に、`:where(._card) ._title` のように前の部分を包めば、`._title` の0.1.0だけが残ります。どの部分の詳細度を残すかを、セレクタの中で選べます。
 
@@ -70,7 +70,7 @@ aside h3 {
 /* 🙅‍♂ Not Recommended */
 @scope (.scoped.toggle-button) to (.scoped) {
   :scope {
-    background-color: var(--background--active);
+    background-color: var(--background--surface);
 
     &[data-variant="outline"] {
       background-color: transparent;
@@ -78,7 +78,7 @@ aside h3 {
 
     /* 詳細度は 0.1.0 で、上の 0.2.0 に負ける */
     &:where([aria-pressed="true"], [aria-expanded="true"]) {
-      background-color: color-mix(in oklab, var(--foreground--accent) 24%, transparent);
+      background-color: var(--background--accent-subtle);
     }
   }
 }
@@ -87,7 +87,7 @@ aside h3 {
 ```css title="🙆‍♂ Recommended: 状態のセレクタは :is() でまとめ、詳細度を残す" from="pseudo/where-is-state"
 @scope (.scoped.toggle-button) to (.scoped) {
   :scope {
-    background-color: var(--background--active);
+    background-color: var(--background--surface);
 
     &[data-variant="outline"] {
       background-color: transparent;
@@ -95,7 +95,7 @@ aside h3 {
 
     /* 詳細度は 0.2.0 で、後に書いたほうが勝つ */
     &:is([aria-pressed="true"], [aria-expanded="true"]) {
-      background-color: color-mix(in oklab, var(--foreground--accent) 24%, transparent);
+      background-color: var(--background--accent-subtle);
     }
   }
 }
@@ -140,7 +140,7 @@ aside h3 {
 }
 ```
 
-`:not()` の詳細度は、引数の最大の1つ分です。重ねた `:not()` は、それぞれが詳細度を加えるので、除く条件を1つ足すたびに0.1.0ずつ上がります。上の例で、外部へのリンクにだけ `._external` を付けて文字色を変えるとき、`a._external` の詳細度は0.1.1です。1つにまとめた形なら0.1.1どうしの比較になり、後に書けば上書きできます。重ねた形の0.2.1には、クラス1つを足した0.1.1では勝てません。
+`:not()` の詳細度は、引数の最大の1つ分です。重ねた `:not()` は、それぞれが詳細度を加えるので、除く条件を1つ足すたびに0.1.0ずつ上がります。上の例では、1つにまとめた形が0.1.1、重ねた形が0.2.1です。除く条件が増えるほど、同じリンクの見た目を後から変えるのに要る詳細度も上がります。リンクの役割ごとに見た目を変えたいときは、詳細度を上げたセレクタで上書きせず、`._external` のような子クラスのルールの側に書きます（「[5-1 擬似クラスと擬似要素の基本](/pseudo/basics/)」）。
 
 `:not()` の引数は、`:is()` と違い、寛容なセレクタリストではありません。引数に解釈できないセレクタが1つでもあると、ルール全体が無効になります。対応が分かれる擬似クラスを並べるときは、`:not(:is(:heading, h2))` のように、引数の中でさらに `:is()` で包みます（ルール `forgiving-list-for-partial-support`）。
 
@@ -154,7 +154,7 @@ Selectors Level 4の `:not()` には、子孫結合子を含むセレクタも�
 @scope (.scoped.entry-body) to (.scoped) {
   a {
     &:not(:is(h2, h3) *) {
-      text-decoration-line: underline;
+      text-decoration-line: revert;
     }
   }
 }

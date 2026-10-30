@@ -65,7 +65,7 @@ Gridは2017年から主要なブラウザで使えますが、Gridを使った�
 
 次の指定は、下の図と同じ3列2行のグリッドを作ります。コメントに、それぞれの指定が作るものの名前を書いています。
 
-```css title="🙆‍♂ Recommended: 列と行のトラックを決め、アイテムを2行にまたがらせる"
+```css
 ._grid {
   /* グリッドコンテナ。直接の子がグリッドアイテムになる */
   display: block grid;
@@ -123,18 +123,16 @@ Gridは2017年から主要なブラウザで使えますが、Gridを使った�
 
 防ぎ方は2つあります。1つは、トラックの側で `minmax(0, 1fr)` と書き、列の下限を0にする方法です。もう1つは、ベーススタイルの全称セレクタで `min-inline-size: 0` を指定し、アイテムの下限を0にする方法です（「[8-2 ベーススタイルに書くもの](/reset/base-styles/#rule-global-min-inline-size-zero)」）。本書は後者を使い、列は `1fr` のまま書きます。アイテムの下限が0なら、下限が `auto` のトラックの下限も0になるからです（「[11-3 サイズと内容の変化に耐える](/layout-practice/defensive/#rule-fr-without-minmax-zero)」）。
 
-次のデモは、`1fr 1fr` のグリッドに長いURLを置いたものです。上のグリッドだけ、アイテムの `min-inline-size` を初期値の `auto` に戻しています。幅を320pxにすると、上のグリッドではURLの列が押し広げられて等分にならず、下のグリッドではURLが列の中で折り返します。デモの環境は `overflow-wrap: anywhere` を継承しており、そのままではURLの最小幅が小さくなって列が広がらないので、`overflow-wrap` を `break-word` に戻して違いを見せています。
+次のデモは、`1fr 1fr` のグリッドに長いURLを置いたものです。上のグリッドだけ、アイテムの `min-inline-size` を初期値の `auto` に戻しています。幅を320pxにすると、上のグリッドではURLの列が押し広げられて等分にならず、下のグリッドではURLが列の中で折り返します。デモの環境は `overflow-wrap: anywhere` を継承しており、そのままではURLの最小幅が小さくなって列が広がりません。そこで、最小幅の計算では折り返さない `break-word` を `overflow-wrap` に指定して、違いを見せています。
 
 <Demo title="アイテムの min-inline-size が auto のときと0のときの 1fr の列" html={minSizeHtml} css={minSizeCss} widths={[320, 768]} />
 
-アイテムの間隔は、アイテムの `margin` ではなく、コンテナの `gap` で作ります（「[11-2 余白を設計する](/layout-practice/spacing/#rule-gap-over-child-margin)」）。`gap` は行の間隔と列の間隔を順に書くショートハンドで、片方だけなら `row-gap` か `column-gap` で指定します。溝はトラックとトラックの間にだけ作られ、グリッドの外周にはできません。
+アイテムの間隔は、アイテムの `margin` ではなく、コンテナの `gap` で作ります（「[11-2 余白を設計する](/layout-practice/spacing/#rule-gap-over-child-margin)」）。`gap` は行の間隔と列の間隔を順に書くショートハンドで（次の例では行の間が24px、列の間が16px）、片方だけなら `row-gap` か `column-gap` で指定します。溝はトラックとトラックの間にだけ作られ、グリッドの外周にはできません。
 
 ```css title="🙆‍♂ Recommended: アイテムの間隔を、コンテナの gap で作る"
 ._list {
   display: block grid;
   grid-template-columns: repeat(3, 1fr);
-
-  /* 行の間隔 24px、列の間隔 16px */
   gap: 24px 16px;
 }
 ```
@@ -182,7 +180,7 @@ Gridは2017年から主要なブラウザで使えますが、Gridを使った�
 
 線には名前を付けられます。`grid-template-columns` のトラックの間に `[--content-start]` のように角括弧で名前を書き、アイテムの側でその名前を指定します。本書では、自分で付ける線とエリアの名前を `--` で始めます（「[9-1 命名規則](/notation/naming/)」）。`--content-start` と `--content-end` のように、`-start` と `-end` で終わる名前の組を付けると、その間は `--content` という名前のエリアとして扱われます。アイテムは `grid-column: --content` だけで置けます。
 
-```css title="🙆‍♂ Recommended: 線に名前を付け、アイテムは名前で置く" from="layout/grid-basics-named-lines"
+```css title="🙆‍♂ Recommended: 線に名前を付け、アイテムは名前で置く"
 ._page {
   display: block grid;
   grid-template-columns:
@@ -248,7 +246,7 @@ Gridは2017年から主要なブラウザで使えますが、Gridを使った�
 ```
 
 ```html
-<article class="feature-card">
+<article class="scoped feature-card">
   <div class="_layout">
     <h2 class="_heading">…</h2>
     <div class="_body">…</div>

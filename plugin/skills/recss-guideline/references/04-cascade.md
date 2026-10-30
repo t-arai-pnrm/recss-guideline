@@ -1,8 +1,8 @@
 # 第4章 カスケードを制御する：ルール
 
-- ガイドラインのバージョン: 0.82.0（2026-10-30 生成）
+- ガイドラインのバージョン: 0.83.0（2026-10-30 生成）
 - ルールの数: 24
-- 本文: 約9.1万字
+- 本文: 約9.4万字
 - 読む条件: @layer、!important、詳細度、セレクタの重ね掛け、:is()、:where()、上書きの順番
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
@@ -12,12 +12,12 @@
 
 ## この章の節
 
-- `cascade` 第4章 カスケードを制御する（約6,400字）https://t-arai-pnrm.github.io/recss-guideline/cascade/
-- `cascade/cascade-basics` 4-1 カスケード・詳細度・継承（約1.3万字）https://t-arai-pnrm.github.io/recss-guideline/cascade/cascade-basics/
+- `cascade` 第4章 カスケードを制御する（約6,700字）https://t-arai-pnrm.github.io/recss-guideline/cascade/
+- `cascade/cascade-basics` 4-1 カスケード・詳細度・継承（約1.4万字）https://t-arai-pnrm.github.io/recss-guideline/cascade/cascade-basics/
 - `cascade/selectors` 4-2 セレクタで詳細度を設計する（約1.2万字）https://t-arai-pnrm.github.io/recss-guideline/cascade/selectors/
-- `cascade/layers` 4-3 カスケードレイヤーで順位を決める（約2万字）https://t-arai-pnrm.github.io/recss-guideline/cascade/layers/
-- `cascade/scope` 4-4 @scopeでスタイルを閉じ込める（約1.7万字）https://t-arai-pnrm.github.io/recss-guideline/cascade/scope/
-- `cascade/nesting` 4-5 CSSネストの基礎（約1.1万字）https://t-arai-pnrm.github.io/recss-guideline/cascade/nesting/
+- `cascade/layers` 4-3 カスケードレイヤーで順位を決める（約2.1万字）https://t-arai-pnrm.github.io/recss-guideline/cascade/layers/
+- `cascade/scope` 4-4 @scopeでスタイルを閉じ込める（約1.8万字）https://t-arai-pnrm.github.io/recss-guideline/cascade/scope/
+- `cascade/nesting` 4-5 CSSネストの基礎（約1.2万字）https://t-arai-pnrm.github.io/recss-guideline/cascade/nesting/
 - `cascade/custom-properties-basics` 4-6 カスタムプロパティの基礎（約9,900字）https://t-arai-pnrm.github.io/recss-guideline/cascade/custom-properties-basics/
 
 ## 4-1 カスケード・詳細度・継承
@@ -26,10 +26,11 @@ https://t-arai-pnrm.github.io/recss-guideline/cascade/cascade-basics/
 
 - 【推奨・実装上の判断】スタイルの優先順位は詳細度の高さで決めず、レイヤーの順番と書く順番で決める。（`order-by-layer-not-specificity`）
   - 理由: 詳細度で優先順位を決めると、上書きのたびにセレクタが重くなり、後から誰も上書きできなくなるため。
-  - 補足: 詳細度は、ベースでは 0、コンポーネントの中ではクラス1つ分（0.1.0）を基本にそろえます。
+  - 補足: ベーススタイルは `base` レイヤーに素のセレクタで書き、コンポーネントの中はクラス1つ分（0.1.0）を基本にそろえます。レイヤーを使えない場合は、ベーススタイルを `:where()` で詳細度0にします。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/cascade/cascade-basics/#rule-order-by-layer-not-specificity
 - 【禁止・実装上の判断】詳細度や読み込み順の競争に勝つ目的で `!important` を使わない。（`no-important-for-specificity`）
   - 理由: スタイルの宣言どうしでは `!important` を打ち消せるのは `!important` だけなので、上書きのたびに `!important` が増えていくため。
+  - 補足: レイヤーを使えない既存のサイトで、壊れた既存の CSS から新しいコンポーネントを切り離すときの `all: revert-layer !important` は、この禁止の対象外です（`revert-layer-isolation-for-legacy`）。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/cascade/cascade-basics/#rule-no-important-for-specificity
 - 【推奨・実装上の判断】`!important` は、`[hidden]` を確実に隠す、CMS が要素に出力する `style` 属性を打ち消すなど、ほかの手段では実現できない場面に限って使う。（`important-only-for-guarantees`）
   - 理由: どのような上書きにも負けてはいけない指定だけに絞れば、`!important` 同士の競争が起きないため。
@@ -92,6 +93,7 @@ https://t-arai-pnrm.github.io/recss-guideline/cascade/layers/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/cascade/layers/#rule-import-resolved-at-build
 - 【必須・本書の規約】`@layer` と `@import` の `layer()` には、先頭の `@layer` 文で宣言した9つのレイヤー名だけを使う。（`declared-layer-names-only`）
   - 理由: 宣言していない名前はエラーにならず、最後に宣言したレイヤーより後ろに新しいレイヤーとして作られるので、打ち間違えると順番が崩れるため。
+  - 補足: 既存の CSS から新しいコンポーネントを切り離すときに、レイヤーの中に作る名前のない入れ子のレイヤー（`revert-layer-isolation-for-legacy`）は対象外です。
   - 自動チェック: Stylelint: `layer-name-pattern`
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/cascade/layers/#rule-declared-layer-names-only
 - 【推奨・本書の規約】自分で読み込むサードパーティのCSSは、`@import url("…") layer(vendors);` で `vendors` レイヤーに入れる。（`third-party-in-vendors`）
@@ -109,7 +111,7 @@ https://t-arai-pnrm.github.io/recss-guideline/cascade/layers/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/cascade/layers/#rule-no-layers-with-unlayered-css
 - 【推奨・実装上の判断】直せない既存のCSSがコンポーネントに流れ込むときは、レイヤーの中でコンポーネントの要素すべてに `all: revert-layer !important` を指定し、コンポーネント自身のスタイルは同じレイヤーの入れ子の無名レイヤーに書く。（`revert-layer-isolation-for-legacy`）
   - 理由: `!important` どうしではレイヤーの順番が逆になるので、レイヤーの外のスタイルを詳細度や `!important` に関係なく遮断でき、入れ子のレイヤーの値だけを戻せるため。
-  - 補足: 後ろのレイヤーやユーティリティクラスも遮断されます。`style` 属性に `!important` を付けた指定は防げません。`all` はカスタムプロパティを戻さず、`*` は擬似要素を選ばないので、継承する値に加え、書き換えられたトークンや擬似要素への指定は別に考えます。既存のCSSを直せるなら、そちらを先に検討します。
+  - 補足: 後ろのレイヤーやユーティリティクラスに加え、同じレイヤーの親が付けた配置（`grid-area`、外側の `margin`）と、レイヤーの外のリセット CSS の指定（`box-sizing` など）も外れるので、要るものは入れ子のレイヤーで書き直します。`style` 属性に `!important` を付けた指定は防げません。`all` はカスタムプロパティを戻さず、`:scope` と `*` は擬似要素を選ばないので、継承する値に加え、書き換えられたトークンや擬似要素への指定は別に考えます。既存のCSSを直せるなら、そちらを先に検討します。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/cascade/layers/#rule-revert-layer-isolation-for-legacy
 
 ## 4-4 @scopeでスタイルを閉じ込める

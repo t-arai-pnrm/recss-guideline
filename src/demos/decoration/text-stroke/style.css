@@ -2,8 +2,9 @@
   @scope (.scoped.text-stroke-demo) to (.scoped) {
     ._title {
       color: oklch(100% 0 0deg);
-      font-size: calc(40 / 16 * 1rem);
+      font-size: calc(var(--text--display--font-size) / 16 * 1rem);
       font-weight: var(--font-weight--bold);
+      line-height: var(--text--display--leading);
 
       /* 文字の縁取りは、接頭辞付きの指定でしか書けない */
       /* stylelint-disable-next-line property-no-vendor-prefix */

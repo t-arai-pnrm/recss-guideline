@@ -24,23 +24,23 @@
       line-height: var(--text--caption--leading);
     }
 
-    ._step-3 {
+    ._display-text {
       font-size: calc(var(--_base) * pow(var(--_ratio), 3));
     }
 
-    ._step-2 {
+    ._title-text {
       font-size: calc(var(--_base) * pow(var(--_ratio), 2));
     }
 
-    ._step-1 {
+    ._lead-text {
       font-size: calc(var(--_base) * pow(var(--_ratio), 1));
     }
 
-    ._step-0 {
+    ._body-text {
       font-size: var(--_base);
     }
 
-    ._step-minus-1 {
+    ._note-text {
       font-size: calc(var(--_base) * pow(var(--_ratio), -1));
     }
   }

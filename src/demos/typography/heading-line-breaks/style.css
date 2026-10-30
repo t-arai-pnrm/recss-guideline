@@ -29,8 +29,8 @@
     }
 
     h2 {
-      font-size: calc(26 / 16 * 1rem);
-      line-height: var(--leading--snug);
+      font-size: calc(var(--text--display--font-size) / 16 * 1rem);
+      line-height: var(--text--display--leading);
 
       /* 比較のために、文節での折り返しと行の長さの調整を取り除き、親の値を継承させる */
       &[data-phrase="off"] {

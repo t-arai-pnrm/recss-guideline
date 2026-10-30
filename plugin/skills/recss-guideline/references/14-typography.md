@@ -1,8 +1,8 @@
 # 第14章 タイポグラフィと和文組版：ルール
 
-- ガイドラインのバージョン: 0.82.0（2026-10-30 生成）
+- ガイドラインのバージョン: 0.83.0（2026-10-30 生成）
 - ルールの数: 32
-- 本文: 約8.4万字
+- 本文: 約8.6万字
 - 読む条件: font-*、line-height、文字の大きさ、和文組版、改行、文字の色の役割
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
@@ -13,9 +13,9 @@
 ## この章の節
 
 - `typography` 第14章 タイポグラフィと和文組版（約4,600字）https://t-arai-pnrm.github.io/recss-guideline/typography/
-- `typography/fonts` 14-1 フォントを指定する（約1.7万字）https://t-arai-pnrm.github.io/recss-guideline/typography/fonts/
+- `typography/fonts` 14-1 フォントを指定する（約1.8万字）https://t-arai-pnrm.github.io/recss-guideline/typography/fonts/
 - `typography/japanese-typesetting` 14-2 和文組版を整える（約1.8万字）https://t-arai-pnrm.github.io/recss-guideline/typography/japanese-typesetting/
-- `typography/line-height` 14-3 行の高さとハーフレディング（約1.8万字）https://t-arai-pnrm.github.io/recss-guideline/typography/line-height/
+- `typography/line-height` 14-3 行の高さとハーフレディング（約1.9万字）https://t-arai-pnrm.github.io/recss-guideline/typography/line-height/
 - `typography/size-and-line-breaks` 14-4 文字サイズと改行（約1.6万字）https://t-arai-pnrm.github.io/recss-guideline/typography/size-and-line-breaks/
 - `typography/text-roles` 14-5 文字の役割と色（約1.1万字）https://t-arai-pnrm.github.io/recss-guideline/typography/text-roles/
 
@@ -154,9 +154,9 @@ https://t-arai-pnrm.github.io/recss-guideline/typography/size-and-line-breaks/
 - 【推奨・実装上の判断】見出しの改行を手で制御するときは、`:lang(ja)` のときだけ効く `.-br` と `.-wbr` のユーティリティを使い、ほかの言語では `display: contents` にする。（`line-break-utilities-for-japanese`）
   - 理由: 手動の改行は日本語の都合なので、翻訳で言語が変わったときには通常の折り返しに戻すため。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/typography/size-and-line-breaks/#rule-line-break-utilities-for-japanese
-- 【推奨・仕様にもとづく制約】行数を制限するときは、`-webkit-line-clamp` に `display: -webkit-box` と `-webkit-box-orient: block-axis` を組み合わせ、はみ出しは `overflow-block: clip` で隠す。（`line-clamp-with-overflow-clip`）
+- 【推奨・仕様にもとづく制約】行数を制限するときは、`-webkit-line-clamp` に `display: -webkit-box` と `-webkit-box-orient: block-axis` を組み合わせ、はみ出しは `overflow-y: clip` で隠す。（`line-clamp-with-overflow-clip`）
   - 理由: 接頭辞のない `line-clamp` はまだ使えず、`overflow: hidden` ではぶら下げた約物が切れたり、スクロールバーが出たりするため。
-  - 補足: `overflow-block` に対応していない Safari 18 のために、`@supports not (overflow-block: clip)` の中で `overflow-y: clip` を指定します。
+  - 補足: 論理プロパティの `overflow-block` には Safari が 26 から対応したので、`overflow-y` で書きます（`physical-only-where-no-logical`）。縦書きの要素では `overflow-x: clip` にします。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/typography/size-and-line-breaks/#rule-line-clamp-with-overflow-clip
 
 ## 14-5 文字の役割と色

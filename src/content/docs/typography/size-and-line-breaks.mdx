@@ -1,6 +1,6 @@
 ---
 title: "14-4 文字サイズと改行"
-description: "画面の幅で変える文字サイズはclamp()のユーティリティにまとめます。和文の見出しはword-break: auto-phraseとtext-wrap: balanceで文節ごとに折り返し、見た目のための改行に<br>を使いません。行数の制限は-webkit-line-clampとoverflow-block: clipで書きます。"
+description: "画面の幅で変える文字サイズはclamp()のユーティリティにまとめます。和文の見出しはword-break: auto-phraseとtext-wrap: balanceで文節ごとに折り返し、見た目のための改行に<br>を使いません。行数の制限は-webkit-line-clampとoverflow-y: clipで書きます。"
 reading: basic
 sidebar:
   order: 4
@@ -89,7 +89,7 @@ import breakCss from '../../../demos/typography/heading-line-breaks/style.css?ra
 
 公開プロパティは `--fluid-text--` で始め、内部で使う値は `--_u--` で始めています。コンポーネントの内部プロパティと名前がぶつからないようにするためです。公開プロパティと内部プロパティの考え方は「[10-5 公開プロパティと内部プロパティ](/components/custom-properties/)」で説明しています。
 
-比例させる基準は、`--fluid-text--relative-unit` で切り替えます。サイト全体で文字の大きさの調和をとるなら、デフォルトの `100svi`（画面の幅）を使います。置かれた場所の幅に合わせたいコンポーネントでは `100cqi` を渡し、コンテナの幅を基準にします。`cqi` が参照するのは、インライン方向のサイズクエリに対応する、最も近い祖先のコンテナです。名前は関係しないので、名前付きの `@container` が問い合わせるコンテナと、`cqi` の参照先は一致するとは限りません。間に別のコンテナが入れば、基準の幅も変わります。`cqi` はコンテナが見つからないと `svi` として計算されるので、デフォルトを `svi` にそろえています。コンテナの書き方は「[13-3 コンテナサイズクエリ](/responsive/container-size-queries/)」で説明しています。
+比例させる基準は、`--fluid-text--relative-unit` で切り替えます。サイト全体で文字の大きさの調和をとるなら、デフォルトの `100svi`（画面の幅）を使います。置かれた場所の幅に合わせたいコンポーネントでは `100cqi` を渡し、コンテナの幅を基準にします。このときは、区間の端も `--fluid-text--relative-min-width` と `--fluid-text--relative-max-width` で、コンテナが取りうる幅に合わせて渡します。区間の端のデフォルトは画面の幅のトークンです。そのままでは、幅320pxのサイドバーに置いた文字は、375pxに届かないので常に最小値になります。`cqi` が参照するのは、インライン方向のサイズクエリに対応する、最も近い祖先のコンテナです。名前は関係しないので、名前付きの `@container` が問い合わせるコンテナと、`cqi` の参照先は一致するとは限りません。間に別のコンテナが入れば、基準の幅も変わります。`cqi` はコンテナが見つからないと `svi` として計算されるので、デフォルトを `svi` にそろえています。コンテナの書き方は「[13-3 コンテナサイズクエリ](/responsive/container-size-queries/)」で説明しています。
 
 流体的にするのは、見出しやリード文のように、画面の幅によって大きさを変えたい文字だけです。タグやラベルのように大きさを変える必要のない文字には使いません。カンプの比率を保ってほしいと頼まれた場合も、本文まで含めた文字サイズ全体を画面の幅に比例させることはしません。狭い画面で本文が読めないほど小さくなるからです（「[13-7 カンプの幅で全体を拡大・縮小しない](/responsive/design-comp-pattern/)」）。
 
@@ -205,7 +205,7 @@ SafariやFirefoxでも文節で折り返したい場合は、JavaScriptのライ
 
 ほかの言語で `display: contents` にしているのは、手動の改行が日本語の都合だからです。機械翻訳で言語が変わると、`span` の箱がなくなり、翻訳後の文章は通常どおりに折り返します。インラインブロックの `span` が残ったままだと、翻訳の単位が細切れになり、不自然な訳文になることもあります。
 
-段落の中での手動の改行は、本文の段落に `word-break: auto-phrase` を指定するのと同じく読みにくさの原因になり、画面の幅が変わると簡単に崩れます。デザインで段落の中に改行が入っていたら、再現は難しいとデザイナーに伝えて相談します。特定の語の途中で改行させたくないだけなら、`相&zwj;殺` のように、文字の間に `&zwj;` を入れて分離を禁止する方法もあります。
+段落の中での手動の改行は、本文の段落に `word-break: auto-phrase` を指定するのと同じく読みにくさの原因になり、画面の幅が変わると簡単に崩れます。デザインで段落の中に改行が入っていたら、再現は難しいとデザイナーに伝えて相談します。特定の語の途中で改行させたくないだけなら、`相&NoBreak;殺` のように、文字の間に `&NoBreak;`（U+2060 WORD JOINER）を入れて分離を禁止する方法もあります。`&zwj;` でも改行は止まりますが、絵文字などの文字を結合するための文字なので、改行の禁止には使いません。
 
 ## 行数を制限する
 
@@ -215,25 +215,22 @@ SafariやFirefoxでも文節で折り返したい場合は、JavaScriptのライ
 
 ```css title="🙆‍♂ Recommended: 行数を制限するユーティリティ"
 .-line-clamp {
+  --_u--limit: var(--line-clamp--limit, 3);
+
   /* 行数の制限は、接頭辞付きの指定でしか動かない */
   /* stylelint-disable-next-line value-no-vendor-prefix */
   display: -webkit-box;
-  overflow-block: clip;
+  overflow-y: clip;
   /* stylelint-disable-next-line property-no-vendor-prefix, property-no-deprecated */
   -webkit-box-orient: block-axis;
   /* stylelint-disable-next-line property-no-vendor-prefix */
-  -webkit-line-clamp: var(--line-clamp--limit, 3);
-
-  /* Safari 18 は overflow-block に対応していない */
-  @supports not (overflow-block: clip) {
-    overflow-y: clip;
-  }
+  -webkit-line-clamp: var(--_u--limit);
 }
 ```
 
-`-webkit-box-orient` には、`vertical` ではなく `block-axis` を指定します。書字方向に合わせたブロック方向の指定で、縦書きでも同じように行数を制限できます。行数は `--line-clamp--limit` で受け取り、指定がなければ3行にします。ベンダープレフィックスを書くときの作法は、「[9-8 モダンな記法にそろえる](/notation/modern-syntax/)」で説明しています。
+`-webkit-box-orient` には、`vertical` ではなく `block-axis` を指定します。書字方向に合わせたブロック方向の指定で、縦書きでも同じように行数を制限できます。{/* 要検証: ブラウザ。縦書きの要素で、-webkit-box-orient: block-axis による行数の制限が働くか（Chrome、Safari、Firefox） */}行数は公開プロパティの `--line-clamp--limit` で受け取って内部プロパティの `--_u--limit` に入れ、指定がなければ3行にします。ベンダープレフィックスを書くときの作法は、「[9-8 モダンな記法にそろえる](/notation/modern-syntax/)」で説明しています。
 
-はみ出した行を隠すには、`overflow: hidden` ではなく `overflow-block: clip` を使います。`overflow: hidden` では、`hanging-punctuation` でぶら下げた約物まで切り取られます。`overflow-y: hidden` を指定すると、横方向の `overflow` が `auto` に変わり、スクロールバーの表示される場合があります。`clip` ならブロック方向だけを切り取り、スクロールできる領域も作りません。`overflow-block` はSafari 26で対応したので、Safari 18のために `overflow-y: clip` を用意しています。
+はみ出した行を隠すには、`overflow: hidden` ではなく `overflow-y: clip` を使います。`overflow: hidden` では、`hanging-punctuation` でぶら下げた約物まで切り取られます。`overflow-y: hidden` を指定すると、横方向の `overflow` が `auto` に変わり、スクロールバーの表示される場合があります。`clip` なら縦方向だけを切り取り、スクロールできる領域も作りません。論理プロパティの `overflow-block` にはSafariが26から対応したので、対象のブラウザがそろって対応している `overflow-y` で書きます（ルール `physical-only-where-no-logical`）。縦書きの要素の行数を制限するときは、行が横に並ぶので `overflow-x: clip` に替えます。
 
 ## ガイドライン
 

@@ -1,8 +1,8 @@
 # 第11章 レイアウトを組む：ルール
 
-- ガイドラインのバージョン: 0.82.0（2026-10-30 生成）
-- ルールの数: 62
-- 本文: 約27万字
+- ガイドラインのバージョン: 0.83.0（2026-10-30 生成）
+- ルールの数: 60
+- 本文: 約27.2万字
 - 読む条件: 余白の設計、内容の変化への耐性、はみ出しとスクロール、重なり、z-index、アンカーポジショニング、表
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
@@ -13,13 +13,13 @@
 ## この章の節
 
 - `layout-practice` 第11章 レイアウトを組む（約7,100字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/
-- `layout-practice/choosing` 11-1 レイアウト手法の選び方（約1.7万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/choosing/
+- `layout-practice/choosing` 11-1 レイアウト手法の選び方（約1.6万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/choosing/
 - `layout-practice/spacing` 11-2 余白を設計する（約3.1万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/spacing/
-- `layout-practice/defensive` 11-3 サイズと内容の変化に耐える（約2.1万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/defensive/
+- `layout-practice/defensive` 11-3 サイズと内容の変化に耐える（約2.2万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/defensive/
 - `layout-practice/overflow` 11-4 はみ出しとスクロール（約2.3万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/overflow/
 - `layout-practice/quantity-layouts` 11-5 件数で配置を組み替える（約1.8万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/quantity-layouts/
-- `layout-practice/layering` 11-6 重なりと全幅（約1.3万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/layering/
-- `layout-practice/sticky-header` 11-7 固定ヘッダー（約9,400字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/sticky-header/
+- `layout-practice/layering` 11-6 重なりと全幅（約1.4万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/layering/
+- `layout-practice/sticky-header` 11-7 固定ヘッダー（約9,800字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/sticky-header/
 - `layout-practice/anchor-positioning` 11-8 アンカーポジショニング（約2万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/anchor-positioning/
 - `layout-practice/overlap-detection` 11-9 要素どうしの重なりを検出する（約1.1万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/overlap-detection/
 - `layout-practice/root-scroller` 11-10 ページのスクロールとルートスクローラー（約1.4万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/root-scroller/
@@ -27,8 +27,8 @@
 - `layout-practice/reading-flow` 11-12 表示順と読み上げ順を合わせる（約1.3万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/reading-flow/
 - `layout-practice/icon-alignment` 11-13 アイコンを配置する（約1.9万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/icon-alignment/
 - `layout-practice/float` 11-14 floatで文章を回り込ませる（約1万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/float/
-- `layout-practice/tables` 11-15 表を組む（約2.4万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/tables/
-- `layout-practice/truncation-and-skeletons` 11-16 文字の切り詰めと読み込み中の表示（約8,200字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/truncation-and-skeletons/
+- `layout-practice/tables` 11-15 表を組む（約2.5万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/tables/
+- `layout-practice/truncation-and-skeletons` 11-16 文字の切り詰めと読み込み中の表示（約8,500字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/truncation-and-skeletons/
 
 ## 11-1 レイアウト手法の選び方
 
@@ -47,7 +47,7 @@ https://t-arai-pnrm.github.io/recss-guideline/layout-practice/choosing/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout-practice/choosing/#rule-flex-auto-margin-for-end-items
 - 【推奨・実装上の判断】縦に積む要素の間隔が、前後の要素の種類や有無によって変わるときは、Flexbox や Grid にせず、通常フローのまま次兄弟結合子で選んだ要素の `margin-block-start` で間隔を作る。（`normal-flow-for-conditional-spacing`）
   - 理由: `gap` はすべての間に同じ値を空けるので、条件で変わる間隔を作るには子の `margin` を足したり打ち消したりする必要があるため。通常フローなら、要素の関係ごとに書いた `margin` と、マージンの相殺がそのまま働く。
-  - 補足: 間隔を一律にしてよい部品は Flexbox の `gap`（コンポジション `stack`）で、要素の種類と順番が決まっていて間ごとの余白だけが違う部品は空のグリッドセルで作ります。見出しや段落が続く流れを自分で HTML に書くときは、コンポジション `prose` を使えます。
+  - 補足: 本文のように種類の違う要素が続く領域も、同じ理由で通常フローのまま組みます。`float` による回り込みと `margin` の相殺が働き、要素ごとの余白の大小を調整できます。見出しや段落が続く流れを自分で HTML に書くときは、コンポジション `prose` を使えます。間隔を一律にしてよい部品は Flexbox の `gap`（コンポジション `stack`）で、要素の種類と順番が決まっていて間ごとの余白だけが違う部品は空のグリッドセルで作ります。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout-practice/choosing/#rule-normal-flow-for-conditional-spacing
 
 ## 11-2 余白を設計する
@@ -61,16 +61,10 @@ https://t-arai-pnrm.github.io/recss-guideline/layout-practice/spacing/
   - 理由: 余白の指定が `grid-template` の1か所にまとまり、見れば構造が分かるうえ、余白のための要素を足さずに済むため。
   - 補足: 余白の差を作るためだけに、`padding` を持つ `div` を足しません。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout-practice/spacing/#rule-empty-grid-cells-for-spacing
-- 【推奨・実装上の判断】状況によって要素の有無や数が変わる場所では、`* + *` で2つ目以降の要素にだけ `margin-block-start` を付けて間隔を作る。（`owl-margin-for-optional-elements`）
-  - 理由: 空のセルで余白を決めておくと、要素が欠けたときに余白だけが残るため。
-  - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout-practice/spacing/#rule-owl-margin-for-optional-elements
 - 【必須・実装上の判断】要素の間のブロック方向の `margin` は、`& > * + *` や `& > :is(:heading, h1, h2, h3, h4, h5, h6) + *` のように、次兄弟結合子で前の要素を条件にしたセレクタで選び、後ろの要素の `margin-block-start` に指定する。（`block-margin-with-sibling-combinator`）
   - 理由: 要素の間の余白は、隣り合う2つの要素の関係から生まれるため。前の要素を条件にしておけば、その関係が成り立つときだけ余白が付き、要素が欠けたり並びが変わったりしても、余計な余白が残らない。
-  - 補足: 要素そのものに条件なしの `margin-block-start` や `margin-block-end` を付けたり、`:first-child` や `:last-child` で打ち消したりしません。Flexbox と Grid の子の間隔は、親の `gap` で作ります（`gap-over-child-margin`）。間隔ではなく位置を決める `margin`（`auto` で寄せる、`padding` を打ち消す負の値、アンカーポジショニングで基準の要素から離す距離など）と、マージンの相殺そのものを説明する例は対象外です。`:heading` は、ルール `heading-with-fallback` のとおり従来のタイプセレクタと並べて書きます。
+  - 補足: 要素そのものに条件なしの `margin-block-start` や `margin-block-end` を付けたり、`:first-child` や `:last-child` で打ち消したりしません。Flexbox と Grid の子の間隔は、親の `gap` で作ります（`gap-over-child-margin`）。状況によって要素の有無や数が変わる場所でも、空のグリッドセルではなくこの書き方で間隔を作ります。空のセルで余白を決めると、要素が欠けたときに余白の行だけが残るからです。`hidden` 属性や `display: none` で隠した要素も兄弟として数えるので、`* + *` の余白は隠した要素の後ろの要素にも付きます。条件で出さない要素は、隠さずに HTML に出力しないようにします。間隔ではなく位置を決める `margin`（`auto` で寄せる、`padding` を打ち消す負の値、アンカーポジショニングで基準の要素から離す距離、`float` の要素と回り込む行の距離など）と、マージンの相殺そのものを説明する例は対象外です。`:heading` は、ルール `heading-with-fallback` のとおり従来のタイプセレクタと並べて書きます。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout-practice/spacing/#rule-block-margin-with-sibling-combinator
-- 【推奨・実装上の判断】本文のように種類の違う要素が続く領域は、Flexbox や Grid の `gap` にせず、通常フローのまま `margin` で間隔を作る。（`prose-in-normal-flow`）
-  - 理由: `float` による回り込みや `margin` の相殺が働き、要素ごとの余白の大小を自然に調整できるため。
-  - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout-practice/spacing/#rule-prose-in-normal-flow
 - 【推奨・実装上の判断】親子のマージンの相殺を止めたいときは、`overflow: auto` や見えない `padding`、`border` ではなく、親に `display: flow-root` を指定する。（`flow-root-for-margin-collapse`）
   - 理由: `overflow` はスクロールコンテナを作り、中の `position: sticky` を妨げるほか、影や絶対配置の要素を切り取る副作用があるため。
   - 補足: Flexbox や Grid にした親と、その子の間では、余白は相殺しません。
@@ -97,11 +91,11 @@ https://t-arai-pnrm.github.io/recss-guideline/layout-practice/defensive/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout-practice/defensive/#rule-design-for-content-changes
 - 【推奨・仕様にもとづく制約】要素の高さは `block-size` で固定しない。一定の高さが要るときは `min-block-size` で下限を、上限が要るときは `max-block-size` で上限を決め、縦横比が決まっている要素（画像、動画、擬似要素で描くアイコンなど）は `aspect-ratio` で決める。（`min-block-size-over-fixed-height`）
   - 理由: 内容が増えたときや、ユーザーが文字サイズを大きくしたときにも、中身があふれないため。`aspect-ratio` なら幅に応じて高さが決まり、どの幅でも比率が保たれる。
-  - 補足: `inline-size` と `block-size` に同じ値を書いて正方形を作らず、`inline-size` と `aspect-ratio: 1` で書きます。行の高さに合わせる `1lh`、読み込み中の表示の `2lh` のように、高さそのものが行数で決まる指定は対象外です。`appearance: none` で描き直す `input` 要素は、`aspect-ratio` で大きさを決めると Safari で比率を保てずに潰れることがあるので、`inline-size` と `block-size` の両方で指定します（17-7）。画面全体を覆う `position: fixed` の背景やダイアログのように、高さが画面の大きさで決まる指定（`100lvb`、`100%`）も対象外です。
+  - 補足: `inline-size` と `block-size` に同じ値を書いて正方形を作らず、`inline-size` と `aspect-ratio: 1` で書きます。行の高さに合わせる `1lh`、読み込み中の表示の `2lh` のように、高さそのものが行数で決まる指定は対象外です。`appearance: none` で描き直す `input` 要素は、`aspect-ratio` で大きさを決めると Safari で比率を保てずに潰れることがあるので、`inline-size` と `block-size` の両方で指定します（17-7）。画面全体を覆う `position: fixed` の背景やダイアログのように、高さが画面の大きさで決まる指定（`100lvb`、`100%`）も対象外です。隣の要素の高さに合わせる画像の `block-size: 0` と `min-block-size: 100%` の組は、画像が行の高さを押し広げないための指定なので、対象外です（16-1）。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout-practice/defensive/#rule-min-block-size-over-fixed-height
 - 【必須・仕様にもとづく制約】`minmax()` の最小値や `min-inline-size` に固定の長さを書くときは、`min(100%, …)` で親の幅を上限にする。（`minmax-min-capped-at-100-percent`）
   - 理由: 親がその長さより狭くなったときに、はみ出すのを防ぐため。
-  - 補足: 例：`repeat(auto-fit, minmax(min(100%, calc(360 / 16 * 1rem)), 1fr))`、`min-inline-size: min(100%, 320px)`。
+  - 補足: 例：`repeat(auto-fit, minmax(min(100%, calc(360 / 16 * 1rem)), 1fr))`、`min-inline-size: min(100%, 320px)`。ページの両端のガターの列（`minmax(var(--_gutter), 1fr)`）のように、親の幅より十分小さいことが明らかな下限と、スクロールのラッパーの中で意図して親より広くする表の最小幅は対象外です。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout-practice/defensive/#rule-minmax-min-capped-at-100-percent
 - 【推奨・本書の規約】列を均等や比率で分けるときは、`minmax(0, 1fr)` ではなく `1fr` と書く。（`fr-without-minmax-zero`）
   - 理由: ベーススタイルの全称セレクタの `min-inline-size: 0` でグリッドアイテムの最小幅が0になっており、`1fr` の列も中身に押し広げられないため。`minmax(0, 1fr)` は同じ守りを重ねるだけで、意図して下限を決めた `minmax()` との区別もつかなくなる。
@@ -172,7 +166,7 @@ https://t-arai-pnrm.github.io/recss-guideline/layout-practice/layering/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout-practice/layering/#rule-full-bleed-via-layout-first
 - 【必須・実装上の判断】親の幅を超えて画面の端まで広げる量は、`calc((100lvi - 100%) / -2)` のように「画面の幅と親の幅の差の半分」の式で書き、`100vw` や `calc(50% - 50vw)` を使わない。（`full-bleed-offset-formula`）
   - 理由: 何をどれだけ広げているのかが式から読め、`vw` の曖昧さも避けられるため。
-  - 補足: `100lvi` もクラシックなスクロールバーの幅を含むので、この式を使うときは、ルートで横方向のはみ出しを `overflow-x: clip` で切る前提にします。横にスクロールする領域では、`100%` の代わりに名前付きのコンテナの `100cqi` を使います。`vw` を使わない理由は、第6章のルール `no-vw-vh` を参照してください。
+  - 補足: クラシックなスクロールバーが幅を取る環境では、ブラウザとルートの `scrollbar-gutter` の指定によって `100lvi` もスクロールバーの幅を含むことがあるので、この式を使うときは、ルートで横方向のはみ出しを `overflow-x: clip` で切る前提にします。横にスクロールする領域では、`100%` の代わりに名前付きのコンテナの `100cqi` を使います。`vw` を使わない理由は、第6章のルール `no-vw-vh` を参照してください。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout-practice/layering/#rule-full-bleed-offset-formula
 
 ## 11-7 固定ヘッダー
@@ -202,7 +196,7 @@ https://t-arai-pnrm.github.io/recss-guideline/layout-practice/anchor-positioning
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout-practice/anchor-positioning/#rule-anchor-scope-for-repeated-components
 - 【推奨・実装上の判断】ホバーやフォーカスした項目へ背景が移る表現は、リストの擬似要素を `inset: anchor(inside)` で状態のある項目に合わせて作り、指定を `@supports` の中に書いて、未対応の環境では背景が付かないだけになる装飾として扱う。（`anchor-indicator-as-decoration`）
   - 理由: 項目ごとの背景では項目の間を移動させられない一方、アンカーポジショニングは対象のブラウザの一部が対応していないので、なくても内容と操作に影響しない形でだけ使えるため。
-  - 補足: アンカーの名前は、`&:any-link:hover`（`@media (any-hover)` の中）と `&:focus-visible` のときだけリンクに付けます。どの項目も状態を持たない間は `anchor()` を解決できないので、リストに立てた `--_has-hocus` のフラグを擬似要素のスタイルクエリで読み、`opacity: 0` にします。使うのは、すべての項目が押せ、項目が隙間なく並び、ホバーしている間に項目が動かない部品に限ります。項目の間を移動させる `inset` のトランジションは `prefers-reduced-motion: no-preference` の中に書き、`opacity` のトランジションはその外に書いて、動きを減らす設定でも薄れる変化は残します。フォーカスしたリンクがある間は、どちらのトランジションも外します。ルートには `anchor-scope` を指定します（`anchor-scope-for-repeated-components`）。
+  - 補足: アンカーの名前は、`&:any-link:hover`（`@media (any-hover)` の中）と `&:focus-visible` のときだけリンクに付けます。どの項目も状態を持たない間は `anchor()` を解決できないので、リストに立てた `--_has-hocus` のフラグを擬似要素のスタイルクエリで読み、`opacity: 0` にします。使うのは、すべての項目が押せ、項目が隙間なく並び、ホバーしている間に項目が動かない部品に限ります。項目の間を移動させる `inset` のトランジションは `prefers-reduced-motion: no-preference` の中に書き、`opacity` のトランジションはその外に書いて、動きを減らす設定でも薄れる変化は残します。どの項目も状態を持たない間は、`inset` もトランジションの対象に加え、タイミング関数を `step-end` にして、`opacity` が薄れ終わる時点で切り替えます。フォーカスしたリンクがある間は、どちらのトランジションも外します。ルートには `anchor-scope` を指定します（`anchor-scope-for-repeated-components`）。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout-practice/anchor-positioning/#rule-anchor-indicator-as-decoration
 
 ## 11-9 要素どうしの重なりを検出する
@@ -211,7 +205,7 @@ https://t-arai-pnrm.github.io/recss-guideline/layout-practice/overlap-detection/
 
 - 【推奨・実装上の判断】アンカーポジショニングとスクロール駆動アニメーションで要素どうしの重なりを検出する技法は、隠れても内容と操作に影響しない装飾にだけ使い、指定はすべて `@supports` の中に書く。（`overlap-detection-for-decoration-only`）
   - 理由: Safari 18 などの未対応の環境では検出が働かないので、隠す対象が本文や操作の部品だと、環境によって読める内容が変わるため。
-  - 補足: 測る範囲に置く要素は、はみ出したときにスクロールコンテナになるので、`inert` 属性を付けてフォーカスと支援技術から外します。重ならないレイアウト（Grid の列に装飾を置くなど）を組めるなら、そちらを先に検討します。ナビゲーションを1行に収まらなくなったら折りたたむ処理は、ナビゲーション自身の溢れを測る第13章のルール `collapse-nav-on-overflow` に従います。
+  - 補足: 測る範囲に置く要素は、中身がはみ出すとスクロールできる状態になり、キーボードで選べるブラウザがあるので、`inert` 属性を付けてフォーカスと支援技術から外します。重ならないレイアウト（Grid の列に装飾を置くなど）を組めるなら、そちらを先に検討します。ナビゲーションを1行に収まらなくなったら折りたたむ処理は、ナビゲーション自身の溢れを測る第13章のルール `collapse-nav-on-overflow` に従います。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout-practice/overlap-detection/#rule-overlap-detection-for-decoration-only
 
 ## 11-10 ページのスクロールとルートスクローラー
@@ -248,7 +242,7 @@ https://t-arai-pnrm.github.io/recss-guideline/layout-practice/masonry/
   - 補足: 仕様も、`infinite` の代わりに大きめの長さを指定するよう勧めています。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout-practice/masonry/#rule-flow-tolerance-no-infinite
 - 【推奨・実装上の判断】上から下へ読む1つのリストを段に分けるときは `columns` を使い、項目に `break-inside: avoid` を指定して、間隔は `margin` ではなく `padding-block` で空ける。（`columns-for-top-to-bottom-lists`）
-  - 理由: 段組みは並び順が縦なので HTML の順番と読む順番がそろい、2段目以降の先頭の `margin` は段の境目で切り取られて上端がそろわないため。
+  - 理由: 段組みは並び順が縦なので HTML の順番と読む順番がそろうため。項目の間隔を `margin` で作ると、すべての項目に `margin` を付けた場合、2段目以降の先頭の項目の `margin` は段の境目で切り取られ、1段目の先頭と上端がそろわない。
   - 補足: `column-width` は `%` を受け付けず、`min(100%, …)` と書くと宣言ごと無効になります。段の幅をコンテナに比例させるときは `cqi` を使います。横方向の順番で並べながら高さの違いを詰めるなら `grid-lanes` を使います。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout-practice/masonry/#rule-columns-for-top-to-bottom-lists
 
@@ -330,9 +324,9 @@ https://t-arai-pnrm.github.io/recss-guideline/layout-practice/tables/
 
 https://t-arai-pnrm.github.io/recss-guideline/layout-practice/truncation-and-skeletons/
 
-- 【推奨・仕様にもとづく制約】1行で打ち切るときは、`text-overflow: ellipsis` に `white-space: nowrap` と `overflow-inline: clip` を組み合わせる。（`ellipsis-with-nowrap-and-clip`）
+- 【推奨・仕様にもとづく制約】1行で打ち切るときは、`text-overflow: ellipsis` に `white-space: nowrap` と `overflow-x: clip` を組み合わせる。（`ellipsis-with-nowrap-and-clip`）
   - 理由: `text-overflow` は折り返さずにはみ出した行にだけ効き、はみ出しを `overflow: hidden` で切り取ると要素がスクロールコンテナになるため。
-  - 補足: `overflow-inline` に対応していない Safari 18 のために、`@supports not (overflow-inline: clip)` の中で `overflow-x: clip` を指定します。2行以上で打ち切るときは、第14章のルール `line-clamp-with-overflow-clip` に従います。行数を制限する要素には `padding-block` を付けず、余白は外側の要素に持たせます。
+  - 補足: 論理プロパティの `overflow-inline` は Safari 26 から対応したので、`overflow-x` で書きます（第9章のルール `physical-only-where-no-logical`）。2行以上で打ち切るときは、第14章のルール `line-clamp-with-overflow-clip` に従います。行数を制限する要素には `padding-block` を付けず、余白は外側の要素に持たせます。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout-practice/truncation-and-skeletons/#rule-ellipsis-with-nowrap-and-clip
 - 【推奨・実装上の判断】文字を切り詰めるときは、リンク先のページや詳細の表示など、全文を読める手段を用意する。（`truncate-with-full-text-access`）
   - 理由: 切り詰めた部分は、画面の上では読めなくなるため。

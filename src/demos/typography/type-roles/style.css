@@ -7,7 +7,7 @@
 
     ._role {
       & > ._name-text + ._sample-text {
-        margin-block-start: calc(var(--spacing--xxxs) * 1px);
+        margin-block-start: calc(var(--spacing--xxxs) / 16 * 1rem);
       }
     }
 

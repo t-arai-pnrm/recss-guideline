@@ -33,7 +33,7 @@ CMSのWYSIWYGエディタが出力する本文は、`wysiwyg` クラスを付け
 }
 
 .wysiwyg p {
-  line-height: 1.8;
+  line-height: var(--text--body--leading);
 }
 ```
 
@@ -45,7 +45,7 @@ CMSのWYSIWYGエディタが出力する本文は、`wysiwyg` クラスを付け
 
 独自ブロックは、スコープの下限で切り離します。`@scope (:scope) to ([class|="cms"])` のように、`to()` にブロックの目印を指定すると、そのブロックの中にはスタイルが届きません。内側の `@scope` の `:scope` は、外側のスコープのルート、つまり `.wysiwyg` を指します。
 
-```css title="🙆‍♂ Recommended: 本文エリアの @scope から、独自ブロックを切り離す"
+```css title="🙆‍♂ Recommended: 本文エリアの @scope から、独自ブロックを切り離す" from="operations/wysiwyg"
 @scope (.wysiwyg) {
   @scope (:scope) to ([class|="cms"]) {
     h2 {
@@ -55,11 +55,13 @@ CMSのWYSIWYGエディタが出力する本文は、`wysiwyg` クラスを付け
     }
 
     p {
-      line-height: 1.8;
+      line-height: var(--text--body--leading);
     }
   }
 }
 ```
+
+本文の `h2` には、横の `padding` と線を直接付けています。通常は、文字の要素には文字のスタイルだけを書き、左右の余白は包む要素で作ります（ルール [`text-elements-text-styles-only`](/layout/margin-role/#rule-text-elements-text-styles-only)）。編集者が要素を足せない本文エリアでは包む要素を用意できないので、この規約の対象から外します。
 
 通常の規約では、`@scope` は `@scope (.scoped.<名前>) to (.scoped)` の形で書き、ネストはしません。本文エリアは、中に入る要素を自分で決められないので、この形を使えません。`.scoped` のクラスを付けられるのは、コードを書く人だけだからです。代わりに、`cms-` で始まるクラスを、独自ブロックの目印にします。
 
@@ -69,28 +71,30 @@ CMSのWYSIWYGエディタが出力する本文は、`wysiwyg` クラスを付け
 
 独自ブロックのスタイルは、ブロックのクラスを起点とする `@scope` で書きます。このスコープは、本文エリアの中で使う前提なので、`to()` を省略します。ブロックの内側に、別のブロックを入れないからです。入れ子にするブロックを作るときは、通常の規約どおり `to (.scoped)` を付けた形で書きます。
 
-```css title="🙆‍♂ Recommended: 独自ブロックのスタイルは、ブロック自身の @scope に書く"
+```css title="🙆‍♂ Recommended: 独自ブロックのスタイルは、ブロック自身の @scope に書く" from="operations/wysiwyg"
 @scope (.cms-custom-section) {
   :scope {
     background-color: var(--background--inverse);
     color: var(--foreground--inverse);
   }
 
-  :where(h2, h3, h4) {
-    font-size: calc(20 / 16 * 1rem);
+  h2,
+  h3,
+  h4 {
+    font-size: calc(var(--text--title--font-size) / 16 * 1rem);
   }
 }
 ```
 
-デモでは、本文エリアの `h2` に左の線と背景色が付き、独自ブロックの `h2` には付かないことを確かめられます。ブロックの中の `p` も、本文エリアの行間 `1.8` を受け取りません。
+デモでは、本文エリアの `h2` に左の線と背景色が付き、独自ブロックの `h2` には付かないことを確かめられます。ブロックの中の `p` も、本文エリアの `p` の行の高さを受け取りません。
 
-<Demo title="本文エリアのスタイルが、独自ブロックの中には届かない" html={wysiwygHtml} css={wysiwygCss} scheme="light" widths={[320, 768]} />
+<Demo title="本文エリアのスタイルが、独自ブロックの中には届かない" html={wysiwygHtml} css={wysiwygCss} widths={[320, 768]} />
 
 ## ブロック間の余白は rlh で決める
 
-本文のブロックの間隔は、2つ目以降の直下の子に付けます。`& > * + *` に `margin-block-start: 1rlh` を指定し、見出しと独自ブロックの前だけ `2rlh` に広げます。`rlh` は、ルート要素の行の高さを単位にした長さです。本文の `p` の `line-height` が `1.8` でも、見出しが別の行間でも、余白はルート要素の行の高さの倍数で揃います。
+本文のブロックの間隔は、2つ目以降の直下の子に付けます。`& > * + *` に `margin-block-start: 1rlh` を指定し、見出しと独自ブロックの前だけ `2rlh` に広げます。`rlh` は、ルート要素の行の高さを単位にした長さです。本文の `p` と見出しの `line-height` が違っても、余白はルート要素の行の高さの倍数で揃います。
 
-```css title="🙆‍♂ Recommended: 余白は rlh で、見出しと独自ブロックの前だけ広げる"
+```css title="🙆‍♂ Recommended: 余白は rlh で、見出しと独自ブロックの前だけ広げる" from="operations/wysiwyg"
 @scope (.wysiwyg) {
   :scope {
     & > * + * {
@@ -112,7 +116,7 @@ CMSのWYSIWYGエディタが出力する本文は、`wysiwyg` クラスを付け
 
 `[class|="cms"]` には、制約があります。この属性セレクタは、`class` 属性の値の全体が `cms` か、`cms-` で始まるときに一致します。`class="cms-custom-section"` は一致しますが、`class="foo cms-custom-section"` は、先頭が `foo` なので一致しません。独自ブロックのクラスは、`class` 属性の先頭に書くと決めてください。クラスを種類ごとに `|` で区切って並べる場合も（「[9-1 命名規則](/notation/naming/)」）、独自ブロックのクラスはルートのグループの先頭に置くので、この約束と両立します。CMSのエディタが、クラスを並べ替えたり先頭に別のクラスを足したりする場合は、`to ([class*="cms-"])` のように部分一致にする手もあります。ただし、`xcms-` のようなクラスにも一致するので、クラス名の付け方を別に決める必要があります。
 
-`@scope` のBaselineは「新しく使える」の段階です。対応していないブラウザでは、`@scope` の中のルールがすべて無視されます。対象のブラウザの基準は、案件ごとに確かめます。
+`@scope` のBaselineは「新しく利用可能」の段階です。基本の動作には、本書の対象のブラウザ（Safari 18.6以降と、ほかのブラウザの最新版）がすべて対応しています。対応していないブラウザでは、`@scope` の中のルールがすべて無視されるので、対象により古いブラウザを含む案件では、その基準で確かめます。{/* 要検証: ブラウザ。Safari 18.6で、ネストした @scope (:scope) to ([class|="cms"]) が適用され、独自ブロックの中に本文のスタイルが届かないか */}
 
 <Baseline id="scope" name="@scope" />
 

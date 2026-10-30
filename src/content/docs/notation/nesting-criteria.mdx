@@ -87,7 +87,7 @@ BEMにたとえると、BlockとElementの関係（コンポーネントと、�
   ._icon {
     inline-size: 1em;
     aspect-ratio: 1;
-    color: oklch(50% 0.15 250deg);
+    color: var(--foreground--muted);
   }
 }
 ```
@@ -122,7 +122,7 @@ BEMにたとえると、BlockとElementの関係（コンポーネントと、�
       flex-shrink: 0;
       inline-size: 1em;
       aspect-ratio: 1;
-      color: oklch(50% 0.15 250deg);
+      color: var(--foreground--muted);
     }
   }
 }
@@ -184,7 +184,7 @@ BEMにたとえると、BlockとElementの関係（コンポーネントと、�
 @scope (.scoped.action-bar) to (.scoped) {
   button,
   ._selected-count {
-    background-color: var(--background--active);
+    background-color: var(--background--surface);
 
     &:enabled {
       background-color: var(--background--inverse);
@@ -193,19 +193,20 @@ BEMにたとえると、BlockとElementの関係（コンポーネントと、�
 
   button {
     &[data-variant="danger"] {
-      background-color: var(--foreground--danger);
+      background-color: var(--background--surface);
+      color: var(--foreground--danger);
     }
   }
 }
 ```
 
-このバーには、操作のボタンと、選択中の件数を示す `._selected-count` が並んでいます。2つは背景色を共有しているので、1つのセレクタリストにまとめています。`&:enabled` は `:is(button, ._selected-count):enabled` と同じ意味になり、詳細度は `0.2.0` です。`button` で一致した要素にも、`._selected-count` の `0.1.0` が使われます。後ろにある `button[data-variant="danger"]` は `0.1.1` なので負け、削除のボタンは赤になりません。親が `button` だけなら、どちらも `0.1.1` になり、後ろに書いた赤が勝ちます。
+このバーには、操作のボタンと、選択中の件数を示す `._selected-count` が並んでいます。2つは背景色を共有しているので、1つのセレクタリストにまとめています。`&:enabled` は `:is(button, ._selected-count):enabled` と同じ意味になり、詳細度は `0.2.0` です。`button` で一致した要素にも、`._selected-count` の `0.1.0` が使われます。後ろにある `button[data-variant="danger"]` は `0.1.1` なので負け、削除のボタンの文字は赤になりません。親が `button` だけなら、どちらも `0.1.1` になり、後ろに書いた赤が勝ちます。
 
 ```css title="🙆‍♂ Recommended: ネストするルールはセレクタごとに分ける" from="notation/nesting-split-list"
 @scope (.scoped.action-bar) to (.scoped) {
   button,
   ._selected-count {
-    background-color: var(--background--active);
+    background-color: var(--background--surface);
   }
 
   button {
@@ -214,7 +215,8 @@ BEMにたとえると、BlockとElementの関係（コンポーネントと、�
     }
 
     &[data-variant="danger"] {
-      background-color: var(--foreground--danger);
+      background-color: var(--background--surface);
+      color: var(--foreground--danger);
     }
   }
 }
@@ -222,7 +224,7 @@ BEMにたとえると、BlockとElementの関係（コンポーネントと、�
 
 宣言だけのセレクタリストは問題ありません。リストの各セレクタは、それぞれの詳細度で比べられるからです。問題になるのは、リストの中でセレクタをネストしたときだけです。条件付きのアットルールは詳細度を変えないので、リストの中にネストしてもかまいません。
 
-次の2つのデモは、同じHTMLに、上の2つのコード例のCSSを当てたものです。上のデモでは、削除のボタンが赤くなります。下のデモでは、削除のボタンもほかのボタンと同じ色のままです。
+次の2つのデモは、同じHTMLに、上の2つのコード例のCSSを当てたものです。上のデモでは、削除のボタンの文字が赤くなります。下のデモでは、削除のボタンもほかのボタンと同じ色のままです。
 
 <Demo title="ネストするルールをセレクタごとに分けたボタン" html={splitHtml} css={splitCss} />
 
@@ -273,7 +275,7 @@ BEMにたとえると、BlockとElementの関係（コンポーネントと、�
 レビューでは、問題の深刻さで指摘を分けます（「[19-2 レビューの進め方](/operations/review/)」）。セレクタリストの中のネストで上書きできないなら、不具合なので `MUST` です。子自身の見た目を親のネストに書いているだけで、今は正しく表示されているなら、本書の規約を採用したプロジェクトでは `MUST`、そうでなければ `IMO` として伝えます。直下の子の `& >` がマークアップの都合なのか意図した制約なのかがコードから読み取れないときは、`Q` で尋ねます。
 
 ```text title="レビューの指摘の例"
-[MUST] `button, ._selected-count` の中の `&:enabled` は、詳細度が 0.2.0 になり、後ろの `button[data-variant="danger"]`（0.1.1）に勝ってしまいます。削除のボタンが赤くなりません。`&:enabled` は `button` のルールに移してください（`no-nesting-under-selector-list`）。
+[MUST] `button, ._selected-count` の中の `&:enabled` は、詳細度が 0.2.0 になり、後ろの `button[data-variant="danger"]`（0.1.1）に勝ってしまいます。削除のボタンの文字が赤くなりません。`&:enabled` は `button` のルールに移してください（`no-nesting-under-selector-list`）。
 ```
 
 ネストの深さ、詳細度、宣言の順番はツールで検査できますが、ネストしたルールの持ち主が正しいかどうかは、ツールでは判断できません。本書の設定で機械的に検査しているのは、`&` で始まるかどうかと、条件付きのアットルールの位置と、ルールの中の並び順です。この節の判断は、レビューで確かめます。

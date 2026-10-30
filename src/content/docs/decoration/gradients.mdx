@@ -56,7 +56,7 @@ import patternsCss from '../../../demos/decoration/gradient-patterns/style.css?r
 ```css title="🙅‍♂ Not Recommended: 同じ境界の位置を、前の色と後ろの色に2回ずつ書く" issue="convention"
 /* 🙅‍♂ Not Recommended */
 ._ratio {
-  background-image: linear-gradient(to right, var(--background--inverse) 30%, var(--background--active) 30%, var(--background--active) 70%, var(--background--surface) 70%);
+  background-image: linear-gradient(to right, var(--background--inverse) 30%, var(--foreground--muted) 30%, var(--foreground--muted) 70%, var(--background--surface) 70%);
 }
 ```
 
@@ -67,7 +67,7 @@ import patternsCss from '../../../demos/decoration/gradient-patterns/style.css?r
   --_first: 30%;
   --_second: 70%;
 
-  background-image: linear-gradient(to right, var(--background--inverse) var(--_first), var(--background--active) 0 var(--_second), var(--background--surface) 0);
+  background-image: linear-gradient(to right, var(--background--inverse) var(--_first), var(--foreground--muted) 0 var(--_second), var(--background--surface) 0);
 }
 ```
 
@@ -81,7 +81,7 @@ import patternsCss from '../../../demos/decoration/gradient-patterns/style.css?r
 
 ```css title="🙆‍♂ Recommended: 斜めの縞は、停止位置の並びを繰り返して描く" from="decoration/gradient-patterns"
 ._placeholder {
-  background-image: repeating-linear-gradient(-45deg, var(--background--active) 0 8px, transparent 0 16px);
+  background-image: repeating-linear-gradient(-45deg, var(--border--base) 0 8px, transparent 0 16px);
 }
 ```
 
@@ -144,7 +144,7 @@ import patternsCss from '../../../demos/decoration/gradient-patterns/style.css?r
 
 単色の画像は、`conic-gradient(currentColor 0 0)` のように、どの関数で書いても同じ画像になります。CSS Images Module Level 4では色を1つだけ書く `conic-gradient(#000)` も認められていますが、`色 0 0` の形は、色が2つ以上必要だったLevel 3の書き方でも有効です。{/* 要検証: ブラウザ。色を1つだけ書いたグラデーションに対応した各ブラウザの版 */}
 
-## この節で使ったルール
+## ガイドライン
 
 この節の書き方は、ほかの節のルールを組み合わせたもので、この節だけのルールは置いていません。使ったルールは次のとおりです。
 

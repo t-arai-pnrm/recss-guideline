@@ -35,9 +35,9 @@
         /* 狭いときは、タイトルを次の行へ移して全幅を使う */
         grid-column: 1 / -1;
 
-        /* 日付 96px 相当・カテゴリ 160px 相当・タイトル 160px 相当と、列の隙間 24px が 2 つ、左右の余白 24px が並ぶ幅 */
+        /* タイトルの列が 160px 相当を確保できる幅になったら、日付とカテゴリの行に戻す */
         @container --scoped (inline-size >= calc(96 / 16 * 1rem + 160 / 16 * 1rem + 160 / 16 * 1rem + 24px * 2 + 24px * 2)) {
-          grid-column: auto;
+          grid-column: initial;
         }
       }
     }
@@ -45,8 +45,9 @@
     ._category {
       padding-block: 2px;
       padding-inline: 8px;
+      border: 1px solid var(--border--base);
       border-radius: var(--rounded--sm);
-      background-color: var(--background--active);
+      background-color: var(--background--surface);
       font-size: calc(var(--text--caption--font-size) / 16 * 1rem);
       line-height: var(--text--caption--leading);
     }

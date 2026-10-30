@@ -38,9 +38,14 @@ CSSのレイアウトは、1つの仕組みではなく、通常フロー、Flex
 ```
 
 ```css title="🙆‍♂ Recommended: inline flow-root にして、ブロックの規則で余白を持たせる"
+._meta {
+  & > ._tag {
+    margin-block: 4px;
+  }
+}
+
 ._tag {
   display: inline flow-root;
-  margin-block: 4px;
 }
 ```
 
@@ -59,17 +64,18 @@ AIが生成するコードにも、同じ傾向があります。方式の違い
 
 コードでは、通常フローは何も書かず、FlexboxとGridは親の `display` で、位置指定は要素自身の `position` で選びます。
 
-```css title="🙆‍♂ Recommended: レイアウトの方式を、親の display と要素自身の position で選ぶ"
+```css
 /* 通常フロー：display を変えない */
 
 /* Flexbox と Grid：親の display の内側の値で選ぶ */
 ._actions {
   display: block flex;
+  flex-wrap: wrap;
 }
 
 ._list {
   display: block grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(240 / 16 * 1rem)), 1fr));
 }
 
 /* 位置指定：position で選ぶ */
@@ -125,13 +131,13 @@ AIが生成するコードにも、同じ傾向があります。方式の違い
 直し方も、方式の規則に合わせて選びます。リンクに幅を持たせたいなら、値を変えずに `display: inline flow-root` を指定して、幅を持てる種類の箱へ変えます。フレックスアイテムが縮みすぎるときは、縮む量を決めているのは幅ではなく `flex-shrink` と最小幅なので、そちらで縮みすぎを防ぎます（「[11-3 サイズと内容の変化に耐える](/layout-practice/defensive/)」）。
 
 ```css title="🙆‍♂ Recommended: 方式の規則に合わせて、幅を決める指定を選ぶ"
-/* 通常フローのインライン：幅を持てる種類の箱に変える */
+/* インラインの箱には幅が適用されないので、幅を持てる inline flow-root にする */
 ._link {
   display: inline flow-root;
   inline-size: calc(160 / 16 * 1rem);
 }
 
-/* フレックスアイテム：幅を出発点のまま保ち、縮ませない */
+/* 縮む量を決めるのは幅ではなく flex-shrink なので、縮ませたくない画像の側で止める */
 ._media {
   display: block flex;
 

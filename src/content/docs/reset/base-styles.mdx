@@ -104,7 +104,7 @@ kiso.cssは、リンクの下線をデフォルトで消し、下線の太さを
 
 <Demo title="アクセントカラーの1色のリングは、同じ色の背景の上で見えなくなる" html={ringHtml} css={ringBadCss} scheme="light" variant="not-recommended" />
 
-kiso.cssは `outline-offset: 3px` を指定しているだけで、リングの色や太さはベーススタイルで決めます。コンポーネントごとのフォーカスの見せ方は、「[17-1 ホバーとフォーカスを表す](/interaction/states-and-focus/)」で扱います。
+kiso.cssは `outline-offset: 3px` を指定しているだけで、リングの色や太さはベーススタイルで決めます。ただし、kiso.cssは `tabindex="-1"` を持つ要素のフォーカスでは `outline` を `!important` で消すので、その要素では外側の `outline` が出ず、内側の `Canvas` の帯だけが残ります。後のレイヤーからは戻せません（「[8-3 グローバルに書いてはいけないもの](/reset/global-pitfalls/)」）。コンポーネントごとのフォーカスの見せ方は、「[17-1 ホバーとフォーカスを表す](/interaction/states-and-focus/)」で扱います。
 
 ## スムーススクロールの有効化
 
@@ -225,12 +225,14 @@ Safariは18.2で対応したので、本書が対象とするブラウザ（Safa
 デザインの都合でどうしても変える場合は、強制カラーモードでないとき（`forced-colors: none`）に限り、標準の `scrollbar-color` と `scrollbar-width` で指定します。どちらも、2025年12月までにすべての主要なブラウザで使えるようになりました。
 
 ```css title="🙆‍♂ Recommended: スクロールバーを変えるなら、強制カラーモードでないときだけにする"
-._scroller {
-  overflow-x: auto;
+@scope (.scoped.data-table) to (.scoped) {
+  ._scroller {
+    overflow-x: auto;
 
-  @media (forced-colors: none) {
-    scrollbar-color: var(--foreground--muted) var(--background--surface);
-    scrollbar-width: thin;
+    @media (forced-colors: none) {
+      scrollbar-color: var(--foreground--muted) var(--background--surface);
+      scrollbar-width: thin;
+    }
   }
 }
 ```

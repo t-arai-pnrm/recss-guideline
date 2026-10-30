@@ -32,11 +32,11 @@ import toastCss from '../../../demos/color-media/toast-palette/style.css?raw';
   --color-primary-dark: #c9853a;
 }
 
-.button--ghost {
+._ghost-button {
   background-color: rgb(var(--color-primary-rgb) / 20%);
 }
 
-.button--strong {
+._strong-button {
   background-color: var(--color-primary-dark);
 }
 ```
@@ -51,15 +51,15 @@ import toastCss from '../../../demos/color-media/toast-palette/style.css?raw';
 
 ```css title="🙆‍♂ Recommended: 元の色から、不透明度や明度を変えた色を作る"
 ._divider {
-  border-block-end: 1px solid oklch(from var(--background--accent) l c h / 10%);
+  border-block-end: 1px solid oklch(from var(--background--brand) l c h / 10%);
 }
 
 ._tag {
-  background-color: oklch(from var(--background--accent) calc(l - 0.15) c h);
+  background-color: oklch(from var(--background--brand) calc(l - 0.15) c h);
 }
 ```
 
-1つ目は、アクセントカラーの不透明度を10%にした区切り線です。2つ目は、明度だけを0.15下げた、少し暗いアクセントカラーです。どちらも元の色のトークンを参照しているので、アクセントカラーを変えれば、区切り線とタグの色も一緒に変わります。元の色には、色の段階（`--color--accent--500` のようなプリミティブ）ではなく、役割を表すセマンティクスのトークンを使います。ダークモードで値が切り替わっても、派生させた色が同じ役割のまま追従するからです（「[10-4 デザイントークン](/components/design-tokens/#色のトークンの層)」）。
+`--background--brand` は、ブランドの色を表すセマンティクスのトークンの例です。1つ目は、ブランドの色の不透明度を10%にした区切り線です。2つ目は、明度だけを0.15下げた、少し暗いブランドの色です。どちらも元の色のトークンを参照しているので、ブランドの色を変えれば、区切り線とタグの色も一緒に変わります。元の色には、色の段階（`--color--brand--500` のようなプリミティブ）ではなく、役割を表すセマンティクスのトークンを使います。ダークモードで値が切り替わっても、派生させた色が同じ役割のまま追従するからです（「[10-4 デザイントークン](/components/design-tokens/#色のトークンの層)」）。
 
 元の色の書き方は問いません。16進数のトークンでも、`oklch(from #e4a153 l c h / 20%)` と書けば、ブラウザが `oklch()` の成分に変換してから書き換えます。相対カラー構文は `rgb()` や `hsl()` でも使えますが、本書では `oklch()` にそろえます。HSLの明度は見た目の明るさと一致しないので、`calc(l - 10)` で暗くしても、色相によって暗くなり方が変わるからです。
 
@@ -72,12 +72,12 @@ import toastCss from '../../../demos/color-media/toast-palette/style.css?raw';
 ```css title="🙆‍♂ Recommended: 状態ごとの色を、元の色の成分を書き換えて作る"
 @scope (.scoped.button) to (.scoped) {
   :scope {
-    --_accent: var(--button--accent, var(--background--accent));
+    --_accent: var(--button--accent, var(--background--brand));
     --_background: var(--_accent);
 
     border-color: transparent;
     background-color: var(--_background);
-    color: oklch(100% 0 0deg);
+    color: oklch(100% 0 none);
 
     &:focus-visible {
       --_background: oklch(from var(--_accent) calc(l - 0.1) c h);
@@ -98,11 +98,11 @@ import toastCss from '../../../demos/color-media/toast-palette/style.css?raw';
 
 カードの背景は元の色の不透明度を6%に、枠線は30%に、バッジの背景は15%にしています。ボタンにマウスを重ねるか、Tabキーでフォーカスを移すと、明度を0.1下げた色に変わります。2枚目と3枚目は、`style` 属性で `--derived-card--accent` を渡しているだけで、CSSの側には色ごとのルールがありません。
 
-相対カラー構文は、元の色の色相を回すこともできます。`oklch(from var(--background--accent) l c calc(h + 180))` は、明度と彩度を保ったまま、色相環の反対側の色を作ります。ただし、こうして作った色がデザインで使えるかどうかは別の問題です。配色のための色は、デザインで決めたトークンから選びます。{/* 要確認: 出典なし */}
+相対カラー構文は、元の色の色相を回すこともできます。`oklch(from var(--background--brand) l c calc(h + 180))` は、明度と彩度を保ったまま、色相環の反対側の色を作ります。ただし、こうして作った色がデザインで使えるかどうかは別の問題です。配色のための色は、デザインで決めたトークンから選びます。{/* 要確認: 出典なし */}
 
 ### alpha() 関数
 
-不透明度だけを変える場合は、`alpha()` 関数でも書けます。`alpha(from var(--background--accent) / 10%)` は `oklch(from var(--background--accent) l c h / 10%)` と同じ色です。成分をそのまま並べる `l c h` を省けます。相対カラー構文の結果は `oklch()` の色空間になりますが、`alpha()` の結果は元の色の色空間のままです。
+不透明度だけを変える場合は、`alpha()` 関数でも書けます。`alpha(from var(--background--brand) / 10%)` は `oklch(from var(--background--brand) l c h / 10%)` と同じ色です。成分をそのまま並べる `l c h` を省けます。相対カラー構文の結果は `oklch()` の色空間になりますが、`alpha()` の結果は元の色の色空間のままです。
 
 `alpha()` が主要なブラウザで使えるようになったのは2026年9月で、Safariは27から対応しています。本書の対象のブラウザでは使えないので、当面は相対カラー構文で書きます。
 
@@ -177,7 +177,7 @@ import toastCss from '../../../demos/color-media/toast-palette/style.css?raw';
 
 ## 派生させた色の注意点
 
-明度を上げ下げした色は、元の色によっては画面で表示できる範囲を外れます。彩度の高い色の明度を大きく上げると、その明度では表せない彩度になり、ブラウザが近い色に置き換えます。明度を大きく変えるときは、元の色の段階のトークン（`--color--accent--300` など）を使うほうが、デザインどおりの色になります。
+明度を上げ下げした色は、元の色によっては画面で表示できる範囲を外れます。彩度の高い色の明度を大きく上げると、その明度では表せない彩度になり、ブラウザが近い色に置き換えます。明度を大きく変えた色が要るなら、デザインで決めた段階の色を、役割を表すセマンティクスのトークンとして足します。プリミティブを直接参照すると、ダークモードで値が切り替わったときに追従しなくなるからです。
 
 半透明の色は、下にある色と重なって見えます。背景が白なら淡い色に見えますが、画像や別の色の上では違う色に見えます。文字の背景に半透明の色を使うときは、重ねる背景ごとにコントラスト比を確かめます。基準は「[15-5 強制カラーモードとコントラスト](/color-media/forced-colors/)」で説明しています。
 

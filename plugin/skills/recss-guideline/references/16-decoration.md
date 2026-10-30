@@ -1,8 +1,8 @@
 # 第16章 画像・装飾：ルール
 
-- ガイドラインのバージョン: 0.82.0（2026-10-30 生成）
+- ガイドラインのバージョン: 0.83.0（2026-10-30 生成）
 - ルールの数: 35
-- 本文: 約22.4万字
+- 本文: 約22.9万字
 - 読む条件: 画像、SVG、アイコン、mask、影、角丸、枠線、区切り線、印刷
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
@@ -14,14 +14,14 @@
 
 - `decoration` 第16章 画像・装飾（約5,100字）https://t-arai-pnrm.github.io/recss-guideline/decoration/
 - `decoration/images` 16-1 画像の配置と比率（約3.4万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/images/
-- `decoration/image-loading` 16-2 画像の形式と読み込み（約8,400字）https://t-arai-pnrm.github.io/recss-guideline/decoration/image-loading/
-- `decoration/icons-and-masks` 16-3 アイコンとSVG（約2.3万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/icons-and-masks/
-- `decoration/clipping-and-masks` 16-4 clip-pathとマスクで見せる範囲を決める（約3.7万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/clipping-and-masks/
+- `decoration/image-loading` 16-2 画像の形式と読み込み（約8,300字）https://t-arai-pnrm.github.io/recss-guideline/decoration/image-loading/
+- `decoration/icons-and-masks` 16-3 アイコンとSVG（約2.4万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/icons-and-masks/
+- `decoration/clipping-and-masks` 16-4 clip-pathとマスクで見せる範囲を決める（約4万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/clipping-and-masks/
 - `decoration/surfaces` 16-5 面・影・角丸（約2.6万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/surfaces/
 - `decoration/gradients` 16-6 グラデーションを描く（約1.2万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/gradients/
-- `decoration/text-ornaments` 16-7 文字とリストの装飾（約1.4万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/text-ornaments/
-- `decoration/shapes` 16-8 角の形を変える（約1.9万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/shapes/
-- `decoration/outlines` 16-9 輪郭と枠線を描く（約2.9万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/outlines/
+- `decoration/text-ornaments` 16-7 文字とリストの装飾（約1.5万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/text-ornaments/
+- `decoration/shapes` 16-8 角の形を変える（約2万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/shapes/
+- `decoration/outlines` 16-9 輪郭と枠線を描く（約3万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/outlines/
 - `decoration/separators` 16-10 区切り線を引く（約1.5万字）https://t-arai-pnrm.github.io/recss-guideline/decoration/separators/
 
 ## 16-1 画像の配置と比率
@@ -97,7 +97,7 @@ https://t-arai-pnrm.github.io/recss-guideline/decoration/clipping-and-masks/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/decoration/clipping-and-masks/#rule-clip-path-shape-tokens
 - 【推奨・実装上の判断】スクロールできる領域の端を薄くして続きを示すときは、端に線や背景と同じ色のグラデーションを重ねず、スクロールコンテナの `mask-image` に両端が透明になるグラデーションを指定する。（`scroll-edge-fade-with-mask`）
   - 理由: 中身そのものが端で薄れるので、背景が写真や別の色でも帯が浮かず、線のように区切りとして読まれることもないため。
-  - 補足: `linear-gradient()` の向きには論理方向のキーワードがないので、両端を同じ幅で薄くして書字方向に左右されない形にします。マスクは要素の外側に描く `outline` も切り取るので、スクロールコンテナがフォーカスを受けるときは、リングを親の `:has(:focus-visible)` に出します。
+  - 補足: `linear-gradient()` の向きには論理方向のキーワードがないので、両端を同じ幅で薄くして書字方向に左右されない形にします。マスクは要素の外側に描く `outline` も切り取るので、スクロールコンテナがフォーカスを受けるときは、リングを親の `:has(:focus-visible)` に出します。中にフォーカスできる要素を並べるときは、そのリングもスクロールコンテナの端で切り取られるので、スクロールコンテナにリングの幅（ベーススタイルでは6px）以上の `padding` を取り、`scroll-padding-inline` に薄くする幅を指定して、フォーカスした要素を薄くなる範囲の外で止めます。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/decoration/clipping-and-masks/#rule-scroll-edge-fade-with-mask
 - 【推奨・実装上の判断】重なった要素の周りに隙間を見せるときは、手前の要素に背景と同じ色の `border` や `box-shadow` を付けず、奥の要素の重なる部分を `mask-image` で切り抜く。切り抜く位置と大きさは、手前の要素の大きさと隙間の幅から `calc()` で求める。（`cutout-overlap-with-mask`）
   - 理由: 背景の色で塗った縁は、置いた場所の背景がページの背景と同じときにしか隙間に見えず、カードの面やダークモード、写真やグラデーションの上では輪として浮くため。
@@ -169,7 +169,7 @@ https://t-arai-pnrm.github.io/recss-guideline/decoration/outlines/
 
 - 【推奨・仕様にもとづく制約】`background-clip: border-area` の透明な枠線のように、未対応の環境で宣言ごと無効になって何も描かれなくなる指定は `@supports` の中に書く。（`guard-new-shapes-with-supports`）
   - 理由: 未対応の環境では、背景の宣言ごと無効になって枠線やグラフが消えたり、枠線だけが透明になったりするため。
-  - 補足: 未対応の環境では、単色の枠線や中心まで塗った円グラフのように、意味の読み取れる形に縮退させます。
+  - 補足: 未対応の環境では、単色の枠線のように、意味の読み取れる形に縮退させます。割合を示すドーナツグラフのように形が情報を表すものは、縮退させると中心の数値と塗りが重なるので、`border-area` を使わず、どの環境でも同じ形になるマスクの合成で描きます。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/decoration/outlines/#rule-guard-new-shapes-with-supports
 - 【推奨・実装上の判断】グラデーションの枠線は `background-clip: border-area` で描いて未対応の環境では単色の枠線に戻し、どの環境でもグラデーションが必要なときだけ、擬似要素の透明な枠線にグラデーションを敷いて `mask-composite: exclude` で内側をくり抜く。（`gradient-border-method`）
   - 理由: `border-area` なら2つの宣言で描けて形がコードから読み取れ、装飾の枠線は単色でも境界を示せるため。
@@ -190,7 +190,7 @@ https://t-arai-pnrm.github.io/recss-guideline/decoration/separators/
 
 - 【推奨・本書の規約】並んだ要素の間の区切り線は、各要素の `border` ではなく、要素の間の `gap` に描く。（`separators-in-gap`）
   - 理由: 折り返しや列数の変化で行の末尾に来る要素はセレクタで選べず、要素に線を持たせると、行の端に区切る相手のいない線が残ったり、隣り合う線が二重になったりするため。
-  - 補足: gap decorations（`column-rule`、`row-rule`）を使うか、`gap` を線の太さにして各要素の `box-shadow` を重ねます。表の枠線は `border-collapse` で共有します（11-15）。
+  - 補足: gap decorations（`column-rule`、`row-rule`）を使うか、`gap` を線の太さにして各要素の `box-shadow` を重ねます。表の枠線は `border-collapse` で共有します（11-15）。本文とサイドバーのように、折り返さず並びの変わらない2つの区画の境界は、行の端に線が残ることがないので、片方の区画の `border` に描いてかまいません。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/decoration/separators/#rule-separators-in-gap
 - 【非推奨・本書の規約】区切り線のために各要素に `border` を付け、`:last-child` や `:nth-child()` で末尾の要素の `border` を打ち消さない。（`no-last-child-border-reset`）
   - 理由: 打ち消せるのは並び全体の最後の要素だけで、折り返した行の末尾や、列数が変わるグリッドの末尾の列には線が残るため。

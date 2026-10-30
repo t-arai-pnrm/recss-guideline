@@ -11,7 +11,7 @@
       display: inline flex;
       justify-content: center;
       align-items: center;
-      min-inline-size: min(100%, calc(240 / 16 * 1rem));
+      min-inline-size: min(100%, 240 / 16 * 1rem);
       min-block-size: calc(56 / 16 * 1rem);
       padding-block: 8px;
       padding-inline: 24px;

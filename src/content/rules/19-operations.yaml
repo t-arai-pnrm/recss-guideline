@@ -23,6 +23,7 @@
   kind: convention
   rule: ルールを無効にするときは、`stylelint-disable-next-line` とルール名で1行・1つのルールに絞り、直前のコメントに理由を書く。
   reason: 範囲を広げると、同じ場所にある別の誤りまで見逃すうえ、なぜ無効にしたのかが後から分からなくなるため。
+  note: '1つの宣言が2つ以上のルールに掛かるときは、`-next-line` のコメントを同じ行に2つ書けないので、1つのコメントにルール名を並べます。ルールが報告しない宣言には、無効にするコメントを書きません。不要な無効化は `stylelint --report-needless-disables` で見つけられます。'
   page: operations/stylelint
   since: 0.1.0
 

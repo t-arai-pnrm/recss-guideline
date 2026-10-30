@@ -29,6 +29,10 @@
     gap: var(--cluster--gap, var(--cluster--row-gap, 0)) var(--cluster--gap, var(--cluster--column-gap, 0));
     justify-content: var(--cluster--justification, normal);
     align-items: var(--cluster--alignment, normal);
+
+    @supports (flex-wrap: balance) {
+      flex-wrap: balance;
+    }
   }
 
   /* 子要素をインライン方向の両端に分けて配置し、入りきらなければ折り返す。 */

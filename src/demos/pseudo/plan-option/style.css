@@ -32,10 +32,9 @@
       cursor: pointer;
       accent-color: var(--_accent);
 
-      /* 直下のラジオボタンがチェックされたら、カード全体を選んだ見た目にする */
+      /* 選択はブラウザが管理するので、マウスでもキーボードでも、見た目が状態とずれない */
       &:has(> input:checked) {
         border-color: var(--_accent);
-        background-color: var(--background--accent-subtle);
       }
 
       & > ._price {

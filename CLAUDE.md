@@ -8,6 +8,7 @@ CSS の記法と知識をまとめた日本語の技術書を、Astro Starlight 
 - `pnpm build`: 本番ビルド。下書きは除かれ、内部リンクが検証される。
 - `pnpm lint:css`: サイトの CSS とデモの CSS を Stylelint で検証する。
 - `pnpm lint:examples`: 原稿の 🙆‍♂ Recommended の CSS コード例を Stylelint で検証する。
+- `pnpm lint:demos`: デモの CSS が共通トークンの約束（宣言し直さない、プリミティブを参照しない、文字は役割のトークン、ホバーと押下の色は状態の面だけ）に沿っているかを検証する。デモだけの例外は付録I（`appendix/demo-tokens.mdx` の `## デモだけの例外`）に並べ、`scripts/lint-demos.mjs` の `EXCEPTIONS` とそろえる。
 - `pnpm lint:classes`: デモ、ひな形、原稿、サイトのコンポーネントの `class` 属性が、種類ごとに `|` で区切られ、決まった順に並んでいるかを検証する（ルール `group-classes-with-pipe`）。
 - `pnpm lint:refs`: 原稿のリンクの文字列に書いた節番号、章番号、付録の記号とタイトルが、リンク先のページのタイトルと一致するかを検証する（更新履歴は対象外）。節や章を移したり、タイトルを変えたりしたら実行する。
 - `pnpm lint:text`: 原稿を textlint で検証する。
@@ -78,7 +79,7 @@ CSS の記法と知識をまとめた日本語の技術書を、Astro Starlight 
   - 仕組みや書き方を説明する見出しには、必ずコード例を置く。表示が変わる話（レイアウト、大きさ、Flexbox や Grid の振る舞いなど）には、その見出しの直下にデモも置く。
   - 「補足と注意点」と、判断や使い分けだけを述べる見出しには、サンプルを求めない。冒頭の問題提起は、問題がコードに関わるなら Not Recommended の例を置く。
   - コード例とデモは字数に数えない。
-- 字数は、一度に理解してほしい判断のまとまりで決める。下限は置かず、8,000字を超えるときは分けるかを著者に確かめる。各見出しの段落数（3〜5段落）は目安とする。章の概要ページ、「はじめに」のページ（`introduction/` 以下）、ルールを置かない考え方の節（1-3〜1-7、2-1、2-2、3-1、3-2）は、字数の規定の対象外。考え方の節には `## ガイドライン` を置かない。
+- 字数は、一度に理解してほしい判断のまとまりで決める。下限は置かず、8,000字を超えるときは分けるかを著者に確かめる。各見出しの段落数（3〜5段落）は目安とする。章の概要ページ、「はじめに」のページ（`introduction/` 以下）、ルールを置かない考え方の節（1-3〜1-7、2-1、2-2、3-1、3-2）は、字数の規定の対象外。考え方の節には `## ガイドライン` を置かない。その節に属するルールのない参照や応用の節（16-6、18-8 など）は、`## ガイドライン` に「この節だけのルールは置いていません」と書き、使ったほかの節のルールをリンクと1文の要約で並べる（`<Guideline />` は置かない）。
 - 各ページが単体で意味が通るように書く。ほかのページに触れるときは、リンクと一言の要約を添える。
 - 通読の流れもつなぐ。章の概要ページには、導入の段落の直後（節の一覧の前）に `## この章で判断できるようになること` を、末尾に `## 次の章へ`（最後の第20章は付録へ案内する `## 付録へ`）を、数文ずつ置く。節の一覧は `## この章の節` の見出しの下に置く。
   - 古い書き方からの移行がはっきりした章の概要には、導入の段落に「以前は〜、この章では〜」の段落を1つ置く（書名の RE）。置き換えの一覧は付録B（`appendix/modernize.mdx`）にあり、書名の RE から付録Bへ案内している。
@@ -127,7 +128,7 @@ CSS の記法と知識をまとめた日本語の技術書を、Astro Starlight 
 - 子要素のクラスの下の要素を、タイプセレクタで選ばない（`._section p` は不可、要素にクラスを付ける）。直下の要素を選ぶときは、子要素のクラスのルールの中にネストして `& > p` と書く（`._section > p` と並べて書かない）。ネストに書くのは親のレイアウトで決まる宣言だけ。
 - 命名
   - ルートは `scoped <名前>`、子要素は `._kebab`、ユーティリティは `.-kebab`。
-  - 1つの要素に種類の違うクラスを付けるときは、「ルート | 子要素 | コンポジション | パターン | ユーティリティ」の順に `|` で区切る（例：`class="_tags | cluster"`）。
+  - 1つの要素に種類の違うクラスを付けるときは、「ルート | 子要素 | コンポジション | パターン | ユーティリティ」の順に `|` で区切る（例：`class="_body | stack"`）。
   - カスタムプロパティは、公開用が `--<コンポーネント>--<プロパティ>`、内部用が `--_<プロパティ>`。
   - スペーストグルの変数は `--_if-<フラグの値の名前>`（`--_if-spacious` と `--_if-compact`）。オンは `initial`、オフは空白1文字。`if()` に未対応の環境でも同じ表示が要る2値の分岐にだけ使う（ルール `space-toggle-until-if`）。
 - スコープは `@scope (.scoped.<名前>) to (.scoped)`。
@@ -137,12 +138,12 @@ CSS の記法と知識をまとめた日本語の技術書を、Astro Starlight 
 - ホバーは `&:any-link:hover` か `&:enabled:hover` に絞り、`@media (any-hover)` の中に書く（`<summary>` と `<label>` は除く）。
 - ベーススタイルは `@layer base` の中に素のセレクタで書く。`:where()` で詳細度を0にするのは、`@layer` を使えない場合（第19章）のベーススタイル、上書きされる前提のデフォルト値、直下の子をネストで選ぶときに詳細度を上げたくない場合（`& > :where(._child)`、4-2）に限る。状態のセレクタをまとめるときは `:where()` ではなく `:is()` を使い、詳細度を残す。
 - `border-box` を取り消すときは `box-sizing: unset` と書く。前の値（ブラウザのデフォルト、リセット、ベース、前のルール）を打ち消すときは、`0` や `none` ではなく `unset`、`revert`、`revert-layer`、`initial` のうち戻したい先に合うキーワードで書く（ルール `explicit-rollback-keyword`）。打ち消しが要らない値は、宣言ごと書かない。`0` そのものがデザインの値なら `0` のままにする。
-- 親の配置で意味が決まる宣言（`flex*`、`grid-area`、`align-self`、`float`、`shape-outside`、`position: absolute` と `inset`、コンポーネントの中の要素を基準にする `position: sticky`、`scroll-snap-align`、`break-inside`、外側の `margin`（`auto` と負の値を含む））は、親のルールの `& > ._child` や `& > .scoped` のネストに書く（ルール `nest-child-placement-only`、`parent-owns-child-placement`）。ページのルートのスクロールに沿わせる `sticky` と、`position: fixed` は例外。子要素の大きさは子のルールに、子のコンポーネントの大きさは置く側のネストに書く。
+- 親の配置で意味が決まる宣言（`flex*`、`grid-area`、`align-self`、`float`、`shape-outside`、`position: absolute` と `inset`、コンポーネントの中の要素を基準にする `position: sticky`、`scroll-snap-align`、`break-inside`、外側の `margin`（`auto` と負の値を含む））は、親のルールの `& > ._child` のネストに書く（ルール `nest-child-placement-only`）。ページのルートのスクロールに沿わせる `sticky` と、`position: fixed` は例外。包含ブロックが親でない `position: absolute`（祖先を基準にするもの）は、包含ブロックの要素のネストに `& ._child` で書く。子要素の大きさは子のルールに書く。子のコンポーネントの配置、外側の余白、幅は、親の `gap` やグリッドか、親が子のコンポーネントを包む子要素（Outer）のネスト（`& > ._card-outer`）に書く（ルール `parent-owns-child-placement`）。`to (.scoped)` の下限は境界の要素自身も範囲から外すので、`& > .scoped` では子のコンポーネントのルートを選べない。
 - 要素の間のブロック方向の `margin` は、`& > * + *` や `& > :is(:heading, h1, h2, h3, h4, h5, h6) + *` のように次兄弟結合子で選んだ後ろの要素の `margin-block-start` に付ける。要素自身に条件なしの `margin-block-end` を付けたり、`:last-child` で打ち消したりしない。
 - 高さは `block-size` で固定せず、`min-block-size`、`max-block-size`、`aspect-ratio` で決める。正方形は `inline-size` と `aspect-ratio: 1` で書く。
 - デモの見た目は、共通トークン（`src/demos/tokens/`）で統一する。詳細と経緯は `DECISIONS.md` の「デモの共通トークンと見た目で決めたこと」にある。
   - 色：プリミティブ（`--color--neutral--*`、`--color--accent--*`、`--color--red--*`）は直接参照せず、セマンティクスを使う。面は `--background--base`／`surface`／`raised`／`overlay` の4段階を役割で選ぶ。枠線は `--border--base`。選んだ状態や範囲の淡い青は `--background--accent-subtle`、成功とエラーの文字は `--foreground--success` と `--foreground--danger`。
-  - 文字色は `--foreground--base` と `--foreground--muted` の2つだけにし、`opacity` や半透明の色で薄くしない。青（accent）はリンク、フォーカスリング、選択した状態にだけ使い、主ボタンは文字色で塗る。
+  - 文字色は `--foreground--base` と `--foreground--muted` の2つだけにし、`opacity` や半透明の色で薄くしない。青（accent）はリンク、フォーカスリング、選択した状態にだけ使い、主ボタンは文字色で塗る。例外は、当たった要素や説明の対象の箱を示す図解と、第15章の色そのものを見せる例だけ。
   - 背景が透明な項目のホバーと押下は、`background-color` に `--background--hover` と `--background--active` を指定する。背景色のあるボタンは相対カラー構文で明るさを変える。文字色で塗ったボタン（`--background--inverse`）は、`color-mix(in oklab, var(--background--inverse) 80%, var(--background--base))` でページの背景に寄せる。
   - 文字は役割のトークン（`--text--<役割>--font-size` と `--text--<役割>--leading`。役割は display、title、subtitle、body、body-compact、caption）で指定する。太さは `--font-weight--regular` と `--font-weight--bold` の2段階。
   - 角丸は `--rounded--sm`／`md`／`lg`／`full`（外側のパネルは `lg`、内側の項目は `md`）、影は `--shadow--*`、再生時間は `--duration--fast`（80ms）／`base`（160ms）／`slow`（240ms）。

@@ -1,8 +1,8 @@
 # 第9章 記法の規約：ルール
 
-- ガイドラインのバージョン: 0.82.0（2026-10-30 生成）
+- ガイドラインのバージョン: 0.83.0（2026-10-30 生成）
 - ルールの数: 49
-- 本文: 約12.5万字
+- 本文: 約12.7万字
 - 読む条件: すべてのCSS（命名、バリエーション、ネスト、@scope、プロパティの並び、記法）（常に読む）
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
@@ -15,14 +15,14 @@
 - `notation` 第9章 記法の規約（約8,400字）https://t-arai-pnrm.github.io/recss-guideline/notation/
 - `notation/naming` 9-1 命名規則（約1.8万字）https://t-arai-pnrm.github.io/recss-guideline/notation/naming/
 - `notation/variants` 9-2 BEMからの書き直しとバリエーション（約9,800字）https://t-arai-pnrm.github.io/recss-guideline/notation/variants/
-- `notation/terminology` 9-3 名前に使う語（約1.4万字）https://t-arai-pnrm.github.io/recss-guideline/notation/terminology/
+- `notation/terminology` 9-3 名前に使う語（約1.5万字）https://t-arai-pnrm.github.io/recss-guideline/notation/terminology/
 - `notation/scope-and-nesting` 9-4 @scopeとネストの使い分け（約1.2万字）https://t-arai-pnrm.github.io/recss-guideline/notation/scope-and-nesting/
 - `notation/nesting` 9-5 ネストの書き方（約1.2万字）https://t-arai-pnrm.github.io/recss-guideline/notation/nesting/
-- `notation/nesting-criteria` 9-6 ネストの判断基準（約1.5万字）https://t-arai-pnrm.github.io/recss-guideline/notation/nesting-criteria/
-- `notation/property-order` 9-7 プロパティの並び順（約3,900字）https://t-arai-pnrm.github.io/recss-guideline/notation/property-order/
+- `notation/nesting-criteria` 9-6 ネストの判断基準（約1.6万字）https://t-arai-pnrm.github.io/recss-guideline/notation/nesting-criteria/
+- `notation/property-order` 9-7 プロパティの並び順（約4,000字）https://t-arai-pnrm.github.io/recss-guideline/notation/property-order/
 - `notation/modern-syntax` 9-8 モダンな記法にそろえる（約1.2万字）https://t-arai-pnrm.github.io/recss-guideline/notation/modern-syntax/
 - `notation/logical-properties` 9-9 論理プロパティと論理値（約1.1万字）https://t-arai-pnrm.github.io/recss-guideline/notation/logical-properties/
-- `notation/comments` 9-10 コメントの書き方（約9,100字）https://t-arai-pnrm.github.io/recss-guideline/notation/comments/
+- `notation/comments` 9-10 コメントの書き方（約9,400字）https://t-arai-pnrm.github.io/recss-guideline/notation/comments/
 
 ## 9-1 命名規則
 
@@ -43,7 +43,7 @@ https://t-arai-pnrm.github.io/recss-guideline/notation/naming/
   - 理由: 配置のパターンの名前をそのまま使え、接頭辞の付いたほかの種類のクラスと並べたときに役割の違いが分かるため。
   - 補足: パターンにも接頭辞を付けません。コンポジションは `stack` や `sidebar` のような配置の名前に、パターンは `section-heading` や `icon` のような役割の名前（`name-by-role`）にして、名前の種類で区別します。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/notation/naming/#rule-composition-class-plain
-- 【推奨・本書の規約】1つの要素に種類の違うクラスを付けるときは、ルート、子要素、コンポジション、パターン、ユーティリティの順に並べ、種類の境目を `|` で区切る（例：`class="_tags | cluster"`）。（`group-classes-with-pipe`）
+- 【推奨・本書の規約】1つの要素に種類の違うクラスを付けるときは、ルート、子要素、コンポジション、パターン、ユーティリティの順に並べ、種類の境目を `|` で区切る（例：`class="_body | stack"`）。（`group-classes-with-pipe`）
   - 理由: 要素がどのコンポーネントの何であるかと、外から何を重ねているかを、`class` 属性の中の位置で読み取れるため。並びが決まっていれば、増えたユーティリティや崩れた並びにレビューで気付ける。
   - 補足: 種類が1つだけなら `|` を書きません。ルートと親の子要素のクラスは同じ要素に付けないので（`parent-owns-child-placement`）、2つが並ぶことはありません。CMSが出力するブロックのクラスは、ルートのグループの先頭に置きます。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/notation/naming/#rule-group-classes-with-pipe
@@ -168,7 +168,7 @@ https://t-arai-pnrm.github.io/recss-guideline/notation/nesting-criteria/
 
 - 【推奨・実装上の判断】直下の子へネストしたルール（`& > ._icon`）には、`flex-shrink`、`grid-area`、`align-self` のように親のレイアウトによって意味が決まる宣言だけを書き、子自身の大きさや見た目は子のルールに書く。（`nest-child-placement-only`）
   - 理由: 親のレイアウトを変えるときに一緒に見直す宣言が親のルールの中にまとまり、子を別の親に移しても子自身の見た目が失われないため。
-  - 補足: `float`、`shape-outside`、`position` と `inset`、`scroll-snap-align`、`break-inside`、要素の外側の `margin`（要素の間の余白、`auto` で寄せる値、負の値）も、親のレイアウトや親のスクロールによって意味が決まるので、直下の子へのネストに書きます。`position` は、親を基準にする `absolute` と、コンポーネントの中の要素のスクロールを基準にする `sticky` が対象です。ページのルートのスクロールに沿わせる `sticky` と、ビューポートを基準にする `fixed` は、親のレイアウトで決まらないので、子のルールに書いてかまいません。子の大きさ（`inline-size`、`aspect-ratio`）や色、`padding`、`border` は子のルールに書きます。コンポジションは子にクラスを付けられないので、直下の子を選んで配置を書きます。子が自分の状態のルールやネストを持つなら、親のルールには入れず、同じ階層の独立したルールにします。子のコンポーネントの配置は、第10章のルール `parent-owns-child-placement` で扱います。親が `display: contents` にした要素を挟んでいても、その箱がないので子は実質的な直下の子です。サブグリッドの `article` の `grid-column` は、親の `ul` のルールに `& article` と書きます。
+  - 補足: `float`、`shape-outside`、`position` と `inset`、`scroll-snap-align`、`break-inside`、要素の外側の `margin`（要素の間の余白、`auto` で寄せる値、負の値）も、親のレイアウトや親のスクロールによって意味が決まるので、直下の子へのネストに書きます。`position` は、親を基準にする `absolute` と、コンポーネントの中の要素のスクロールを基準にする `sticky` が対象です。ページのルートのスクロールに沿わせる `sticky` と、ビューポートを基準にする `fixed` は、親のレイアウトで決まらないので、子のルールに書いてかまいません。子の大きさ（`inline-size`、`aspect-ratio`）や色、`padding`、`border` は子のルールに書きます。コンポジションは子にクラスを付けられないので、直下の子を選んで配置を書きます。子が自分の状態のルールやネストを持つなら、親のルールには入れず、同じ階層の独立したルールにします。子のコンポーネントの配置は、第10章のルール `parent-owns-child-placement` で扱います。親が `display: contents` にした要素を挟んでいても、その箱がないので子は実質的な直下の子です。サブグリッドの `article` の `grid-column` は、親の `ul` のルールに `& > li > article` と書きます。祖先を包含ブロックにする `position: absolute` と、祖先のスクロールコンテナを基準にする `sticky` は、基準の要素のルールのネストに `& ._child` と書きます。コンポジション `columns` のように、段組みのリストを包む2段の構成で、孫の項目に `padding-block` と `break-inside` を書く `& > * > *` も、この書き方に含めます。マージンの相殺そのものを説明する解説のデモ（兄弟の `margin` を子のルールに書くもの）と、ベーススタイルの印刷用の `break-inside` は、この対象外です。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/notation/nesting-criteria/#rule-nest-child-placement-only
 - 【推奨・仕様にもとづく制約】詳細度の違うセレクタを並べたセレクタリスト（`button, ._selected-count`）の中では、セレクタをネストしない。ネストが必要なら、セレクタごとのルールに分ける。（`no-nesting-under-selector-list`）
   - 理由: `&` の詳細度は親のセレクタリストを `:is()` で包んだものと同じになり、詳細度の低いほうのセレクタで一致した要素にも、リストの中でいちばん高い詳細度が付くため。
@@ -256,7 +256,7 @@ https://t-arai-pnrm.github.io/recss-guideline/notation/comments/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/notation/comments/#rule-prop-tag-for-public-properties
 - 【必須・実装上の判断】コードの途中のコメントには「なぜそう書くのか」と「なぜ別の書き方をしないのか」だけを書き、コードが何をしているかは書かない。（`comments-why-only`）
   - 理由: 何をしているかはコードを読めば分かり、コードと食い違ったコメントは誤解のもとになるため。
-  - 補足: `:has()` の中の結合子や `:nth-child()` の範囲のように、読み解くのに時間のかかるセレクタの条件は、「3件以上のとき」のように文章にしてかまいません。セレクタの意味を言い換えるだけで、何をしているかの説明とは違い、読み手が条件を確かめる手間を減らせるためです。
+  - 補足: `:has()` の中の結合子や `:nth-child()` の範囲のように、読み解くのに時間のかかるセレクタの条件は、「3件以上のとき」のように文章にしてかまいません。セレクタの意味を言い換えるだけで、何をしているかの説明とは違い、読み手が条件を確かめる手間を減らせるためです。解説のデモでは、比べた結果（「詳細度は0.1.0」など）を示す注釈も書いてかまいません（付録Iの「デモだけの例外」）。宣言の働きや式の結果を言い換えたくなったら、なぜその宣言や式にするのかの形に書き直します。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/notation/comments/#rule-comments-why-only
 - 【禁止・実装上の判断】変更の経緯（以前の実装、日付、タスクや計画書の番号）と、コメントアウトしたコードを残さない。（`no-history-comments`）
   - 理由: 経緯はバージョン管理に残っており、コメントに書くと現在のコードを読む妨げになり、時間とともに古くなるため。

@@ -107,11 +107,15 @@ button {
     color: var(--foreground--muted);
   }
 }
-
-._icon {
-  fill: currentColor;
-}
 ```
+
+```html title="🙆‍♂ Recommended: アイコンの色は、svg 要素の fill 属性で currentColor にする" from="decoration/current-color-icon"
+<svg class="_icon" aria-hidden="true" viewBox="0 0 24 24" fill="currentColor">
+  <path d="M11 3h2v9.17l3.59-3.58L18 10l-6 6-6-6 1.41-1.41L11 12.17zM4 19h16v2H4z" />
+</svg>
+```
+
+`currentColor` は、CSSの `fill` ではなく、`svg` 要素の `fill` 属性に書きます。強制カラーモードでは、SVGの色がシステムカラーに置き換わらない環境があります。「[15-5 強制カラーモードとコントラスト](/color-media/forced-colors/)」のベーススタイルは、`fill="currentColor"` を書いた `svg` 要素を属性のセレクタで選んで補正するので、属性で書いたアイコンにはその補正がそのまま当たります。CSSの `fill: currentColor` で色を決めると、属性のセレクタに当てはまらず、コンポーネントごとに同じ補正を書くことになります。
 
 <Demo title="無効なボタンでは、文字色だけを変えると、アイコンと枠線も同じ色になる" html={currentColorHtml} css={currentColorCss} />
 
@@ -216,7 +220,7 @@ button {
 線ごとに `path` を分けておけば、メニューを開いている間、上下の線を回して×にできます。1つの `path` に3本の線をまとめると（`d="M4 6H20M4 12H20M4 18H20"`）、3本を一緒にしか動かせません。
 
 ```css title="🙆‍♂ Recommended: メニューを開いている間、上下の線を回して×にし、真ん中の線を消す" from="decoration/menu-icon"
-@scope (.scoped.site-menu) to (.scoped) {
+@scope (.scoped.site-navigation) to (.scoped) {
   ._line-start,
   ._line-middle,
   ._line-end {
@@ -262,7 +266,7 @@ SVGの図形は、デフォルトでは、`viewBox` の原点（左上）を基�
 
 開いた状態は、ボタンの直後に置いたポップオーバーが開いているかを、`button:has(+ :popover-open)` で調べて選びます。「[18-4 トランジションの基本と中断](/motion/transitions-and-keyframes/)」のボタンのアイコンを回す例と同じく、`&:is(… *)` で、状態を持つ祖先の下の図形を選んでいます。HTMLの要素と支援技術の対応を定める仕様（HTML-AAM）では、`popovertarget` を付けたボタンは、ポップオーバーが開いているかどうかを支援技術に伝えるとされています。そのため、`aria-expanded` を自分で切り替える必要はありません。{/* 要検証: ブラウザ。Chrome、Firefox、Safari のアクセシビリティツリーで、popovertarget を付けたボタンの展開状態が、ポップオーバーの開閉に合わせて変わること */}トランジションは、`prefers-reduced-motion: no-preference` の中に書きます。動きを減らす設定では、×への切り替えが一度で起きます（「[18-2 動きを減らす設定に対応する](/motion/reduced-motion/)」）。
 
-画面を覆うモーダルのドロワーでは、開いている間、メニューのボタンは背面にあって操作できないので、×に変えても見せる場面がありません。ドロワーの中に閉じるボタンを置きます。ドロワーの開閉は「[17-6 開閉するUI](/interaction/disclosure/)」で説明しています。
+ヘッダーのボタンを残したまま開くドロワー（「[17-6 開閉するUI](/interaction/disclosure/)」の、背面を不活性にする方法）では、開いている間もボタンを押せるので、×に変えて閉じられることを示せます。このドロワーはポップオーバーではなく、開閉の状態を `aria-expanded` で持つので、条件は `&:is([aria-expanded="true"] *)` にします。`showModal()` で開くモーダルのドロワーでは、ボタンが背面になって押せないので、×に変えても見せる場面がありません。ドロワーの中に閉じるボタンを置きます。
 
 ## 同じアイコンを何度も置くときのスプライト
 
@@ -270,11 +274,13 @@ SVGの図形は、デフォルトでは、`viewBox` の原点（左上）を基�
 
 ```html
 <!-- body の先頭に一度だけ置く -->
-<svg aria-hidden="true" style="display: none">
-  <symbol id="icon-check" viewBox="0 0 24 24">
-    <path d="M4 12L10 18L20 6" />
-  </symbol>
-</svg>
+<div hidden>
+  <svg>
+    <symbol id="icon-check" viewBox="0 0 24 24">
+      <path d="M4 12L10 18L20 6" />
+    </symbol>
+  </svg>
+</div>
 
 <!-- 置く場所では参照するだけ -->
 <svg class="icon" aria-hidden="true" fill="none" stroke="currentColor">
@@ -328,7 +334,7 @@ SVGの図形は、デフォルトでは、`viewBox` の原点（左上）を基�
 
 ### スプライトのアイコンの代替テキスト
 
-代替テキストの付け方は、「[インラインSVGの代替テキスト](#インラインsvgの代替テキスト)」と同じです。意味のあるアイコンは、参照する側の `svg` 要素に `role="img"` と `aria-label` を付けます。装飾だけのアイコンや、名前を視覚的に隠したテキストで添えるアイコンは、`aria-hidden="true"` にします。違うのは、`<symbol>` をまとめた `svg` 要素も、`aria-hidden="true"` と `display: none` で読み上げと表示の両方から外しておく点です。{/* 要確認: 出典なし。スプライトをまとめた svg 要素の隠し方 */}
+代替テキストの付け方は、「[インラインSVGの代替テキスト](#インラインsvgの代替テキスト)」と同じです。意味のあるアイコンは、参照する側の `svg` 要素に `role="img"` と `aria-label` を付けます。装飾だけのアイコンや、名前を視覚的に隠したテキストで添えるアイコンは、`aria-hidden="true"` にします。違うのは、`<symbol>` をまとめた `svg` 要素を、`hidden` 属性を付けた `div` で包み、読み上げと表示の両方から外しておく点です。`style` 属性は公開カスタムプロパティを渡す用途に限るので、`style="display: none"` は書きません。`hidden` 属性を `svg` 要素に直接書かないのは、`hidden` 属性で要素を隠すブラウザの既定のスタイルが、HTMLの要素にだけ当たるからです。{/* 要検証: ブラウザ。hidden 属性の div の中の symbol を、use で参照して表示できること */}{/* 要確認: 出典なし。スプライトをまとめた svg 要素の隠し方 */}
 
 ### スプライトを選ぶ場面
 

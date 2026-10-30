@@ -35,7 +35,7 @@ import weightCss from '../../../demos/interaction/hover-weight/style.css?raw';
 
 ._more-link {
   &:hover {
-    @media (width >= 768px) {
+    @media (width >= calc(768 / 16 * 1rem)) {
       color: var(--_color--hocus);
     }
   }
@@ -60,6 +60,9 @@ import weightCss from '../../../demos/interaction/hover-weight/style.css?raw';
     --_color--hocus: color-mix(in oklab, var(--foreground--accent) 70%, var(--foreground--base));
 
     color: var(--_color);
+
+    /* kiso.css が消した下線を戻し、本文の中のリンクを色だけで示さない */
+    text-decoration-line: revert;
 
     &:focus-visible {
       color: var(--_color--hocus);
@@ -116,16 +119,14 @@ import weightCss from '../../../demos/interaction/hover-weight/style.css?raw';
 ```css title="🙆‍♂ Recommended: トランジションを :not(:focus-visible) の中に書く"
 ._submit-button {
   &:not(:focus-visible) {
-    @media (prefers-reduced-motion: no-preference) {
-      transition-duration: var(--duration--fast);
-      transition-property: background-color;
-      transition-timing-function: var(--ease--out-quint);
-    }
+    transition-duration: var(--duration--fast);
+    transition-property: background-color;
+    transition-timing-function: var(--ease--out-quint);
   }
 }
 ```
 
-`:focus-visible` が当てはまっている間は、トランジションの指定がありません。そのため、フォーカスが来た瞬間に一度で色が変わります。フォーカスが離れるときとホバーのときは、`:not(:focus-visible)` が当てはまるので、なめらかに色が戻ります。トランジションを動きを減らす設定の条件で囲む理由は、「[18-2 動きを減らす設定に対応する](/motion/reduced-motion/)」で説明します。
+`:focus-visible` が当てはまっている間は、トランジションの指定がありません。そのため、フォーカスが来た瞬間に一度で色が変わります。フォーカスが離れるときとホバーのときは、`:not(:focus-visible)` が当てはまるので、なめらかに色が戻ります。色の変化では位置と大きさが変わらないので、動きを減らす設定の条件で囲みません。位置や大きさを変えるトランジションは、次の見出しの例のように条件の中に書きます。条件の範囲は、「[18-2 動きを減らす設定に対応する](/motion/reduced-motion/)」で説明します。
 
 ## ホバーの変化を透明度で表す方法
 
@@ -276,7 +277,7 @@ import weightCss from '../../../demos/interaction/hover-weight/style.css?raw';
 
 ```css title="🙆‍♂ Recommended: グレードの軸で、字幅を変えずに濃くする"
 @scope (.scoped.global-nav) to (.scoped) {
-  ._link {
+  a {
     &:focus-visible {
       font-variation-settings: "GRAD" 150;
     }
@@ -294,7 +295,7 @@ import weightCss from '../../../demos/interaction/hover-weight/style.css?raw';
 
 ```css title="🙆‍♂ Recommended: 太字の幅を先に確保してから、太さを変える" from="interaction/hover-weight"
 @scope (.scoped.weight-nav) to (.scoped) {
-  ._link {
+  a {
     display: inline flex;
     flex-direction: column;
 

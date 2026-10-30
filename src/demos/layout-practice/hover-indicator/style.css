@@ -1,5 +1,5 @@
 @layer components {
-  @scope (.scoped.link-menu) to (.scoped) {
+  @scope (.scoped.link-list) to (.scoped) {
     :scope {
       /* 同じメニューを複数置いても、アンカーの名前がほかのメニューに届かないようにする */
       anchor-scope: --current-hocus;
@@ -13,7 +13,6 @@
       grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(200 / 16 * 1rem)), 1fr));
       isolation: isolate;
 
-      /* ホバーかフォーカスしている項目に重ねる背景 */
       &::after {
         @supports (anchor-name: --current-hocus) {
           content: "";
@@ -43,6 +42,7 @@
         /* マウスを外したあとは、薄れ終わるまで最後の項目の位置に留める */
         @container style(--_has-hocus: --false) {
           transition-property: inset, opacity;
+          transition-timing-function: step-end, var(--ease--out-quint);
         }
 
         /* 項目の間を移動させるのは、動きを減らす設定がないときだけにする */

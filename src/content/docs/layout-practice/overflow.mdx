@@ -23,17 +23,18 @@ import scrollBodyPanelCss from '../../../demos/layout-practice/scroll-body-panel
 
 ## 横スクロールの原因を特定する
 
-ページに横スクロールが出たら、まず、はみ出している要素を特定します。DevToolsのコンソールで次のスクリプトを実行すると、すべての要素に枠線を付けたうえで、ビューポートより広い要素を一覧できます。`$$()` は、DevToolsのコンソールで使える `querySelectorAll()` の省略形です。
+ページに横スクロールが出たら、まず、はみ出している要素を特定します。DevToolsのコンソールで次のスクリプトを実行すると、すべての要素に枠線を付けたうえで、ビューポートの左右の端からはみ出した要素を一覧できます。幅だけを比べると、ビューポートより狭くても `translate` や負の `margin` で位置がずれてはみ出した要素を見落とすので、左右の端の位置を比べます。`$$()` は、DevToolsのコンソールで使える `querySelectorAll()` の省略形です。
 
-```js title="DevTools のコンソールで、ビューポートより広い要素を探す"
+```js title="DevTools のコンソールで、ビューポートの端からはみ出した要素を探す"
 const windowWidth = document.documentElement.clientWidth;
 $$('*').forEach((el) => {
   el.style.outline = '1px solid tomato';
-  if (windowWidth < el.getBoundingClientRect().width) console.log(el);
+  const { left, right } = el.getBoundingClientRect();
+  if (left < 0 || windowWidth < right) console.log(el);
 });
 ```
 
-`margin` が原因のはみ出しは、このスクリプトでは見つかりません。枠線を目で追って確かめます。原因が分かったら、その要素を直します。直し方は「[11-3 サイズと内容の変化に耐える](/layout-practice/defensive/)」にまとめています。
+要素の外側の `margin` の領域は `getBoundingClientRect()` に含まれないので、`margin` の領域だけがはみ出している場合は、このスクリプトでは見つかりません。枠線を目で追って確かめます。原因が分かったら、その要素を直します。直し方は「[11-3 サイズと内容の変化に耐える](/layout-practice/defensive/)」にまとめています。
 
 そのうえで、画面の端まで広げた装飾などが意図せずはみ出す場合に備えて、ベーススタイル（`base` レイヤー）で、ルートの横方向のはみ出しを切り取ることがあります。このとき、`overflow-x: hidden` ではなく `clip` を使います。理由は次の見出しで説明します。
 
@@ -41,18 +42,14 @@ $$('*').forEach((el) => {
 @layer base {
   :root,
   body {
-    overflow-inline: clip;
-
-    @supports not (overflow-inline: clip) {
-      overflow-x: clip;
-    }
+    overflow-x: clip;
   }
 }
 ```
 
 <Baseline id="overflow-clip" />
 
-`overflow: clip` は、本書の対象のすべてのブラウザで使えます。論理プロパティの `overflow-inline` は、Safariでは26から対応したので、対応していない環境には `@supports` で `overflow-x` を指定しています。はみ出しの対策に `contain: paint` を使う方法もありますが、中にある `position: fixed` の要素の基準が変わってしまうので使いません。この仕組みは「[7-10 positionの基礎](/layout/positioning/)」で説明します。
+`overflow: clip` は、本書の対象のすべてのブラウザで使えます。論理プロパティの `overflow-inline` は、Safariでは26から対応したので、本書の対象のブラウザでは物理の `overflow-x` で書きます（「[9-9 論理プロパティと論理値](/notation/logical-properties/)」）。はみ出しの対策に `contain: paint` を使う方法もありますが、中にある `position: fixed` の要素の基準が変わってしまうので使いません。この仕組みは「[7-10 positionの基礎](/layout/positioning/)」で説明します。
 
 ルートでは、`clip` を選ぶ理由がもう1つあります。`html` と `body` の両方に `overflow-x: hidden` を指定すると、`body` がスクロールコンテナになり、ページのスクロールが `body` に移ることがあります（「[11-10 ページのスクロールとルートスクローラー](/layout-practice/root-scroller/)」）。
 
@@ -147,9 +144,12 @@ $$('*').forEach((el) => {
 ```css title="🙆‍♂ Recommended: 見出しと操作ボタンの行を残し、本文の行だけを縮めてスクロールさせる"
 @scope (.scoped.dialog-panel) to (.scoped) {
   :scope {
-    display: block grid;
     grid-template-rows: auto minmax(0, 1fr) auto;
     max-block-size: calc(100svb - 32px * 2);
+
+    &[open] {
+      display: block grid;
+    }
   }
 
   ._body {
@@ -159,7 +159,7 @@ $$('*').forEach((el) => {
 }
 ```
 
-高さを `max-block-size` で上限として書くのは、中身が少ないときはパネルを中身の高さまで縮めるためです。上限の基準には、ブラウザのUIが表示されている最も小さい領域を表す `svb` を使い、画面の上下に32pxずつの余白を残しています。UIの出入りで値が変わる `dvb` は、要素の大きさに使いません（「[6-2 ビューポート単位とコンテナ単位](/values/viewport-and-container-units/)」）。`<dialog>` のデフォルトの高さの上限はkiso.cssが解除しているので、上限はコンポーネントで決めます。
+高さを `max-block-size` で上限として書くのは、中身が少ないときはパネルを中身の高さまで縮めるためです。上限の基準には、ブラウザのUIが表示されている最も小さい領域を表す `svb` を使い、画面の上下に32pxずつの余白を残しています。UIの出入りで値が変わる `dvb` は、要素の大きさに使いません（「[6-2 ビューポート単位とコンテナ単位](/values/viewport-and-container-units/)」）。`<dialog>` のデフォルトの高さの上限はkiso.cssが解除しているので、上限はコンポーネントで決めます。この例のルートは `<dialog>` なので、`display` は開いた状態（`&[open]`）にだけ指定します。条件なしで `display: block grid` を書くと、閉じた `<dialog>` を隠すブラウザのデフォルトの `display: none` に勝ち、閉じたままのダイアログが表示されます。
 
 Flexboxでも組めますが、本書ではGridを選びます。Gridなら、行の数と、どの行が残りの高さを受け取るかを、親の `grid-template-rows` の1行で読み取れます。Flexboxでは、どのアイテムが縮むかがアイテムごとの `flex-shrink` と最小サイズで決まり、親と子のCSSを読み合わせる必要があります（「[11-1 レイアウト手法の選び方](/layout-practice/choosing/)」）。
 

@@ -1,4 +1,4 @@
-/* utilities レイヤーを、components レイヤーより前に書いている */
+/* 前に書いても、先頭の @layer 文で components より後ろのレイヤーになる */
 @layer utilities {
   /* 詳細度は 0.1.0 */
   .-text-muted {
@@ -16,10 +16,9 @@
       border-radius: var(--rounded--md);
     }
 
-    /* 詳細度は同じ 0.1.0 で、後ろに書いている */
+    /* 詳細度は同じ 0.1.0。後ろに書いても、レイヤーが前なので負ける */
     ._lead {
       color: var(--foreground--accent);
-      font-size: calc(18 / 16 * 1rem);
     }
   }
 }

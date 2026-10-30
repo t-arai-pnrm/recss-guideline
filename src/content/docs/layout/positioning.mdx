@@ -82,7 +82,7 @@ CSSには、通常フロー、Flexbox、Gridのように、要素の大きさと
 
 ### sticky
 
-`sticky` の要素は、通常フローの位置に置かれたまま、スクロールに合わせて、祖先のスクロールコンテナと包含ブロックの範囲の中でずれます。場所を占め続けるので、周囲のレイアウトは `static` と変わりません。範囲の外へは出られないので、ずれる余地がなければ、何も指定していないのと同じに見えます。留まらない原因は、あとの節で扱います。
+`sticky` の要素は、親のレイアウトの方式で置かれた位置のまま、スクロールに合わせて、祖先のスクロールコンテナと包含ブロックの範囲の中でずれます。場所を占め続けるので、周囲のレイアウトは `static` と変わりません。範囲の外へは出られないので、ずれる余地がなければ、何も指定していないのと同じに見えます。留まらない原因は、あとの節で扱います。
 
 <Baseline id="sticky-positioning" />
 
@@ -98,7 +98,7 @@ CSSには、通常フロー、Flexbox、Gridのように、要素の大きさと
 
 | `position` | 包含ブロック |
 | --- | --- |
-| `static`、`relative`、`sticky` | いちばん近いブロックコンテナの祖先の、内容の領域 |
+| `static`、`relative`、`sticky` | いちばん近いブロックコンテナの祖先の、内容の領域。フレックスアイテムはフレックスコンテナの内容の領域、グリッドアイテムは置かれたグリッドエリア |
 | `absolute` | `position` が `static` 以外のいちばん近い祖先の、`padding` の領域。なければ初期包含ブロック |
 | `fixed` | ビューポート |
 
@@ -263,7 +263,7 @@ GridとFlexboxの子は、`align-self` の初期値（`normal`）が `stretch` �
 
 原因がはっきりしないときは、DevToolsで `sticky` の要素から祖先へ順にたどります。Computedタブで `overflow-x` と `overflow-y` の算出値を見て、`auto`、`scroll`、`hidden` のどれかになっている要素を探します。書いた値ではなく算出値を見るのは、片方の軸だけを指定すると、もう一方の軸の値も変わることがあるからです。たとえば `overflow-x: hidden` だけを書くと、`overflow-y` の `visible` は `auto` として算出され、その要素は縦方向にもスクロールするスクロールコンテナになります。
 
-見つけたら、その指定が必要かを確かめます。はみ出しを切り取るだけなら、スクロールコンテナを作らない `overflow: clip` に変えます（「[11-4 はみ出しとスクロール](/layout-practice/overflow/)」）。親子のマージンの相殺を止めるために `overflow: auto` を使う書き方も、同じ理由で避けます。相殺を止めるなら `display: flow-root` を使います（「[11-2 余白を設計する](/layout-practice/spacing/)」）。
+見つけたら、その指定が必要かを確かめます。はみ出しを切り取るだけなら、スクロールコンテナを作らない `clip` に変えます。`overflow-x: hidden` なら `overflow-x: clip` のように、切り取る軸はそのままにします。もう一方の軸は `visible` のまま残るので、縦にはみ出す影やフォーカスリングは切り取られません（「[11-4 はみ出しとスクロール](/layout-practice/overflow/)」）。親子のマージンの相殺を止めるために `overflow: auto` を使う書き方も、同じ理由で避けます。相殺を止めるなら `display: flow-root` を使います（「[11-2 余白を設計する](/layout-practice/spacing/)」）。
 
 ```css title="🙅‍♂ Not Recommended: はみ出しを切り取るために overflow-x: hidden を指定する" issue="behavior"
 /* 🙅‍♂ Not Recommended */
@@ -272,9 +272,9 @@ GridとFlexboxの子は、`align-self` の初期値（`normal`）が `stretch` �
 }
 ```
 
-```css title="🙆‍♂ Recommended: はみ出しを切り取るだけなら overflow: clip にする" from="layout/sticky-scroll-container"
+```css title="🙆‍♂ Recommended: はみ出しを切り取るだけなら overflow-x: clip にする" from="layout/sticky-scroll-container"
 .page-section {
-  overflow: clip;
+  overflow-x: clip;
 }
 ```
 

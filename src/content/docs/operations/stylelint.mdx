@@ -18,9 +18,9 @@ import Guideline from '../../../components/Guideline.astro';
 
 本書のルールは、全体で数百件あります。レビューのたびにこれをすべて確かめるのは、現実的ではありません。宣言の並び順や `display` の書き方のように、正しいかどうかを機械的に判断できるものまで人が見ていると、命名や設計のように人にしか判断できない部分に割く時間がなくなります。
 
-私のレビューのチェックリストでも、インデントやプロパティの並び順は「本来はフォーマッターやリンターの仕事で、人が手作業でそろえるものではない」としています。自動化が機能していない場合に限って、そのことを指摘します。並び順は、統一されていること自体に価値があり、方式はプロジェクトで合意できていれば何でもかまいません。
+私が公開しているレビューのチェックリスト（付録G「[参考資料](/appendix/references/)」の「CSSのレビュー時に確認しておくものリスト」）でも、インデントやプロパティの並び順は「本来はフォーマッターやリンターの仕事で、人が手作業でそろえるものではない」としています。自動化が機能していない場合に限って、そのことを指摘します。並び順は、統一されていること自体に価値があり、方式はプロジェクトで合意できていれば何でもかまいません。
 
-ただし、ツールに従えば安全というわけでもありません。私のテンプレートでは、Stylelintの並び順の設定に従った結果、条件付きのブロックが元のルールより前に並び、メディアクエリで上書きできないコンポーネントをいくつも作っていました。設定がガイドラインの意図とずれていると、ツールに従うほど誤りが増えます。Stylelintの設定は、ガイドラインの本文と同じだけ注意して保守する必要があります。
+ただし、ツールに従えば安全というわけでもありません。私が案件で使っているAstroのサイトのテンプレートでは、{/* 要確認: 著者の判断。テンプレートを公開しているならリンクを添え、公開していないなら「非公開」と書く */}Stylelintの並び順の設定に従った結果、条件付きのブロックが元のルールより前に並び、メディアクエリで上書きできないコンポーネントをいくつも作っていました。設定がガイドラインの意図とずれていると、ツールに従うほど誤りが増えます。Stylelintの設定は、ガイドラインの本文と同じだけ注意して保守する必要があります。
 
 ## 本書の設定の全体像
 
@@ -65,7 +65,7 @@ stylelint-plugin-logical-cssは、論理プロパティと論理的な単位を�
 
 本書の設定には、独自ルールを3つ加えています。この節で取り上げる `book/conditions-inside-rules` は、`@media` と `@container` がセレクタの中に書かれていないと、エラーにするルールです。起点のない `:has()` を報告する `book/no-unanchored-has` は「[5-3 :has() で祖先と前の兄弟を選ぶ](/pseudo/has/)」で説明しています。見た目の順番を変えうる配置に `reading-flow` を求める `book/reading-flow-when-reordered` は「[11-12 表示順と読み上げ順を合わせる](/layout-practice/reading-flow/)」で説明しています。
 
-```css title="🙅‍♂ Not Recommended: @scope の直下に条件のブロックを置く" issue="convention"
+```css title="🙅‍♂ Not Recommended: @scope の直下に条件のブロックを置く" issue="behavior"
 /* 🙅‍♂ Not Recommended */
 @scope (.scoped.card) to (.scoped) {
   @media (width >= calc(768 / 16 * 1rem)) {
@@ -81,7 +81,9 @@ stylelint-plugin-logical-cssは、論理プロパティと論理的な単位を�
 ```
 
 ```text title="Stylelintの出力"
-2:3  ✖  `@media`はセレクタの中に書いてください。条件付きのアットルールをセレクタの外に置くと、上書きの順序が崩れます。  book/conditions-inside-rules
+3:3  ✖  `@media`はセレクタの中に書いてください。条件付きのアットルールをセレクタの外に置くと、上書きの順序が崩れます。  book/conditions-inside-rules
+
+✖ 1 problem (1 error, 0 warnings)
 ```
 
 このルールを作ったのは、`order/order` が「アットルールをネストしたルールより前に置く」並びを、`@scope` の中にも求めるからです。条件のブロックが元のルールより前に並ぶと、同じ詳細度の元のルールが後から勝ち、広い画面向けの指定で上書きできません。上の例では、画面が広くなっても見出しは18px相当のままです。標準のルールには、この並びを見つけるものがありませんでした。
@@ -131,7 +133,7 @@ Stylelintには、`unit-disallowed-list` や `declaration-property-value-disallo
 
 ## エラーと警告の使い分け
 
-Stylelintのルールは、デフォルトではエラーとして報告されます。`severity: 'warning'` を指定すると、警告になります。本書の設定で警告にしているのは、ビューポート単位の禁止、`z-index` の数値の禁止、論理プロパティと論理的な単位の2つのルールです。
+Stylelintのルールは、デフォルトではエラーとして報告されます。`severity: 'warning'` を指定すると、警告になります。本書の設定で警告にしているのは、ビューポート単位の禁止、`z-index` の数値と `line-height: 1` の禁止、論理プロパティと論理的な単位の2つのルールです。
 
 警告とエラーの違いは、終了コードに表れます。エラーが1つでもあると、Stylelintは失敗の終了コードを返し、CIの検査も失敗します。警告だけなら成功の終了コードを返すので、CIは通ります。警告でも失敗させたいときは、`--max-warnings 0` を付けて実行します。
 
@@ -143,17 +145,19 @@ Stylelintのルールは、デフォルトではエラーとして報告され�
 body {
   /* 切り欠きは画面の物理的な左右にあるので、書字方向で入れ替わらないようにする */
   /* stylelint-disable-next-line logical-css/require-logical-properties */
-  padding-right: env(safe-area-inset-right);
+  padding-right: max(16px, env(safe-area-inset-right));
   /* stylelint-disable-next-line logical-css/require-logical-properties */
-  padding-left: env(safe-area-inset-left);
+  padding-left: max(16px, env(safe-area-inset-left));
 }
 ```
 
 無効にする範囲は、`stylelint-disable-next-line` とルール名で、1行と1つのルールに絞ります。ファイル全体やすべてのルールを無効にすると、同じ場所にある別の誤りまで見逃します。エラーや警告を消すことだけを目的に、ルールを無効にしたり検査を飛ばしたりするわけにはいきません。私のテンプレートのAI向けの規約でも、このことを明記しています。無効にするコメントの書き方は「[9-10 コメントの書き方](/notation/comments/)」で説明しています。
 
-並び順のように自動で直せるものは、手で直しません。私は、エディタの保存時にStylelintの自動修正が走るように設定しています。手で直す作業がなくなれば、並び順の違反がレビューに上がってくることもありません。
+並び順のように自動で直せるものは、手で直しません。私は、エディタの保存時にStylelintの自動修正が走るように設定しています。VS Codeなら、Stylelintの拡張機能を入れると、プロジェクトに入れたStylelintと設定で、編集中のファイルの違反が表示されます。手で直す作業がなくなれば、並び順の違反がレビューに上がってくることもありません。
 
 ## コード例の自動検証
+
+この見出しは、本書のリポジトリで使っている仕組みの紹介です。読者が手元で実行する手順は、次の「自分のプロジェクトに入れる」にまとめています。
 
 本書では、`🙆‍♂ Recommended` のCSSのコード例を、本文から取り出して同じStylelintの設定で検証しています。`pnpm lint:examples` を実行すると、原稿（MDX）の中からタイトルが `🙆‍♂ Recommended` で始まるCSSのコードブロックを集め、一時ファイルに書き出して検査します。`🙅‍♂ Not Recommended` の例と、ラベルのない式だけの例は対象外です。
 
@@ -164,6 +168,8 @@ body {
 この仕組みは、本書に限らず使えます。プロジェクトの設計のドキュメントや、AI向けの規約に載せたコード例も、同じ設定で検証しておくと、ドキュメントとコードが食い違いません。
 
 ## 自分のプロジェクトに入れる
+
+Stylelintは、Node.jsの上で動くツールです。Node.jsを入れたうえで、プロジェクトのフォルダーに `package.json` がなければ、そのフォルダーで `npm init -y` を実行して作っておきます。Node.jsを入れられない環境では、Stylelintを使わずに、「[19-3 表示と操作を確かめる](/operations/verification/)」のブラウザでの確認から始めます。
 
 本書の設定は、設定ファイルだけをコピーしても動きません。独自ルールを `stylelint/` ディレクトリのファイルから読み込んでいるので、ディレクトリも一緒にコピーし、設定と独自ルールが読み込むパッケージを入れる必要があります。
 
@@ -222,25 +228,26 @@ AstroやVueのコンポーネントの `<style>` にもCSSを書くなら、そ�
 /* 🙅‍♂ Not Recommended */
 .card {
   display: flex;
-  margin-top: 16px;
+  padding-top: 16px;
 }
 ```
 
 ```text title="Stylelintの出力"
 3:3  ✖  Use multi-keyword syntax `block flex` instead of `flex`.  plugin/display-multi-keyword-syntax
-4:3  ⚠  Unexpected physical CSS property margin-top. Please use the logical equivalent — margin-block-start  logical-css/require-logical-properties
+4:3  ⚠  Unexpected physical CSS property padding-top. Please use the logical equivalent — padding-block-start  logical-css/require-logical-properties
 
 ✖ 2 problems (1 error, 1 warning)
+  1 warning potentially fixable with the "--fix" option.
 ```
 
-出力の各行には、左から位置（行:列）、重大度、メッセージ、ルール名が並びます。`✖` はエラー、`⚠` は警告です。この例ではエラーが1件あるので、Stylelintは失敗の終了コードを返します。プラグインのメッセージは英語のままです。本書の設定で日本語のメッセージを出すのは、禁止リストと許可リスト、名前のパターン、独自ルールに限られます。メッセージで直し方が分からないときは、末尾のルール名で設定とプラグインの説明を探します。
+出力の各行には、左から位置（行:列）、重大度、メッセージ、ルール名が並びます。`✖` はエラー、`⚠` は警告です。この例ではエラーが1件あるので、Stylelintは失敗の終了コードを返します。プラグインのメッセージは英語のままです。本書の設定で日本語のメッセージを出すのは、`message` を指定したルール（ビューポート単位と値の禁止リスト、`order` と `reading-order` の値の許可リスト、コンテナとレイヤーの名前のパターン）と、独自ルールに限られます。メッセージで直し方が分からないときは、末尾のルール名で設定とプラグインの説明を探します。
 
-直し方は、どちらもメッセージが示すとおりです。`display` は `block flex` に、`margin-top` は `margin-block-start` に書き換えます。この2件は、`npm run lint:css:fix` でも書き換わります。自動で直したときは、書き換わった箇所を差分で確かめます。そのあと、もう一度 `npm run lint:css` を実行し、何も出力されずに終われば、検査を通っています。
+直し方は、どちらもメッセージが示すとおりです。`display` は `block flex` に、`padding-top` は `padding-block-start` に書き換えます。この2件は、`npm run lint:css:fix` でも書き換わります。自動で直したときは、書き換わった箇所を差分で確かめます。そのあと、もう一度 `npm run lint:css` を実行し、何も出力されずに終われば、検査を通っています。
 
 ```css title="🙆‍♂ Recommended: 2値構文と論理プロパティで書く"
 .card {
   display: block flex;
-  margin-block-start: 16px;
+  padding-block-start: 16px;
 }
 ```
 

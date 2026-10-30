@@ -91,7 +91,7 @@
 - id: press-feedback-short
   level: 推奨
   kind: judgment
-  rule: 'ボタンを押したことを動きで返すときは、`:active` で `scale` を0.96〜0.98に縮め、再生時間を100〜150msにする。'
+  rule: 'ボタンを押したことを動きで返すときは、`:active` で `scale` を0.96〜0.98に縮め、再生時間を `--duration--fast` から `--duration--base` まで（80〜160ms）にする。'
   reason: 押したことがすぐに伝わり、短い動きなら続けて押す操作の妨げにならないため。
   note: 押したことを伝える必要がある UI にだけ使います。
   page: motion/easing-and-duration
@@ -128,7 +128,7 @@
 - id: interruptible-with-transition
   level: 推奨
   kind: judgment
-  rule: 操作の途中で取り消されることがある動きは `@keyframes` ではなくトランジションで書き、タブやセグメンテッドコントロールのように続けて押される UI では、再生時間を100〜150msにするか、動きを省く。
+  rule: 操作の途中で取り消されることがある動きは `@keyframes` ではなくトランジションで書き、タブやセグメンテッドコントロールのように続けて押される UI では、再生時間を `--duration--fast` から `--duration--base` まで（80〜160ms）にするか、動きを省く。
   reason: トランジションは途中の状態から逆向きに戻るが、`@keyframes` のアニメーションは途中で止めると値が飛び、続けて押すと動きが操作に追いつかないため。
   page: motion/transitions-and-keyframes
   since: 0.15.0

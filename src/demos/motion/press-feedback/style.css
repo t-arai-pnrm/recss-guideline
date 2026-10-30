@@ -17,8 +17,9 @@
       color: var(--foreground--inverse);
 
       &:disabled {
-        --_background: var(--background--active);
+        --_background: var(--background--surface);
 
+        border-color: var(--border--base);
         color: var(--foreground--muted);
       }
 
@@ -27,7 +28,7 @@
         --_background: var(--_fill--hocus);
       }
 
-      /* 色はホバーの目安（100ms以下）、縮小は押下の目安（100〜150ms）で動かす */
+      /* 色はホバーの目安（100ms以下）、縮小は押下の目安（80〜160ms）で動かす */
       &:not(:focus-visible) {
         @media (prefers-reduced-motion: no-preference) {
           transition-duration: var(--duration--fast), var(--duration--press);

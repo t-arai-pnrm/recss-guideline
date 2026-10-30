@@ -40,6 +40,7 @@ import powCss from '../../../demos/values/pow-type-scale/style.css?raw';
 まず、計算関数の使い方だけを直します。中央の式を「本文の外の余白が、最小の余白をどれだけ超えたか」として組み立て、`336px` を、本文の幅（640px）と、本文の外に必ず残す余白（16px）に分けて書きます。最小値の `-24px` は、はみ出させる量の上限です。`vw` と `left` は元のまま残しているので、この段階のコードは、まだ本書の規約には合わせていません。
 
 ```css title="中央の式を、余白の差として組み立てる（規約にはまだ合わせていない）"
+/* 途中の段階の式。vw と left は、次の見出しで置き換える */
 .section-label {
   position: relative;
 
@@ -110,6 +111,7 @@ import powCss from '../../../demos/values/pow-type-scale/style.css?raw';
   :scope {
     --_step: 12px;
 
+    /* 折り返すと弧の形が崩れるので、折り返さない */
     display: block flex;
     gap: 8px;
     padding-block: 8px;
@@ -122,7 +124,7 @@ import powCss from '../../../demos/values/pow-type-scale/style.css?raw';
 
   li {
     @supports (z-index: sibling-index()) {
-      /* 中央の位置からの距離に比例して下げる */
+      /* 中央から離れた項目ほど下げて、中央を頂点にした弧の形にするため */
       translate: 0 calc(abs(sibling-index() - (sibling-count() + 1) / 2) * var(--_step));
     }
   }
@@ -135,7 +137,7 @@ import powCss from '../../../demos/values/pow-type-scale/style.css?raw';
 
 項目を下げるには、`margin-block-start` ではなく `translate` を使います。弧の形は見た目だけの装飾なので、レイアウトを変えない変形が向いています。`margin-block-start` で下げると、下げた分だけ一覧の高さが変わり、要素の間隔を作る `margin` とも見分けが付きません。ただし、`translate` は後ろの内容を押し下げないので、いちばん下がる項目の分だけ、一覧の下に余白を取っておきます。
 
-中央の位置を `3` のような数値で書かず、`sibling-count()` から求めているので、項目の数を変えても、弧は左右対称のままです。`abs()` は2025年6月から主要なブラウザで使え、本書の対象のブラウザもすべて対応しています。`sibling-index()` に対応したブラウザはどれも `abs()` にも対応しているので、`@supports` は `sibling-index()` の判定だけで足ります。
+中央の位置を `3` のような数値で書かず、`sibling-count()` から求めているので、項目の数を変えても、弧は左右対称のままです。ただし、折り返すと弧の形が崩れるので、一覧は折り返さずに並べています。項目を増やすときは、置き場所の幅に収まる数までにします。`abs()` は2025年6月から主要なブラウザで使え、本書の対象のブラウザもすべて対応しています。`sibling-index()` に対応したブラウザはどれも `abs()` にも対応しているので、`@supports` は `sibling-index()` の判定だけで足ります。
 
 <Baseline id="abs-sign" name="abs() と sign()" />
 
@@ -186,7 +188,7 @@ import powCss from '../../../demos/values/pow-type-scale/style.css?raw';
 
 式には、基準と比率と段階の数が残るので、それぞれの値がどう決まったのかを読み取れます。比率を変えるときも、`--_ratio` の1か所を書き換えれば、すべての段階が式に従って変わります。なお、`pow()` の2つの引数は、どちらも単位のない数値でなければなりません。`pow(1rem, 2)` のように長さを渡すと宣言が無効になるので、単位は、`pow()` の結果に基準の長さを掛けて付けます。
 
-次のデモは、同じ5つの段階を、左の列は比率1.2、右の列は比率1.25で求めたものです。2つの列の違いは `--_ratio` の値だけで、各段階の式は同じです。基準の段階0はどちらも16pxで、段階3は約27.6pxと31.25px、段階−1は約13.3pxと12.8pxになり、比率が大きいほど段階の間の差が開きます。{/* 要検証: ブラウザ。デモの各段階の計算値 */}
+次のデモは、同じ5つの段階を、1つ目の区画は比率1.2、2つ目の区画は比率1.25で求めたものです。2つの区画の違いは `--_ratio` の値だけで、各段階の式は同じです。基準の段階0はどちらも16pxで、段階3は約27.6pxと31.25px、段階−1は約13.3pxと12.8pxになり、比率が大きいほど段階の間の差が開きます。{/* 要検証: ブラウザ。デモの各段階の計算値 */}
 
 <Demo title="同じ式で、比率だけを1.2と1.25に変えた文字サイズの段階" html={powHtml} css={powCss} widths={[320, 768]} />
 
@@ -230,7 +232,7 @@ import powCss from '../../../demos/values/pow-type-scale/style.css?raw';
   }
 
   ._body {
-    /* 幅の5%を16px〜40pxに収め、4pxの倍数に丸める */
+    /* ほかの部品の4pxの倍数の余白と並べたときに、端数でずれないようにするため */
     padding-inline: round(clamp(16px, 5cqi, 40px), 4px);
   }
 }
@@ -266,10 +268,12 @@ import powCss from '../../../demos/values/pow-type-scale/style.css?raw';
 ```css title="🙆‍♂ Recommended: デザインカンプの値は単位のない数値で割る"
 @scope (.scoped.page-section) to (.scoped) {
   :scope {
-    padding-inline: calc(40 / 1280 * 100svi);
+    padding-inline: clamp(16px, 40 / 1280 * 100svi, 40px);
   }
 }
 ```
+
+比率で求めた値にも、`clamp()` で最小値と最大値を付けます。比率だけで決めると、狭い画面では余白が細くなりすぎ、広い画面では際限なく広がるからです（「[13-7 カンプの幅で全体を拡大・縮小しない](/responsive/design-comp-pattern/)」）。
 
 単位のついた値で割って作った長さには、ズームについての注意があります。Chromeでは、`calc(24px / 1rem * 1rem)` のように長さどうしの割り算を含む式で定義した値が、ブラウザのズームで拡大縮小されません（2026年初めに確認）。式の値は24pxと同じ長さですが、表示を拡大しても大きさが変わらないので、文字サイズに使うとWCAGの達成基準1.4.4（テキストのサイズ変更）を満たせなくなるおそれがあります。この割り算から求めた値を文字サイズに使うときは、`max()` でremの下限を付けます。
 
@@ -315,7 +319,7 @@ import powCss from '../../../demos/values/pow-type-scale/style.css?raw';
 }
 ```
 
-SafariとFirefoxでは `--fluid()` を含む宣言が無効になり、見出しは継承した文字サイズのままになります。それを避けるには、6-3の「計算はCSSに任せる」で示した式を前の宣言として書く必要があり、同じ計算を2か所で持つことになります。
+SafariとFirefoxでは `--fluid()` を含む宣言が無効になり、見出しはブラウザのデフォルトスタイルの文字サイズ（`h2` なら `1.5em`）のままになります。kiso.cssは、見出しの文字サイズをリセットしていないからです。それを避けるには、6-3の「計算はCSSに任せる」で示した式を前の宣言として書く必要があり、同じ計算を2か所で持つことになります。
 
 <Baseline id="calc-size" />
 

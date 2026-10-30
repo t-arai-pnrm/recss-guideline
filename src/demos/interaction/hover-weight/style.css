@@ -1,12 +1,12 @@
 @layer components {
   @scope (.scoped.weight-nav) to (.scoped) {
-    ._list {
+    ul {
       display: block flex;
       flex-wrap: wrap;
       gap: 24px;
     }
 
-    ._link {
+    a {
       display: inline flex;
       flex-direction: column;
 

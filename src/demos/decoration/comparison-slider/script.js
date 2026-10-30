@@ -1,7 +1,6 @@
 const root = document.querySelector('.scoped.comparison-slider');
-const range = root.querySelector('._range');
+const range = root.querySelector('input[type="range"]');
 
-// 範囲の入力の値を、切り抜く位置のカスタムプロパティに書き込む
 const update = () => {
   root.style.setProperty('--comparison-slider--position', `${range.value}%`);
 };

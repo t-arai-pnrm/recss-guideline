@@ -1,5 +1,4 @@
 @layer components {
-  /* to (.scoped) で、入れ子のコンポーネントのルートからスコープを外す */
   @scope (.scoped.media-card) to (.scoped) {
     :scope {
       display: block grid;
@@ -10,12 +9,14 @@
     }
 
     h2 {
-      font-size: calc(24 / 16 * 1rem);
+      font-size: calc(var(--text--title--font-size) / 16 * 1rem);
+      line-height: var(--text--title--leading);
     }
 
     p {
       color: var(--foreground--accent);
-      font-size: calc(18 / 16 * 1rem);
+      font-size: calc(var(--text--body--font-size) / 16 * 1rem);
+      line-height: var(--text--body--leading);
     }
   }
 
@@ -24,8 +25,8 @@
       display: block grid;
       gap: 4px;
       padding: 12px;
+      border: 1px solid var(--border--base);
       border-radius: var(--rounded--md);
-      background-color: var(--background--active);
     }
 
     p {

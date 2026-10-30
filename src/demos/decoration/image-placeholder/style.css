@@ -28,8 +28,8 @@
 
       /* 比べるための指定。背景色と線を外す */
       &[data-fallback="none"] {
-        background-color: transparent;
-        outline: none;
+        background-color: unset;
+        outline: unset;
       }
     }
 

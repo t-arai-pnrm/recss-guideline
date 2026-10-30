@@ -22,6 +22,7 @@
 
       /* ネイティブの検証のエラーと、ARIA属性で伝えるエラーを同じ見た目にする */
       &:is(:user-invalid, [aria-invalid="true"]) {
+        border-width: 2px;
         border-color: var(--foreground--danger);
       }
     }
@@ -59,7 +60,8 @@
 
       /* disabled 属性で止めたボタンと、aria-disabled で無効を伝えるボタンを同じ見た目にする */
       &:is(:disabled, [aria-disabled="true"]) {
-        background-color: var(--background--active);
+        border-color: var(--border--strong);
+        background-color: unset;
         color: var(--foreground--muted);
       }
     }

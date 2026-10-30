@@ -19,24 +19,20 @@
 
     p {
       font-weight: var(--font-weight--bold);
-    }
-
-    ul {
-      display: none;
-      gap: 16px;
 
       @media (width >= calc(640 / 16 * 1rem)) {
-        display: block flex;
+        font-size: calc(var(--text--title--font-size) / 16 * 1rem);
+        line-height: var(--text--title--leading);
       }
     }
 
-    button {
-      padding-block: 4px;
-      padding-inline: 12px;
-      border-radius: var(--rounded--sm);
+    ul {
+      display: block grid;
+      gap: 8px 16px;
 
       @media (width >= calc(640 / 16 * 1rem)) {
-        display: none;
+        display: block flex;
+        flex-wrap: wrap;
       }
     }
   }

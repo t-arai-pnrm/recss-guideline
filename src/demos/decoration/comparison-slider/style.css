@@ -6,7 +6,6 @@
 @layer components {
   @scope (.scoped.comparison-slider) to (.scoped) {
     :scope {
-      /* スクリプトが書き込む位置。書き込まれる前は中央 */
       --_position: var(--comparison-slider--position, 50%);
 
       display: block grid;
@@ -41,12 +40,11 @@
       object-fit: cover;
     }
 
-    /* 補正前の画像を、境界より左の範囲だけ見せる */
     ._before {
       clip-path: inset(0 calc(100% - var(--_position)) 0 0);
     }
 
-    ._control {
+    ._position {
       display: block grid;
       gap: 8px;
     }
@@ -56,7 +54,7 @@
       line-height: var(--text--body-compact--leading);
     }
 
-    ._range {
+    input {
       inline-size: -webkit-fill-available;
       inline-size: stretch;
     }

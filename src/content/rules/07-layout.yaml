@@ -26,7 +26,7 @@
   kind: judgment
   rule: '`gap`、`align-items`、`justify-content` のように Flexbox や Grid でだけ働くプロパティを、`display` が `flex` でも `grid` でもない通常フローの要素に書かない。'
   reason: 通常フローのブロックコンテナではこれらのプロパティは何も変えず、書いてあると間隔や配置がそこで決まっていると読まれて、実際の指定（子の `margin` など）を見誤らせるため。
-  note: '`align-content` は、ブロックコンテナでも中身をブロック方向にそろえるので、この対象から外れます。`justify-items` と `justify-self` も、仕様ではブロックコンテナで働きますが、対応しているのは Chrome と Edge だけなので、Baseline になるまではこの対象に含めます（ルール `no-justify-self-in-block-layout`）。`gap` は段組み（`column-count` など）でも働きます。'
+  note: '`align-content` は、ブロックコンテナでも中身をブロック方向にそろえるので、この対象から外れます。`justify-items` と `justify-self` は、Chrome と Edge ではブロックコンテナでも働くので、このルールではなく、ルール `no-justify-self-in-block-layout`（禁止）で扱います。`gap` は段組み（`column-count` など）でも働きます。'
   aiProne: true
   page: layout/normal-flow
   since: 0.12.0
@@ -118,7 +118,7 @@
   kind: judgment
   rule: '段落や見出しのような文字の要素には文字のスタイルだけを書き、横方向の `margin` と `padding` を付けず、`display` も構造上の理由なく変えない。文字を左右から離す余白は、包む要素の `padding` か親の `gap` で作る。'
   reason: '文字の要素ごとに横の余白を付けると、同じ領域のほかの要素と左右の端がそろわず、要素の種類が増えるたびに同じ値を書き足すことになるため。`display` を変えると、`margin` の相殺や行の折り返し方が変わり、余白の書き分けが成り立たなくなる。'
-  note: '押せる範囲を広げるために `<a>` を `display: block flow` にして `padding` を付ける場合（17-2）と、`code` やバッジのように背景や枠線を持つインラインの要素が `padding-inline` を持つ場合は対象外です。'
+  note: '押せる範囲を広げるために `<a>` を `display: block flow` にして `padding` を付ける場合（17-2）と、`code` やバッジのように背景や枠線を持つインラインの要素が `padding-inline` を持つ場合は対象外です。本文の段落の行の長さを `max-inline-size: 40ic` のように文字数で決める指定も、文字を左右から離す余白ではないので対象外です（8-3）。編集者が要素を足せない CMS の本文エリアの見出しに付ける横の余白も対象外です（19-5）。'
   page: layout/margin-role
   since: 0.50.0
 
@@ -136,7 +136,7 @@
 - id: flexbox-size-with-inline-size
   level: 推奨
   kind: judgment
-  rule: 'フレックスアイテムの大きさは `inline-size` や `block-size` で指定し、`flex-basis` は `auto` のままにする。`flex-basis` を書くのは、`flex: 1` のように伸び縮みの起点を決めるときと、折り返しの閾値のように主軸の大きさとして計算に使わせるときだけにする。'
+  rule: 'フレックスアイテムの大きさは `inline-size` や `block-size` で指定し、`flex-basis` は `auto` のままにする。`flex-basis` を書くのは、`flex: 1` のように伸び縮みの起点を決めるときと、折り返しの閾値や縮む量の比のように主軸の大きさとして計算に使わせるときだけにする。'
   reason: '`flex-basis` は主軸の大きさなので、`flex-direction` を `column` に変えると、幅のつもりで書いた値が高さになるため。`inline-size` なら、並べる向きを変えても意味が変わらない。'
   note: '`flex-basis` と `inline-size` は伸び縮みの前の仮の大きさで、最後は `min-*` と `max-*` の範囲に収められます。優先順位は `min-*`、`max-*`、`flex-basis` と `inline-size` の順です。'
   page: layout/flexbox-basics
@@ -175,7 +175,7 @@
 - id: large-flex-shrink-for-shrink-order
   level: 推奨
   kind: judgment
-  rule: '2カラムのどちらを先に縮めるかを決めるときは、先に縮める列に `flex-shrink: 9999` のような大きな値と `min-inline-size` を指定し、もう一方の列に `flex-shrink: 0` を指定しない。'
+  rule: '2カラムのどちらを先に縮めるかを決めるときは、先に縮める列に `flex-shrink: 9999` のような大きな値と、`min(100%, …)` で親の幅を上限にした `min-inline-size` を指定し、もう一方の列に `flex-shrink: 0` を指定しない。'
   reason: '不足は `flex-shrink` と `flex-basis` の積の比で配られるので、大きな値の列がほぼすべてを受け持ち、最小幅に届いてから残りがもう一方に配られるため。`flex-shrink: 0` はどの幅でも縮まなくなり、狭い幅ではみ出す。'
   note: '縦に積む切り替えは、コンテナサイズクエリや `sidebar` の折り返しで別に行います。'
   page: layout/flexbox-basics
@@ -271,7 +271,7 @@
   kind: judgment
   rule: 'グリッドの列の幅は、列ごとに可変か不変かを決めてから、`max-content`（改行させない）、`fit-content()`（上限まで中身に合わせる）、`1fr`（残りをすべて使う）のように指定する。'
   reason: 中身の長さが変わっても、どの列が伸び、どの列が伸びないかがコードから読み取れ、意図どおりに振る舞うため。
-  note: '一覧の項目は `grid-template-columns: subgrid` で親の列に参加させると、すべての項目で列の位置がそろいます。`fit-content()` の列は `fr` の列より先に上限まで広がるので、隣の `fr` の列には `minmax(下限, 1fr)` で下限を付けます。'
+  note: '一覧の項目は `grid-template-columns: subgrid` で親の列に参加させると、すべての項目で列の位置がそろいます。`fit-content()` の列は `fr` の列より先に上限まで広がるので、隣の `fr` の列には `minmax(min(100%, 下限), 1fr)` で下限を付けます（ルール `minmax-min-capped-at-100-percent`）。'
   page: layout/grid-alignment
   since: 0.3.0
 
@@ -375,7 +375,7 @@
   kind: judgment
   rule: '`display: contents` は、サブグリッドに参加させるときや、幅によってラッパーの箱を出し入れするときなど、箱をなくす理由があるときだけ使う。画面の幅で並びを変えるだけなら `grid-template` のエリアで組む。'
   reason: '箱をなくした要素はブラウザによってロールを失い、Flexbox で構造を変えると `order` も必要になって、読み上げやフォーカスの順番が見た目と食い違いやすいため。'
-  note: 'エリアで組むときは、テンプレートを `--_template` に入れてコンテナサイズクエリの中で差し替え、同じルールに `reading-flow` を指定します（ルール `reading-flow-when-reordered`）。レイアウトのためだけのラッパーは足しません。'
+  note: 'エリアで組むときは、コンテナサイズクエリの中で `grid-template` を書き換え、同じルールに `reading-flow` を指定します（ルール `reading-flow-when-reordered`）。レイアウトのためだけのラッパーは足しません。'
   aiProne: true
   page: layout/display-contents
   since: 0.24.0

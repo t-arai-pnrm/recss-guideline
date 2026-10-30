@@ -7,10 +7,7 @@ sidebar:
 ---
 
 import Baseline from '../../../components/Baseline.astro';
-import Demo from '../../../components/Demo.astro';
 import Guideline from '../../../components/Guideline.astro';
-import productHtml from '../../../demos/responsive/product-cards/index.html?raw';
-import productCss from '../../../demos/responsive/product-cards/style.css?raw';
 
 ブレイクポイントは、スマートフォンやPCのようなデバイスの分類ではなく、内容が成り立たなくなる幅から決めます。値はremで指定し、閾値は「列の最小幅×列数＋隙間×隙間の数」のように、レイアウトが成り立つ条件を `calc()` の式で書きます。式にしておけば、閾値の根拠がコードに残り、列数や隙間を変えたときに直す場所も分かります。
 
@@ -85,71 +82,34 @@ import productCss from '../../../demos/responsive/product-cards/style.css?raw';
 
 隙間を `32px` のまま足す理由は、後の「gapとpaddingを式から省かない」で説明します。このページ全体の段組みのデモは「[13-5 メディアクエリ](/responsive/media-queries/)」にあります。
 
-コンテナサイズクエリでも同じです。次の例は、最小幅160px相当の列を最大8列まで並べるグリッドに、2列分の幅のカードを並べた商品の一覧です。1行に並ぶカードの枚数は列の数の半分なので、カードが5枚のとき、4列なら最後の行に1枚だけ残ります。この1枚を中央に寄せたいとします。
+コンテナサイズクエリでも同じです。次の例は、画像と本文を並べるカードです。画像の列は160px相当、本文の最小幅は240px相当で、その間に24pxの隙間を空け、カードの内側の左右に16pxの余白を取ります。横に並べられるのは、これらを足した幅からです。
 
-```css title="🙆‍♂ Recommended: 列の最小幅と隙間から、カードが何枚並ぶかの範囲を式で書く" from="responsive/product-cards"
-@scope (.scoped.product-cards) to (.scoped) {
+```css title="🙆‍♂ Recommended: 画像の列、隙間、本文の最小幅、左右の余白を足した式で閾値を書く"
+@scope (.scoped.media-card) to (.scoped) {
   :scope {
     container: --scoped / inline-size;
   }
 
-  ._body {
-    --_columns: --one;
+  ._layout {
+    display: block grid;
+    gap: 24px;
+    padding-inline: 16px;
 
-    /* 最小幅160px相当の列が2つと隙間が1つ並ぶ幅から、カードを2列分にする */
-    @container --scoped (inline-size >= calc(160 / 16 * 1rem * 2 + 24px)) {
-      --_columns: --two;
-    }
-
-    @container --scoped (inline-size >= calc(160 / 16 * 1rem * 4 + 24px * 3)) {
-      --_columns: --four;
-    }
-
-    /* 6列以上の並びは省略 */
-    @container --scoped (inline-size >= calc(160 / 16 * 1rem * 6 + 24px * 5)) {
-      --_columns: --six;
-    }
-
-    & > * {
-      @container not style(--_columns: --one) {
-        grid-column-end: span 2;
-      }
-    }
-
-    /* 4〜5列（カードは1行に2枚）：最後の1枚を2列目から置く */
-    & > :nth-child(2n + 1):nth-last-child(1) {
-      @container style(--_columns: --four) {
-        grid-column-start: 2;
-      }
+    /* 画像 160px 相当・隙間 24px・本文の最小幅 240px 相当と、左右の余白 16px が並ぶ幅 */
+    @container --scoped (inline-size >= calc(160 / 16 * 1rem + 24px + 240 / 16 * 1rem + 16px * 2)) {
+      grid-template-columns: calc(160 / 16 * 1rem) 1fr;
     }
   }
 }
 ```
 
-```html
-<div class="scoped product-cards">
-  <ul
-    class="_body | grid"
-    style="--grid--mode: auto-fit; --grid--column-min-width: calc(160 / 16 * 1rem); --grid--column-max-count: 8; --grid--gap: 24px"
-  >
-    <li class="_card">…</li>
-  </ul>
-</div>
-```
+文字サイズが標準なら、閾値は456pxです。画像の列と本文の最小幅はremの変換の式で、隙間と余白はpxで指定しているので、閾値の式でも同じ単位で足しています。
 
-並びは、列の最小幅と最大数から列数を決めるコンポジションの `grid`（「[12-7 grid](/compositions/grid/)」）に任せています。`calc(160 / 16 * 1rem * 4 + 24px * 3)` は「最小幅160px相当の列4つと、24pxの隙間3つ」が並ぶ幅で、`calc(160 / 16 * 1rem * 6 + 24px * 5)` は6列の幅です。その間では列が4つか5つになり、カードは1行に2枚並びます。列が5つのときの余った1列は、`auto-fit` がアイテムのない列を幅0に畳むので、表示に影響しません。
-
-コンテナサイズクエリを書くのは、並べられる列の数をフラグ `--_columns` に立てる `._body` のルールだけです。カードの側は、`@container style(--_columns: --four)` のようにフラグを読んで置く列を変えます。カードごとにコンテナサイズクエリを書くと、閾値がカードの数だけ散らばり、直し忘れた箇所で、どの幅にも想定していない並びができます。フラグの書き方は「[10-6 スタイルクエリで状態を伝える](/components/style-queries/)」で説明しています。
-
-列の最小幅はremの変換の式で、隙間はpxで渡しているので、閾値の式でも同じ単位で足しています。
-
-`:nth-child(2n + 1):nth-last-child(1)` は、奇数番目で、しかも最後の要素を選びます。最後の行に1枚だけ残ったカードを、2列目から置くことで中央に寄せています。子要素の位置と数で選ぶ書き方は「[5-5 数量クエリ](/pseudo/quantity-queries/)」で、端数を中央に寄せる配置の全体は「[11-5 件数で配置を組み替える](/layout-practice/quantity-layouts/)」で説明しています。次のデモでは、6列以上の範囲（1行に3枚）と8列の範囲（1行に4枚）にも、同じ形で条件を足しています。幅を変えると、最後の行の端数がどの幅でも中央に寄ります。
-
-<Demo title="列の最小幅と隙間の式で範囲を決め、最後の行の端数を中央に寄せる" html={productHtml} css={productCss} widths={[320, 768, 1200, 1600]} />
+切り替えるのは `._layout` の配置の1か所なので、クエリは `._layout` のルールに直接書いています。同じ閾値で画像の縦横比や見出しの大きさも変えるなら、クエリはフラグを立てる1つのルールにまとめます（「[10-6 スタイルクエリで状態を伝える](/components/style-queries/)」）。列の数に応じて何段階も切り替える一覧は、「[11-5 件数で配置を組み替える](/layout-practice/quantity-layouts/)」で扱います。
 
 ## gapとpaddingを式から省かない
 
-閾値の式には、レイアウトが成り立つ条件に関わる `gap`、`padding`、`border` を省かずに含めます。上の例で隙間を省いて `calc(160 / 16 * 1rem * 6)` と書くと、閾値は960pxになります。実際に6列が並ぶのは、隙間5つ（120px）を足した1080pxからです。960pxから1080pxの間では、列は5つしかないのに6列用の条件が当てはまり、カードが意図しない列に置かれて並びが崩れます。
+閾値の式には、レイアウトが成り立つ条件に関わる `gap`、`padding`、`border` を省かずに含めます。上の例で隙間と余白を省いて `calc(160 / 16 * 1rem + 240 / 16 * 1rem)` と書くと、閾値は400pxになります。本文の列が240pxを保てるのは、隙間24pxと左右の余白32pxを足した456pxからです。400pxから456pxの間では、条件が当てはまって画像と本文が横に並ぶのに、本文の列が240pxより狭くなり、文字が詰まります。
 
 `padding` と `border` も同じです。コンテナの内側で並べる要素に左右の `padding` があるなら、その分も式に足します。ボタンのように中身の幅で閾値を決める部品なら、「アイコンの幅＋隙間＋ラベルの幅＋左右の `padding`」が閾値です。どれか1つを省くと、閾値は実際に並べられる幅より狭くなり、切り替わった直後の幅で中身がはみ出したり詰まったりします。
 
@@ -157,7 +117,7 @@ import productCss from '../../../demos/responsive/product-cards/style.css?raw';
 
 前の「ブレイクポイントをremで書く」で説明したとおり、メディアクエリの中のremは、ブラウザの設定の文字サイズを基準にします。本書はルートの文字サイズを変えないので、ページの中のremも同じ大きさです。そのため、各項を宣言したときの単位で書けば、文字サイズを変えたときにremの項は中身の幅と同じ割合で広がり、pxの項は隙間と同じく変わらないので、閾値と実際に並べられる幅がずれません。
 
-式が長くなっても、項を省いて短くはしません。一度しか使わない長い式には、何列・何個・何本分なのかをコメントで補います。上の例のコメントがそれに当たります。コメントに書くのは、式が表している条件です（「[9-10 コメントの書き方](/notation/comments/)」）。
+式が長くなっても、項を省いて短くはしません。一度しか使わない長い式には、どの幅を足したのかをコメントで補います。上の例のコメントがそれに当たります。コメントに書くのは、式が表している条件です（「[9-10 コメントの書き方](/notation/comments/)」）。
 
 ## calc()で書くかどうかの判断基準
 
@@ -165,7 +125,7 @@ import productCss from '../../../demos/responsive/product-cards/style.css?raw';
 
 避けるのは、根拠のない数値を `calc(48rem)` のように包むだけの書き方です。式の形をしていても、根拠は何も残りません。一度しか使わない巨大な式を、コメントなしでその場に書くのも避けます。
 
-そもそも、イントリンシックなレイアウトで解決できる問題を、クエリと `calc()` で解こうとしないことが前提です。列数が増減するだけなら、`repeat()` の `auto-fit` と `minmax()` で、クエリなしに組めます（「[13-1 検討する順番](/responsive/escalation/)」）。上の例でクエリを書いているのは、最後の行の端数を中央に寄せるという、列数の自動調整だけでは表せない配置があるからです。
+そもそも、イントリンシックなレイアウトで解決できる問題を、クエリと `calc()` で解こうとしないことが前提です。列数が増減するだけなら、`repeat()` の `auto-fit` と `minmax()` で、クエリなしに組めます（「[13-1 検討する順番](/responsive/escalation/)」）。上の例でクエリを書いているのは、画像の列を本文の横に置くか上に積むかという、途中の状態のない切り替えだからです。
 
 ## クエリの条件にvar()を書かない
 

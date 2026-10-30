@@ -1,0 +1,8 @@
+/* デモを見せるための足場：右に開くサブメニューの幅を空けておく */
+@layer components {
+  @scope (.scoped.safe-triangle-demo) to (.scoped) {
+    ._case {
+      padding-inline-end: calc(120 / 16 * 1rem);
+    }
+  }
+}

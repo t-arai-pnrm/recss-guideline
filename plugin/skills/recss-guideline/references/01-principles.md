@@ -1,8 +1,8 @@
 # 第1章 CSSのマインドセット：ルール
 
-- ガイドラインのバージョン: 0.82.0（2026-10-30 生成）
+- ガイドラインのバージョン: 0.83.0（2026-10-30 生成）
 - ルールの数: 15
-- 本文: 約5.5万字
+- 本文: 約5.6万字
 - 読む条件: 新しい機能、ブラウザの対応状況、フォールバック、@supports
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
@@ -14,12 +14,12 @@
 
 - `principles` 第1章 CSSのマインドセット（約4,700字）https://t-arai-pnrm.github.io/recss-guideline/principles/
 - `principles/browser-suggestion` 1-1 CSSはブラウザへの「提案」である（約1万字）https://t-arai-pnrm.github.io/recss-guideline/principles/browser-suggestion/
-- `principles/browser-support` 1-2 ブラウザサポートとプログレッシブ・エンハンスメント（約1.6万字）https://t-arai-pnrm.github.io/recss-guideline/principles/browser-support/
+- `principles/browser-support` 1-2 ブラウザサポートとプログレッシブ・エンハンスメント（約1.7万字）https://t-arai-pnrm.github.io/recss-guideline/principles/browser-support/
 - `principles/layout-algorithms` 1-3 レイアウトをアルゴリズムへの入力として読む（約3,400字）https://t-arai-pnrm.github.io/recss-guideline/principles/layout-algorithms/
 - `principles/fundamentals` 1-4 基礎を固める（約3,200字）https://t-arai-pnrm.github.io/recss-guideline/principles/fundamentals/
 - `principles/no-memorizing` 1-5 解決策を丸暗記しない（約5,400字）https://t-arai-pnrm.github.io/recss-guideline/principles/no-memorizing/
 - `principles/tips` 1-6 Tipsとの付き合い方（約6,100字）https://t-arai-pnrm.github.io/recss-guideline/principles/tips/
-- `principles/options` 1-7 選択肢を多く持つ（約5,600字）https://t-arai-pnrm.github.io/recss-guideline/principles/options/
+- `principles/options` 1-7 選択肢を多く持つ（約5,800字）https://t-arai-pnrm.github.io/recss-guideline/principles/options/
 
 ## 1-1 CSSはブラウザへの「提案」である
 
@@ -55,7 +55,7 @@ https://t-arai-pnrm.github.io/recss-guideline/principles/browser-support/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/principles/browser-support/#rule-check-safari-support-first
 - 【必須・実装上の判断】対象のブラウザの一部しか対応していない機能は、未対応の環境でも内容を読めて操作できる場合に限って、プログレッシブ・エンハンスメントとして使う。（`progressive-enhancement-if-harmless`）
   - 理由: 対応した環境の体験を良くしつつ、未対応の環境のユーザーを切り捨てないため。
-  - 補足: `text-wrap: pretty`、`word-break: auto-phrase`、`field-sizing`、`text-box`、ドキュメント間のビュートランジションが使いやすい例です。
+  - 補足: `text-wrap: pretty`（英文の段落。和文には `no-text-wrap-pretty-for-japanese`）、`word-break: auto-phrase`、`field-sizing`、`text-box`、ドキュメント間のビュートランジションが使いやすい例です。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/principles/browser-support/#rule-progressive-enhancement-if-harmless
 - 【推奨・実装上の判断】プログレッシブ・エンハンスメントとして使う機能は、その宣言を外した表示を確かめてから使う。同じ機能を複数の箇所で使うときは、箇所ごとに確かめる。（`verify-fallback-by-removal`）
   - 理由: 未対応の環境では宣言が無視されるだけなので、宣言を外した表示を見れば、読めて操作できるかを、未対応のブラウザなしで判断できるため。
@@ -84,6 +84,6 @@ https://t-arai-pnrm.github.io/recss-guideline/principles/browser-support/
   - 理由: 既存のプロパティの新しい仕様を Chrome が先に実装することが多く、Chrome だけで確認すると、ほかのブラウザとの差に気づけないため。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/principles/browser-support/#rule-no-chrome-only-check
 - 【禁止・仕様にもとづく制約】ブロックレイアウトの要素に、`justify-self` や `justify-items` を指定しない。（`no-justify-self-in-block-layout`）
-  - 理由: 対応しているのは Chrome だけで、Safari と Firefox では無視されるため。
+  - 理由: 対応しているのは Chrome と Edge だけで、Safari と Firefox では無視されるため。
   - 補足: ブロックの中央寄せには `margin-inline: auto` を使います。`display` を grid からブロックに戻すときは、指定が残っていないかを確かめます。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/principles/browser-support/#rule-no-justify-self-in-block-layout

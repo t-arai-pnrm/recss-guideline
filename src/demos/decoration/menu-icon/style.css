@@ -1,5 +1,5 @@
 @layer components {
-  @scope (.scoped.site-menu) to (.scoped) {
+  @scope (.scoped.site-navigation) to (.scoped) {
     button {
       display: inline flex;
       gap: 8px;
@@ -14,6 +14,10 @@
         &:enabled:hover {
           background-color: var(--background--hover);
         }
+      }
+
+      &:focus-visible {
+        background-color: var(--background--hover);
       }
 
       &:enabled:active {
@@ -73,7 +77,6 @@
       box-shadow: var(--shadow--lg);
       background-color: var(--background--overlay);
 
-      /* popovertarget で開いたボタンの下に置く */
       @supports (position-area: block-end span-inline-end) {
         position-area: block-end span-inline-end;
         margin-block: 8px 0;
@@ -87,12 +90,15 @@
       padding-inline: 16px;
       border-radius: var(--rounded--md);
       color: var(--foreground--base);
-      text-decoration: none;
 
       @media (any-hover) {
         &:any-link:hover {
           background-color: var(--background--hover);
         }
+      }
+
+      &:focus-visible {
+        background-color: var(--background--hover);
       }
     }
   }

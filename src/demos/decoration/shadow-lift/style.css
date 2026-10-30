@@ -7,13 +7,13 @@
       line-height: var(--text--caption--leading);
     }
 
-    ._row {
+    ._tiles {
       display: block grid;
       grid-template-columns: repeat(auto-fit, minmax(min(100%, calc(200 / 16 * 1rem)), 1fr));
       gap: 24px;
     }
 
-    ._card {
+    ._tile {
       display: block grid;
       gap: 4px;
       padding: 16px;
@@ -21,7 +21,6 @@
       box-shadow: var(--_box-shadow);
       background-color: var(--background--surface);
       color: var(--foreground--base);
-      text-decoration: none;
       filter: var(--_filter);
 
       /* キーボードのフォーカスでは一度で持ち上げるので、トランジションはフォーカスリングのないときだけ掛ける */

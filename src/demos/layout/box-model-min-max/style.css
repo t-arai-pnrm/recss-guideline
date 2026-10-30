@@ -9,7 +9,7 @@
       outline: 1px dashed var(--border--strong);
     }
 
-    ._button {
+    ._box {
       inline-size: fit-content;
       padding-block: 8px;
       padding-inline: 12px;

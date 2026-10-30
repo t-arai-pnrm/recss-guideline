@@ -17,23 +17,23 @@
       padding-block: 6px;
       padding-inline: 12px;
       border-radius: var(--rounded--sm);
-      background-color: var(--background--active);
-      font-size: calc(14 / 16 * 1rem);
+      background-color: var(--background--accent-subtle);
+      font-size: calc(var(--text--body-compact--font-size) / 16 * 1rem);
     }
 
     p {
-      background-color: var(--background--active);
+      background-color: var(--background--accent-subtle);
       line-height: var(--leading--loose);
     }
   }
 }
 
 @layer utilities {
-  /* 1行目の上と最後の行の下にあるハーフレディングを取り除く */
+  /* 枠や背景の上下の余白を字面からの距離で決めるため、行と行の間は残して両端だけを削る */
   .-trim-both {
     text-box-trim: trim-both;
 
-    /* 英文は大文字の上端とベースラインで切り取る */
+    /* 和文の字面は大文字の上端とベースラインからはみ出すので、cap alphabetic は英文だけにする */
     &:lang(en) {
       text-box-edge: cap alphabetic;
     }

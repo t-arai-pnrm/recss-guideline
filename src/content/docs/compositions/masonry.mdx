@@ -47,7 +47,7 @@ import masonryCss from '../../../demos/compositions/masonry/style.css?raw';
  * @prop {length}  --masonry--tolerance        [normal]                - 同じ高さとみなす列の高さの差（flow-tolerance）
  *
  * @example
- * <ul class="masonry" style="--masonry--column-min-width: calc(240 / 16 * 1rem); --masonry--gap: calc(var(--spacing--sm) / 16 * 1rem)">
+ * <ul class="masonry" style="--masonry--column-min-width: calc(240 / 16 * 1rem); --masonry--gap: calc(var(--spacing--sm) * 1px)">
  *   <li>…</li>
  * </ul>
  */
@@ -109,16 +109,16 @@ import masonryCss from '../../../demos/compositions/masonry/style.css?raw';
 | `--masonry--mode` | `repeat()` のキーワード（`auto-fill` か `auto-fit`） | `auto-fill` |
 | `--masonry--tolerance` | 同じ高さとみなす列の高さの差 | `normal` |
 
-間隔のデフォルト値を `0px` にしているのは、10-3のルール「[コンポジションの間隔のデフォルト値は0にする](/components/compositions-and-utilities/#rule-composition-default-gap-zero)」に従ったものです。間隔はコンポジションを置く文脈で決まる値なので、使う側で必ず指定します。単位の付いた `0px` にしているのは、列の間隔を `calc()` の中で `100%` から引くためです。単位のない `0` を長さと引き算すると型が合わず、計算全体が無効になります。
+間隔のデフォルト値を `0px` にしているのは、10-3のルール「[コンポジションの間隔のデフォルト値は0にする](/components/compositions-and-utilities/#rule-composition-default-gap-zero)」に従ったものです。間隔はコンポジションを置く文脈で決まる値なので、使う側で必ず指定します。単位の付いた `0px` にしているのは、列の間隔を `calc()` の中で `100%` から引くためです。単位のない `0` を長さと引き算すると型が合わず、計算全体が無効になります。使う側が間隔を空けないときも、`--masonry--gap: 0px` のように単位を付けて渡します（[ルール：閾値などの計算に使う間隔は 0px と書く](/compositions/switcher/#rule-switcher-gap-default-with-unit)）。
 
 間隔は、`--masonry--gap` で一括に、`--masonry--row-gap` と `--masonry--column-gap` で個別に渡せます。`var(--masonry--gap, var(--masonry--row-gap, 0px))` は、「一括の指定があればそれを、なければ個別の指定を、どちらもなければ `0px` を使う」という意味です。`grid-lanes` の行の間隔は、同じ列の中で上下に積まれた項目の間隔になります。
 
-値は、HTMLの `style` 属性で渡します。余白のトークンは単位のない数値で持っているので、`calc(var(--spacing--sm) / 16 * 1rem)` でremに変換します。
+値は、HTMLの `style` 属性で渡します。余白のトークンは単位のない数値で持っているので、`calc(var(--spacing--sm) * 1px)` でpxに変換します。
 
 ```html
 <ul
   class="scoped post-list | masonry"
-  style="--masonry--column-min-width: calc(240 / 16 * 1rem); --masonry--column-max-count: 4; --masonry--gap: calc(var(--spacing--sm) / 16 * 1rem)"
+  style="--masonry--column-min-width: calc(240 / 16 * 1rem); --masonry--column-max-count: 4; --masonry--gap: calc(var(--spacing--sm) * 1px)"
 >
   <li>…</li>
 </ul>
@@ -150,11 +150,11 @@ import masonryCss from '../../../demos/compositions/masonry/style.css?raw';
 
 この幅を `minmax()` の最小値に渡すと、列の数は2つの場合に分かれます。広い場所では、最大の列数で割った幅のほうが大きくなるので、最大の列数より多くの列は入りません。狭い場所では列の最小幅のほうが大きくなり、入らなくなった列から減っていきます。実際の列の幅は、余った幅を `1fr` で分けたものになります。
 
-デフォルト値に、列の間隔24px相当を渡した場合で確かめます。要素の幅が1,200pxのとき、最大の列数で割った幅は（1,200−24×4）÷5で220.8pxなので、列の最小幅の320pxが使われます。320pxの列と24pxの間隔が入るのは、（1,200＋24）÷（320＋24）の整数部分で3列です。要素の幅が1,800pxなら、最大の列数で割った幅は340.8pxで最小幅を上回り、5列ちょうどで埋まります。2,400pxまで広げても列の最小幅が460.8pxに広がるので、6列目は入りません。
+デフォルト値に、列の間隔24pxを渡した場合で確かめます。要素の幅が1,200pxのとき、最大の列数で割った幅は（1,200−24×4）÷5で220.8pxなので、列の最小幅の320pxが使われます。320pxの列と24pxの間隔が入るのは、（1,200＋24）÷（320＋24）の整数部分で3列です。要素の幅が1,800pxなら、最大の列数で割った幅は340.8pxで最小幅を上回り、5列ちょうどで埋まります。2,400pxまで広げても列の最小幅が460.8pxに広がるので、6列目は入りません。
 
 `min(100%, …)` は、要素の幅が列の最小幅より狭いときのための指定です。要素の幅が280pxなら、列の最小幅は320pxではなく280pxになり、1列が要素からはみ出しません。この計算は要素自身の幅を基準にしているので、メインエリアとサイドバーのどちらに置いても、その場所の幅に応じて列の数が変わります。メディアクエリとコンテナサイズクエリは要りません。
 
-次のデモは、本文の長さが違う9つの項目を、列の最小幅160px相当、最大4列、間隔16px相当で並べたものです。番号はHTMLに書いた順番です。幅を変えると、320pxで1列、480pxで2列、640pxで3列、768px以上で4列になり、1,024pxにしても列は増えません。
+次のデモは、本文の長さが違う9つの項目を、列の最小幅160px相当、最大4列、間隔16pxで並べたものです。番号はHTMLに書いた順番です。幅を変えると、320pxで1列、480pxで2列、640pxで3列、768px以上で4列になり、1,024pxにしても列は増えません。
 
 <Demo title="masonry コンポジションで、高さの違う項目を最大4列に詰めて並べる" html={masonryHtml} css={masonryCss} widths={[320, 480, 640, 768, 1024]} />
 

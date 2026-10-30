@@ -8,7 +8,13 @@
     ul {
       display: block flex;
       gap: 8px;
+      overflow-x: auto;
+      padding-block-start: 6px;
       padding-inline: 24px;
+
+      & > li {
+        flex: none;
+      }
     }
 
     ._tab {
@@ -20,7 +26,6 @@
       padding-inline: 24px;
       border-start-start-radius: var(--_radius);
       border-start-end-radius: var(--_radius);
-      color: var(--foreground--muted);
       isolation: isolate;
 
       @supports (corner-shape: scoop) {
@@ -40,7 +45,6 @@
 
       &[aria-current="page"] {
         background-color: var(--background--base);
-        color: var(--foreground--base);
         font-weight: var(--font-weight--bold);
       }
     }

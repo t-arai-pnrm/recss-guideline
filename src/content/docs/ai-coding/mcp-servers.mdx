@@ -51,7 +51,7 @@ Figmaの公式プラグインには、デザインからコードを書くとき
 
 `get_design_context` の出力は、カンプの1つの幅と1つの内容を再現した試作です。次のコードは、記事の一覧のデザインを読ませたときの出力から、カードの1枚分を抜き出したものです。文言と色の値を一般的なものに置き換え、説明に関わらないクラスと属性を省いています。
 
-```jsx title="🙅‍♂ Not Recommended: 出力のクラスと値をそのまま写す" issue="convention"
+```jsx title="🙅‍♂ Not Recommended: 出力のクラスと値をそのまま写す" issue="behavior"
 /* 🙅‍♂ Not Recommended */
 const imgRectangle = "https://www.figma.com/api/mcp/asset/…";
 
@@ -133,7 +133,7 @@ Chrome DevTools MCPは、Googleが提供している、Chromeの開発者ツー�
 
 宣言が効かないとき、AIに直させると、`!important` や詳細度を上げるセレクタで症状を消そうとすることがあります。そこで、先に `get_css_styles` で負けた宣言と勝った宣言を確かめさせ、原因の宣言を直すよう指示します。人が開発者ツールで行う手順は「[19-4 表示の崩れを開発者ツールで調べる](/operations/devtools/)」で説明していて、AIにさせる手順も同じです。
 
-計算値は `evaluate_script` で `getComputedStyle` を呼んで読み、処理の重さは性能のトレースで調べます。一方で、動きを減らす設定や強制カラーモードを切り替える機能はなく、対象のブラウザもChromeだけです。表示の設定やほかのブラウザでの確認は、Playwright MCPに任せます。
+計算値は `evaluate_script` で `getComputedStyle` を呼んで読み、処理の重さは性能のトレースで調べます。動きを減らす設定と強制カラーモードは、2026年10月の1.11.0から `emulate` で切り替えられるようになりました。ただし、ひな形の `mcp.json` は1.10.1に固定しているので、この版のままでは切り替えられません。また、対象のブラウザはChromeだけです。表示の設定とほかのブラウザでの確認は、Playwright MCPに任せます。
 
 ## `.mcp.json` にまとめる
 

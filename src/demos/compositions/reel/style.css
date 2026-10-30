@@ -2,12 +2,12 @@
  * 子要素をインライン方向に1列に並べ、入りきらない分を横にスクロールさせる。
  * 項目の幅は、子ではなく reel を付けた要素が決める。
  *
- * @prop {length} --reel--item-size [max-content] - 項目の幅（grid-auto-columns）
- * @prop {length} --reel--gap       [0]           - 項目の間隔
- * @prop {length} --reel--inset     [0]           - 両端の余白と、スナップで止まる位置の内側の余白
+ * @prop {length | keyword} --reel--item-size [max-content] - 項目の幅（grid-auto-columns）
+ * @prop {length}           --reel--gap       [0]           - 項目の間隔
+ * @prop {length}           --reel--inset     [0]           - 両端の余白と、スナップで止まる位置の内側の余白
  *
  * @example
- * <ul class="reel" style="--reel--item-size: min(80%, calc(280 / 16 * 1rem)); --reel--gap: calc(var(--spacing--sm) / 16 * 1rem)">
+ * <ul class="reel" style="--reel--item-size: min(80%, calc(280 / 16 * 1rem)); --reel--gap: calc(var(--spacing--sm) * 1px)">
  *   <li>…</li>
  * </ul>
  */
@@ -27,7 +27,7 @@
 @layer components {
   @scope (.scoped.related-articles) to (.scoped) {
     :scope {
-      & > ._item {
+      & > li {
         scroll-snap-align: start;
       }
 
@@ -36,12 +36,12 @@
       }
     }
 
-    ._item {
+    li {
       /* カードを行の高さまで伸ばし、隣のカードと下端をそろえる */
       display: block grid;
     }
 
-    ._card {
+    article {
       display: block grid;
       grid-template-rows: auto auto 1fr;
       gap: 8px;
@@ -54,7 +54,7 @@
     ._thumbnail {
       aspect-ratio: 16 / 9;
       border-radius: var(--rounded--sm);
-      background-image: linear-gradient(135deg, oklch(82% 0.08 250deg), oklch(72% 0.12 300deg));
+      background-color: color-mix(in oklab, var(--foreground--muted) 24%, transparent);
     }
 
     ._title {
@@ -62,20 +62,9 @@
       line-height: var(--text--subtitle--leading);
     }
 
-    ._date {
+    p {
       color: var(--foreground--muted);
       font-size: calc(var(--text--caption--font-size) / 16 * 1rem);
-      line-height: var(--text--caption--leading);
-    }
-  }
-}
-
-@layer pages {
-  @scope (.scoped.reel-demo) to (.scoped) {
-    ._heading {
-      color: var(--foreground--muted);
-      font-size: calc(var(--text--caption--font-size) / 16 * 1rem);
-      font-weight: var(--font-weight--regular);
       line-height: var(--text--caption--leading);
     }
   }

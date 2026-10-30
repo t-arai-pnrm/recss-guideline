@@ -2,7 +2,7 @@
   @scope (.scoped.format-toolbar) to (.scoped) {
     :scope {
       --_tooltip-delay: 400ms;
-      --_tooltip-duration: var(--duration--fast);
+      --_tooltip-duration: var(--duration--base);
 
       display: block flex;
       gap: 4px;
@@ -45,19 +45,20 @@
       border-radius: var(--rounded--sm);
       background-color: var(--background--inverse);
       color: var(--foreground--inverse);
-      opacity: 0;
       font-size: calc(var(--text--caption--font-size) / 16 * 1rem);
       line-height: var(--text--caption--leading);
       white-space: nowrap;
-      pointer-events: none;
       transition-duration: var(--_tooltip-duration);
       transition-property: opacity;
       transition-timing-function: var(--ease--out-quad);
 
+      &:not(:is(._item[data-open] *)) {
+        opacity: 0;
+        pointer-events: none;
+      }
+
       /* 遅延は表示した状態のルールに書く。非表示に戻るときは遅れずに消える */
       &:is(._item[data-open] *) {
-        opacity: 1;
-        pointer-events: auto;
         transition-delay: var(--_tooltip-delay);
       }
 

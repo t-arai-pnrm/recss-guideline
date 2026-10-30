@@ -1,4 +1,5 @@
-const tabs = [...document.querySelectorAll('.scoped.product-tabs [role="tab"]')];
+const list = document.querySelector('.scoped.product-tabs ._tabs');
+const tabs = [...list.querySelectorAll('._tab')];
 const panelOf = (tab) => document.getElementById(tab.getAttribute('aria-controls'));
 
 // 選んだタブだけを aria-selected="true" にする。見た目はこの属性から決まる
@@ -13,6 +14,16 @@ const select = (selected) => {
     panel.tabIndex = isSelected ? 0 : -1;
   }
 };
+
+// 切り替えが動く状態になってから、タブのロールを付けて並びを表示する
+list.setAttribute('role', 'tablist');
+list.setAttribute('aria-label', '商品の情報');
+for (const tab of tabs) {
+  tab.setAttribute('role', 'tab');
+  const panel = panelOf(tab);
+  panel.setAttribute('role', 'tabpanel');
+  panel.setAttribute('aria-labelledby', tab.id);
+}
 
 for (const [index, tab] of tabs.entries()) {
   tab.addEventListener('click', () => select(tab));
@@ -31,4 +42,5 @@ for (const [index, tab] of tabs.entries()) {
   panelOf(tab).addEventListener('beforematch', () => select(tab));
 }
 
-select(tabs.find((tab) => tab.getAttribute('aria-selected') === 'true'));
+select(tabs[0]);
+list.hidden = false;

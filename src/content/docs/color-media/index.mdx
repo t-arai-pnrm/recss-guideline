@@ -36,11 +36,11 @@ sidebar:
 
 次のルールを先に押さえ、ほかのルールは、該当する場面で付録A「[ルール一覧](/appendix/rules/)」から引けば足ります。
 
-- [`text-contrast-aa`](/color-media/forced-colors/#rule-text-contrast-aa)：文字と背景のコントラスト比は、WCAG 2.1のAAを満たします。
+- [`text-contrast-aa`](/color-media/forced-colors/#rule-text-contrast-aa)：文字と背景のコントラスト比は、WCAG 2.2のAAを満たします。
 - [`no-color-only-information`](/color-media/forced-colors/#rule-no-color-only-information)：本文の中のリンク、フォーカスやホバーの状態、入力エラーを、色の違いだけで伝えません。
 - [`transparent-border-over-none`](/color-media/forced-colors/#rule-transparent-border-over-none)：枠線を消すときは、`border: none` ではなく `border-color: transparent` で透明にします。
 - [`derive-colors-from-base`](/color-media/relative-color/#rule-derive-colors-from-base)：透過させた色や明度を変えた色は元の色から作り、そのためのトークンやRGBの値を別に用意しません。
-- [`light-dark-in-semantic-tokens`](/color-media/dark-mode/#rule-light-dark-in-semantic-tokens)：ダークモードの色はセマンティクスのトークンに `light-dark()` で持たせ、コンポーネントにメディアクエリを書きません。
+- [`light-dark-in-semantic-tokens`](/color-media/dark-mode/#rule-light-dark-in-semantic-tokens)：ダークモードの色はセマンティクスのトークンに `light-dark()` で持たせ、コンポーネントに `prefers-color-scheme` のメディアクエリを書きません。
 
 ## この章の実装を終えたら確かめること
 

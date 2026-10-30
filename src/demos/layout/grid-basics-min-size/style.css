@@ -9,7 +9,7 @@
 
       /* デモの環境はベーススタイルで min-inline-size: 0 を指定しているので、初期値に戻して比べる */
       &[data-min="auto"] > ._item {
-        min-inline-size: auto;
+        min-inline-size: initial;
       }
     }
 
@@ -21,7 +21,7 @@
       font-size: calc(var(--text--body-compact--font-size) / 16 * 1rem);
       line-height: var(--text--body-compact--leading);
 
-      /* kiso.css の anywhere は最小幅を小さくするので、URL を折り返さない単語として扱う break-word に戻す */
+      /* kiso.css の anywhere は最小幅の計算でも折り返すので、最小幅の計算では折り返さない break-word にする */
       overflow-wrap: break-word;
     }
   }

@@ -61,19 +61,19 @@ import switcherCss from '../../../demos/compositions/switcher/style.css?raw';
   --_c--column-count: var(--switcher--column-count, 3);
   --_c--column-min-width: var(--switcher--column-min-width, calc(320 / 16 * 1rem));
 
-  /* 列の最小幅で指定の列数を並べるのに必要な幅 */
+  /* 閾値を手で決めると列の値を変えたときに食い違うので、列の最小幅と列数から求める */
   --_c--threshold: calc(
     var(--_c--column-min-width) * var(--_c--column-count) + var(--_c--column-gap) * (var(--_c--column-count) - 1)
   );
 
-  /* 指定の列数でちょうど埋まる 1 列の幅。auto-fit がこれより多くの列を作らないようにする */
+  /* auto-fit が指定の列数より多くの列を作らないように、列の幅の下限にする */
   --_c--column-preferred-width: calc(
     (100% - var(--_c--column-gap) * (var(--_c--column-count) - 1)) / var(--_c--column-count)
   );
 
   display: block grid;
 
-  /* 閾値より狭いと sign() が -1 になり、列の最小幅が 100%（1 列）になる */
+  /* クエリを使わずに1列へ切り替えるため、閾値未満では列の最小幅を100%にする */
   grid-template-columns: repeat(
     auto-fit,
     minmax(max(var(--_c--column-preferred-width), sign(100% - var(--_c--threshold)) * -100%), 1fr)
@@ -84,7 +84,7 @@ import switcherCss from '../../../demos/compositions/switcher/style.css?raw';
 
 ### 公開プロパティ
 
-公開プロパティは次の5つです。列数と列の最小幅の2つで閾値が決まり、間隔の3つは見た目の隙間と閾値の両方に使われます。
+公開プロパティは次の5つです。列数と列の最小幅の2つで閾値が決まります。一括の間隔と列の間隔は、見た目の隙間と閾値の両方に使われ、行の間隔は見た目の隙間だけに使われます。
 
 | プロパティ | 意味 | デフォルト値 |
 |---|---|---|
@@ -94,12 +94,12 @@ import switcherCss from '../../../demos/compositions/switcher/style.css?raw';
 | `--switcher--row-gap` | 行の間隔 | `0px` |
 | `--switcher--column-gap` | 列の間隔 | `0px` |
 
-値は、HTMLの `style` 属性で渡します。間隔には、単位のない数値で持っている余白のトークンを `calc(var(--spacing--md) / 16 * 1rem)` の形でremに変換して渡します。トークンを単位なしで持つ理由は「[10-4 デザイントークン](/components/design-tokens/)」で説明しています。
+値は、HTMLの `style` 属性で渡します。間隔には、単位のない数値で持っている余白のトークンを `calc(var(--spacing--md) * 1px)` の形でpxに変換して渡します。トークンを単位なしで持つ理由は「[10-4 デザイントークン](/components/design-tokens/)」で説明しています。
 
 ```html
 <div
   class="switcher"
-  style="--switcher--column-count: 3; --switcher--column-min-width: calc(200 / 16 * 1rem); --switcher--gap: calc(var(--spacing--md) / 16 * 1rem)"
+  style="--switcher--column-count: 3; --switcher--column-min-width: calc(200 / 16 * 1rem); --switcher--gap: calc(var(--spacing--md) * 1px)"
 >
   <section>…</section>
   <section>…</section>
@@ -107,7 +107,7 @@ import switcherCss from '../../../demos/compositions/switcher/style.css?raw';
 </div>
 ```
 
-間隔のデフォルト値は、ほかのコンポジションと同じく0です（「[10-3 コンポジションとユーティリティ](/components/compositions-and-utilities/#rule-composition-default-gap-zero)」のルール）。ただし、`switcher` では単位のない `0` ではなく `0px` と書きます。列の間隔は閾値の `calc()` で長さと足し合わされるので、単位のない `0` が入ると「長さ＋数値」の式になって無効になるからです。無効になった `grid-template-columns` は初期値の `none` に戻り、どの幅でも1列になります。
+間隔のデフォルト値は、ほかのコンポジションと同じく0です（「[10-3 コンポジションとユーティリティ](/components/compositions-and-utilities/#rule-composition-default-gap-zero)」のルール）。ただし、`switcher` では単位のない `0` ではなく `0px` と書きます。列の間隔は閾値の `calc()` で長さと足し合わされるので、単位のない `0` が入ると「長さ＋数値」の式になって無効になるからです。無効になった `grid-template-columns` は初期値の `none` に戻り、どの幅でも1列になります。使う側が間隔を空けないときも、`--switcher--gap: 0px` のように単位を付けて渡します。
 
 コンポーネントの中で `switcher` を使うときは、`switcher` のクラスを付けた要素の直下に項目を置きます。`switcher` が決めるのは直下の子の並び方と間隔だけで、子の中身には関与しません。この役割分担は「[10-2 コンポーネントの境界を守る](/components/boundaries/)」で説明した「配置は置く側が持つ」という考え方にもとづいています。コンポーネント側では、項目に幅や `margin` を指定せず、次の例のように各項目の見た目だけを書きます。
 
@@ -121,14 +121,15 @@ import switcherCss from '../../../demos/compositions/switcher/style.css?raw';
   }
 
   h2 {
-    font-size: calc(18 / 16 * 1rem);
+    font-size: calc(var(--text--subtitle--font-size) / 16 * 1rem);
+    line-height: var(--text--subtitle--leading);
   }
 }
 ```
 
 ### 閾値：`--_c--threshold`
 
-`--_c--threshold` は、列の最小幅で指定の列数を並べたときに必要な幅です。列が3つなら隙間は2つなので、「列の最小幅×列数＋列の間隔×（列数−1）」になります。デフォルトの3列・320px相当に、列の間隔として24px相当を渡すと、320×3＋24×2で1008px相当です。
+`--_c--threshold` は、列の最小幅で指定の列数を並べたときに必要な幅です。列が3つなら隙間は2つなので、「列の最小幅×列数＋列の間隔×（列数−1）」になります。デフォルトの3列・320px相当に、列の間隔として24pxを渡すと、320×3＋24×2で1008px相当です。
 
 閾値に列の間隔を含めているので、間隔を変えると閾値も変わります。間隔を広げたのに切り替わる幅が変わらなければ、閾値ちょうどの幅で列が最小幅を割り込みます。閾値を式で書いておけば、値を変えても「列の最小幅が守られる」という条件が保たれます。クエリの閾値を式で書く考え方は「[13-2 ブレイクポイントの決め方](/responsive/breakpoints/#rule-threshold-as-formula)」で説明しています。
 
@@ -162,7 +163,7 @@ import switcherCss from '../../../demos/compositions/switcher/style.css?raw';
 
 この節の列数は、どれも実際のブラウザで要素の幅を変えて確かめた値です。式を変えたときも、閾値の前後と、閾値より十分に広い幅の3点で列数を確かめておくと、括弧の位置の誤りに気付けます。
 
-次のデモには、`switcher` を2つ置いています。上は列数3、列の最小幅200px相当、間隔24px相当で、閾値は648px相当です。下は列数4、列の最小幅140px相当、間隔12px相当で、閾値は596px相当です。幅を672pxにすると下だけが4列になり、768px以上では両方が横に並びます。デモの本文には左右に24pxずつの余白があるので、要素の幅はデモの幅より48px狭く、672pxのときは624pxです。
+次のデモには、`switcher` を2つ置いています。上は列数3、列の最小幅200px相当、間隔24pxで、閾値は648px相当です。下は列数4、列の最小幅140px相当、間隔12pxで、閾値は596px相当です。幅を672pxにすると下だけが4列になり、768px以上では両方が横に並びます。デモの本文には左右に24pxずつの余白があるので、要素の幅はデモの幅より48px狭く、672pxのときは624pxです。
 
 <Demo
   title="閾値を境に、3列と1列、4列と1列が切り替わる switcher"
@@ -231,7 +232,7 @@ import switcherCss from '../../../demos/compositions/switcher/style.css?raw';
 
 `switcher` の `minmax()` の最小値は、列の幅の目安か `100%` のどちらかで、どちらも要素の幅を超えません。そのため、`min(100%, …)` で包まなくても、列が要素からはみ出すことはありません。
 
-ただし、列の幅は `minmax()` の最小値で決まり、中身の幅では広がりません。kiso.cssはルート要素に `overflow-wrap: anywhere` を指定しているので、長いURLは折り返されます。幅の決まった画像や表のように折り返せない中身は、列を押し広げずにセルの外へはみ出すので、コンポーネント側で `max-inline-size: 100%` などを指定して対処します。
+ただし、列の幅は `minmax()` の最小値で決まり、中身の幅では広がりません。kiso.cssはルート要素に `overflow-wrap: anywhere` を指定しているので、長いURLは折り返されます。画像は、kiso.cssの `max-inline-size: 100%` で列の幅に収まります。はみ出すのは表のように縮まない中身なので、「[11-15 表を組む](/layout-practice/tables/)」のように、スクロールする要素で包みます。
 
 `switcher` は、幅が親から決まる場所に置きます。`display: flex` の親の中で、幅を指定していないflexアイテムにすると、`100%` が中身の幅から決まるので、閾値の判定が意図どおりになりません。実際に試すと、中身の幅の1列になりました。flexアイテムにするなら、`flex-grow` などで幅を親から与えます。
 

@@ -3,11 +3,9 @@
     :scope {
       display: block grid;
       gap: 8px;
-
-      /* 上下の余白は、セクション自身の padding-block で持つ */
       padding-block: 48px;
       padding-inline: 16px;
-      background-color: var(--background--active);
+      background-color: var(--background--surface);
     }
   }
 
@@ -26,12 +24,8 @@
     :scope {
       display: block grid;
       gap: 8px;
-
-      /* 背景のないセクションも、同じく padding-block で持つ */
       padding-block: 48px;
       padding-inline: 16px;
     }
   }
 }
-
-/* ページの側は、セクションを間隔なしで縦に積むだけなので、何も書かない */

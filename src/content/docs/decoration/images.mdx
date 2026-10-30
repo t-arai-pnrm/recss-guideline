@@ -43,16 +43,19 @@ import comparisonSliderJs from '../../../demos/decoration/comparison-slider/scri
 
   &::after {
     content: "";
-    display: block;
+    display: block flow;
     padding-top: calc(9 / 16 * 100%);
+  }
+
+  & > ._image {
+    position: absolute;
+    inset: 0;
   }
 }
 
-.frame img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+._image {
+  inline-size: 100%;
+  block-size: 100%;
   object-fit: cover;
 }
 ```
@@ -101,13 +104,13 @@ import comparisonSliderJs from '../../../demos/decoration/comparison-slider/scri
 
 <Demo title="16:9の画像を正方形の枠に入れたときの、object-fit の違い" html={objectFitHtml} css={objectFitCss} variant="neutral" />
 
-デモでは、円を描いた16:9の画像を、`fill`、`cover`、`contain` の順に正方形の枠に入れています。`fill` では円が縦長の楕円に歪み、`cover` では画像の左右が切り取られ、`contain` では画像の上下に枠の灰色の背景が残ります。
+デモでは、円を描いた16:9の画像を、`fill`、`cover`、`contain` の順に正方形の枠に入れています。`fill` では円が縦長の楕円に歪み、`cover` では画像の左右が切り取られ、`contain` では画像の上下に枠の背景色が残ります。
 
 `cover` は、比率を保ったまま枠を覆うように拡大し、はみ出した部分を切り取ります。写真のサムネイルやメインビジュアルのように、枠を埋めることを優先する画像に向いています。`contain` は、画像全体が枠に収まるように縮めます。ロゴや図版のように、切り取られると困る画像に使います。
 
 私のテンプレートでは、ベーススタイルで `<img>` と `<video>` を `cover` にしています。`contain` が必要な画像だけ、コンポーネントで上書きします。切り取る位置は `object-position` で調整できます。人物の顔が写真の上のほうにあるなら、`object-position: 50% 20%` のように上寄りにすれば、顔が切れにくくなります。
 
-```css title="🙆‍♂ Recommended: 画像と動画は cover を既定にする" from="decoration/object-fit"
+```css title="🙆‍♂ Recommended: 画像と動画は cover を既定にする"
 @layer base {
   img,
   video {
@@ -338,7 +341,7 @@ Chromeで、前のデモの `<img>` を `<picture>` で包み、このCSSに変�
 
 ```js title="範囲の入力の値を、カスタムプロパティに書き込む"
 const root = document.querySelector('.scoped.comparison-slider');
-const range = root.querySelector('._range');
+const range = root.querySelector('input[type="range"]');
 
 const update = () => {
   root.style.setProperty('--comparison-slider--position', `${range.value}%`);
@@ -350,7 +353,7 @@ update();
 
 `input` イベントは、つまみを動かしている間も値が変わるたびに発生するので、境界はつまみに合わせて動きます。最後に一度 `update()` を呼ぶのは、再読み込みのときにブラウザが入力の値を復元し、HTMLの `value` と現在の値の食い違う場合に備えるためです。書き込むカスタムプロパティは、外から値を受け取る入り口なので、公開用の名前（`--comparison-slider--position`）にし、CSSの中では内部用の `--_position` に受けて使います。
 
-範囲の入力は、透明にして画像全体に重ねる作り方もありますが、本書では画像の下に置きます。重ねると画像のどこを押しても境界が動きますが、透明にしたつまみとフォーカスリングは見えなくなるので、境界の線やフォーカスの表示を `:has(._range:focus-visible)` などで描き直すことになります。強制カラーモードでの見え方も自分で確かめる必要があります。下に置けば、見えるラベル、左右の矢印キーでの操作、ブラウザのフォーカスリングが、標準の範囲の入力のまま手に入ります。
+範囲の入力は、透明にして画像全体に重ねる作り方もありますが、本書では画像の下に置きます。重ねると画像のどこを押しても境界が動きますが、透明にしたつまみとフォーカスリングは見えなくなるので、境界の線やフォーカスの表示を `:has(input:focus-visible)` などで描き直すことになります。強制カラーモードでの見え方も自分で確かめる必要があります。下に置けば、見えるラベル、左右の矢印キーでの操作、ブラウザのフォーカスリングが、標準の範囲の入力のまま手に入ります。
 
 <Demo title="範囲の入力で、重ねた2枚の画像の境界を動かす" html={comparisonSliderHtml} css={comparisonSliderCss} js={comparisonSliderJs} />
 

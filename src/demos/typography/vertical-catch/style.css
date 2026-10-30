@@ -7,8 +7,11 @@
     }
 
     ._hero {
-      display: block grid;
-      grid-template-columns: 1fr auto;
+      display: block flex;
+      reading-flow: flex-flow;
+
+      /* 縦書きの見出しを右から読ませるので、HTMLの順のまま右から並べる */
+      flex-direction: row-reverse;
       gap: 24px;
       align-items: start;
       padding: 24px;
@@ -16,14 +19,8 @@
       border-radius: var(--rounded--lg);
       background-color: var(--background--surface);
 
-      & > ._catch-text {
-        grid-column: 2;
-        grid-row: 1;
-      }
-
       & > ._lead-text {
-        grid-column: 1;
-        grid-row: 1;
+        flex-grow: 1;
       }
     }
 

@@ -58,7 +58,7 @@ sidebar:
 | `outline: none`、`outline: 0` | 消さずに、`:focus-visible` の二重のリングとして定義し直す | 挙動：キーボードで操作すると、フォーカスの位置が見えない | [`no-outline-none`](/reset/global-pitfalls/#rule-no-outline-none)、[`focus-ring-double`](/reset/base-styles/#rule-focus-ring-double) | AI |
 | `box-shadow` だけで描いたフォーカスリング | `CanvasText` の `outline` と `Canvas` の `box-shadow` を重ねる | 挙動：強制カラーモードでリングが消える | [`focus-ring-not-box-shadow-only`](/reset/base-styles/#rule-focus-ring-not-box-shadow-only) | AI |
 | `list-style: none` | `list-style-type: ""` | 挙動：SafariのVoiceOverがリストとして読み上げない | [`list-style-type-empty-string`](/reset/global-pitfalls/#rule-list-style-type-empty-string) | AI |
-| `html { scroll-behavior: smooth; }` | 動きを減らす設定がなく、`:target` があり、`:focus-visible` がないときだけ有効にする | 挙動：動きを減らす設定をしたユーザーにもアニメーションが適用される | [`no-global-smooth-scroll`](/reset/base-styles/#rule-no-global-smooth-scroll)、[`smooth-scroll-conditional`](/reset/base-styles/#rule-smooth-scroll-conditional) | AI |
+| `html { scroll-behavior: smooth; }` | 動きを減らす設定がなく、ページの読み込みが終わり（`[data-loaded="true"]`）、`:target` があり、`:focus-visible` がないときだけ有効にする | 挙動：動きを減らす設定をしたユーザーにもアニメーションが適用される | [`no-global-smooth-scroll`](/reset/base-styles/#rule-no-global-smooth-scroll)、[`smooth-scroll-conditional`](/reset/base-styles/#rule-smooth-scroll-conditional) | AI |
 
 ## 記法
 
@@ -96,15 +96,15 @@ sidebar:
 | `grid-template-areas` や `flex-direction: row-reverse` だけで並べ替える | 同じルールに `reading-flow` を指定する。まずHTMLの順番を読む順に合わせる | 挙動：キーボードと読み上げの順が、見た目の順とずれる | [`reading-flow-when-reordered`](/layout-practice/reading-flow/#rule-reading-flow-when-reordered) | AI |
 | 何にでも `width: 100%` | 書かない。ブロックレベルの要素は親の幅いっぱいに広がる | 挙動：左右のマージンや `box-sizing: content-box` と組み合わさると、親からはみ出す | [`no-redundant-width-100`](/design-mindset/maintainability/#rule-no-redundant-width-100) | AI |
 | 子要素に `height: 100%` | 親を `display: block grid` にして `stretch` に任せる | 挙動：親の高さが明示されていないと働かない | [`stretch-over-height-100`](/layout/sizing/#rule-stretch-over-height-100) | AI |
-| 子要素の `margin-bottom` と `:last-child { margin-bottom: 0; }` | 親の `gap` | 本書の方針 | [`gap-over-child-margin`](/layout-practice/spacing/#rule-gap-over-child-margin) | AI |
+| FlexboxやGridの子要素の `margin-bottom` と `:last-child { margin-bottom: 0; }` | 親の `gap` | 本書の方針 | [`gap-over-child-margin`](/layout-practice/spacing/#rule-gap-over-child-margin) | AI |
 | 見出しの `margin-bottom` と、段落の `margin-bottom` を `:last-child` で打ち消す書き方 | `& > * + *` や `& > :is(:heading, h1, h2, h3, h4, h5, h6) + *` で選んだ後ろの要素の `margin-block-start` | 挙動：要素が欠けたり並びが変わったりすると、余計な余白が残る | [`block-margin-with-sibling-combinator`](/layout-practice/spacing/#rule-block-margin-with-sibling-combinator) | AI |
 | `height: 400px` | 下限は `min-block-size`、上限は `max-block-size`、比率は `aspect-ratio` | 挙動：文字が増えたり大きくなったりすると、中身があふれる | [`min-block-size-over-fixed-height`](/layout-practice/defensive/#rule-min-block-size-over-fixed-height) | AI |
 | アイコンの `width: 24px; height: 24px;` | `inline-size` と `aspect-ratio: 1` | 本書の方針 | [`min-block-size-over-fixed-height`](/layout-practice/defensive/#rule-min-block-size-over-fixed-height) | AI |
-| `grid-template-columns: repeat(3, minmax(0, 1fr))` | `repeat(3, 1fr)` | 本書の方針 | [`fr-without-minmax-zero`](/layout-practice/defensive/#rule-fr-without-minmax-zero) | AI |
+| `grid-template-columns: repeat(3, minmax(0, 1fr))` | `repeat(3, 1fr)`。ベーススタイルで全称セレクタに `min-inline-size: 0` を指定している前提（[`global-min-inline-size-zero`](/reset/base-styles/#rule-global-min-inline-size-zero)） | 本書の方針 | [`fr-without-minmax-zero`](/layout-practice/defensive/#rule-fr-without-minmax-zero) | AI |
 | `minmax(360px, 1fr)` | `minmax(min(100%, 360px), 1fr)` | 挙動：コンテナが360pxより狭いと、はみ出す | [`minmax-min-capped-at-100-percent`](/layout-practice/defensive/#rule-minmax-min-capped-at-100-percent) | AI |
 | `overflow-x: hidden` | `overflow-x: clip` | 挙動：中の `position: sticky` が働かなくなる | [`overflow-clip-over-hidden`](/layout-practice/overflow/#rule-overflow-clip-over-hidden) | AI |
 | スクロールする要素の `align-content: center` | `align-content: safe center` | 挙動：中身がはみ出すと、先頭側がスクロールで戻れない位置に置かれる | [`safe-center-for-scrollable`](/layout-practice/overflow/#rule-safe-center-for-scrollable) | AI |
-| `top: 50%; left: 50%; transform: translate(-50%, -50%);` | `inset: 0; margin: auto;`。Gridの中なら `place-items: center` | 本書の方針 | [`absolute-centering-with-margin-auto`](/layout/positioning/#rule-absolute-centering-with-margin-auto) | AI |
+| `top: 50%; left: 50%; transform: translate(-50%, -50%);` | `inset: 0; margin: auto;` と、`inline-size` と `block-size`（`fit-content` など）。Gridの中なら `place-items: center` | 本書の方針 | [`absolute-centering-with-margin-auto`](/layout/positioning/#rule-absolute-centering-with-margin-auto) | AI |
 | カードの見出しの高さを `min-height` やJavaScriptでそろえる | サブグリッド（`grid-template-rows: subgrid`） | 本書の方針 | [`subgrid-for-aligned-rows`](/layout/grid-alignment/#rule-subgrid-for-aligned-rows) | AI |
 | 条件なしの `position: sticky` のヘッダー | `@media (height >= calc(600 / 16 * 1rem))` の中で固定する | 挙動：高さの低い画面や拡大した画面で、ヘッダーが画面の多くを覆う | [`sticky-header-height-query`](/layout-practice/sticky-header/#rule-sticky-header-height-query) | AI |
 | `scroll` イベントで、ヘッダーが留まったときにクラスを付ける | `container-type: scroll-state` と `@container scroll-state(stuck: block-start)` | 本書の方針 | [`scroll-state-for-sticky-styles`](/layout-practice/sticky-header/#rule-scroll-state-for-sticky-styles) | AI |
@@ -131,7 +131,7 @@ sidebar:
 
 | よく見かける書き方 | 本書の書き方 | 理由 | ルール | AI |
 | --- | --- | --- | --- | --- |
-| OSごとの和文フォントを並べたスタックや、`system-ui` から始まるスタック | 特に指定がなければ `font-family: sans-serif` | 本書の方針 | [`font-family-sans-serif`](/typography/fonts/#rule-font-family-sans-serif)、[`no-system-ui-for-japanese`](/typography/fonts/#rule-no-system-ui-for-japanese) | AI |
+| OSごとの和文フォントを並べたスタックや、`system-ui` から始まるスタック | 特に指定がなければ `font-family: sans-serif` | 挙動：`system-ui` から始めると、Windowsで和文が游ゴシックの画面表示用の書体になる | [`font-family-sans-serif`](/typography/fonts/#rule-font-family-sans-serif)、[`no-system-ui-for-japanese`](/typography/fonts/#rule-no-system-ui-for-japanese) | AI |
 | `line-height: 1` | ベースは1.5以上を保ち、見出しは用途に合わせて狭める（和文で1.25〜1.5ほど）。上下の余白は `text-box-trim` で取り除く | 挙動：改行が起きたとき、行が重なって読めなくなることがある | [`no-line-height-one`](/typography/line-height/#rule-no-line-height-one)、[`text-box-trim-for-half-leading`](/typography/line-height/#rule-text-box-trim-for-half-leading) | AI |
 | 本文の `font-feature-settings: "palt"` | 本文はベタ組みにし、`palt` は見出しに限る | 本書の方針 | [`solid-setting-for-body-text`](/typography/japanese-typesetting/#rule-solid-setting-for-body-text)、[`palt-for-headings`](/typography/japanese-typesetting/#rule-palt-for-headings) | AI |
 | `word-break: break-all`、`overflow-wrap: break-word` | `word-break` は初期値のままにし、`overflow-wrap: anywhere` | 挙動：`break-all` は、次の行に移せば収まる英単語まで途中で分ける | [`overflow-wrap-over-word-break`](/typography/size-and-line-breaks/#rule-overflow-wrap-over-word-break) | AI |

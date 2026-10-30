@@ -41,6 +41,7 @@ DOMに追加した要素も `@starting-style` の値から動き始めますが�
   :scope {
     --_scale-from: 1;
 
+    z-index: var(--z--top);
     transform-origin: 50% 100%;
     transition-duration: var(--duration--base);
     transition-property: opacity, scale, display, overlay;
@@ -218,7 +219,7 @@ Firefoxは `display: none` へのトランジションに対応していませ�
 
 <Baseline id="interpolate-size" />
 
-`interpolate-size` に対応しているのは、Chrome系のブラウザだけです。ほかのブラウザでは高さが一瞬で切り替わり、不透明度だけが変化しますが、開閉の機能は損なわれません。高さを動かすとレイアウトの計算が毎フレーム起きますが、アコーディオンでは開閉の位置関係を伝えるために許容します。レイアウトを起こす動きの負荷は、「[18-10 動きの負荷を抑える](/motion/performance/)」で説明しています。
+`interpolate-size` に対応しているのは、Chrome系のブラウザだけです。ほかのブラウザでは高さが一瞬で切り替わり、開くときは不透明度だけが変化します。Firefoxは `content-visibility` のトランジションに対応していないので、閉じるときは一瞬で消えます。どちらの場合も、開閉の機能は損なわれません。高さを動かすとレイアウトの計算が毎フレーム起きますが、アコーディオンでは開閉の位置関係を伝えるために許容します。レイアウトを起こす動きの負荷は、「[18-10 動きの負荷を抑える](/motion/performance/)」で説明しています。
 
 高さを補間する方法には、`calc-size()` もあります。`block-size: calc-size(auto, size)` のように、補間したい宣言ごとに書く関数です。対応しているのは、`interpolate-size` と同じくChrome系のブラウザだけです。未対応の環境では宣言ごと無視されるので、多くの場合は直前に普通の値を書いて保険にします。`:root` に一度書けば済む `interpolate-size` より記述が増えるので、本書は現状では採用していません。
 

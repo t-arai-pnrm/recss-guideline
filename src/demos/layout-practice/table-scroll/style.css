@@ -9,6 +9,22 @@
       background-color: var(--background--surface);
       isolation: isolate;
       scrollbar-gutter: stable;
+
+      & thead th {
+        position: sticky;
+        inset-block-start: 0;
+      }
+
+      /* 縦と横に留めたセルが重なるのは左上の角だけなので、このセルだけを前に出す */
+      & thead th:first-child {
+        inset-inline-start: 0;
+        z-index: var(--z--forwards);
+      }
+
+      & tbody th {
+        position: sticky;
+        inset-inline-start: 0;
+      }
     }
 
     table {
@@ -41,22 +57,15 @@
 
     th {
       &:is(thead *) {
-        position: sticky;
-        inset-block-start: 0;
         border-block-end: 2px solid var(--border--strong);
         background-color: var(--background--base);
       }
 
-      /* 左上の角のセルは、縦にも横にも留めて、ほかの留めたセルより前に出す */
       &:is(thead *):first-child {
-        inset-inline-start: 0;
-        z-index: var(--z--forwards);
         border-inline-end: 1px solid var(--border--base);
       }
 
       &:is(tbody *) {
-        position: sticky;
-        inset-inline-start: 0;
         border-inline-end: 1px solid var(--border--base);
         background-color: var(--background--surface);
       }

@@ -1,6 +1,6 @@
 # AIが誤りやすいルール
 
-- ガイドラインのバージョン: 0.82.0（2026-10-30 生成）
+- ガイドラインのバージョン: 0.83.0（2026-10-30 生成）
 - ルールの数: 299
 
 AIが生成するコードで特に誤りやすいルールです。CSSを書く前とレビューの前に、必ず確認してください。1件1行で、強度とルールの本文と ID だけを並べています。理由と補足は、章ごとのファイル（`references/<章>.md`）を ID で検索して読んでください。
@@ -124,7 +124,7 @@ AIが生成するコードで特に誤りやすいルールです。CSSを書く
 ## 第9章 記法の規約（references/09-notation.md）
 
 - 【必須】コンポーネントの子要素のクラス名は、`_` で始まる kebab-case にする（例：`._main-link`、`._nav-links`）。（`child-class-underscore`）
-- 【推奨】1つの要素に種類の違うクラスを付けるときは、ルート、子要素、コンポジション、パターン、ユーティリティの順に並べ、種類の境目を `|` で区切る（例：`class="_tags | cluster"`）。（`group-classes-with-pipe`）
+- 【推奨】1つの要素に種類の違うクラスを付けるときは、ルート、子要素、コンポジション、パターン、ユーティリティの順に並べ、種類の境目を `|` で区切る（例：`class="_body | stack"`）。（`group-classes-with-pipe`）
 - 【必須】自分で付けて値として使う名前（`@keyframes`、グリッドの線とエリア、アンカー、スタイルクエリの値）は、`--` で始める。（`dashed-ident-names`）
 - 【推奨】クラス名とカスタムプロパティの名前は、単語を省略せずに書く（`._btn` ではなく `._button`、`._ttl` ではなく `._title`）。省略してよいのは、`img` や `nav` のように Web 標準で使われている略語と、`cta` のようにプロジェクトの中で浸透している略語だけにする。（`no-abbreviation`）
 - 【必須】`inner`、`outer`、`container` を名前に使うときは、`._section-inner`、`._card-outer`、`._list-container` のように、必ず「何の」を併記する（`._inner` だけにしない）。（`inner-outer-names`）
@@ -204,7 +204,7 @@ AIが生成するコードで特に誤りやすいルールです。CSSを書く
 - 【必須】スクロールのラッパーで包んだ表の列の見出しを `position: sticky` で留めるときは、ラッパーに `max-block-size` を指定して、ラッパーの中で縦にスクロールさせる。（`sticky-table-header-needs-block-limit`）
 - 【必須】表の見出しのセルを `position: sticky` で留めるときは、表に `border-collapse: separate` と `border-spacing: 0` を指定し、枠線を各セルに持たせる。（`table-sticky-border-separate`）
 - 【推奨】数値の列のセルは、列の見出しのセルも含めて `text-align: end` で末尾に揃え、表に `font-variant-numeric: tabular-nums` を指定する。（`numeric-cells-tabular-end`）
-- 【推奨】1行で打ち切るときは、`text-overflow: ellipsis` に `white-space: nowrap` と `overflow-inline: clip` を組み合わせる。（`ellipsis-with-nowrap-and-clip`）
+- 【推奨】1行で打ち切るときは、`text-overflow: ellipsis` に `white-space: nowrap` と `overflow-x: clip` を組み合わせる。（`ellipsis-with-nowrap-and-clip`）
 - 【禁止】金額、数量、日付、型番のような数値を、`text-overflow` や行数の制限で切り詰めない。（`no-truncate-numbers`）
 - 【推奨】読み込み中の表示（スケルトン）は読み込み後の内容と同じ寸法にし、画像の枠は `aspect-ratio`、文字の行は `lh` 単位で場所を取る。（`skeleton-matches-final-size`）
 
@@ -216,7 +216,7 @@ AIが生成するコードで特に誤りやすいルールです。CSSを書く
 - 【推奨】子を両端に分けて置くときは、`cluster` に `--cluster--justification: space-between` を渡さず、`apart` を使う。（`cluster-apart-for-two-ends`）
 - 【推奨】`apart` は役割の違う2つのまとまりを両端に分けるときに使い、片側に複数の要素を置くときは1つの要素に包む。（`apart-for-two-groups`）
 - 【必須】`switcher` の列の幅の目安は「（100% − 列の間隔 ×（列数 − 1））÷ 列数」で計算する。（`switcher-preferred-width-formula`）
-- 【必須】閾値などの `calc()` で長さと足し合わせる間隔のデフォルト値は、単位のない `0` ではなく `0px` と書く。（`switcher-gap-default-with-unit`）
+- 【必須】閾値などの `calc()` で長さと足し合わせる間隔は、デフォルト値も使う側が渡す値も、単位のない `0` ではなく `0px` と書く。（`switcher-gap-default-with-unit`）
 - 【必須】`sidebar` の直接の子は2つだけにし、それぞれに `.main-column` と `.side-column` を付ける。（`sidebar-two-direct-children`）
 - 【推奨】`sidebar` のサイドを左右どちらに置くかは HTML の順番で決め、`flex-direction: row-reverse` や `order` で見た目だけを入れ替えない。（`sidebar-side-position-by-source-order`）
 - 【推奨】同じ形のアイテムを並べる一覧で列の数に上限があるときは、メディアクエリで列数を切り替えず、`grid` の `--grid--column-min-width` と `--grid--column-max-count` で列の最小幅と最大数を渡す。（`grid-max-count-over-queries`）
@@ -271,7 +271,7 @@ AIが生成するコードで特に誤りやすいルールです。CSSを書く
 - 【非推奨】和文には `text-wrap: pretty` を指定しない。（`no-text-wrap-pretty-for-japanese`）
 - 【推奨】`word-break` は初期値のままにし、長い単語や URL のはみ出しは `overflow-wrap: anywhere` で防ぐ。（`overflow-wrap-over-word-break`）
 - 【非推奨】見た目を整えるための改行に `<br>` を使わない。（`no-br-for-visual-breaks`）
-- 【推奨】行数を制限するときは、`-webkit-line-clamp` に `display: -webkit-box` と `-webkit-box-orient: block-axis` を組み合わせ、はみ出しは `overflow-block: clip` で隠す。（`line-clamp-with-overflow-clip`）
+- 【推奨】行数を制限するときは、`-webkit-line-clamp` に `display: -webkit-box` と `-webkit-box-orient: block-axis` を組み合わせ、はみ出しは `overflow-y: clip` で隠す。（`line-clamp-with-overflow-clip`）
 
 ## 第15章 色（references/15-color-media.md）
 
@@ -281,9 +281,9 @@ AIが生成するコードで特に誤りやすいルールです。CSSを書く
 - 【推奨】ダークモードの色はセマンティクスのトークンに `light-dark()` で持たせ、コンポーネントに `prefers-color-scheme` のメディアクエリを書かない。（`light-dark-in-semantic-tokens`）
 - 【必須】コンポーネントに `color-scheme` を指定するときは、同じ要素で `color` と `background-color` をセマンティクスのトークンで指定し直す。（`redeclare-colors-with-color-scheme`）
 - 【必須】枠線を消すときは、`border: none` ではなく `border-color: transparent` で透明にする。（`transparent-border-over-none`）
-- 【必須】`mask-image` や `clip-path` で切り抜き、`background-color` で塗る図形は、`currentColor` を直接指定せず、強制カラーモードでシステムカラーに切り替わるカスタムプロパティ（`--background--current`）から色を受け取る。（`background-current-for-shapes`）
+- 【必須】`mask-image` や `clip-path` で切り抜き、文字色の代わりに `background-color` で塗るアイコンや記号は、`currentColor` を直接指定せず、強制カラーモードでシステムカラーに切り替わるカスタムプロパティ（`--background--current`）から色を受け取る。（`background-current-for-shapes`）
 - 【必須】本文の中のリンク、フォーカスやホバーの状態、入力エラーのような情報を、色の違いだけで伝えない。（`no-color-only-information`）
-- 【必須】文字と背景のコントラスト比は、WCAG 2.1 の AA（通常の文字で 4.5:1 以上、大きな文字で 3:1 以上）を満たす。（`text-contrast-aa`）
+- 【必須】文字と背景のコントラスト比は、WCAG 2.2 の AA（通常の文字で 4.5:1 以上、大きな文字で 3:1 以上）を満たす。（`text-contrast-aa`）
 
 ## 第16章 画像・装飾（references/16-decoration.md）
 

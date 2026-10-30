@@ -26,8 +26,8 @@
         z-index: var(--z--backwards);
         inline-size: 160px;
         aspect-ratio: 1;
-        border-radius: 50%;
-        background-color: color-mix(in oklab, var(--foreground--accent) 24%, var(--background--raised));
+        border-radius: var(--rounded--full);
+        background-color: color-mix(in oklab, var(--foreground--muted) 24%, var(--background--raised));
       }
 
       & > * + * {

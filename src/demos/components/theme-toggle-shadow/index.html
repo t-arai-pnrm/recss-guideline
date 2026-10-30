@@ -1,8 +1,8 @@
 <template id="theme-toggle-template">
   <style>
     :host {
-      --_background: var(--background--base);
-      --_background--hocus: var(--background--surface);
+      --_background: transparent;
+      --_background--hocus: var(--background--hover);
 
       display: block flow;
     }
@@ -10,7 +10,7 @@
     button {
       padding: 8px;
       border: 1px solid currentColor;
-      border-radius: 8px;
+      border-radius: var(--rounded--md);
       background-color: var(--_background);
 
       /* ページの kiso.css の color: unset と font: unset は届かないので、ここで継承させる */
@@ -33,15 +33,14 @@
       margin: revert;
       padding: 16px;
       border: 1px solid currentColor;
-      border-radius: 8px;
-      background-color: var(--_background);
+      border-radius: var(--rounded--lg);
+      background-color: var(--background--raised);
       color: inherit;
 
-      /* 対応する環境では、ボタンの下に左端をそろえて出す */
       @supports (position-area: block-end span-inline-end) {
         position-area: block-end span-inline-end;
         margin-block: 8px;
-        margin-inline: 0;
+        margin-inline: unset;
       }
     }
 

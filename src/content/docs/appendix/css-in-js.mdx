@@ -116,6 +116,14 @@ Vueは、`<style scoped>` のセレクタの末尾に部品ごとの `data-v-…
     display: block grid;
     gap: 16px;
   }
+
+  article {
+    border: 1px solid;
+  }
+
+  ._title {
+    font-weight: var(--font-weight--bold);
+  }
 }
 
 @scope (.scoped.news-card) to (.scoped) {
@@ -135,7 +143,7 @@ Vueは、`<style scoped>` のセレクタの末尾に部品ごとの `data-v-…
 </ul>
 ```
 
-ルートは、Vueでは部品のテンプレートの要素がそのまま範囲になり、本書では `@scope` の前置きの `.scoped.<名前>` で指定します。下限は、Vueでは子の部品のルートの内側にあり、本書では `to (.scoped)` に当てはまる子の部品のルートそのものです。下限の要素はスコープの外なので、`news-list` のルールは `news-card` のルートにも当たりません。Vueに移植するときは、親の部品のセレクタが子の部品のルートにも当たるようになるので、セレクタを書き換えるときに、子のルートと同じクラスを親が選んでいないかを確かめます。スロットの内容も、受け持つ側が逆になります。Vueは、子の部品のスロットに渡した内容を、渡した親の部品のものとして扱うので、子の `scoped` のスタイルはデフォルトでは当たらず、当てるには `:slotted()` を使います。本書の書き方では、スロットの内容は子の部品のルートの内側に描画されるので、子の `@scope` が当たり、親の `@scope` は下限で止まります。
+ルートは、Vueでは部品のテンプレートの要素がそのまま範囲になり、本書では `@scope` の前置きの `.scoped.<名前>` で指定します。下限は、Vueでは子の部品のルートの内側にあり、本書では `to (.scoped)` に当てはまる子の部品のルートそのものです。下限の要素はスコープの外なので、`news-list` の `article` と `._title` のルールは、`news-card` のルートにも、その中の見出しにも当たりません。Vueの例で親の `.card` が子のルートに枠線を付けたのとは、ここが違います。Vueに移植するときは、親の部品のセレクタが子の部品のルートにも当たるようになるので、セレクタを書き換えるときに、子のルートと同じクラスを親が選んでいないかを確かめます。スロットの内容も、受け持つ側が逆になります。Vueは、子の部品のスロットに渡した内容を、渡した親の部品のものとして扱うので、子の `scoped` のスタイルはデフォルトでは当たらず、当てるには `:slotted()` を使います。本書の書き方では、スロットの内容は子の部品のルートの内側に描画されるので、子の `@scope` が当たり、親の `@scope` は下限で止まります。
 
 置き換えたときは、詳細度の変わり方に注意が要ります。Vueの `scoped` は、`.example` を `.example[data-v-f3f3eg9]` のように属性セレクタを足して変換するので、詳細度が属性セレクタ1つ分上がります。Astroも、デフォルトの設定では `data-astro-cid-*` の属性セレクタを足すので、同じように上がります。ただし、設定 `scopedStyleStrategy` を `"where"` にすれば、`:where()` で包んで詳細度を変えません。
 
@@ -159,7 +167,7 @@ Vueは、`<style scoped>` のセレクタの末尾に部品ごとの `data-v-…
 ```
 
 ```html
-<article class="scoped promo-card" style="--promo-card--background: var(--color--accent--600)">…</article>
+<article class="scoped promo-card" style="--promo-card--background: var(--background--inverse)">…</article>
 ```
 
 使う側は、`style` 属性で `--promo-card--background` に色を渡すだけです。部品は、渡された値を内部プロパティ `--_background` に受けて使い、何も渡されなければデフォルトの背景色を使います。文字色は、相対カラー構文と `sign()` で背景の明度から黒か白に決めているので、背景色を変えるたびに文字色を指定し直す必要はありません（[15-3 背景から文字色を決める](/color-media/contrast-text/)）。

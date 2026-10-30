@@ -1,8 +1,8 @@
 # 第13章 レスポンシブデザイン：ルール
 
-- ガイドラインのバージョン: 0.82.0（2026-10-30 生成）
+- ガイドラインのバージョン: 0.83.0（2026-10-30 生成）
 - ルールの数: 44
-- 本文: 約14.3万字
+- 本文: 約14.1万字
 - 読む条件: @media、@container、ブレイクポイント、画面幅やコンテナの幅による切り替え、ナビゲーションの折りたたみ、safe-area、画面の幅で変える clamp() の区間、progress()
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
@@ -12,15 +12,15 @@
 
 ## この章の節
 
-- `responsive` 第13章 レスポンシブデザイン（約8,600字）https://t-arai-pnrm.github.io/recss-guideline/responsive/
-- `responsive/escalation` 13-1 検討する順番（約8,500字）https://t-arai-pnrm.github.io/recss-guideline/responsive/escalation/
-- `responsive/breakpoints` 13-2 ブレイクポイントの決め方（約1.7万字）https://t-arai-pnrm.github.io/recss-guideline/responsive/breakpoints/
+- `responsive` 第13章 レスポンシブデザイン（約10,000字）https://t-arai-pnrm.github.io/recss-guideline/responsive/
+- `responsive/escalation` 13-1 検討する順番（約8,600字）https://t-arai-pnrm.github.io/recss-guideline/responsive/escalation/
+- `responsive/breakpoints` 13-2 ブレイクポイントの決め方（約1.1万字）https://t-arai-pnrm.github.io/recss-guideline/responsive/breakpoints/
 - `responsive/container-size-queries` 13-3 コンテナサイズクエリ（約2.2万字）https://t-arai-pnrm.github.io/recss-guideline/responsive/container-size-queries/
 - `responsive/container-units-and-side-effects` 13-4 コンテナの副作用とコンテナ単位（約1.5万字）https://t-arai-pnrm.github.io/recss-guideline/responsive/container-units-and-side-effects/
 - `responsive/media-queries` 13-5 メディアクエリ（約1.4万字）https://t-arai-pnrm.github.io/recss-guideline/responsive/media-queries/
 - `responsive/min-viewport-width` 13-6 375px未満の画面で配置を保つ例外（約7,400字）https://t-arai-pnrm.github.io/recss-guideline/responsive/min-viewport-width/
 - `responsive/design-comp-pattern` 13-7 カンプの幅で全体を拡大・縮小しない（約8,300字）https://t-arai-pnrm.github.io/recss-guideline/responsive/design-comp-pattern/
-- `responsive/safe-area` 13-8 セーフエリアに対応する（約1.6万字）https://t-arai-pnrm.github.io/recss-guideline/responsive/safe-area/
+- `responsive/safe-area` 13-8 セーフエリアに対応する（約1.7万字）https://t-arai-pnrm.github.io/recss-guideline/responsive/safe-area/
 - `responsive/overflow-collapse` 13-9 収まらなくなったらナビゲーションを折りたたむ（約1.4万字）https://t-arai-pnrm.github.io/recss-guideline/responsive/overflow-collapse/
 - `responsive/fluid-range` 13-10 流体的な値の区間をそろえる（約1.2万字）https://t-arai-pnrm.github.io/recss-guideline/responsive/fluid-range/
 
@@ -160,7 +160,7 @@ https://t-arai-pnrm.github.io/recss-guideline/responsive/media-queries/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/responsive/media-queries/#rule-any-pointer-not-width-for-input
 - 【推奨・実装上の判断】薄い境界線や補助テキストの色で区別や意味を伝えている部品は、`@media (prefers-contrast: more)` の中で色を濃くする。（`prefers-contrast-more-for-faint-borders`）
   - 理由: OS でコントラストを上げる設定にしているユーザーが、薄い区切りや補助テキストを読み取れる状態を保つため。
-  - 補足: `prefers-contrast: custom` は強制カラーモードの配色に対応する値で、色は上書きされるため指定しない。強制カラーモードの扱いは第15章で説明する。
+  - 補足: `prefers-contrast: custom` は強制カラーモードの配色に対応する値で、色は上書きされるため指定しない。強制カラーモードの扱いは第15章で説明する。入力欄の枠線のように UI 部品の範囲を示す線は、この設定と関係なく、隣り合う色と 3:1 以上の差にする（第15章）。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/responsive/media-queries/#rule-prefers-contrast-more-for-faint-borders
 - 【推奨・実装上の判断】半透明の背景や `backdrop-filter` の上に文字を置く部品は、`@media (prefers-reduced-transparency: reduce)` の中で背景を不透明にする。（`reduced-transparency-opaque-background`）
   - 理由: OS で透明度を下げる設定にしているユーザーが、背景に左右されずに文字を読める状態を保つため。

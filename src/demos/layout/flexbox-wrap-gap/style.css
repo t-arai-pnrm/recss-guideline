@@ -12,7 +12,6 @@
     }
 
     ._tag {
-      /* タグの中では折り返さず、中身の幅より縮めない */
       min-inline-size: fit-content;
       padding-block: 4px;
       padding-inline: 12px;
@@ -20,7 +19,6 @@
       background-color: var(--background--accent-subtle);
       font-size: calc(var(--text--body-compact--font-size) / 16 * 1rem);
       line-height: var(--text--body-compact--leading);
-      white-space: nowrap;
     }
   }
 }

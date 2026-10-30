@@ -64,6 +64,7 @@ Sassに慣れていると、HTMLの階層をそのままネストで写したく
 @scope (.scoped.site-nav) to (.scoped) {
   ul {
     display: block flex;
+    flex-wrap: wrap;
 
     & > * {
       flex-grow: 1;
@@ -72,7 +73,7 @@ Sassに慣れていると、HTMLの階層をそのままネストで写したく
 
   a {
     &[aria-current="page"] {
-      font-weight: 700;
+      font-weight: var(--font-weight--bold);
     }
   }
 }
@@ -129,9 +130,9 @@ Stylelintには、この数え方に合う設定がありません。標準の `
 
 ## 条件付きのアットルールの置き場所
 
-`@media` と `@container` を `@scope` の直下にまとめて書くと、上書きできない場合があります。例として、狭い画面ではナビゲーションのリンクを隠し、広い画面になったら表示するヘッダーを見てみます。
+`@media` と `@container` を `@scope` の直下にまとめて書くと、上書きできない場合があります。例として、ナビゲーションのリンクを狭い画面では縦に積み、広い画面では横に並べるヘッダーを見てみます。
 
-```css title="🙅‍♂ Not Recommended: 条件のブロックを @scope の先頭にまとめる" issue="convention"
+```css title="🙅‍♂ Not Recommended: 条件のブロックを @scope の先頭にまとめる" issue="behavior"
 /* 🙅‍♂ Not Recommended */
 @scope (.scoped.site-header) to (.scoped) {
   @media (width >= calc(640 / 16 * 1rem)) {
@@ -141,12 +142,12 @@ Stylelintには、この数え方に合う設定がありません。標準の `
   }
 
   ul {
-    display: none;
+    display: block grid;
   }
 }
 ```
 
-このCSSでは、広い画面でもリンクは表示されません。2つの `ul` のルールは、同じレイヤーの同じスコープにあり、詳細度はどちらも `0.0.1` です。`@media` は条件を付けるだけで、詳細度を上げません。条件が同じなら後に書いたルールが勝つので、画面の幅にかかわらず `display: none` が残ります。
+このCSSでは、広い画面でもリンクは縦に積まれたままです。2つの `ul` のルールは、同じレイヤーの同じスコープにあり、詳細度はどちらも `0.0.1` です。`@media` は条件を付けるだけで、詳細度を上げません。条件が同じなら後に書いたルールが勝つので、画面の幅にかかわらず `display: block grid` が残ります。
 
 誰もこんな順番で書かないと思うかもしれませんが、この順番はStylelintの並び順の設定から生まれます。本書が使っている `order/order` の設定は、ブロックの中の並びを「宣言 → `@supports` → `@container` → `@media` → ネストしたルール」と決めています。この決まりはセレクタの中だけでなく、`@scope` の中身にも当てはまります。条件のブロックを `@scope` の直下へ書くと、自動修正はそれを先頭へ移し、上書きの順番を逆転させます。
 
@@ -154,7 +155,7 @@ Stylelintには、この数え方に合う設定がありません。標準の `
 
 | 書き方 | 結果 |
 |---|---|
-| `@scope` の先頭に `@media` を置き、後ろに元のルールを書く | `none`（上書きできない） |
+| `@scope` の先頭に `@media` を置き、後ろに元のルールを書く | `grid`（上書きできない） |
 | 元のルールの中に `@media` を書く | `flex`（上書きできる） |
 | 元のルールの後ろに `@media` を置く | `flex`（上書きできる） |
 
@@ -163,7 +164,7 @@ Stylelintには、この数え方に合う設定がありません。標準の `
 ```css title="🙆‍♂ Recommended: 条件をセレクタの中に書く" from="notation/conditions-inside"
 @scope (.scoped.site-header) to (.scoped) {
   ul {
-    display: none;
+    display: block grid;
 
     @media (width >= calc(640 / 16 * 1rem)) {
       display: block flex;
@@ -176,22 +177,22 @@ Stylelintには、この数え方に合う設定がありません。標準の `
 
 本書では、この規約をStylelintの独自ルール `book/conditions-inside-rules` で検査しています。`@media` と `@container` がセレクタの中にないと、エラーになります。`@scope` の直下だけでなく、ファイルの直下に書いた `@media` も対象です。
 
-次の2つのデモは、同じHTMLに、条件の置き場所だけが違うCSSを当てたものです。幅を768px以上にすると、上のデモではメニューのボタンが消えてリンクが並びます。下のデモではボタンは消えますが、リンクは表示されないままです。
+次の2つのデモは、同じHTMLに、条件の置き場所だけが違うCSSを当てたものです。幅を768px以上にすると、上のデモではリンクが横に並び、サイト名の文字が大きくなります。下のデモでは、サイト名の文字は大きくなりますが、リンクは縦に積まれたままです。
 
 <Demo title="条件をセレクタの中に書いたヘッダー" html={insideHtml} css={insideCss} />
 
 <Demo title="条件を @scope の先頭にまとめたヘッダー" html={outsideHtml} css={outsideCss} variant="not-recommended" />
 
-下のデモでも、ボタンは正しく消えます。`button` の元のルールは `display` を指定していないので、先頭の条件のブロックが負けないためです。上書きできないのは、元のルールが同じプロパティを指定しているときだけです。一部の指定だけが適用されなくなるので、見落としやすくなります。
+下のデモでも、サイト名の文字は大きくなります。`p` の元のルールは `font-size` を指定していないので、先頭の条件のブロックが負けないためです。上書きできないのは、元のルールが同じプロパティを指定しているときだけです。一部の指定だけが適用されなくなるので、見落としやすくなります。
 
 ## 条件のブロックの中の宣言
 
 `@scope` の直下に置いた条件のブロックには、もう1つ問題があります。セレクタを書かずに、条件のブロックの中へ宣言をじかに書く書き方です。
 
-```css title="🙅‍♂ Not Recommended: 条件のブロックの中に宣言をじかに書く" issue="convention"
+```css title="🙅‍♂ Not Recommended: 条件のブロックの中に宣言をじかに書く" issue="behavior"
 /* 🙅‍♂ Not Recommended */
 @scope (.scoped.hero-section) to (.scoped) {
-  @container style(--hero-section--size: large) {
+  @container style(--hero-section--size: --large) {
     min-block-size: calc(800 / 16 * 1rem);
 
     & ._title {
@@ -205,7 +206,7 @@ Stylelintには、この数え方に合う設定がありません。標準の `
 }
 ```
 
-Chromeで確かめたところ、この書き方では、条件のブロックの中の宣言がすべて破棄されました。さらに、直後の `& ._title` のルールも一緒に消え、残ったのは `._lead` のルールだけでした。条件を挟まずに `@scope` の直下へ宣言を書いた場合はルート要素に適用されるので、条件のブロックの中だけで起きる現象です。
+Chromeで確かめたところ、この書き方では、条件のブロックの中の宣言がすべて破棄されました。さらに、直後の `& ._title` のルールも一緒に消え、残ったのは `._lead` のルールだけでした。条件を挟まずに `@scope` の直下へ宣言を書いた場合は、Chromeではルート要素に適用されたので、条件のブロックの中だけで起きる現象です。本書はルートの宣言を `:scope` の中に書くので、`@scope` の直下へ宣言を書くこと自体をしません。
 
 私の案件でも、この書き方をしたページで、ヒーローの高さや背景、カルーセルの配置など、主要なスタイルがまとめて適用されなくなったことがあります。Stylelintの標準のルールでは検出できず、ビルドも通ったので、ブラウザで確認するまで気づけませんでした。条件をセレクタの中に書く規約を守っていれば、この書き方は `book/conditions-inside-rules` のエラーになります。
 

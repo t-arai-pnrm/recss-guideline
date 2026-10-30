@@ -68,7 +68,7 @@ AIが生成するコードにも、この誤解が表れます。ブロックの
 
 <Baseline id="two-value-display" name="display の2値構文" />
 
-内側の値が `flow` か `flow-root` の要素は、ブロックコンテナと呼ばれ、子を通常フローで並べます。外側の値は、親が通常フローのときだけ意味を持ちます。親がFlexboxやGridなら、`<span>` もブロックのように大きさを持つアイテムになり、外側の値は無視されます。
+外側の値が `block` で内側の値が `flow` の要素と、内側の値が `flow-root` の要素は、ブロックコンテナと呼ばれ、子を通常フローで並べます。`display: inline`（外側は `inline`、内側は `flow`）の要素はブロックコンテナではなく、インラインボックスとして中身を行の中に流します。外側の値は、親が通常フローのときだけ意味を持ちます。親がFlexboxやGridなら、`<span>` もブロックのように大きさを持つアイテムになり、外側の値は無視されます。
 
 ```css title="🙆‍♂ Recommended: 外側と内側を2値構文で書き分ける" from="layout/normal-flow-outer-display"
 ._label {
@@ -94,9 +94,9 @@ AIが生成するコードにも、この誤解が表れます。ブロックの
 
 <Demo title="画像をベースラインにそろえると、下に隙間ができる" html={baselineGapHtml} css={baselineGapCss} variant="neutral" />
 
-`vertical-align: middle` は、要素の中心を、親のベースラインからx-height（小文字の「x」の高さ）の半分だけ上の位置に合わせる指定です。フォントの寸法で位置が決まるので、行の見た目の中央と一致しないことがあります。アイコンと文字の中央をそろえたいときは、親をFlexboxにして `align-items: center` を使います。
+`vertical-align: middle` は、要素の中心を、親のベースラインからx-height（小文字の「x」の高さ）の半分だけ上の位置に合わせる指定です。フォントの寸法で位置が決まるので、行の見た目の中央と一致しないことがあります。ラベルが1行に収まるなら、アイコンと文字の中央は、親をFlexboxにして `align-items: center` でそろえます。折り返すおそれのあるラベルでは、アイコンを1行目の中央に置きます。`align-items: center` では、アイコンが2行の中央に移るからです（[`icon-first-line-with-lh`](/layout-practice/icon-alignment/#rule-icon-first-line-with-lh)）。
 
-```css title="🙆‍♂ Recommended: アイコンと文字の中央を Flexbox でそろえる"
+```css title="🙆‍♂ Recommended: 1行に収まるラベルのアイコンと文字の中央を Flexbox でそろえる"
 ._link {
   display: inline flex;
   align-items: center;
@@ -137,8 +137,11 @@ AIが生成するコードにも、この誤解が表れます。ブロックの
 ```css title="🙆‍♂ Recommended: 行ごとの断片を独立した箱として描く"
 ._marker {
   padding-inline: 4px;
-  border-radius: 4px;
+  border-radius: var(--rounded--sm);
+
+  /* 蛍光ペンの黄色はテーマで変えないので、ダークモードでも読めるように文字色も固定する */
   background-color: oklch(92% 0.08 90deg);
+  color: oklch(20% 0 0deg);
 
   /* Safari は接頭辞なしの box-decoration-break に対応していない */
   /* stylelint-disable-next-line property-no-vendor-prefix */
@@ -168,6 +171,7 @@ AIが生成するコードにも、この誤解が表れます。ブロックの
 ```css title="🙆‍♂ Recommended: Flexbox にして gap で間隔を決める"
 .tag-list {
   display: block flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 ```
@@ -221,7 +225,7 @@ AIが生成するコードにも、この誤解が表れます。ブロックの
 
 働かない指定は、残しておくと読む人を誤らせます。`gap` が書いてあれば子の間隔はそこで決まっていると読まれますが、実際の間隔は子の `margin` です。FlexboxやGridでだけ働くプロパティは、`display` を `flex` か `grid` にした要素にだけ書きます（[`no-flex-grid-props-in-flow`](/layout/normal-flow/#rule-no-flex-grid-props-in-flow)）。
 
-例外が `align-content` です。2024年から、ブロックコンテナにも使えるようになりました。親を `display: block grid` に変えなくても、`align-content: center` だけで、中身を上下の中央に置けます。ただし、`justify-content` はブロックコンテナでは働かないので、左右の中央寄せは `margin-inline: auto` で書きます。{/* 要確認: 出典なし */}
+例外が `align-content` です。2024年から、ブロックコンテナにも使えるようになりました。親を `display: block grid` に変えなくても、`align-content: center` だけで、中身を上下の中央に置けます。ただし、`justify-content` はブロックコンテナでは働かないので、左右の中央寄せは子の `margin-inline: auto` で書きます。子が幅いっぱいに広がるブロックなら、`inline-size: fit-content`（「[7-4 大きさの決まり方](/layout/sizing/)」）で中身の幅に縮めてから寄せます。{/* 要確認: 出典なし */}
 
 <Baseline id="align-content-block" name="ブロックコンテナの align-content" />
 
@@ -232,7 +236,7 @@ AIが生成するコードにも、この誤解が表れます。ブロックの
 }
 ```
 
-`justify-items` と `justify-self` も、仕様ではブロックコンテナで働くように広がりました。Chromeで親に `justify-items: center` を指定すると、子は左右の中央に寄り、幅を指定していない子は中身の幅まで縮みます。ただし、対応しているのはChromeとEdgeだけで、SafariとFirefoxでは指定が無視されます。この2つは、`align-content` と違って通常フローの要素には書きません（[`no-justify-self-in-block-layout`](/principles/browser-support/#rule-no-justify-self-in-block-layout)）。左右の中央寄せは、どのブラウザでも同じ結果になる `margin-inline: auto` で書きます。
+`justify-items` と `justify-self` も、仕様ではブロックコンテナで働くように広がりました。Chromeで親に `justify-items: center` を指定すると、子は左右の中央に寄り、幅を指定していない子は中身の幅まで縮みます。ただし、対応しているのはChromeとEdgeだけで、SafariとFirefoxでは指定が無視されます。この2つは、`align-content` と違って通常フローの要素には書きません（[`no-justify-self-in-block-layout`](/principles/browser-support/#rule-no-justify-self-in-block-layout)）。中身の幅に縮めて左右の中央に置くなら、子に `inline-size: fit-content` を指定し、`margin-inline: auto` と組み合わせます。どのブラウザでも同じ結果になります。
 
 <Baseline id="justify-self-block" name="ブロックレイアウトの justify-self" />
 
@@ -265,7 +269,7 @@ AIが生成するコードにも、この誤解が表れます。ブロックの
 
 ## 補足と注意点
 
-通常フローは、FlexboxやGridの代わりが見つかるまでの仮の状態ではありません。見出し、段落、リスト、画像が続く本文は、通常フローのまま `margin` で間隔を作ります。そうすれば、`float` による回り込みや `margin` の相殺が働きます（[`prose-in-normal-flow`](/layout-practice/spacing/#rule-prose-in-normal-flow)）。部品の中で間隔を一定にしたい並びは、FlexboxかGridにして `gap` で間隔を決めます（「[11-2 余白を設計する](/layout-practice/spacing/)」）。
+通常フローは、FlexboxやGridの代わりが見つかるまでの仮の状態ではありません。見出し、段落、リスト、画像が続く本文は、通常フローのまま `margin` で間隔を作ります。そうすれば、`float` による回り込みや `margin` の相殺が働きます（[`normal-flow-for-conditional-spacing`](/layout-practice/choosing/#rule-normal-flow-for-conditional-spacing)）。部品の中で間隔を一定にしたい並びは、FlexboxかGridにして `gap` で間隔を決めます（「[11-2 余白を設計する](/layout-practice/spacing/)」）。
 
 親をFlexboxやGridにしても、変わるのは子の並べ方だけです。親自身は、外側の値に従って、祖先の通常フローの中にブロックとして積まれます。`display: block flex` の `block` は、この外側の振る舞いを表しています。
 

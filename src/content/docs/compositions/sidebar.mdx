@@ -98,7 +98,7 @@ import sidebarCss from '../../../demos/compositions/sidebar/style.css?raw';
 
 デモのCSSのうち、コンポーネント（`sidebar-demo`）が書いているのは、枠線、背景、文字の大きさだけです。メインの中の間隔は、`main-column` と同じ要素に付けた `stack` で作っています。1つの要素が、親の `sidebar` に対しては列として、自分の子に対しては `stack` として振る舞います。
 
-上のデモの1つ目は、メインの最小幅を480px相当（デフォルト）、サイドの幅を240px相当、間隔を24px相当にしています。折り返す幅は480＋240＋24で744px相当です。次の表は、この配置を置いた要素の幅ごとに、Chromeでメインとサイドの幅を測った結果です。
+上のデモの1つ目は、メインの最小幅を480px相当（デフォルト）、サイドの幅を240px相当、間隔を24pxにしています。折り返す幅は480＋240＋24で744px相当です。次の表は、この配置を置いた要素の幅ごとに、Chromeでメインとサイドの幅を測った結果です。
 
 | 要素の幅 | 並び方 | メインの幅 | サイドの幅 |
 |---|---|---|---|
@@ -123,7 +123,7 @@ import sidebarCss from '../../../demos/compositions/sidebar/style.css?raw';
 
 `--sidebar--gap` を指定すると、個別の指定より優先されます。フォールバックを `var(--sidebar--gap, var(--sidebar--row-gap, 0px))` のように連ねているからです。横に並べたときと縦に積んだときで間隔を変えたいなら、`--sidebar--row-gap` と `--sidebar--column-gap` を別々に渡します。デフォルト値は、単位なしの `0` ではなく `0px` と書いています。単位なしの `0` は `calc()` の中で長さと足し算できないので、間隔を計算に使う `grid` や `switcher` と書き方をそろえています。
 
-値は、HTMLの `style` 属性で、`calc(240 / 16 * 1rem)` のようにremで渡します。余白のトークンは `calc(var(--spacing--lg) / 16 * 1rem)` で変換します。remにしておくと、ユーザーが文字サイズを大きくしたときに折り返す幅も広がるので、文字が大きいほど早く縦に積まれます。
+値は、HTMLの `style` 属性で渡します。サイドとメインの幅は `calc(240 / 16 * 1rem)` のようにremで渡します。幅をremにしておくと、ユーザーが文字サイズを大きくしたときに折り返す幅も広がるので、文字が大きいほど早く縦に積まれます。間隔は部品の間の余白なので、ほかのコンポジションと同じく `calc(var(--spacing--lg) * 1px)` でpxに変換して渡します。
 
 コンポーネントの中で使うときは、`sidebar` を付けた要素の直下に、`.main-column` と `.side-column` の2つの子を置きます。次の例では、記事のページのコンポーネントが、本文と関連記事の一覧を並べています。
 
@@ -131,7 +131,7 @@ import sidebarCss from '../../../demos/compositions/sidebar/style.css?raw';
 <div class="scoped article-page">
   <div
     class="_layout | sidebar"
-    style="--sidebar--side-width: calc(240 / 16 * 1rem); --sidebar--gap: calc(var(--spacing--md) / 16 * 1rem)"
+    style="--sidebar--side-width: calc(240 / 16 * 1rem); --sidebar--gap: calc(var(--spacing--md) * 1px)"
   >
     <article class="main-column">…</article>
     <aside class="side-column" aria-labelledby="related-heading">…</aside>
@@ -174,11 +174,13 @@ import sidebarCss from '../../../demos/compositions/sidebar/style.css?raw';
 
 {/* 要確認: 出典なし */}「横に並ぶときはサイドを左に、縦に積むときは本文を上に」というデザインでは、`flex-direction: row-reverse` で見た目だけを入れ替えたくなります。しかし、横に並んでいる間は、キーボードで移動する順番が右の本文から左のサイドへ進み、見た目の順番と食い違います。サイドにリンクがあるなら、デザインの側で、どちらの幅でも同じ順番になるように調整します。そのため、`sidebar` には左右を指定する公開プロパティを設けていません。
 
-### 中身の最小幅で折り返す幅がずれる
+### 縮まない中身は列からはみ出す
 
-折り返す幅が「メインの最小幅＋サイドの幅＋列の間隔」になるのは、子の中身がそれより狭く縮められる場合だけです。フレックスアイテムは、`min-inline-size` の初期値 `auto` によって、中身の最小幅（`min-content`）より狭くなりません。折り返しの判定でも、`flex-basis` がこの最小幅より小さければ、最小幅のほうが使われます。
+折り返す幅は「メインの最小幅＋サイドの幅＋列の間隔」で決まり、列はその幅まで縮みます。本書のベーススタイルは、すべての要素に `min-inline-size: 0` を指定しているからです（「[8-2 ベーススタイルに書くもの](/reset/base-styles/)」）。画像も、kiso.cssの `max-inline-size: 100%` によって列の幅に合わせて縮みます。
 
-たとえば、サイドに幅300pxの画像があると、`--sidebar--side-width` を240px相当にしても、判定には300pxが使われ、折り返す幅は計算より60px広がります。メインに幅の広い表があるときも同じなので、公開プロパティの値は、それぞれの中身の最小幅より大きくしておきます。縦に積んだあとで中身が親からはみ出すときの対処は、「[11-3 サイズと内容の変化に耐える](/layout-practice/defensive/)」で説明しています。
+縮まないのは、幅の決まった表や、`white-space: nowrap` を指定した文字列のような中身です。`--sidebar--side-width` を240px相当にしたサイドへ、幅300pxの表を置くと、サイドの列は240px相当のまま、表が列から60pxはみ出します。そのため、公開プロパティの値は、それぞれの中身の最小幅より大きくしておきます。表のように縮められない中身は、スクロールする要素で包みます（「[11-15 表を組む](/layout-practice/tables/)」）。
+
+ベーススタイルがない環境では、結果が変わります。フレックスアイテムは、`min-inline-size` の初期値 `auto` によって、中身の最小幅（`min-content`）より狭くなりません。折り返しの判定でも、`flex-basis` がこの最小幅より小さければ、最小幅のほうが使われるので、先の例では折り返す幅が計算より60px広がります。
 
 ### grid-template で書くとき
 
@@ -194,7 +196,7 @@ import sidebarCss from '../../../demos/compositions/sidebar/style.css?raw';
 
   ._layout {
     display: block grid;
-    reading-flow: grid-rows;
+    reading-flow: grid-columns;
     grid-template:
       "--header"
       "--body"
@@ -222,6 +224,8 @@ import sidebarCss from '../../../demos/compositions/sidebar/style.css?raw';
   }
 }
 ```
+
+`reading-flow` には `grid-columns` を指定しています。`grid-rows` は行の順に読むので、広い幅では、見出しと同じ1行目から始まる関連記事が本文より先に読まれます。`grid-columns` は列の順に読むので、どの幅でも、見出し、本文、関連記事の順に移ります。{/* 要検証: ブラウザ。Chromeで広い幅のフォーカスの順が見出し、本文、関連記事になるか */}
 
 この書き方では、閾値の `800 / 16 * 1rem` を手で決めます。サイドの幅や間隔を変えたら、閾値も見直す必要があります。`sidebar` で済む配置をGridとコンテナサイズクエリで書くと、この手間が増えるだけなので、まず `sidebar` で足りるかを考えます。クエリを使う前にイントリンシックな方法を検討する順番は、「[13-1 検討する順番](/responsive/escalation/)」で説明しています。
 

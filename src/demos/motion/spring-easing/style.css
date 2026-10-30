@@ -45,7 +45,7 @@
         --_background: var(--_accent);
       }
 
-      &.-spring {
+      &[data-spring] {
         --_duration: var(--duration--spring);
         --_ease: var(--ease--spring);
       }

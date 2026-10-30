@@ -22,12 +22,14 @@
       display: block grid;
       gap: 8px;
       padding: 16px;
+      border: 1px solid var(--border--base);
       border-radius: var(--rounded--md);
-      background-color: var(--background--active);
+      background-color: var(--background--surface);
     }
 
     h2 {
-      font-size: calc(14 / 16 * 1rem);
+      font-size: calc(var(--text--body-compact--font-size) / 16 * 1rem);
+      line-height: var(--text--body-compact--leading);
     }
 
     p {

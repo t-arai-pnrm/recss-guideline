@@ -28,32 +28,33 @@ import tabsJs from '../../../demos/interaction/aria-selected-tabs/script.js?raw'
 本書では、状態を表すのに原則としてクラスを使いません。次の優先順位で、状態を表すセレクタを選びます。
 
 1. 擬似クラス（`:disabled`、`:any-link`、`:checked` など）
-2. HTML要素の属性（`target` 属性、`<details>` の `open` 属性など）
+2. HTML要素の属性（`target` 属性など）
 3. ARIA属性（`aria-expanded`、`aria-readonly`、`aria-selected` など）
 4. `data-*` 属性
 
 最初に検討するのは、擬似クラスです。`:checked`、`:disabled`、`:popover-open`、`:modal`、`:user-invalid` などは、ブラウザが状態を判定して付け外しするので、JavaScriptで管理する必要がありません。`required` 属性と `:required` のように、属性と擬似クラスのどちらでも選べる状態は、擬似クラスで選びます。
 
-擬似クラスがない状態は、HTML要素の属性をセレクタにします。新しいタブで開くリンクを示す `[target="_blank"]` や、開いた `<details>` を示す `[open]` がこれにあたります。これらの属性は、ブラウザの動作を決めるためにHTMLへ書くものです。見た目も同じ属性から決めれば、動作と見た目が食い違いません。
+擬似クラスがない状態は、HTML要素の属性をセレクタにします。新しいタブで開くリンクを示す `[target="_blank"]` がこれにあたります。こうした属性は、ブラウザの動作を決めるためにHTMLへ書くものです。見た目も同じ属性から決めれば、動作と見た目が食い違いません。擬似クラスがあっても、対象のブラウザの一部が対応していないときは、属性で選びます。開いた `<details>` には `:open` 擬似クラスがありますが、Safariが対応したのは26.5からなので、本書では `[open]` で選びます（「[17-6 開閉するUI](/interaction/disclosure/)」）。
 
 HTMLの属性でも表せない状態は、`aria-selected`、`aria-expanded`、`aria-current`、`aria-pressed` のようなARIA属性をセレクタにします。タブの選択やメニューの展開は、HTMLの要素だけでは表せず、ARIA属性で支援技術に伝える状態です。
 
 ```css title="🙆‍♂ Recommended: ARIA属性をそのままセレクタにする" from="interaction/aria-selected-tabs"
 @scope (.scoped.product-tabs) to (.scoped) {
   ._tab {
-    border-block-end: 2px solid transparent;
+    border-color: transparent;
+    border-block-end-width: 2px;
 
     &[aria-selected="true"] {
-      border-color: currentColor;
+      border-block-end-color: currentColor;
     }
 
     &:enabled:not([aria-selected="true"]):focus-visible {
-      border-color: var(--border--base);
+      border-block-end-color: var(--border--base);
     }
 
     &:enabled:not([aria-selected="true"]):hover {
       @media (any-hover) {
-        border-color: var(--border--base);
+        border-block-end-color: var(--border--base);
       }
     }
   }
@@ -62,7 +63,9 @@ HTMLの属性でも表せない状態は、`aria-selected`、`aria-expanded`、`
 
 ARIA属性をセレクタにすれば、支援技術に伝わる状態と見た目の状態が同じ属性から決まるので、両者がずれません。JavaScriptが属性の更新を忘れたら見た目も変わらないので、不具合にもすぐ気づけます。私は2020年ごろから、状態の管理は原則としてARIA属性とdata属性で行うと決めています。
 
-次のデモでは、スクリプトはタブの `aria-selected` 属性を書き換えるだけで、クラスは付け外ししていません。タブを押すか、タブにフォーカスして左右の矢印キーを押すと、`aria-selected="true"` になったタブへ下線が移ります。選択していないタブにマウスを重ねるかフォーカスすると、薄い色の下線が出ます。
+次のデモでは、スクリプトはタブの `aria-selected` 属性を書き換えるだけで、クラスは付け外ししていません。タブを押すか、タブにフォーカスして左右の矢印キーを押すと、`aria-selected="true"` になったタブへ下線が移ります。選択していないタブにマウスを重ねると、薄い色の下線が出ます。このデモでは矢印キーで選択とフォーカスを同時に移すので、選択していないタブにはフォーカスが止まりません。`:focus-visible` の指定は、フォーカスだけを移して選択はEnterキーで確定するタブのためのものです。
+
+タブのロール、`aria-selected`、`tabindex` は、初期のHTMLに書かず、スクリプトが初期化に成功してから付けます。スクリプトが動かない環境では、タブの並びを `hidden` 属性で隠したまま、3つのパネルを順に表示します。押しても切り替わらないものを、タブとして支援技術に伝えないためです。強制カラーモードでは、透明な下線にもシステムの色が付き、下線の有無で選択を見分けられなくなります。デモでは、選択していないタブの下線を `Canvas` にし、選択中のタブを太字でも示しています。
 
 <Demo title='aria-selected="true" のタブに下線が付き、選択を移すと下線も移る' html={tabsHtml} css={tabsCss} js={tabsJs} widths={[]} />
 

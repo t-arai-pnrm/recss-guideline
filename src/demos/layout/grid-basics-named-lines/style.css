@@ -3,7 +3,7 @@
     :scope {
       display: block grid;
 
-      /* 本文の列の左右に、余白の列を置く。本文の列は 480px 相当で頭打ちにする */
+      /* 本文の行が長くなりすぎないよう、本文の列を 480px 相当で頭打ちにし、残りを左右の余白の列に回す */
       grid-template-columns:
         [--full-start] minmax(16px, 1fr)
         [--content-start] minmax(0, calc(480 / 16 * 1rem))

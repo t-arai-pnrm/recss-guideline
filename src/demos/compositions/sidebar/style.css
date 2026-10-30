@@ -34,7 +34,7 @@
     flex-wrap: wrap;
     gap: var(--_c--row-gap) var(--_c--column-gap);
 
-    /* サイドの 9999 倍で伸びるので、横に並んでいる間は余った幅をほぼすべて受け取る */
+    /* 横に並んでいる間、余った幅をメインだけが受け取り、サイドを指定の幅に保つため、サイドより桁違いに大きく伸ばす */
     & > .main-column {
       flex-grow: 9999;
       flex-basis: var(--_c--main-min-width);
@@ -59,12 +59,14 @@
     aside,
     nav {
       padding: 16px;
+      border: 1px solid var(--border--base);
       border-radius: var(--rounded--md);
-      background-color: var(--background--active);
+      background-color: var(--background--surface);
     }
 
     ._main-heading {
-      font-size: calc(18 / 16 * 1rem);
+      font-size: calc(var(--text--subtitle--font-size) / 16 * 1rem);
+      line-height: var(--text--subtitle--leading);
     }
 
     ._side-heading {

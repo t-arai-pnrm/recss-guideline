@@ -38,7 +38,7 @@
 
     ._body {
       & > ._title + ._lead {
-        margin-block-start: 8px;
+        margin-block-start: calc(8 / 16 * 1rem);
       }
     }
 

@@ -22,7 +22,7 @@ sidebar:
 
 | 困りごと | 最初に読む節 | 関係するルール |
 |---|---|---|
-| 幅が縮まない、親からはみ出す | 「[19-4 表示の崩れを開発者ツールで調べる](/operations/devtools/)」「[11-3 サイズと内容の変化に耐える](/layout-practice/defensive/)」 | [`fr-without-minmax-zero`](/layout-practice/defensive/#rule-fr-without-minmax-zero) |
+| 幅が縮まない、親からはみ出す | 「[19-4 表示の崩れを開発者ツールで調べる](/operations/devtools/#幅が縮まないはみ出す)」「[11-3 サイズと内容の変化に耐える](/layout-practice/defensive/)」 | [`global-min-inline-size-zero`](/reset/base-styles/#rule-global-min-inline-size-zero)、[`flexbox-check-auto-min-size`](/layout/flexbox-basics/#rule-flexbox-check-auto-min-size) |
 | ページに横スクロールが出る | 「[19-4 表示の崩れを開発者ツールで調べる](/operations/devtools/#横スクロールが出る)」「[11-4 はみ出しとスクロール](/layout-practice/overflow/)」 | [`find-overflow-source-first`](/layout-practice/overflow/#rule-find-overflow-source-first) |
 | 狭い場所に置くと部品が崩れる | 「[13-3 コンテナサイズクエリ](/responsive/container-size-queries/)」「[11-3 サイズと内容の変化に耐える](/layout-practice/defensive/)」 | [`flex-wrap-for-variable-items`](/layout-practice/defensive/#rule-flex-wrap-for-variable-items) |
 | 長いURLや英単語がはみ出す | 「[14-4 文字サイズと改行](/typography/size-and-line-breaks/)」 | [`overflow-wrap-over-word-break`](/typography/size-and-line-breaks/#rule-overflow-wrap-over-word-break) |
@@ -33,8 +33,8 @@ sidebar:
 | 困りごと | 最初に読む節 | 関係するルール |
 |---|---|---|
 | 要素の間の余白が思ったとおりにならない | 「[7-5 marginの役割](/layout/margin-role/)」「[7-6 マージンの相殺](/layout/margin-collapse/)」「[11-2 余白を設計する](/layout-practice/spacing/)」 | [`block-margin-with-sibling-combinator`](/layout-practice/spacing/#rule-block-margin-with-sibling-combinator) |
-| `position: sticky` が留まらない | 「[19-4 表示の崩れを開発者ツールで調べる](/operations/devtools/)」「[11-7 固定ヘッダー](/layout-practice/sticky-header/)」 | [`sticky-header-height-query`](/layout-practice/sticky-header/#rule-sticky-header-height-query) |
-| `z-index` を上げても手前に出ない | 「[11-6 重なりと全幅](/layout-practice/layering/)」 | [`check-stacking-context-first`](/layout-practice/layering/#rule-check-stacking-context-first) |
+| `position: sticky` が留まらない | 「[19-4 表示の崩れを開発者ツールで調べる](/operations/devtools/#stickyが留まらないz-indexが効かない)」「[7-10 positionの基礎](/layout/positioning/)」 | [`sticky-needs-inset`](/layout/positioning/#rule-sticky-needs-inset)、[`sticky-align-self-start`](/layout/positioning/#rule-sticky-align-self-start)、[`overflow-clip-over-hidden`](/layout-practice/overflow/#rule-overflow-clip-over-hidden) |
+| `z-index` を上げても手前に出ない | 「[19-4 表示の崩れを開発者ツールで調べる](/operations/devtools/#stickyが留まらないz-indexが効かない)」「[11-6 重なりと全幅](/layout-practice/layering/)」 | [`check-stacking-context-first`](/layout-practice/layering/#rule-check-stacking-context-first) |
 
 ## 操作と状態
 

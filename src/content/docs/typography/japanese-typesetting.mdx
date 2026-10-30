@@ -44,10 +44,10 @@ kiso.cssは、和文組版のための3つの初期値を `:root` に指定し�
 
 `line-break: strict` は、小書きの仮名（「ッ」や「ゃ」など）や長音記号を行頭に置かない、厳格な禁則を適用します。行末に余白が出やすくなる面はありますが、読み誤りを防ぐほうを優先します。
 
-反対に、アキを入れると困る要素もあります。等幅フォントで桁をそろえる `pre`、日付を表す `time`、ユーザーが文字を入力する欄です。入力中にアキが入ると、カーソルの動きが不自然になるおそれがあります。これらの要素では `text-autospace` を無効にし、`pre` では `text-spacing-trim` の詰めも止めます。kiso.cssを使っていれば指定済みです。kiso.cssを使わない場合は、次の指定を `reset` レイヤーに入れます。
+反対に、アキを入れると困る要素もあります。等幅フォントで桁をそろえる `pre`、日付を表す `time`、ユーザーが文字を入力する欄です。入力中にアキが入ると、カーソルの動きが不自然になるおそれがあります。これらの要素では `text-autospace` を無効にし、`pre` では `text-spacing-trim` の詰めも止めます。kiso.cssを使っていれば指定済みです。kiso.cssを使わない場合は、次の指定をベーススタイルとして `base` レイヤーに入れます。
 
-```css title="🙆‍♂ Recommended: アキを入れると困る要素で、自動のアキを止める" from="typography/autospace-trim"
-@layer reset {
+```css title="🙆‍♂ Recommended: アキを入れると困る要素で、自動のアキを止める"
+@layer base {
   pre {
     text-spacing-trim: space-all;
     text-autospace: no-autospace;
@@ -133,7 +133,7 @@ kiso.cssは、和文組版のための3つの初期値を `:root` に指定し�
 
 `hgroup` の中の副題のように、見出しの要素ではないけれど詰めたい文字もあります。そうした場所のために、同じ指定をユーティリティとして用意しておきます。
 
-```css title="🙆‍♂ Recommended: 見出し以外を詰めるユーティリティ" from="typography/heading-palt"
+```css title="🙆‍♂ Recommended: 見出し以外を詰めるユーティリティ"
 .-kerning {
   font-kerning: normal;
 
@@ -149,23 +149,27 @@ kiso.cssは、和文組版のための3つの初期値を `:root` に指定し�
 
 段落の行末に句読点が来ると、その行だけ右端が内側に入り、行末がそろっていないように見えることがあります。`hanging-punctuation` を指定すると、行末の句読点や段落の最後の閉じ括弧を、行の外側にぶら下げて表示できます。印刷の組版で使われてきた手法です。
 
-```css title="🙆‍♂ Recommended: 段落の約物をぶら下げるユーティリティ"
-.-hanging {
-  hanging-punctuation: last allow-end;
+```css title="🙆‍♂ Recommended: 段落の約物をぶら下げ、ぶら下がる場所を padding で確保する"
+@scope (.scoped.article-body) to (.scoped) {
+  p {
+    padding-inline-end: 1ic;
+    hanging-punctuation: last allow-end;
 
-  &:lang(en) {
-    hanging-punctuation: first allow-end last;
+    &:lang(en) {
+      padding-inline-start: 1ic;
+      hanging-punctuation: first allow-end last;
+    }
   }
 }
 ```
 
-和文では、段落の最後の閉じ括弧をぶら下げる `last` と、行末の句読点をぶら下げる `allow-end` を組み合わせます。英文では、段落の先頭の引用符をぶら下げる `first` も加えます。
+和文では、段落の最後の閉じ括弧をぶら下げる `last` と、行末の句読点をぶら下げる `allow-end` を組み合わせます。英文では、段落の先頭の引用符をぶら下げる `first` も加えます。ぶら下がる約物は全角1文字ぶんの幅に収まるので、ぶら下がる側に `1ic` の `padding` を取ります。ほかの宣言を上書きしないように、ユーティリティにはせず、段落を持つコンポーネントの中に書きます。
 
 <Baseline id="hanging-punctuation" />
 
 `hanging-punctuation` に対応しているのはSafariだけです。web-featuresのデータではSafari 26.5からとなっていますが、MDNの互換性データによると、それ以前のSafariも、半角の引用符を除いて対応しています。対応していないブラウザではぶら下がらないだけなので、プログレッシブ・エンハンスメントとして使えます。
 
-注意点は、ぶら下げた約物が要素の幅の外に出ることです。幅いっぱいに置いた段落では、約物が親の要素からはみ出し、横スクロールの原因になります。インライン方向の `padding` とセットで指定し、ぶら下がる場所を確保します。使うのは段落だけにし、見出しやボタンのラベルには指定しません。
+注意点は、ぶら下げた約物が要素の幅の外に出ることです。幅いっぱいに置いた段落では、約物が親の要素からはみ出し、横スクロールの原因になります。上の例のように、インライン方向の `padding` とセットで指定し、ぶら下がる場所を確保します。使うのは段落だけにし、見出しやボタンのラベルには指定しません。
 
 行末のがたつきには、段落の幅を全角1文字の倍数に丸める方法もあります。`ic` は全角の「水」1文字の幅を表す単位で、`round()` で幅を `1ic` の倍数に切り下げると、ベタ組みの行の右端に半端なすき間が残りにくくなります。英数字が混ざるとそろわない行も出ますが、多少は改善します。
 

@@ -71,39 +71,55 @@ sidebar:
 
 判断の問いでは、切り替えにどのクエリを使うかを選びました。ここでは、第10章の「[手を動かす課題](/components/#手を動かす課題)」で主欄とサイドバーに置いたカードを使い、同じ画面の幅のまま、置かれた幅でカードの形を変えます。
 
-まず、主欄とサイドバーを横に並べます。`main` と `aside` を「[12-6 sidebar](/compositions/sidebar/)」の `sidebar` で包み、`main` に `main-column`、`aside` に `side-column` のクラスを付けます。`sidebar` のCSSは `css/compositions/sidebar.css` に置き、`layer(compositions)` として読み込みます。そのうえで、カードの幅が480px以上のときだけ、見出しの文字の大きさを20pxから24pxにしてください。
+まず、主欄とサイドバーを横に並べます。`main` と `aside` を「[12-6 sidebar](/compositions/sidebar/)」の `sidebar` で包み、`main` に `main-column`、`aside` に `side-column` のクラスを付けます。`sidebar` のCSSは `css/compositions/sidebar.css` に置き、`layer(compositions)` として読み込みます。
 
-合格の条件は2つです。画面の幅が1280pxのとき、主欄のカードの見出しは24px、サイドバーのカードの見出しは20pxになることです。また、主欄とサイドバーが縦に積まれる768pxのときは、どちらのカードの見出しも24pxになることです。画面の幅ではなくカードの幅で決まっていれば、この2つは同時に満たされます。
+そのうえで、カードの中身の幅（`padding` の内側）が480px以上のときだけ、日付を見出しの右に並べてください。それより狭いときは、これまでどおり日付を見出しの下に置きます。見出しの文字の大きさは、クエリで切り替えずに、カードの中身の幅に合わせて連続的に変えます。中身の幅が320px以下のときは20px、640px以上のときは24pxで、その間は幅に比例させます。
+
+合格の条件は3つです。画面の幅が1280pxのとき、主欄のカードは日付が見出しの右に並んで見出しが24pxになり、サイドバーのカードは日付が見出しの下にあって見出しが20pxになることです。主欄とサイドバーが縦に積まれる768pxのときは、どちらのカードも日付が見出しの右に並び、見出しが24pxになることです。480pxのときは、どちらのカードも日付が見出しの下にあり、見出しが20pxと24pxの間の大きさになることです。画面の幅ではなくカードの幅で決まっていれば、この3つは同時に満たされます。
 
 <details>
 {/* textlint-disable ja-technical-writing/ja-no-mixed-period */}
 <summary>答えの例と解説</summary>
 {/* textlint-enable ja-technical-writing/ja-no-mixed-period */}
 
-カードのルートをコンテナにし、見出しのルールの中に、カードの幅を問い合わせるコンテナサイズクエリを書きます。
+日付の位置のように途中の状態がない変化は、コンテナサイズクエリで切り替えます。見出しの文字サイズのように途中の値を取れる量は、`clamp()` と `cqi` で連続的に変えます（「[13-4 コンテナの副作用とコンテナ単位](/responsive/container-units-and-side-effects/#閾値と閾値の間の値)」）。カードのルートをコンテナにし、配置を切り替える見出しと日付は、HTMLで `<div class="_header">` に包みます。コンテナ自身は自分の幅を問い合わせられないので、配置を変える要素はルートより一段内側に置く必要があるからです。
 
-```css title="🙆‍♂ Recommended: カードの幅が480px以上のときだけ、見出しを大きくする" use="diff" from="tasks/13-responsive/css/components/news-card.css"
+```css title="🙆‍♂ Recommended: 日付の位置はクエリで切り替え、見出しの大きさは cqi で連続的に変える" use="diff" from="tasks/13-responsive/css/components/news-card.css"
 @scope (.scoped.news-card) to (.scoped) {
   :scope {
+    /* ... */
     container: --scoped / inline-size;
+
+    /* ... */
+  }
+
+  ._header {
+    display: block grid;
+    gap: calc(var(--spacing--xxs) * 1px) calc(var(--spacing--sm) * 1px);
+
+    /* 見出しの最小幅 320px 相当・隙間 16px・日付の幅 144px 相当が並ぶ幅 */
+    @container --scoped (inline-size >= calc(320 / 16 * 1rem + 16px + 144 / 16 * 1rem)) {
+      grid-template-columns: 1fr auto;
+      align-items: baseline;
+    }
   }
 
   h2 {
-    color: var(--_accent);
-    font-size: calc(20 / 16 * 1rem);
+    /* ... */
 
-    @container --scoped (inline-size >= calc(480 / 16 * 1rem)) {
-      font-size: calc(24 / 16 * 1rem);
-    }
+    /* デザインの2つの大きさ（狭いカードの20px、広いカードの24px）の間を、置かれた幅に合わせて補う */
+    font-size: clamp(20 / 16 * 1rem, 1.25cqi + 16 / 16 * 1rem, 24 / 16 * 1rem);
   }
 }
 ```
 
-1280pxのとき、サイドバーの幅は `sidebar` のデフォルトの320pxなので、そこに置いたカードは480pxに届かず、見出しは20pxのままです。768pxで縦に積まれると、サイドバーのカードも主欄と同じ幅に広がり、見出しが24pxになります。`@media (width >= …)` で書くと、1280pxではサイドバーのカードまで24pxになり、768pxでは画面の幅だけで決まるので、置き場所の違いを表せません（「[13-3 コンテナサイズクエリ](/responsive/container-size-queries/)」）。
+閾値は、見出しの最小幅320px相当、隙間16px、日付の幅144px相当を足した480pxです。1280pxのとき、サイドバーの幅は `sidebar` のデフォルトの320pxなので、そこに置いたカードの中身の幅は288pxで、日付は見出しの下に残ります。768pxで縦に積まれると、サイドバーのカードも主欄と同じ幅に広がり、日付が見出しの右に並びます。`@media (width >= …)` で書くと、1280pxではサイドバーのカードまで日付が右に並んで見出しの幅が足りなくなり、768pxでは画面の幅だけで決まるので、置き場所の違いを表せません（「[13-3 コンテナサイズクエリ](/responsive/container-size-queries/)」）。
 
-この課題で変わるのは見出しの1つだけなので、フラグを作らず、見出しのルールにクエリを直接書いています。同じ幅で日付の位置や余白も変えるなら、クエリはフラグを立てる1つのルールにまとめ、ほかの要素はフラグを読みます（「[10-6 スタイルクエリで状態を伝える](/components/style-queries/)」）。
+見出しの `1.25cqi + 16 / 16 * 1rem` は、中身の幅が320pxのとき20px、640pxのとき24pxになる直線です。2点から式を組み立てる手順は「[6-3 計算関数で根拠を式に残す](/values/math-functions/)」で説明しています。`h2` とルートの間に別のコンテナはないので、`cqi` の基準はカードのルートです。Chromeで確かめたところ、1280pxでは主欄のカードの見出しが24px、サイドバーのカードの見出しが20pxになり、480pxでは、主欄のカードが約21.4px、サイドバーのカードが約21.6pxになりました。最小値と最大値をremで書いているので、ブラウザの文字サイズの設定を大きくすると、見出しも大きくなります。
 
-この答えでは、コンテナにしたカードのルートに、第10章から続く `padding` が付いたままです。コンテナにする要素の `padding` は、クエリが問い合わせる幅をその分だけ狭めるので、本書では推奨していません（「[13-4 コンテナの副作用とコンテナ単位](/responsive/container-units-and-side-effects/#rule-no-padding-on-container)」）。ここでは、480pxを「カードの中身の幅」として決めているので、結果は変わりません。カードの外形の幅で判定したいときは、カードの中に `._body` のような要素を足して `padding` をそちらへ移し、閾値を外形の幅で書き直します。
+この課題でクエリによって変わるのは `._header` の配置だけなので、フラグを作らず、`._header` のルールにクエリを直接書いています。同じ幅で余白や画像の縦横比も変えるなら、クエリはフラグを立てる1つのルールにまとめ、ほかの要素はフラグを読みます（「[10-6 スタイルクエリで状態を伝える](/components/style-queries/)」）。
+
+この答えでは、コンテナにしたカードのルートに、第10章から続く `padding` が付いたままです。コンテナにする要素の `padding` は、クエリと `cqi` が基準にする幅をその分だけ狭めるので、本書では推奨していません（「[13-4 コンテナの副作用とコンテナ単位](/responsive/container-units-and-side-effects/#rule-no-padding-on-container)」）。ここでは、閾値と見出しの式をどちらも「カードの中身の幅」で決めているので、結果は変わりません。カードの外形の幅で判定したいときは、見出しと本文を包む要素を足して `padding` をそちらへ移し、閾値と式を外形の幅で書き直します。
 
 答えの例のファイル一式は、[補足サイト](/book-support/index.html)のサンプル一式の `tasks/13-responsive/` にあります。
 

@@ -11,6 +11,48 @@ AI向けのスキル、プラグイン、MCPサーバーには、本書と同じ
 
 執筆中の版は `0.x` とし、すべての章の内容を著者が確認した時点で `1.0.0` にする予定です。`0.x` の間は、ルールを変えたり削除したりしたときも、マイナーバージョンを上げます。
 
+## 0.83.0（2026年10月30日）
+
+章ごとのレビューで見つかった、ルールの補足の不足、デモと推奨例のコントラストと共通トークンの約束からの外れ、確かめていない説明を直しました。あわせて、同じ指示を分け持っていたルールを2つ消してほかのルールの補足にまとめ、第13章と第19章の手を動かす課題を作り直しました。ルールを削除したので、マイナーバージョンを上げています。
+
+- ルールを削除しました。
+  - `owl-margin-for-optional-elements`：内容を [`block-margin-with-sibling-combinator`](/layout-practice/spacing/#rule-block-margin-with-sibling-combinator) の補足にまとめました。補足には、`hidden` や `display: none` で隠した兄弟の後ろにも余白が付くので、出さない要素は出力しないことと、`float` の要素と回り込む行の距離は対象外であることも足しました。
+  - `prose-in-normal-flow`：内容を [`normal-flow-for-conditional-spacing`](/layout-practice/choosing/#rule-normal-flow-for-conditional-spacing) の補足にまとめました。本文のように種類の違う要素が続く領域も、通常フローで組みます。
+- ルールを変えました。
+  - [`no-important-for-specificity`](/cascade/cascade-basics/#rule-no-important-for-specificity)：壊れた既存のCSSから切り離す `all: revert-layer !important` を対象外にしました。
+  - [`declared-layer-names-only`](/cascade/layers/#rule-declared-layer-names-only)：切り離すための名前のない入れ子のレイヤーを対象外にしました。
+  - [`revert-layer-isolation-for-legacy`](/cascade/layers/#rule-revert-layer-isolation-for-legacy)：親が付けた配置とレイヤーの外のリセットも外れることを足しました。
+  - [`font-size-in-rem`](/values/px-and-rem/#rule-font-size-in-rem)：入力欄に `max(16px, 1rem)` でpxの下限だけを付ける指定を例外にしました。
+  - [`no-vw-vh`](/values/viewport-and-container-units/#rule-no-vw-vh)：理由を、縦はラージビューポートを基準にして見切れること、横は基準の状態が読み取れないことに書き分けました。HTMLの `sizes` 属性の値は対象外にしました。
+  - [`no-justify-self-in-block-layout`](/principles/browser-support/#rule-no-justify-self-in-block-layout)：理由を「ChromeとEdgeだけ」にそろえました。`justify-items` と `justify-self` は、`no-flex-grid-props-in-flow` ではなく、このルールで扱います。
+  - [`large-flex-shrink-for-shrink-order`](/layout/flexbox-basics/#rule-large-flex-shrink-for-shrink-order)、[`minmax-min-capped-at-100-percent`](/layout-practice/defensive/#rule-minmax-min-capped-at-100-percent)：固定の最小幅を `min(100%, …)` で包む形にそろえました。ページの両端のガターと、スクロールさせる表の最小幅は対象外です。
+  - [`text-elements-text-styles-only`](/layout/margin-role/#rule-text-elements-text-styles-only)：本文の行の長さを `max-inline-size: 40ic` のように文字数で決める指定を対象外にしました。
+  - [`nest-child-placement-only`](/notation/nesting-criteria/#rule-nest-child-placement-only)：祖先を基準にする `position: absolute` と `sticky` は基準の要素のネストに書くこと、段組みの孫の項目の書き方、対象外にする解説のデモと印刷の指定を足しました。
+  - [`state-suffix-for-custom-properties`](/components/custom-properties/#rule-state-suffix-for-custom-properties)：接尾辞の名前を、幅のフラグの値にそろえることを足しました。
+  - [`use-defined-tokens`](/components/design-tokens/#rule-use-defined-tokens)：`%` や `cqi` と組む余白は、値を直接書いてよいとしました。
+  - [`type-selector-in-scope`](/components/boundaries/#rule-type-selector-in-scope)：1つしかない見出しには、`._title` を付けてよいとしました。
+  - [`one-component-per-file`](/components/boundaries/#rule-one-component-per-file)：デモが比べるために複数のコンポーネントを1つのファイルに書くことを、付録Iの「デモだけの例外」へ案内しました。
+  - [`ellipsis-with-nowrap-and-clip`](/layout-practice/truncation-and-skeletons/#rule-ellipsis-with-nowrap-and-clip)、[`line-clamp-with-overflow-clip`](/typography/size-and-line-breaks/#rule-line-clamp-with-overflow-clip)：`overflow-x` と `overflow-y` で書くようにしました。`overflow-inline` と `overflow-block` は、Safari 26から対応したためです。
+  - [`sidebar-widths-above-min-content`](/compositions/sidebar/#rule-sidebar-widths-above-min-content)、[`switcher-gap-default-with-unit`](/compositions/switcher/#rule-switcher-gap-default-with-unit)：本書のベーススタイルのもとで列が縮むことに理由を合わせ、使う側が渡す間隔も単位付きにすることを足しました。
+  - [`text-contrast-aa`](/color-media/forced-colors/#rule-text-contrast-aa)、[`background-current-for-shapes`](/color-media/forced-colors/#rule-background-current-for-shapes)：参照するWCAGを2.2にしました。`background-color: currentColor` で塗る対象は、文字色の代わりに塗るアイコンと記号に絞りました。
+  - [`separators-in-gap`](/decoration/separators/#rule-separators-in-gap)：本文とサイドバーのように並びの変わらない2つの区画の境界は、片方の `border` でよいとしました。
+  - [`no-motion-on-focus-visible`](/interaction/states-and-focus/#rule-no-motion-on-focus-visible)、[`stretched-link-for-card`](/interaction/card-link/#rule-stretched-link-for-card)：フォーカスと選択が同時に移る部品の扱いを足し、カードのリングを見出しのリンクのフォーカスで出す書き方にしました。
+  - [`press-feedback-short`](/motion/easing-and-duration/#rule-press-feedback-short)、[`interruptible-with-transition`](/motion/transitions-and-keyframes/#rule-interruptible-with-transition)：再生時間を80〜160ms（`--duration--fast` から `--duration--base` まで）にしました。
+  - そのほか、30ほどのルールの補足と理由を、本文の直しに合わせました。
+- 「[はじめに](/introduction/preface/)」で、カードを育てた先を「表示と操作を確かめられる部品」とし、4つ目の達成単位を「表示と操作を確かめる」にしました。「[AI時代にCSSのドキュメントを書いた理由](/introduction/ai-era/)」の、指示しない細部の例を、見出しを文節で折り返すことに替えました。
+- 「[1-2 ブラウザサポートとプログレッシブ・エンハンスメント](/principles/browser-support/)」に、Safari 26.0〜26.3で `@scope` の中のルールが入力欄に適用されないことを足しました。第1〜3章の例は、配置だけを親のネストに書き、子の大きさと見た目は子のルールで指定する形にしました。
+- 「[4-3 カスケードレイヤーで順位を決める](/cascade/layers/)」の例を本書の `@scope` の形にし、レイヤーを使わない環境の約束を書きました。「[6-2 ビューポート単位とコンテナ単位](/values/viewport-and-container-units/)」では、ビューポート単位だけの値はChrome系に限らずズームで大きくならない、と直しました。
+- 「[8-1 壊さないリセット](/reset/kiso/)」に、kiso.cssの `[tabindex="-1"]:focus` が `outline` を `!important` で消すことと、後のレイヤーから戻せないことを書きました。第7章の判断の問いは、ベーススタイルを使わない環境の問いにしました。
+- 「[10-5 公開プロパティと内部プロパティ](/components/custom-properties/)」のトグルボタンで、押した直後にホバーの色が押した状態に勝つ不具合を直しました。「[10-8 Web Components](/components/web-components/)」に、`adoptedStyleSheets` でスタイルを共有する方法を足しました。
+- 「[11-1 レイアウト手法の選び方](/layout-practice/choosing/)」と「[11-2 余白を設計する](/layout-practice/spacing/)」の重なりを整理し、コード例を11-2にまとめました。第12章のコンポジションに渡す間隔は、段落の間をrem、部品の間をpxにそろえました。
+- 第13章「[レスポンシブデザイン](/responsive/)」の手を動かす課題を作り直しました。日付の位置はコンテナサイズクエリで切り替え、見出しの大きさは `clamp()` と `cqi` で連続的に変えます。
+- 第19章「[実務での運用](/operations/)」の手を動かす課題では、文字の役割、ホバーとフォーカス、動きを減らす設定、強制カラーモードの直しをカードに足してから確かめるようにしました。判断の問いは、置かれた幅が広いときに画像を左へ並べる問いにしました。
+- 「[20-6 実装と検証を回す](/ai-coding/implementation/)」のひな形で、テストページのCSSをトークン、kiso.cssの写し、ベーススタイルに分けました。「[20-9 既存のCSSの監査と移行をAIに任せる](/ai-coding/audit/)」とひな形の `/audit` では、ブラウザを使う視点を並行させず、1つずつ調べる手順にしました。
+- デモの共通トークンの `--background--accent` を、ライトとダークの両方でaccent-600にしました。ダークで白の文字とのコントラストが3.73:1しかなかったためです。付録I「[デモの共通トークン](/appendix/demo-tokens/)」には、デモだけに認める書き方を「デモだけの例外」にまとめ、ドロワーのイージング `--ease--out-drawer` を足しました。例外には、説明の対象の箱を示す図解の青、図に比例させる図の中の文字、「最小の構成で始める」の色と文字サイズなどがあります。
+- 「[10-4 デザイントークン](/components/design-tokens/)」の余白のトークンの例で、部品の間の `gap` をpxにしました。
+- 付録D「[レビューのチェックリスト](/appendix/checklist/)」には、単位、フラグとスタイルクエリ、レイヤーの順序の宣言、強制カラーモード、押せる範囲の項目を足しました。付録K「[困りごとから引く](/appendix/troubles/)」では、行に挙げたルールを原因に合うものへ直しました。
+- そのほか、各章のデモと推奨例で、4.5:1に届かない文字の色、装飾に使った青、強制カラーモードで消える要素、何をしているかを書いたコメントを直しました。
+
 ## 0.82.0（2026年10月30日）
 
 演習編（第21章「コーポレートサイトを作る」）を外し、本書を5つの部と20の章にしました。あわせて、冒頭に「AI時代にCSSのドキュメントを書いた理由」を足し、通常フローで `justify-items` と `justify-self` を書かない理由を足しました。章を外し、ページを足したので、マイナーバージョンを上げました。

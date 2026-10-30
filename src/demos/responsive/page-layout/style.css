@@ -14,10 +14,10 @@
     aside {
       padding: 16px;
       border-radius: var(--rounded--md);
-      background-color: var(--background--active);
+      background-color: var(--background--surface);
 
       & > :is(h1, h2) + * {
-        margin-block-start: 8px;
+        margin-block-start: calc(8 / 16 * 1rem);
       }
     }
 

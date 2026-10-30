@@ -6,7 +6,7 @@
 | --- | --- | --- |
 | `04-cascade/` | レイヤーの外で読み込んだ宣言に負けた見出しを直す | `css/legacy.css`（追加）、`css/style.css` |
 | `10-components/` | カードを主欄とサイドバーに置き、サイドバーだけ公開プロパティで変える | `index.html`、`css/style.css`、`css/tokens/sizes.css`、`css/components/news-card.css`、`css/compositions/stack.css`（追加） |
-| `13-responsive/` | 置かれた幅でカードの見出しを変える | `index.html`、`css/style.css`、`css/components/news-card.css`、`css/compositions/sidebar.css`（追加） |
-| `19-operations/` | 条件を再現して結果を記録する | `index.html`、`verification.md`（追加） |
+| `13-responsive/` | 置かれた幅で日付の位置と見出しの大きさを変える | `index.html`、`css/style.css`、`css/components/news-card.css`、`css/compositions/sidebar.css`（追加） |
+| `19-operations/` | 文字の役割、ホバーとフォーカス、動きを減らす設定、強制カラーモードの直しを足し、条件を再現して結果を記録する | `index.html`、`css/style.css`、`css/tokens/typography.css`（追加）、`css/tokens/motion.css`（追加）、`css/components/news-card.css`、`verification.md`（追加） |
 
 次の章の課題を、自分の答えではなく、この答えから始めてもかまいません。たとえば、紙の書籍の巻3から読み始めるときは、`13-responsive/` を写して第19章の課題に使います。`19-operations/verification.md` は記録の形を示すもので、観察した結果の欄は空けてあります。

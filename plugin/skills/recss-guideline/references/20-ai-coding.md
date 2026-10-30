@@ -1,8 +1,8 @@
 # 第20章 AIにコーディングさせる：ルール
 
-- ガイドラインのバージョン: 0.82.0（2026-10-30 生成）
+- ガイドラインのバージョン: 0.83.0（2026-10-30 生成）
 - ルールの数: 17
-- 本文: 約8.9万字
+- 本文: 約9万字
 - 読む条件: AIが書いたCSS、Figmaなどのデザインツールから書いたCSS
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
@@ -12,16 +12,16 @@
 
 ## この章の節
 
-- `ai-coding` 第20章AIにコーディングさせる（約4,500字）https://t-arai-pnrm.github.io/recss-guideline/ai-coding/
-- `ai-coding/roles` 20-1 AIに任せる範囲と人が担う範囲（約4,500字）https://t-arai-pnrm.github.io/recss-guideline/ai-coding/roles/
+- `ai-coding` 第20章 AIにコーディングさせる（約4,700字）https://t-arai-pnrm.github.io/recss-guideline/ai-coding/
+- `ai-coding/roles` 20-1 AIに任せる範囲と人が担う範囲（約4,600字）https://t-arai-pnrm.github.io/recss-guideline/ai-coding/roles/
 - `ai-coding/setup` 20-2 AIに読ませる規約を用意する（約1.2万字）https://t-arai-pnrm.github.io/recss-guideline/ai-coding/setup/
-- `ai-coding/mcp-servers` 20-3 MCPサーバーを役割で使い分ける（約1万字）https://t-arai-pnrm.github.io/recss-guideline/ai-coding/mcp-servers/
+- `ai-coding/mcp-servers` 20-3 MCPサーバーを役割で使い分ける（約1.1万字）https://t-arai-pnrm.github.io/recss-guideline/ai-coding/mcp-servers/
 - `ai-coding/tasks` 20-4 タスクの単位で進める（約1.5万字）https://t-arai-pnrm.github.io/recss-guideline/ai-coding/tasks/
 - `ai-coding/from-figma` 20-5 Figmaのデザインから計画を立てる（約1.2万字）https://t-arai-pnrm.github.io/recss-guideline/ai-coding/from-figma/
-- `ai-coding/implementation` 20-6 実装と検証を回す（約1.1万字）https://t-arai-pnrm.github.io/recss-guideline/ai-coding/implementation/
+- `ai-coding/implementation` 20-6 実装と検証を回す（約1.2万字）https://t-arai-pnrm.github.io/recss-guideline/ai-coding/implementation/
 - `ai-coding/pitfalls` 20-7 AIが誤りやすいパターン（約6,500字）https://t-arai-pnrm.github.io/recss-guideline/ai-coding/pitfalls/
 - `ai-coding/verify-output` 20-8 生成したコードを確かめ、教訓を残す（約5,600字）https://t-arai-pnrm.github.io/recss-guideline/ai-coding/verify-output/
-- `ai-coding/audit` 20-9 既存のCSSの監査と移行をAIに任せる（約7,700字）https://t-arai-pnrm.github.io/recss-guideline/ai-coding/audit/
+- `ai-coding/audit` 20-9 既存のCSSの監査と移行をAIに任せる（約8,100字）https://t-arai-pnrm.github.io/recss-guideline/ai-coding/audit/
 
 ## 20-1 AIに任せる範囲と人が担う範囲
 
@@ -129,5 +129,5 @@ https://t-arai-pnrm.github.io/recss-guideline/ai-coding/audit/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/ai-coding/audit/#rule-audit-list-before-fix
 - 【推奨・実装上の判断】AI の作業を並行させるときは、同じファイルを2つのエージェントに書き換えさせず、修正は1つのエージェントにまとめる。（`single-writer-per-file`）
   - 理由: 2つの作業が同じファイルを書き換えると、後の変更が先の変更を上書きし、どちらの意図とも違う内容が残るおそれがあるため。
-  - 補足: 調べて一覧を返すだけの作業は、並行させてよい。トークンやベーススタイルのような共有のファイルを触る作業は、並行させない。
+  - 補足: 調べて一覧を返すだけの作業は、並行させてよい。ただし、1つのブラウザの MCP サーバーを共有する作業は、幅や表示の設定が互いに干渉するので、順に行う。トークンやベーススタイルのような共有のファイルを触る作業は、並行させない。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/ai-coding/audit/#rule-single-writer-per-file

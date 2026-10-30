@@ -51,7 +51,7 @@ AstroのようにCSSをコンポーネントのファイルの `<style>` に書�
 
 外部関連型のレイアウトをルートに書くと、次のようなコンポーネントになります。
 
-```css title="🙅‍♂ Not Recommended: ルートに幅と外側の余白を持たせる" issue="convention"
+```css title="🙅‍♂ Not Recommended: ルートに幅と外側の余白を持たせる" issue="behavior"
 /* 🙅‍♂ Not Recommended */
 @scope (.scoped.news-card) to (.scoped) {
   :scope {
@@ -69,8 +69,9 @@ AstroのようにCSSをコンポーネントのファイルの `<style>` に書�
 ```css title="🙆‍♂ Recommended: 配置と外側の余白は、置く側のコンポーネントが持つ"
 @scope (.scoped.news-section) to (.scoped) {
   :scope {
-    display: block grid;
-    gap: calc(var(--spacing--lg) * 1px);
+    & > * + * {
+      margin-block-start: calc(var(--spacing--lg) * 1px);
+    }
 
     & > * + ._banner-outer {
       margin-block-start: calc(var(--spacing--xl) * 1px);
@@ -109,7 +110,7 @@ AstroのようにCSSをコンポーネントのファイルの `<style>` に書�
 </section>
 ```
 
-カードのルートには、内部関連型の指定しかありません。カードの幅はリストのグリッドが決め、キャンペーンのバナーの幅は `._banner-outer` が決めています。バナーの上の余白は、前に要素があるときだけ `:scope` の中の `& > * + ._banner-outer` で付けます。同じカードをサイドバーに置いても、サイドバー側のレイアウトに合わせて幅が決まるだけで、カードのCSSを直す必要はありません。
+カードのルートには、内部関連型の指定しかありません。カードの幅はリストのグリッドが決め、キャンペーンのバナーの幅は `._banner-outer` が決めています。要素の間の余白は、前に要素があるときだけ `:scope` の中の `& > * + *` で付け、バナーの上だけを `& > * + ._banner-outer` で広げます。ルートは通常フローなので、バナーの上の余白はトークンの40pxのままで、ほかの間隔と足し合わされません。ルートをGridにして `gap` と `margin` を併用すると、バナーの上は `gap` の32pxと40pxを足した72pxになります。同じカードをサイドバーに置いても、サイドバー側のレイアウトに合わせて幅が決まるだけで、カードのCSSを直す必要はありません。
 
 この形は、本書のスコープの基本形とも相性のよい書き方です。`@scope (.scoped.news-section) to (.scoped)` は、内側にある別の `.scoped` の要素でスコープを打ち切ります。打ち切る境界の要素そのものも範囲の外になるので、親のCSSからは子のコンポーネントのルートも選べません。親が子の配置を決めたければ自分の子要素であるOuterを用意するしかなく、書き方そのものが境界を守る仕組みになっています。スコープの書き方は「[4-4 @scopeでスタイルを閉じ込める](/cascade/scope/)」で説明しています。
 
@@ -186,6 +187,7 @@ AIにコンポーネントの見た目の調整を頼むと、親のセレクタ
 @scope (.scoped.global-nav) to (.scoped) {
   ul {
     display: block flex;
+    flex-wrap: wrap;
     gap: calc(var(--spacing--xs) * 1px);
   }
 
@@ -197,13 +199,13 @@ AIにコンポーネントの見た目の調整を頼むと、親のセレクタ
   }
 
   ._main-link {
-    color: var(--foreground--base);
+    color: var(--foreground--muted);
     font-weight: var(--font-weight--bold);
   }
 
   ._sub-link {
-    background-color: var(--background--accent);
-    color: var(--foreground--on-accent);
+    background-color: var(--background--inverse);
+    color: var(--foreground--inverse);
   }
 }
 ```
@@ -224,7 +226,7 @@ AIにコンポーネントの見た目の調整を頼むと、親のセレクタ
 
 タイプセレクタが当たるのは、ドーナツスコープの下限より手前の要素すべてです。同じコンポーネントの中で同じ種類の要素が入れ子になる場合、たとえば2階層のナビゲーションの中の `ul` には、外側の `ul` のスタイルも当たります。このとき `ul` はコンポーネントの中で2つの役割を持つので、リンクと同じように外側と内側の両方に `._main-list` と `._sub-list` のような子クラスを付けます。`ul` のタイプセレクタには、両方に共通するスタイルだけを書きます。CMSが出力する本文のように、任意のHTMLが入る領域は、別のコンポーネントにしてルートに `scoped` を付けます。下限で範囲が切れるので、外側のタイプセレクタは本文の `p` や `a` に届きません。
 
-繰り返して並べる要素は、`ul` のような囲む要素を必ず用意します。囲む要素があれば、間隔を `gap` で決められます。JavaScriptから要素の一覧を取り出すときも、テンプレートで繰り返しを書くときも、囲む要素が起点になります。`<ul>` の直下に置けるのは `<li>` だけなので、Outerが必要なときは `<li>` の中に置きます。
+繰り返して並べる要素は、`ul` のような囲む要素を必ず用意します。囲む要素があれば、間隔を `gap` で決められます。JavaScriptから要素の一覧を取り出すときも、テンプレートで繰り返しを書くときも、囲む要素が起点になります。`<ul>` の直下に置ける表示用の要素は `<li>` だけなので、Outerが必要なときは `<li>` の中に置きます。
 
 囲みのためだけの `div` が増えることも、必要以上に恐れません。`div` を減らすために、詳細度やセレクタの組み合わせで無理に同じ見た目を作ると、CSSが不安定で読みにくくなります。HTMLを平らに保つことを目的にして、1つの要素に親の子要素としての配置と子のコンポーネントのルートのような複数の役割を持たせると、どの指定がどの役割のものかをクラスから読み取れなくなります。1つの要素に1つの役割があれば、直す場所はクラスから決まります。ただし、リスト、見出し、ナビゲーションのように意味を持つ要素で足りる場面では、その要素を使います。`div` は、意味を持つ要素では表せない囲みにだけ使います。
 
@@ -306,19 +308,19 @@ AIにコンポーネントの見た目の調整を頼むと、親のセレクタ
 @scope (.scoped.global-nav) to (.scoped) {
   a {
     &:focus-visible {
-      color: var(--foreground--accent);
+      color: var(--foreground--base);
     }
 
     &:any-link:hover {
       @media (any-hover) {
-        color: var(--foreground--accent);
+        color: var(--foreground--base);
       }
     }
   }
 
   ._sub-link {
-    background-color: var(--background--accent);
-    color: var(--foreground--on-accent);
+    background-color: var(--background--inverse);
+    color: var(--foreground--inverse);
   }
 }
 ```
@@ -343,31 +345,31 @@ AIにコンポーネントの見た目の調整を頼むと、親のセレクタ
 
   ._main-link {
     &:focus-visible {
-      color: var(--foreground--accent);
+      color: var(--foreground--base);
     }
 
     &:any-link:hover {
       @media (any-hover) {
-        color: var(--foreground--accent);
+        color: var(--foreground--base);
       }
     }
   }
 
   ._sub-link {
     &:focus-visible {
-      background-color: oklch(from var(--background--accent) calc(l - 0.1) c h);
+      background-color: color-mix(in oklab, var(--background--inverse) 80%, var(--background--base));
     }
 
     &:any-link:hover {
       @media (any-hover) {
-        background-color: oklch(from var(--background--accent) calc(l - 0.1) c h);
+        background-color: color-mix(in oklab, var(--background--inverse) 80%, var(--background--base));
       }
     }
   }
 }
 ```
 
-次の2つのデモで、それぞれのリンクにポインターを重ねるか、Tabキーでフォーカスを移して比べてください。1つ目は共通の `a` の状態で文字色を変えているので、「お問い合わせ」の文字が背景に溶け込みます。2つ目は文字色の変更をメインのリンクだけに書いているので、サブのリンクは背景色だけが濃くなります。
+次の2つのデモで、それぞれのリンクにポインターを重ねるか、Tabキーでフォーカスを移して比べてください。1つ目は共通の `a` の状態で文字色を変えているので、「お問い合わせ」の文字が背景に溶け込みます。2つ目は文字色の変更をメインのリンクだけに書いているので、サブのリンクは背景色だけが変わります。
 
 <Demo title="共通の a の状態で文字色を変えると、サブのリンクの文字が背景に溶ける" html={typeSelectorHtml} css={typeSelectorBadCss} variant="not-recommended" />
 
@@ -394,11 +396,14 @@ z-indexは、コンポーネントのルートと内部の要素で、指定し�
   :scope {
     position: relative;
     isolation: isolate;
+
+    & > ._decoration {
+      position: absolute;
+      inset: 0;
+    }
   }
 
   ._decoration {
-    position: absolute;
-    inset: 0;
     z-index: var(--z--backwards);
   }
 }

@@ -1,6 +1,5 @@
 @layer components {
   @scope (.scoped.article-card) to (.scoped) {
-    /* 背景の内側の余白は padding、見出し・本文・フッターの間隔は gap で作る */
     :scope {
       display: block grid;
       gap: 24px;
@@ -26,32 +25,33 @@
     }
 
     ._title {
-      font-size: calc(22 / 16 * 1rem);
+      font-size: calc(var(--text--title--font-size) / 16 * 1rem);
+      line-height: var(--text--title--leading);
     }
 
-    /* 本文は通常フローのまま、前に要素があるときだけ後ろの要素の上に margin を付ける */
+    /* 段落を消しても余白が残らないよう、前に要素があるときだけ後ろの要素に付ける。文字と一緒に広がるよう rem で書く */
     ._body {
       & > * + * {
-        margin-block-start: 16px;
+        margin-block-start: calc(16 / 16 * 1rem);
       }
 
       & > * + :is(:heading, h1, h2, h3, h4, h5, h6) {
-        margin-block-start: 32px;
+        margin-block-start: calc(32 / 16 * 1rem);
       }
 
       & > :is(:heading, h1, h2, h3, h4, h5, h6) + * {
-        margin-block-start: 8px;
+        margin-block-start: calc(8 / 16 * 1rem);
       }
     }
 
     h3 {
-      font-size: calc(18 / 16 * 1rem);
+      font-size: calc(var(--text--subtitle--font-size) / 16 * 1rem);
+      line-height: var(--text--subtitle--leading);
     }
 
     ul {
-      padding-inline-start: 1.5em;
-
-      /* kiso.css が空にしているマーカーを、ブラウザのデフォルトの黒丸に戻す */
+      /* kiso.css が消したマーカーと字下げは、値を覚えずにブラウザのデフォルトへ戻す */
+      padding-inline-start: revert;
       list-style-type: revert;
     }
   }

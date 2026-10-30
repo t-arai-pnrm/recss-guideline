@@ -41,7 +41,8 @@
     }
 
     ._title {
-      font-size: calc(24 / 16 * 1rem);
+      font-size: calc(var(--text--display--font-size) / 16 * 1rem);
+      line-height: var(--text--display--leading);
     }
   }
 }

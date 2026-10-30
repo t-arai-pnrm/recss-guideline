@@ -9,12 +9,15 @@
 @layer components {
   @scope (.scoped.site-header) to (.scoped) {
     :scope {
-      position: sticky;
-      inset-block-start: 0;
       z-index: var(--z--header);
       padding-block: 16px;
       padding-inline: 16px;
       isolation: isolate;
+
+      @media (height >= calc(600 / 16 * 1rem)) {
+        position: sticky;
+        inset-block-start: 0;
+      }
 
       &::after {
         content: "";

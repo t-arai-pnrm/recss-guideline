@@ -30,7 +30,7 @@ Chrome、Edge、Firefoxは自動で更新されるので、多くのユーザー
 
 対象の下限は、新しいメジャーバージョンが出るたびに1つずつ上がります。次のメジャーバージョンが出たら、下限はSafari 26系の最終版です。iOSのSafariも同じ番号で考えます。
 
-この基準は、本書のコード例とルールの前提です。案件で動作環境が決まっている場合は、案件の基準に従います。案件の基準がより古いSafariを含むなら、本書で「そのまま使える」としている機能にも、フォールバックが必要になることがあります。
+この基準は、本書のコード例とルールの前提です。案件で動作環境が決まっている場合は、案件の基準に従います。案件の基準がより古いSafariを含むなら、本書で「そのまま使える」としている機能にも、フォールバックが必要になることがあります。ただし、`@scope` に対応していないブラウザ（Safari 17.3以前など）を含む案件は、本書の対象外です。本書の書き方は、コンポーネントの範囲を `@scope` で区切ることを前提にしているからです。
 
 ## 案件の基準を決めるとき
 
@@ -48,7 +48,7 @@ Chrome、Edge、Firefoxは自動で更新されるので、多くのユーザー
 
 <Baseline id="container-style-queries" name="コンテナスタイルクエリ" />
 
-「広く利用可能」と表示される機能は、すべての主要なブラウザで対応してから長い時間がたっているので、本書の対象でもそのまま使えます。「新しく利用可能」と「一部のブラウザのみ」の機能は、Safariの欄のバージョンが18.6以下かどうかを確かめます。上のコンテナスタイルクエリは、2026年5月に「新しく利用可能」になったばかりですが、Safariは18で対応しているので、本書の対象ではそのまま使えます。
+「広く利用可能」と表示される機能は、すべての主要なブラウザで対応してから長い時間がたっているので、本書の対象でもそのまま使えます。「新しく利用可能」と「一部のブラウザのみ」の機能は、Safariの欄のバージョンが18.6以下かどうかを確かめます。「一部のブラウザのみ」の機能は、Chrome、Edge、Firefoxの欄が空いていないかも確かめます。どれかが空いていれば、Safariが対応していても、プログレッシブ・エンハンスメントとして使えるかを判断します。上のコンテナスタイルクエリは、2026年5月に「新しく利用可能」になったばかりですが、Safariは18で対応しているので、本書の対象ではそのまま使えます。
 
 ただし、表示されるのは「途切れずに対応している最初のバージョン」です。たとえば `@scope` はSafari 17.4で対応しましたが、Safari 26.0〜26.3に `<input>` などで適用されない不具合があったため、Safari 26.4と表示されます。数字が対象の下限より新しいときは、MDNで経緯を確かめます。
 
@@ -58,13 +58,13 @@ Chrome、Edge、Firefoxは自動で更新されるので、多くのユーザー
 
 | 機能 | 未対応のブラウザ | 未対応の環境での表示 |
 | --- | --- | --- |
-| `text-wrap: pretty` | Firefox、Safari 18系 | 通常の折り返しになる |
+| `text-wrap: pretty`（英文の段落） | Firefox、Safari 18系 | 通常の折り返しになる |
 | `word-break: auto-phrase` | Safari、Firefox | 文節で区切らずに折り返す |
 | `field-sizing` | Safari 26.1以前 | 入力欄が内容に合わせて伸び縮みしない |
 | `text-box`（`cap` や `alphabetic` を指定した場合） | Firefox | 宣言が無効になり、文字の上下の余白が残る |
 | ドキュメント間のビュートランジション | Firefox | アニメーションせずにページが切り替わる |
 
-この表は2026年9月時点のものです。`text-box` のように、未対応の環境で余白の大きさが変わる機能は、レイアウトが崩れたり、表示が大きく変わったりしない範囲で使います。
+この表は2026年9月時点のものです。和文には `text-wrap: pretty` を指定しません（「[14-4 文字サイズと改行](/typography/size-and-line-breaks/#rule-no-text-wrap-pretty-for-japanese)」）。`text-box` のように、未対応の環境で余白の大きさが変わる機能は、レイアウトが崩れたり、表示が大きく変わったりしない範囲で使います。
 
 対象の下限が上がると、プログレッシブ・エンハンスメントとして扱っていた機能が、そのまま使える機能に変わります。たとえば `::details-content` はSafari 18.4で対応したので、下限がSafari 17.6だった2026年1月の時点では対象外でした。下限がSafari 18.6になった現在は、本書の対象のすべてで使えます。
 
@@ -72,7 +72,7 @@ Chrome、Edge、Firefoxは自動で更新されるので、多くのユーザー
 
 反対に、未対応の環境での影響が大きく、プログレッシブ・エンハンスメントとして使いにくい機能もあります。未対応の環境でブロックごと無視されるアットルールと、無視されたときに表示の崩れが大きくなるレイアウト関連の機能です。アンカーポジショニングと、絶対配置の要素への `place-self`（どちらもSafari 26で対応）がこれに当たります。`sibling-index()` と `sibling-count()`（Safari 26.2で対応）も同じです。
 
-アットルールでは、以前はコンテナスタイルクエリがこの例でした。`@scope` も未対応の環境では中身がまとめて無視されますが、本書の対象はすべて対応しているので、前提の機能として使っています。詳しくは「[4-4 @scopeでスタイルを閉じ込める](/cascade/scope/)」で説明します。
+アットルールでは、以前はコンテナスタイルクエリがこの例でした。`@scope` も未対応の環境では中身がまとめて無視されますが、本書の対象はすべて対応しているので、前提の機能として使っています。ただし、対象に含まれるSafari 26.0〜26.3では、`@scope` の中のルールが `<input>` と `<textarea>` に適用されません。入力欄は、これらの版で標準の見た目になっても、入力と操作ができることを確かめます。詳しくは「[4-4 @scopeでスタイルを閉じ込める](/cascade/scope/)」と「[17-7 フォーム部品](/interaction/forms/)」で説明します。
 
 <Baseline id="anchor-positioning" compatKey="css.properties.anchor-name" name="アンカーポジショニング（anchor-name）" />
 
@@ -85,14 +85,14 @@ Chrome、Edge、Firefoxは自動で更新されるので、多くのユーザー
   &:has(:any-link:hover) {
     @supports not (anchor-name: --card) {
       @media (any-hover) {
-        background-color: oklch(96% 0.02 250deg);
+        background-color: var(--background--hover);
       }
     }
   }
 
   &:has(:focus-visible) {
     @supports not (anchor-name: --card) {
-      background-color: oklch(96% 0.02 250deg);
+      background-color: var(--background--hover);
     }
   }
 }
@@ -102,7 +102,7 @@ Chrome、Edge、Firefoxは自動で更新されるので、多くのユーザー
 
 表示の確認は、Chromeだけで済ませません。Chromeは、既存のプロパティの新しい仕様を、ほかのブラウザより先に実装することがよくあります。Chromeの最新版だけで確認していると、Chromeでしか成り立たない書き方に気づけません。
 
-たとえば、`justify-self` と `justify-items` は、ブロックレイアウトでも使えるように仕様が広がりました。しかし、対応しているのはChromeだけです。
+たとえば、`justify-self` と `justify-items` は、ブロックレイアウトでも使えるように仕様が広がりました。しかし、対応しているのはChromeとEdgeだけです。
 
 <Baseline id="justify-self-block" name="ブロックレイアウトの justify-self" />
 
@@ -110,10 +110,13 @@ Chrome、Edge、Firefoxは自動で更新されるので、多くのユーザー
 /* 🙅‍♂ Not Recommended */
 ._article {
   & > ._more-link {
-    display: block flow;
-    inline-size: fit-content;
     justify-self: center;
   }
+}
+
+._more-link {
+  display: block flow;
+  inline-size: fit-content;
 }
 ```
 
@@ -122,10 +125,13 @@ Chrome、Edge、Firefoxは自動で更新されるので、多くのユーザー
 ```css title="🙆‍♂ Recommended: ブロックの中央寄せには margin-inline: auto を使う"
 ._article {
   & > ._more-link {
-    display: block flow;
-    inline-size: fit-content;
     margin-inline: auto;
   }
+}
+
+._more-link {
+  display: block flow;
+  inline-size: fit-content;
 }
 ```
 
@@ -153,7 +159,7 @@ Chrome、Edge、Firefoxは自動で更新されるので、多くのユーザー
 
     @supports (field-sizing: content) {
       max-block-size: var(--_max-rows);
-      resize: none;
+      resize: unset;
       field-sizing: content;
     }
   }

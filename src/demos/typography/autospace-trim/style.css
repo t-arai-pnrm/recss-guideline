@@ -13,8 +13,8 @@
     p {
       padding-inline-start: 12px;
       border-inline-start: 2px solid var(--border--strong);
-      font-size: calc(18 / 16 * 1rem);
-      line-height: var(--leading--relaxed);
+      font-size: calc(var(--text--body--font-size) / 16 * 1rem);
+      line-height: var(--text--body--leading);
 
       /* 比較のために、アキを入れず約物も詰めない値を指定する（CSS の初期値の normal に戻すと、ブラウザによってはアキが入る） */
       &[data-typesetting="off"] {

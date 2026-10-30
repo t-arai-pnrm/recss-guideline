@@ -1,33 +1,33 @@
-<div class="scoped apart-wrap-demo | stack" style="--stack--gap: calc(var(--spacing--lg) / 16 * 1rem)">
-  <section class="stack" style="--stack--gap: calc(var(--spacing--xxs) / 16 * 1rem)">
+<div class="scoped apart-wrap-demo" data-demo-layout="stack">
+  <section>
     <h2>A. apart（子は2つ）</h2>
-    <div class="_box | apart" style="--apart--gap: calc(var(--spacing--sm) / 16 * 1rem); --apart--alignment: center">
-      <span class="_item">ロゴ</span>
-      <span class="_item">事業内容　実績　会社概要</span>
+    <div class="_header | apart" style="--apart--gap: calc(var(--spacing--sm) * 1px); --apart--alignment: center">
+      <span class="_logo">ロゴ</span>
+      <span class="_navigation">事業内容　実績　会社概要</span>
     </div>
   </section>
-  <section class="stack" style="--stack--gap: calc(var(--spacing--xxs) / 16 * 1rem)">
+  <section>
     <h2>B. auto の margin（子は2つ）</h2>
-    <div class="_box _pushed">
-      <span class="_item">ロゴ</span>
-      <span class="_item _end-item">事業内容　実績　会社概要</span>
+    <div class="_header" data-method="auto-margin">
+      <span class="_logo">ロゴ</span>
+      <span class="_navigation">事業内容　実績　会社概要</span>
     </div>
   </section>
-  <section class="stack" style="--stack--gap: calc(var(--spacing--xxs) / 16 * 1rem)">
+  <section>
     <h2>C. apart（子は3つ）</h2>
-    <div class="_box | apart" style="--apart--gap: calc(var(--spacing--sm) / 16 * 1rem); --apart--alignment: center">
-      <span class="_item">ロゴ</span>
-      <span class="_item">事業内容　実績</span>
-      <span class="_item">お問い合わせ</span>
+    <div class="_header | apart" style="--apart--gap: calc(var(--spacing--sm) * 1px); --apart--alignment: center">
+      <span class="_logo">ロゴ</span>
+      <span class="_navigation">事業内容　実績</span>
+      <span class="_contact">お問い合わせ</span>
     </div>
   </section>
-  <section class="stack" style="--stack--gap: calc(var(--spacing--xxs) / 16 * 1rem)">
+  <section>
     <h2>D. apart（子は4つ）</h2>
-    <div class="_box | apart" style="--apart--gap: calc(var(--spacing--sm) / 16 * 1rem); --apart--alignment: center">
-      <span class="_item">事業内容</span>
-      <span class="_item">実績</span>
-      <span class="_item">会社概要</span>
-      <span class="_item">採用情報</span>
+    <div class="_header | apart" style="--apart--gap: calc(var(--spacing--sm) * 1px); --apart--alignment: center">
+      <span class="_link">事業内容</span>
+      <span class="_link">実績</span>
+      <span class="_link">会社概要</span>
+      <span class="_link">採用情報</span>
     </div>
   </section>
 </div>

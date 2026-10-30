@@ -62,8 +62,6 @@ import avatarCutoutCss from '../../../demos/decoration/avatar-cutout/style.css?r
     --_size: 16px;
 
     content: "";
-
-    /* ツールチップの下端の中央から、下へ突き出す */
     position: absolute;
     inset-block-start: 100%;
     inset-inline-start: 50%;
@@ -78,7 +76,7 @@ import avatarCutoutCss from '../../../demos/decoration/avatar-cutout/style.css?r
 
 <Demo title="形のトークンで切り抜いた三角形と、下向きの三角形を付けたツールチップ" html={triangleHtml} css={triangleCss} />
 
-デモの上は、下端の中央に下向きの三角形を付けたツールチップです。その下には、4つの形のトークンで正方形を切り抜き、上、下、右、左を向いた三角形を並べています。
+デモの上は、下端の中央に下向きの三角形を付けたツールチップです。その下には、4つの形のトークンで正方形を切り抜き、上、下、右、左を向いた三角形を並べています。4つの三角形は、文字色の代わりに塗る記号なので、背景色を `--background--current` にしています。`background-color` は強制カラーモードで背景色に置き換わり、切り抜いた形が消えるからです。`--background--current` は、強制カラーモードでは文字のシステムカラーに切り替わります（「[15-5 強制カラーモードとコントラスト](/color-media/forced-colors/)」）。ツールチップの三角形は本体の面の続きなので、`inherit` で本体の背景色を受け取ります。
 
 三角形は、ツールチップの本体を基準に絶対配置します。絶対配置した擬似要素はブロックの箱になるので、`display` を指定しなくても、`inline-size` と `aspect-ratio` で大きさが決まります。`translate: -50% 0` で三角形の幅の半分だけ戻し、本体の中央にそろえます。
 
@@ -114,13 +112,13 @@ import avatarCutoutCss from '../../../demos/decoration/avatar-cutout/style.css?r
       --_index: 2;
     }
 
-    & > ._list,
+    & > ._tab-list,
     & > ._highlight {
       grid-area: 1 / 1;
     }
   }
 
-  ._list,
+  ._tab-list,
   ._highlight {
     display: block grid;
     grid-auto-columns: 1fr;
@@ -155,7 +153,7 @@ import avatarCutoutCss from '../../../demos/decoration/avatar-cutout/style.css?r
 
 上の列の背景色は、内部プロパティ `--_background` から受け取ります。強制カラーモードでは、`background-color` がページの背景色に置き換わり、帯と文字色の差がどちらも消えて、どのタブを選んだかが分からなくなります。そこで、強制カラーモードでは `--_background` を選んだ状態のシステムカラー `SelectedItem` に、文字色を `SelectedItemText` に切り替えます（「[15-5 強制カラーモードとコントラスト](/color-media/forced-colors/)」）。{/* 要検証: ブラウザ。強制カラーモードで、切り抜いた帯が SelectedItem で表示されるか */}
 
-下の列（`._list`）は、`role="tab"` を付けた `<button>` を並べた、操作するためのタブです。上の列（`._highlight`）は見た目のためだけの複製なので、`aria-hidden="true"` で読み上げから外し、中身は `<span>` にしてフォーカスを受けないようにします。`pointer-events: none` で、クリックは下のタブに通します。どのタブを選んでいるかは、`aria-selected` から `:has()` で読み取り、`--_index` に入れています。
+下の列（`._tab-list`）は、`role="tab"` を付けた `<button>` を並べた、操作するためのタブです。上の列（`._highlight`）は見た目のためだけの複製なので、`aria-hidden="true"` で読み上げから外し、中身は `<span>` にしてフォーカスを受けないようにします。`pointer-events: none` で、クリックは下のタブに通します。どのタブを選んでいるかは、`aria-selected` から `:has()` で読み取り、`--_index` に入れています。
 
 次のデモでは、タブを選ぶとスクリプトが `aria-selected` を付け替え、`:has()` で決まる `--_index` が変わります。上の列を切り抜く範囲が選んだタブへ滑って移り、帯が通った部分から背景と文字の色が切り替わります。キーボードでは、左右の矢印キーでタブを移れます。パネルの中身は文章だけでフォーカスできる要素がないので、パネルに `tabindex="0"` を付け、選んだタブからTabキーでパネルへ移れるようにしています（WAI-ARIA APGのタブのパターン）。切り抜く範囲を動かす書き方は、次の見出しで説明します。
 
@@ -175,11 +173,18 @@ import avatarCutoutCss from '../../../demos/decoration/avatar-cutout/style.css?r
       transition-property: clip-path;
       transition-timing-function: var(--ease--in-out-quint);
     }
+
+    /* キーボードでは選択がフォーカスと同時に移るので、フォーカスの見た目と同じく一度で切り替える */
+    &:is(:scope:has(._tab:focus-visible) *) {
+      transition-duration: unset;
+    }
   }
 }
 ```
 
-前の見出しのデモの `._highlight` には、この3つの宣言を足しています。タブは続けて押されるUIなので、`@keyframes` ではなくトランジションで書きます（「[18-4 トランジションの基本と中断](/motion/transitions-and-keyframes/)」）。再生時間は、続けて押されるUIの目安の100〜150msに収まる `--duration--press`（120ms）にしています。トランジションは、動いている途中でほかのタブを押すと、その時点の範囲から新しいタブへ向かい直します。Chromeで、帯が移っている途中に別のタブを押すと、切り抜く範囲が途中の値から新しいタブへ向かうことを確かめました。イージングは、画面の上にある帯の移動なので `in-out` 系のトークンを選んでいます（「[18-3 イージングと再生時間](/motion/easing-and-duration/)」）。
+前の見出しのデモの `._highlight` には、この宣言を足しています。タブは続けて押されるUIなので、`@keyframes` ではなくトランジションで書きます（「[18-4 トランジションの基本と中断](/motion/transitions-and-keyframes/)」）。再生時間は、続けて押されるUIの目安の80〜160ms（`--duration--fast` から `--duration--base` まで）に収まる `--duration--press`（120ms）にしています。トランジションは、動いている途中でほかのタブを押すと、その時点の範囲から新しいタブへ向かい直します。Chromeで、帯が移っている途中に別のタブを押すと、切り抜く範囲が途中の値から新しいタブへ向かうことを確かめました。イージングは、画面の上にある帯の移動なので `in-out` 系のトークンを選んでいます（「[18-3 イージングと再生時間](/motion/easing-and-duration/)」）。
+
+キーボードで操作するときは、帯を滑らせません。このタブは矢印キーでフォーカスと選択を同時に移すので、帯の動きはフォーカスの見た目の切り替えと重なります。キーボードでフォーカスを受けた要素の見た目は、トランジションを掛けずに一度で切り替えます（「[17-1 ホバーとフォーカスを表す](/interaction/states-and-focus/#rule-no-motion-on-focus-visible)」）。そこで、どれかのタブが `:focus-visible` に当たっている間は、`:scope:has(._tab:focus-visible)` で選んで `transition-duration` を `unset` に戻します。マウスで押したときは、ボタンは `:focus-visible` に当たらないので、帯は滑って移ります。{/* 要検証: ブラウザ。矢印キーでタブを移したときに帯が一度で切り替わり、マウスで押したときは滑ること */}
 
 帯が横に移る動きは、色の変化ではなく位置の変化です。トランジションの指定は `@media (prefers-reduced-motion: no-preference)` の中に書き、動きを減らす設定では、切り抜く範囲が一度で切り替わります（「[18-2 動きを減らす設定に対応する](/motion/reduced-motion/)」）。帯が動かなくても、どのタブを選んだかは帯の色で伝わり、強制カラーモードでもシステムカラーの帯が残るので、動きを省いても情報は欠けません。Chromeで、動きを減らす設定を模したときにトランジションが起きないことも確かめました。
 
@@ -215,6 +220,8 @@ import avatarCutoutCss from '../../../demos/decoration/avatar-cutout/style.css?r
 <Baseline id="masks" name="マスク（mask-image など）" />
 
 マスクは、要素の境界の外に描かれるものも切り取ります。Chromeで確かめたところ、マスクを指定したスクロールコンテナの `outline` は表示されませんでした。中にリンクのないスクロールコンテナは、キーボードでフォーカスを受けることがあり、そのときのフォーカスリングも見えなくなります。この場合は、親の要素に `&:has(> ul:focus-visible)` でリングを出します。リングを親に出す書き方は、「[17-4 カード全体をリンクにする](/interaction/card-link/)」の例と同じです。
+
+中のリンクのフォーカスリングも、切り取られることがあります。`overflow-x: auto` を指定すると `overflow-y` も `auto` になり、スクロールコンテナは中身をパディングボックスの端で切り取るからです。ベーススタイルのリングはリンクの外側6pxまで描かれる（「[8-2 ベーススタイルに書くもの](/reset/base-styles/)」）ので、次の見出しのデモでは、スクロールコンテナの上下左右に6pxの `padding` を取り、端のタグのリングも内側に収めています。Tabキーで見えていないタグへ移ると、ブラウザはそのタグが見える位置までスクロールします。`scroll-padding-inline` に薄くする幅を指定しておくと、フォーカスしたタグは薄くなる範囲の内側で止まり、リングが薄れません。{/* 要検証: ブラウザ。Chrome、Firefox、Safari で、端のタグのフォーカスリングが切り取られず、マスクで薄くなった端でも見えること */}
 
 ### スクロールできる側の端だけを薄くする
 
@@ -255,6 +262,8 @@ import avatarCutoutCss from '../../../demos/decoration/avatar-cutout/style.css?r
     grid-auto-flow: column;
     gap: 8px;
     overflow-x: auto;
+    padding: 6px;
+    scroll-padding-inline: var(--_fade);
 
     @supports (animation-timeline: scroll()) and (animation-range: 0 32px) {
       mask-image: linear-gradient(var(--_direction), transparent, #000 var(--tag-scroller--fade-start), #000 calc(100% - var(--tag-scroller--fade-end)), transparent);
@@ -400,6 +409,8 @@ import avatarCutoutCss from '../../../demos/decoration/avatar-cutout/style.css?r
 ```
 
 マスクは、切り抜いた要素の `outline` と `box-shadow` も切り取ります（前の見出しで、スクロールコンテナのフォーカスリングが消えたのと同じです）。アバターをリンクにしてフォーカスリングを出すときは、リングを切り抜かない要素に出すか、`outline-offset` を負の値にして、リングを切り抜いていない範囲の内側に収めます。{/* 要検証: ブラウザ。負の outline-offset のリングがバッジの切り抜きに掛かったときの見え方 */}
+
+強制カラーモードでは、アバターとバッジの背景色がページの背景色に置き換わり、形が消えます。デモのCSSでは、アバターに透明な `border` を付け、強制カラーモードで枠線がシステムカラーで描かれて輪郭が残るようにしています。バッジは状態を示すので、強制カラーモードのときだけ、背景色を文字のシステムカラーの `CanvasText` に切り替えて塗ります。状態の名前は、バッジの中に視覚的に隠した文字で伝えます。{/* 要検証: ブラウザ。強制カラーモードで、アバターの枠線とバッジの塗りが見えること */}
 
 ## ガイドライン
 

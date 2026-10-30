@@ -1,17 +1,9 @@
 @layer components {
-  @scope (.scoped.panel-compare) to (.scoped) {
-    ._label {
-      color: var(--foreground--muted);
-      font-size: calc(var(--text--caption--font-size) / 16 * 1rem);
-      line-height: var(--text--caption--leading);
-    }
-  }
-
   @scope (.scoped.filter-panel) to (.scoped) {
     :scope {
       display: block grid;
 
-      /* 見出しは中身の高さ、フォームは残りの高さ。フォームの行の下限を0にする */
+      /* 本文を包むフォームが中身の高さまで伸びてパネルからはみ出さないように、行の下限を0にする */
       grid-template-rows: auto minmax(0, 1fr);
 
       /* デモの枠の中で上限を見せるため、固定の値にしている。実際のダイアログでは calc(100svb - 32px * 2) などにする */
@@ -38,7 +30,7 @@
     form {
       display: block grid;
 
-      /* 本文の行は残りの高さ。下限を0にして、収まらない分は本文の中でスクロールさせる */
+      /* 一覧が長いときも操作ボタンを見せたままにするため、本文の行だけを縮める */
       grid-template-rows: minmax(0, 1fr) auto;
     }
 
@@ -49,7 +41,7 @@
       padding-inline: 16px;
     }
 
-    ._option {
+    label {
       display: block flex;
       gap: 8px;
       align-items: center;

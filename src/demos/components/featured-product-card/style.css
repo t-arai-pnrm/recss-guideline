@@ -17,7 +17,6 @@
     }
 
     li {
-      /* カードが1枚だけのとき、カードの公開プロパティで特集を伝える */
       &:only-child {
         --product-card--featured: --true;
       }
@@ -26,13 +25,12 @@
 
   @scope (.scoped.product-card) to (.scoped) {
     :scope {
-      /* 公開プロパティを内部プロパティに受け、デフォルト値をフォールバックに書く */
       --_featured: var(--product-card--featured, --false);
 
       container: --scoped / inline-size;
     }
 
-    /* コンテナサイズクエリを書くのは、フラグを宣言するこの要素だけ */
+    /* 閾値を1か所で直せるよう、コンテナサイズクエリはフラグを宣言するこの要素にだけ書く */
     ._layout {
       --_density: --compact;
 
@@ -51,11 +49,12 @@
         gap: 24px;
         align-items: center;
 
-        /* この要素自身の特集の見た目は、親（ルート）の --_featured を問い合わせる */
+        /* 要素は自分自身を問い合わせられないので、親（ルート）の --_featured で切り替える */
         @container style(--_featured: --true) {
           grid-template-columns: 1fr 1fr;
           padding: 32px;
-          background-color: var(--background--accent-subtle);
+          box-shadow: var(--shadow--md);
+          background-color: var(--background--raised);
         }
       }
 
@@ -67,7 +66,7 @@
     ._thumbnail {
       aspect-ratio: 16 / 9;
       border-radius: var(--rounded--sm);
-      background-image: linear-gradient(135deg, oklch(80% 0.08 60deg), oklch(70% 0.1 20deg));
+      background-image: linear-gradient(135deg, color-mix(in oklab, var(--foreground--muted) 20%, var(--background--surface)), color-mix(in oklab, var(--foreground--muted) 40%, var(--background--surface)));
 
       @container style(--_density: --spacious) {
         aspect-ratio: 1;
@@ -85,16 +84,17 @@
     }
 
     ._title {
-      font-size: calc(18 / 16 * 1rem);
-      line-height: var(--leading--snug);
+      font-size: calc(var(--text--subtitle--font-size) / 16 * 1rem);
+      line-height: var(--text--subtitle--leading);
 
       @container style(--_density: --spacious) {
-        font-size: calc(22 / 16 * 1rem);
+        font-size: calc(var(--text--title--font-size) / 16 * 1rem);
+        line-height: var(--text--title--leading);
       }
 
       @container style(--_density: --spacious) and style(--_featured: --true) {
-        color: var(--foreground--accent);
-        font-size: calc(32 / 16 * 1rem);
+        font-size: calc(var(--text--display--font-size) / 16 * 1rem);
+        line-height: var(--text--display--leading);
       }
     }
 

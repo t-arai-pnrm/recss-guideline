@@ -4,7 +4,7 @@
  * @prop {length} --stack--gap [0] - 子要素の間隔
  *
  * @example
- * <div class="stack" style="--stack--gap: calc(var(--spacing--md) / 16 * 1rem)">
+ * <div class="stack" style="--stack--gap: calc(var(--spacing--md) * 1px)">
  *   <h2>…</h2>
  *   <p>…</p>
  * </div>

@@ -1,12 +1,11 @@
 @layer components {
   @scope (.scoped.margin-role-spaces) to (.scoped) {
-    /* 背景の内側は padding、アイテムの間は gap */
     :scope {
       display: block grid;
       gap: 16px;
       padding: 16px;
       border: 1px dashed var(--border--strong);
-      background-color: var(--background--active);
+      background-color: var(--background--accent-subtle);
 
       /* margin は gap に足され、その領域には親の背景が見える */
       & > ._item[data-margin] {

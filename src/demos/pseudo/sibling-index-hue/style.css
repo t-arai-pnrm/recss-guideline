@@ -12,7 +12,7 @@
       border-inline-start: 4px solid oklch(60% 0.12 var(--_hue));
 
       @supports (z-index: sibling-index()) {
-        /* 1項目ごとに色相を40度ずつずらす */
+        /* 隣り合う項目を見分けやすくするため、位置ごとに色相を変える */
         --_hue: calc(210deg + sibling-index() * 40deg);
       }
     }

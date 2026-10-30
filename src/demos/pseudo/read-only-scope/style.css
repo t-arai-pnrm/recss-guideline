@@ -29,13 +29,12 @@
 
       /* 比べるための悪い例：無効の入力欄とチェックボックスにも当たる */
       &:is([data-pseudo] *):read-only {
-        background-color: var(--background--active);
         outline: 3px solid var(--foreground--danger);
       }
 
       &:is([data-fixed] *)[readonly] {
         border-color: transparent;
-        background-color: var(--background--accent-subtle);
+        background-color: var(--background--surface);
       }
 
       &:is([data-fixed] *):disabled {

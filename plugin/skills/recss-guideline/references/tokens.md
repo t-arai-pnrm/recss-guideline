@@ -1,6 +1,6 @@
 # 本書のデモの共通トークン
 
-- ガイドラインのバージョン: 0.82.0（2026-10-30 生成）
+- ガイドラインのバージョン: 0.83.0（2026-10-30 生成）
 - 元のファイル: src/demos/tokens/*.css（https://t-arai-pnrm.github.io/recss-guideline/appendix/demo-tokens/）
 
 本書のデモは、次のトークンを `@layer tokens` に入れて読み込んでいる。デモからは、色はセマンティクス（`--background--*`、`--foreground--*`、`--border--*`）だけを、文字は役割（`--text--<役割>--font-size` と `--text--<役割>--leading`）を参照する。
@@ -51,7 +51,7 @@
 
   /* 主ボタンのように、文字色で塗る面 */
   --background--inverse: light-dark(var(--color--neutral--900), var(--color--neutral--100));
-  --background--accent: light-dark(var(--color--accent--600), var(--color--accent--500));
+  --background--accent: var(--color--accent--600);
 
   /* 選んだ状態や範囲を示す淡い青。半透明にして、どの面の上でもなじませる */
   --background--accent-subtle: color-mix(in oklab, var(--foreground--accent) 12%, transparent);
@@ -185,7 +185,8 @@
 
 ```css
 /*
- * 動きのトークン。fast はホバーとフォーカス、base はメニューとタブ、slow はダイアログに使う。
+ * 動きのトークン。fast はホバー、base はメニュー、slow はダイアログに使う。タブは fast から base まで。
+ * キーボードのフォーカスでは動かさない。out-drawer は画面の端から大きく滑り込む UI に使う（18-3）。
  */
 :root {
   --ease--out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -193,6 +194,7 @@
   --ease--out-expo: cubic-bezier(0.16, 1, 0.3, 1);
   --ease--in-out-quint: cubic-bezier(0.86, 0, 0.07, 1);
   --ease--in-out-expo: cubic-bezier(0.87, 0, 0.13, 1);
+  --ease--out-drawer: cubic-bezier(0.32, 0.72, 0, 1);
   --duration--instant: 50ms;
   --duration--fast: 80ms;
   --duration--press: 120ms;

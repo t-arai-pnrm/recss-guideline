@@ -49,7 +49,7 @@ const addHover = (button, menu, signal) => {
   );
 };
 
-class PopoverMenu extends HTMLElement {
+class PopoverNavigation extends HTMLElement {
   #controller;
 
   connectedCallback() {
@@ -81,4 +81,4 @@ class PopoverMenu extends HTMLElement {
   }
 }
 
-customElements.define('popover-menu', PopoverMenu);
+customElements.define('popover-navigation', PopoverNavigation);

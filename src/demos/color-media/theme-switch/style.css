@@ -1,9 +1,9 @@
 @layer tokens {
   :root {
-    --background--base: light-dark(var(--color--neutral--100), var(--color--neutral--900));
-    --background--surface: light-dark(oklch(100% 0 0deg), var(--color--neutral--800));
-    --foreground--base: light-dark(var(--color--neutral--950), var(--color--neutral--50));
-    --foreground--muted: light-dark(var(--color--neutral--600), var(--color--neutral--400));
+    --background--base: light-dark(var(--color--neutral--50), var(--color--neutral--900));
+    --background--surface: light-dark(oklch(100% 0 none), oklch(from var(--color--neutral--900) calc(l + 0.05) c h));
+    --foreground--base: light-dark(var(--color--neutral--900), var(--color--neutral--100));
+    --foreground--muted: light-dark(var(--color--neutral--500), var(--color--neutral--400));
 
     /* meta 要素の値から、いまの配色をカスタムプロパティにする */
     &:has(meta[name="color-scheme"][content="light only"]) {
@@ -114,7 +114,8 @@
     }
 
     h2 {
-      font-size: calc(18 / 16 * 1rem);
+      font-size: calc(var(--text--title--font-size) / 16 * 1rem);
+      line-height: var(--text--title--leading);
     }
 
     ._description {

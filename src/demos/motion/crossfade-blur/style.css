@@ -11,7 +11,7 @@
       line-height: var(--text--body-compact--leading);
 
       /* 比べるために、片方だけぼかしを消す */
-      &.-no-blur {
+      &[data-blur="none"] {
         --copy-button--blur: 0px;
       }
     }
@@ -48,12 +48,9 @@
     }
 
     ._copied-icon {
-      opacity: 0;
-      filter: blur(var(--_blur));
-
-      &:is(:scope[data-copied="true"] *) {
-        opacity: 1;
-        filter: none;
+      &:not(:is(:scope[data-copied="true"] *)) {
+        opacity: 0;
+        filter: blur(var(--_blur));
       }
     }
 

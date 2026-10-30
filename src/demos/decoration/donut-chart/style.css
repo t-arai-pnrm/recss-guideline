@@ -1,16 +1,9 @@
 /**
  * 割合を輪の長さと中心の数値で示すドーナツグラフ。輪はマスクで描き、ページを開いたときに0%から数え上げる。
  *
- * @prop {percentage} --donut-chart--value      [0%]                        - 割合（100%を超える値は100%として扱う）
- * @prop {color}      --donut-chart--foreground [var(--color--accent--500)] - 輪と中心の数値の色
+ * @prop {percentage} --donut-chart--value      [0%]                      - 割合（100%を超える値は100%として扱う）
+ * @prop {color}      --donut-chart--foreground [var(--foreground--base)] - 輪と中心の数値の色
  */
-@layer tokens {
-  :root {
-    --color--neutral--200: oklch(92.2% 0 0deg);
-    --color--accent--500: oklch(62% 0.19 250deg);
-  }
-}
-
 @property --count-up--value {
   syntax: "<percentage>";
   inherits: false;
@@ -27,9 +20,8 @@
   @scope (.scoped.donut-chart) to (.scoped) {
     :scope {
       --_value: min(var(--donut-chart--value, 0%), 100%);
-      --_basis-width: 200px;
       --_border-width: 16px;
-      --_foreground: var(--donut-chart--foreground, var(--color--accent--500));
+      --_foreground: var(--donut-chart--foreground, var(--foreground--base));
 
       container: --scoped / inline-size;
       display: block grid;
@@ -56,9 +48,9 @@
         mask-clip: padding-box, border-box;
         mask-composite: exclude;
         border: var(--_border-width) solid transparent;
-        border-radius: calc(infinity * 1px);
+        border-radius: var(--rounded--full);
         forced-color-adjust: none; /* 強制カラーモードでもグラデーションを画像として表示する */
-        background-image: conic-gradient(currentColor var(--count-up--value), var(--color--neutral--200) 0);
+        background-image: conic-gradient(currentColor var(--count-up--value), var(--border--base) 0);
         background-origin: border-box;
       }
 
@@ -67,8 +59,8 @@
         place-self: center;
         padding: var(--_border-width);
         counter-reset: --value calc(var(--count-up--value) / 1%);
-        font-size: calc(32px / var(--_basis-width) * 100cqi);
-        font-weight: 700;
+        font-size: clamp(1rem, 16cqi, 2rem);
+        font-weight: var(--font-weight--bold);
         font-variant-numeric: tabular-nums;
       }
     }
@@ -86,6 +78,7 @@
     padding: unset;
     border: unset;
     opacity: 0;
+    white-space: nowrap;
     pointer-events: none;
   }
 }

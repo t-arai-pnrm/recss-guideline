@@ -15,12 +15,12 @@
       inline-size: stretch;
       min-block-size: var(--_rows);
       padding: 1em;
-      font-size: max(16px, 1rem);
+      font-size: max(16px, calc(var(--text--body--font-size) / 16 * 1rem));
 
-      /* 自動で伸び縮みする環境でだけ、最大の高さを付けて手動のリサイズを止める */
+      /* 未対応の環境では、手で広げる操作と広げられる高さを残すため */
       @supports (field-sizing: content) {
         max-block-size: var(--_max-rows);
-        resize: none;
+        resize: unset;
         field-sizing: content;
       }
     }

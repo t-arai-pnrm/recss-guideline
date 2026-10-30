@@ -1,7 +1,6 @@
-/* stylelint-disable declaration-property-value-disallowed-list -- 本文の数値と対応させるため、トークンを使わずに書く */
 @layer components {
   @scope (.scoped.layout-stacking-context) to (.scoped) {
-    /* 親と兄弟を同じセルに置いて重ねる */
+    /* position を使わずに重ねるため、親と兄弟を同じセルに置く */
     ._stage {
       display: block grid;
 
@@ -20,16 +19,19 @@
       inline-size: 70%;
       padding: 16px;
       border: 1px dashed var(--border--strong);
-      background-color: var(--background--hover);
+      background-color: var(--background--surface);
 
-      /* グリッドアイテムは、position なしで z-index が効き、スタッキングコンテキストを作る */
+      /* グリッドアイテムは、position なしで z-index が働き、スタッキングコンテキストを作る */
       &[data-context] {
+        /* stylelint-disable-next-line declaration-property-value-disallowed-list -- 本文の数値と対応させるため、トークンを使わずに書く */
         z-index: 1;
       }
     }
 
     ._child {
       position: relative;
+
+      /* stylelint-disable-next-line declaration-property-value-disallowed-list -- 本文の数値と対応させるため、トークンを使わずに書く */
       z-index: 99;
       min-block-size: 64px;
       padding: 8px;
@@ -38,6 +40,7 @@
     }
 
     ._sibling {
+      /* stylelint-disable-next-line declaration-property-value-disallowed-list -- 本文の数値と対応させるため、トークンを使わずに書く */
       z-index: 2;
 
       /* 子が手前に出ても文字が隠れないよう、下端に寄せる */

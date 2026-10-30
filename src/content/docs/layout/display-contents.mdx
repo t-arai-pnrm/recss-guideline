@@ -86,7 +86,7 @@ import boxCss from '../../../demos/layout/display-contents-box/style.css?raw';
 
 この組み方には、問題が3つあります。1つ目は、広いときの配置に合わせて、HTMLを画像から書いていることです。2つ目は、狭いときに `order` で見出しを画像より前へ出しているので、見た目の順番と読み上げの順番が食い違うことです。3つ目は、レイアウトのためだけのラッパー（`._text`）を足し、その箱を幅によって消していることです。
 
-同じレイアウトは、Gridの `grid-template` のエリアで組めます。テンプレートを内部用のカスタムプロパティ `--_template` に入れ、コンテナサイズクエリの中ではテンプレートだけを差し替えます。
+同じレイアウトは、Gridの `grid-template` のエリアで組めます。コンテナサイズクエリの中では、「[7-8 Gridの基礎](/layout/grid-basics/)」と同じく `grid-template` だけを書き換えます。
 
 ```css title="🙆‍♂ Recommended: テンプレートを差し替えて、構造の変化をエリアで書く"
 .feature {
@@ -94,19 +94,15 @@ import boxCss from '../../../demos/layout/display-contents-box/style.css?raw';
 }
 
 ._layout {
-  --_density: --compact;
-  --_template:
+  display: block grid;
+  reading-flow: grid-rows;
+  grid-template:
     "--headline"
     "--image"
     "--body";
 
-  display: block grid;
-  reading-flow: grid-rows;
-  grid-template: var(--_template);
-
   @container --scoped (inline-size >= calc(560 / 16 * 1rem)) {
-    --_density: --spacious;
-    --_template:
+    grid-template:
       "--image --headline"
       "--image --body" 1fr
       / 1fr 1fr;
@@ -145,32 +141,30 @@ HTMLは見出しから書き、ラッパーも足していません。配置の�
 <Baseline id="subgrid" />
 
 ```css title="🙆‍♂ Recommended: li の箱をなくし、article を ul のサブグリッドにする"
-.article-list {
-  & > ._list {
-    display: block grid;
-    grid-template-columns: max-content 1fr max-content;
+ul {
+  display: block grid;
+  grid-template-columns: max-content 1fr max-content;
 
-    /* li の箱がないので、article が ul の実質的な直下の子になる */
-    & > ._item > ._article {
-      grid-column: 1 / -1;
-    }
+  /* li の箱がないので、article が ul の実質的な直下の子になる */
+  & > li > article {
+    grid-column: 1 / -1;
   }
 }
 
-._item {
+li {
   display: contents;
 }
 
-._article {
+article {
   display: block grid;
   grid-template-columns: subgrid;
 }
 ```
 
 ```html title="li のロールを明示する"
-<ul class="_list">
-  <li class="_item" role="listitem">
-    <article class="_article">…</article>
+<ul>
+  <li role="listitem">
+    <article>…</article>
   </li>
 </ul>
 ```
@@ -191,7 +185,7 @@ HTMLは見出しから書き、ラッパーも足していません。配置の�
 
 <Demo title="ランキングを、狭いときは2段のカード、広いときは4列の表のように並べる" html={rankingHtml} css={rankingCss} widths={[320, 480, 768]} />
 
-この例では、2つの使いどころを組み合わせています。`li` は `display: contents` で箱をなくし、`article` を `ul` の直接のグリッドアイテムにしています。`article` は `grid-template-columns: subgrid` で、`ul` の列をそのまま使います。`article` の `grid-column: 1 / -1` は、配置が `ul` のグリッドで決まるので、`ul` のルールに `& article` としてネストしています。`ul` の列は、狭いときは順位と記事の情報の2列、広いときは4列です。
+この例では、2つの使いどころを組み合わせています。`li` は `display: contents` で箱をなくし、`article` を `ul` の直接のグリッドアイテムにしています。`article` は `grid-template-columns: subgrid` で、`ul` の列をそのまま使います。`article` の `grid-column: 1 / -1` は、配置が `ul` のグリッドで決まるので、`ul` のルールに `& > li > article` としてネストしています。`ul` の列は、狭いときは順位と記事の情報の2列、広いときは4列です。
 
 タイトル、著者、日付をまとめた `._meta` が、出し入れするラッパーです。狭いときは、自分でグリッドを組み、タイトルを1行目に、著者と日付を2行目に置きます。広いときは `display: contents` で箱をなくすので、3つの子が `article` のサブグリッドの2〜4列目に入ります。エリアの指定を狭いときのスタイルクエリの中に書いているのは、広いときの `article` にそのエリアの名前がないからです。名前の見つからないエリアを指定したアイテムは、明示的なグリッドの外に置かれます。
 
@@ -202,7 +196,7 @@ HTMLは見出しから書き、ラッパーも足していません。配置の�
     reading-flow: grid-rows;
     grid-template:
       "--title --title"
-      "--author --date"
+      "--author --time"
       / 1fr max-content;
 
     & > ._title {
@@ -214,7 +208,7 @@ HTMLは見出しから書き、ラッパーも足していません。配置の�
     }
 
     & > time {
-      grid-area: --date;
+      grid-area: --time;
     }
   }
 

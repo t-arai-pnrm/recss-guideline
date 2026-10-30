@@ -13,10 +13,10 @@
       line-height: var(--text--body-compact--leading);
     }
 
-    /* 見出しだけが違う値を持つ */
     h2 {
       color: var(--foreground--base);
-      font-size: calc(18 / 16 * 1rem);
+      font-size: calc(var(--text--title--font-size) / 16 * 1rem);
+      line-height: var(--text--title--leading);
     }
   }
 }

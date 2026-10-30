@@ -20,7 +20,7 @@ import compositionsCss from '../../../demos/components/compositions/style.css?ra
 
 タグの一覧、ボタンの並び、フッターのリンク集のように、「横に並べて、入りきらなければ折り返す」配置はサイトのあちこちに出てきます。これを各コンポーネントで毎回書くと、似た指定が少しずつ違う形で散らばります。
 
-```css title="🙅‍♂ Not Recommended: 同じ配置をコンポーネントごとに書く" issue="convention"
+```css title="🙅‍♂ Not Recommended: 同じ配置をコンポーネントごとに書く" issue="behavior"
 /* 🙅‍♂ Not Recommended */
 .tag-list {
   display: block flex;
@@ -75,15 +75,17 @@ import compositionsCss from '../../../demos/components/compositions/style.css?ra
 }
 ```
 
+この定義では、説明で使う宣言だけを書いています。`flex-wrap: balance` を対応している環境でだけ足す完全な定義は、「[12-3 cluster：子を横に並べ、入りきらなければ折り返す](/compositions/cluster/)」にあります。
+
 使う側は、HTMLにクラス名を書き、間隔などの値を `style` 属性で渡します。`class="cluster"` とあれば、その要素の子が横に並んで折り返すことが、CSSを開かなくても分かります。
 
 ```html
-<ul class="cluster" style="--cluster--gap: calc(var(--spacing--xxs) / 16 * 1rem)">
+<ul class="cluster" style="--cluster--gap: calc(var(--spacing--xxs) * 1px)">
   <li>…</li>
 </ul>
 ```
 
-コンポジションは、コンポーネントの中の要素に付けても、コンポーネントのルートに付けてもかまいません。コンポジションが決めるのは直下の子の並び方と間隔だけで、子の内部を指定しないからです。「[10-2 コンポーネントの境界を守る](/components/boundaries/)」で説明した「配置は置く側が持つ」という考え方を、再利用できる形にしたものです。
+コンポジションは、コンポーネントの中の要素に付けても、コンポーネントのルートに付けてもかまいません。コンポジションが決めるのは直下の子の並び方と間隔だけで、子の内部を指定しないからです。ただし、コンポジションを付けた要素では、そのルールに `display` や `gap` を書きません。コンポジションは `compositions` レイヤーにあり、後に並ぶ `components` レイヤーの同じプロパティの宣言に負けるからです（「[4-3 カスケードレイヤーで順位を決める](/cascade/layers/)」）。「[10-2 コンポーネントの境界を守る](/components/boundaries/)」で説明した「配置は置く側が持つ」という考え方を、再利用できる形にしたものです。
 
 ファイルの先頭には、JSDocの形式で公開プロパティの一覧を書きます。`@prop {型} --名前 [デフォルト値] - 説明` の形で書いておけば、使う人は実装を読まずに、変えられる値とデフォルト値を確認できます。コメント全般の書き方は「[9-10 コメントの書き方](/notation/comments/)」で扱います。
 
@@ -115,7 +117,7 @@ import compositionsCss from '../../../demos/components/compositions/style.css?ra
 
 `cluster` のように行と列の2方向の間隔を持つコンポジションでは、`--cluster--gap` で一括に、`--cluster--row-gap` と `--cluster--column-gap` で個別に指定できるようにします。`var(--cluster--gap, var(--cluster--row-gap, 0))` のようにフォールバックを連ねると、「一括の指定があればそれを、なければ個別の指定を、どちらもなければ0を使う」という意味になります。
 
-間隔の値には、余白のトークンを単位に変換したものを渡します。上のHTMLの例では、`--spacing--xxs` を `calc(var(--spacing--xxs) / 16 * 1rem)` でremに変換しています。トークンを単位なしの数値で持つ理由は「[10-4 デザイントークン](/components/design-tokens/)」で説明します。
+間隔の値には、余白のトークンを単位に変換したものを渡します。上のHTMLの例では、`--spacing--xxs` を `calc(var(--spacing--xxs) * 1px)` でpxに変換しています。タグの間のような部品の間の間隔は、文字の大きさと連動させず、pxで渡します（「[6-1 pxとremを使い分ける](/values/px-and-rem/)」）。トークンを単位なしの数値で持つ理由は「[10-4 デザイントークン](/components/design-tokens/)」で説明します。
 
 `switcher` のように、受け取った値から閾値などを計算するコンポジションでは、計算の途中の値を `--_c--` で始まる内部プロパティに置きます。`switcher` の中心は次の1行です。
 
@@ -237,27 +239,31 @@ grid-template-columns: repeat(auto-fit, minmax(max(var(--_c--column-preferred-wi
 /**
  * セクションの見出し。
  *
- * @prop {length} --section-heading--font-size [calc(24 / 16 * 1rem)] - 文字の大きさ
+ * @prop {length} --section-heading--font-size [calc(var(--font-size--xxl) / 16 * 1rem)] - 文字の大きさ
  */
 @layer patterns {
   .section-heading {
-    --_p--font-size: var(--section-heading--font-size, calc(24 / 16 * 1rem));
+    --_p--font-size: var(--section-heading--font-size, calc(var(--font-size--xxl) / 16 * 1rem));
 
     font-size: var(--_p--font-size);
-    font-weight: 700;
-    text-wrap: balance;
+    font-weight: var(--font-weight--bold);
+
+    @supports (word-break: auto-phrase) {
+      text-wrap: balance;
+      word-break: auto-phrase;
+    }
   }
 }
 
 @layer components {
   @scope (.scoped.feature-section) to (.scoped) {
     :scope {
-      --_heading-color: var(--foreground--base);
+      --_heading-color: var(--foreground--muted);
 
       container: --scoped / inline-size;
 
       &[data-variant="featured"] {
-        --_heading-color: var(--foreground--accent);
+        --_heading-color: var(--foreground--base);
       }
     }
 
@@ -300,12 +306,13 @@ grid-template-columns: repeat(auto-fit, minmax(max(var(--_c--column-preferred-wi
     --_background--hocus: color-mix(in oklab, var(--background--inverse) 80%, var(--background--base));
 
     background-color: var(--_background);
+    color: var(--foreground--inverse);
 
     &:is(:focus-visible, :has(:focus-visible)) {
       background-color: var(--_background--hocus);
     }
 
-    &:is(:enabled, label):hover {
+    &:is(:any-link, :enabled, label):hover {
       @media (any-hover) {
         background-color: var(--_background--hocus);
       }
@@ -314,7 +321,7 @@ grid-template-columns: repeat(auto-fit, minmax(max(var(--_c--column-preferred-wi
 }
 ```
 
-コンポーネントにしても、ルートに付ける要素は選べます。`<button>`、`<a>`、`<label>` のどれに付けても、ボタンとしての送信、リンクとしての移動、入力欄を開く動作のような、要素本来の意味と動作はそのまま残ります。ホバーは、ボタンなら `:enabled` に絞り、無効の状態がない `<label>` は条件を付けずに当てます（「[17-1 ホバーとフォーカスを表す](/interaction/states-and-focus/)」）。`<label>` の中の入力欄は視覚的に隠しているので、フォーカスはルートの `:has(:focus-visible)` で表します。名前を `button` にしないのは、`<button>` 以外の要素にも付けるからです（「[9-1 命名規則](/notation/naming/)」）。
+コンポーネントにしても、ルートに付ける要素は選べます。`<button>`、`<a>`、`<label>` のどれに付けても、ボタンとしての送信、リンクとしての移動、入力欄を開く動作のような、要素本来の意味と動作はそのまま残ります。ホバーは、リンクなら `:any-link`、ボタンなら `:enabled` に絞り、無効の状態がない `<label>` は条件を付けずに当てます（「[17-1 ホバーとフォーカスを表す](/interaction/states-and-focus/)」）。`<label>` の中の入力欄は視覚的に隠しているので、フォーカスはルートの `:has(:focus-visible)` で表します。名前を `button` にしないのは、`<button>` 以外の要素にも付けるからです（「[9-1 命名規則](/notation/naming/)」）。
 
 ## コラム：ユーティリティファーストとの付き合い方
 

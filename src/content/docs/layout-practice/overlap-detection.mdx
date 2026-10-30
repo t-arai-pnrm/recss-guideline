@@ -35,7 +35,7 @@ CSSで判定できれば、飾りの見た目に関わる指定が、コンポ�
 
 次に、測定用の要素に `overflow-x: auto` を指定し、中に幅20pxの擬似要素を入れます。間隔が20px以上あれば中身は収まり、20pxを切ると中身がはみ出して、測定用の要素はスクロールできる状態になります。20pxは、飾りと本文の間に確保したい最小の間隔です。この値を変えれば、飾りを隠し始める間隔を変えられます。
 
-測定用の要素は見せるためのものではないので、`scrollbar-width: none` でスクロールバーを隠し、`pointer-events: none` でマウスの操作も受けないようにします。HTMLでは `inert` 属性を付けます。中身がはみ出した要素はスクロールコンテナになり、スクロールコンテナをキーボードで選べるブラウザでは、見えないこの要素にもフォーカスが移るからです。`inert` を付けると、フォーカスを受け取らず、支援技術からも隠れます。
+測定用の要素は見せるためのものではないので、`scrollbar-width: none` でスクロールバーを隠し、`pointer-events: none` でマウスの操作も受けないようにします。HTMLでは `inert` 属性を付けます。`overflow-x: auto` の要素はスクロールコンテナで、中身がはみ出すとスクロールできる状態になります。スクロールできる要素をキーボードで選べるブラウザでは、見えないこの要素にもフォーカスが移るからです。`inert` を付けると、フォーカスを受け取らず、支援技術からも隠れます。
 
 アンカーの名前は、ルートの `anchor-scope` でコンポーネントの中に限ります。同じコンポーネントをページに複数置くと、同じ名前のアンカーも複数でき、別のコンポーネントの飾りや本文を基準に測ってしまうからです。理由は「[11-8 アンカーポジショニング](/layout-practice/anchor-positioning/)」のルール `anchor-scope-for-repeated-components` と同じです。
 
@@ -51,7 +51,7 @@ CSSで判定できれば、飾りの見た目に関わる指定が、コンポ�
 
 最後に、飾りの側で `@container style(--_overlapping: --true)` を書き、条件が成り立つ間だけ `opacity: 0` にします。名前を書かないスタイルクエリは親を問い合わせ、飾りの親はルートなので、ルートで切り替わったフラグを読めます。
 
-```css title="🙆‍♂ Recommended: はみ出している間だけフラグを --true にし、飾りはスタイルクエリで隠す"
+```css title="🙆‍♂ Recommended: はみ出している間だけフラグを --true にし、飾りはスタイルクエリで隠す" from="layout-practice/overlap-detection"
 @keyframes --detect-overlap {
   from,
   to {
@@ -67,7 +67,9 @@ CSSで判定できれば、飾りの見た目に関わる指定が、コンポ�
 
     @supports (anchor-name: --decoration) and (animation-timeline: scroll()) {
       anchor-scope: --decoration, --content;
-      animation: --detect-overlap linear both;
+      animation-name: --detect-overlap;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
       animation-timeline: --decoration-gap;
       timeline-scope: --decoration-gap;
     }

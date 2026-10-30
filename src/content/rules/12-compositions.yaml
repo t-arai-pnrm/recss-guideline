@@ -33,7 +33,7 @@
   kind: convention
   rule: '`stack` の子のうち、ボタンやリンクのように中身の幅で見せたい要素には、置く側の CSS で `align-self: start` を指定する。'
   reason: '`align-items` のデフォルト値 `normal` はフレックスアイテムでは `stretch` と同じに振る舞い、子が `stack` の幅いっぱいに広がるため。'
-  note: 子が別のコンポーネントのルートなら、そのコンポーネントの中には書かず、置く側のコンポーネントが子クラスで指定します。
+  note: 子が別のコンポーネントのルートなら、そのコンポーネントの中には書かず、置く側のコンポーネントが、子を包む Outer の要素（`._button-outer` など）で指定します。
   aiProne: true
   page: compositions/stack
   since: 0.5.0
@@ -117,9 +117,9 @@
 - id: switcher-gap-default-with-unit
   level: 必須
   kind: spec
-  rule: 閾値などの `calc()` で長さと足し合わせる間隔のデフォルト値は、単位のない `0` ではなく `0px` と書く。
+  rule: 閾値などの `calc()` で長さと足し合わせる間隔は、デフォルト値も使う側が渡す値も、単位のない `0` ではなく `0px` と書く。
   reason: 単位のない `0` は数値として扱われ、「長さ＋数値」の式が無効になって、宣言全体が初期値に戻るため。
-  note: '`switcher` では、`grid-template-columns` が `none` に戻り、どの幅でも1列になります。'
+  note: '`switcher` では、`grid-template-columns` が `none` に戻り、どの幅でも1列になります。`masonry` も列の幅の計算で間隔を使うので、同じように `0px` で渡します。'
   aiProne: true
   page: compositions/switcher
   since: 0.5.0
@@ -154,8 +154,9 @@
 - id: sidebar-widths-above-min-content
   level: 推奨
   kind: spec
-  rule: '`--sidebar--main-min-width` と `--sidebar--side-width` には、それぞれの子の中身の最小幅（長い単語、固定幅の画像、表など）より大きな値を渡す。'
-  reason: フレックスアイテムは中身の最小幅より狭くならず、折り返しの判定にも大きいほうが使われるので、指定より広い幅で折り返すようになるため。
+  rule: '`--sidebar--main-min-width` と `--sidebar--side-width` には、それぞれの子の中身の最小幅（長い単語、幅の決まった表、`white-space: nowrap` の文字列など）より大きな値を渡す。'
+  reason: '本書のベーススタイル（`min-inline-size: 0`）のもとでは列は指定どおりの幅まで縮むが、縮まない中身は列からはみ出すため。'
+  note: 'ベーススタイルがない環境では、フレックスアイテムが中身の最小幅より狭くならず、折り返しの判定にも大きいほうが使われるので、指定より広い幅で折り返します。画像は kiso.css の `max-inline-size: 100%` で列の幅に縮みます。'
   page: compositions/sidebar
   since: 0.5.0
 
@@ -294,7 +295,7 @@
 
 - id: primary-layout-center-column-subtract-both-sides
   level: 必須
-  kind: convention
+  kind: spec
   rule: 中央の列の最大幅は、コンテンツ幅の最大値から、その両側に足す列の上限を2本分引いて求める（`var(--_c--content-max-width) - var(--_c--narrow-reduction) * 2`）。
   reason: 片側の分しか引かないと、コンテンツ幅が指定した最大値より列1本分だけ広くなるため。
   aiProne: true
@@ -346,7 +347,7 @@
   kind: convention
   rule: '`prose` の `--prose--space` はルートで内部プロパティに受け直さず、子要素の `margin-block-start` の `var()` で直接参照する。'
   reason: 'ルートで受け直すと `var()` がルートの上で解決され、子には解決済みの値が継承されるので、子に渡した `--prose--space` が効かなくなるため。'
-  note: 公開プロパティを `:scope` で内部プロパティに受ける規約（第10章のルール `receive-public-property-with-fallback`）の例外です。
+  note: 計算に使う値を内部プロパティに受け直す `switcher` や `grid` と違い、`prose` は子に渡した値を生かすために受け直しません。
   aiProne: true
   page: compositions/prose
   since: 0.5.0

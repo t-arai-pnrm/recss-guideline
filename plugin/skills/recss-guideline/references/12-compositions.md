@@ -1,8 +1,8 @@
 # 第12章 レイアウトコンポジション：ルール
 
-- ガイドラインのバージョン: 0.82.0（2026-10-30 生成）
+- ガイドラインのバージョン: 0.83.0（2026-10-30 生成）
 - ルールの数: 39
-- 本文: 約19.2万字
+- 本文: 約19.5万字
 - 読む条件: 要素を縦に積む、横に並べる、横にスクロールさせる、列に分けるなど、繰り返し使うレイアウトのパターン
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
@@ -13,18 +13,18 @@
 ## この章の節
 
 - `compositions` 第12章 レイアウトコンポジション（約4,300字）https://t-arai-pnrm.github.io/recss-guideline/compositions/
-- `compositions/stack` 12-1 stack：子要素を縦に積み、間隔をそろえる（約1.5万字）https://t-arai-pnrm.github.io/recss-guideline/compositions/stack/
-- `compositions/prose` 12-2 prose：子ごとに変えられる間隔で、本文の流れを作る（約1.1万字）https://t-arai-pnrm.github.io/recss-guideline/compositions/prose/
+- `compositions/stack` 12-1 stack：子要素を縦に積み、間隔をそろえる（約1.6万字）https://t-arai-pnrm.github.io/recss-guideline/compositions/stack/
+- `compositions/prose` 12-2 prose：子ごとに変えられる間隔で、本文の流れを作る（約1.2万字）https://t-arai-pnrm.github.io/recss-guideline/compositions/prose/
 - `compositions/cluster` 12-3 cluster：子を横に並べ、入りきらなければ折り返す（約1.4万字）https://t-arai-pnrm.github.io/recss-guideline/compositions/cluster/
 - `compositions/apart` 12-4 apart：子要素を両端に分ける（約1.6万字）https://t-arai-pnrm.github.io/recss-guideline/compositions/apart/
-- `compositions/switcher` 12-5 switcher：n列と1列を幅で切り替える（約1.6万字）https://t-arai-pnrm.github.io/recss-guideline/compositions/switcher/
-- `compositions/sidebar` 12-6 sidebar：メインとサイドの2カラムにし、狭ければ縦に積む（約1.7万字）https://t-arai-pnrm.github.io/recss-guideline/compositions/sidebar/
+- `compositions/switcher` 12-5 switcher：n列と1列を幅で切り替える（約1.7万字）https://t-arai-pnrm.github.io/recss-guideline/compositions/switcher/
+- `compositions/sidebar` 12-6 sidebar：メインとサイドの2カラムにし、狭ければ縦に積む（約1.8万字）https://t-arai-pnrm.github.io/recss-guideline/compositions/sidebar/
 - `compositions/grid` 12-7 grid：列の最小幅と最大数から列数を決める（約2万字）https://t-arai-pnrm.github.io/recss-guideline/compositions/grid/
-- `compositions/columns` 12-8 columns：上から下へ読むリストを段に分ける（約1.3万字）https://t-arai-pnrm.github.io/recss-guideline/compositions/columns/
+- `compositions/columns` 12-8 columns：上から下へ読むリストを段に分ける（約1.2万字）https://t-arai-pnrm.github.io/recss-guideline/compositions/columns/
 - `compositions/masonry` 12-9 masonry：高さの違う子を短い列へ詰めて並べる（約1.7万字）https://t-arai-pnrm.github.io/recss-guideline/compositions/masonry/
 - `compositions/pile` 12-10 pile：子要素を同じセルに重ねる（約1.3万字）https://t-arai-pnrm.github.io/recss-guideline/compositions/pile/
-- `compositions/primary-layout` 12-11 primary-layout：コンテンツ幅とガターを決め、子に5段階の幅を選ばせる（約1.5万字）https://t-arai-pnrm.github.io/recss-guideline/compositions/primary-layout/
-- `compositions/reel` 12-12 reel：子を横に1列に並べ、入りきらない分をスクロールさせる（約2.1万字）https://t-arai-pnrm.github.io/recss-guideline/compositions/reel/
+- `compositions/primary-layout` 12-11 primary-layout：コンテンツ幅とガターを決め、子に5段階の幅を選ばせる（約1.6万字）https://t-arai-pnrm.github.io/recss-guideline/compositions/primary-layout/
+- `compositions/reel` 12-12 reel：子を横に1列に並べ、入りきらない分をスクロールさせる（約2万字）https://t-arai-pnrm.github.io/recss-guideline/compositions/reel/
 
 ## 12-1 stack：子要素を縦に積み、間隔をそろえる
 
@@ -42,7 +42,7 @@ https://t-arai-pnrm.github.io/recss-guideline/compositions/stack/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/compositions/stack/#rule-stack-nested-gap
 - 【推奨・本書の規約】`stack` の子のうち、ボタンやリンクのように中身の幅で見せたい要素には、置く側の CSS で `align-self: start` を指定する。（`stack-align-self-start`）
   - 理由: `align-items` のデフォルト値 `normal` はフレックスアイテムでは `stretch` と同じに振る舞い、子が `stack` の幅いっぱいに広がるため。
-  - 補足: 子が別のコンポーネントのルートなら、そのコンポーネントの中には書かず、置く側のコンポーネントが子クラスで指定します。
+  - 補足: 子が別のコンポーネントのルートなら、そのコンポーネントの中には書かず、置く側のコンポーネントが、子を包む Outer の要素（`._button-outer` など）で指定します。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/compositions/stack/#rule-stack-align-self-start
 
 ## 12-2 prose：子ごとに変えられる間隔で、本文の流れを作る
@@ -55,7 +55,7 @@ https://t-arai-pnrm.github.io/recss-guideline/compositions/prose/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/compositions/prose/#rule-prose-space-on-following-child
 - 【必須・本書の規約】`prose` の `--prose--space` はルートで内部プロパティに受け直さず、子要素の `margin-block-start` の `var()` で直接参照する。（`prose-no-internal-property`）
   - 理由: ルートで受け直すと `var()` がルートの上で解決され、子には解決済みの値が継承されるので、子に渡した `--prose--space` が効かなくなるため。
-  - 補足: 公開プロパティを `:scope` で内部プロパティに受ける規約（第10章のルール `receive-public-property-with-fallback`）の例外です。
+  - 補足: 計算に使う値を内部プロパティに受け直す `switcher` や `grid` と違い、`prose` は子に渡した値を生かすために受け直しません。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/compositions/prose/#rule-prose-no-internal-property
 - 【推奨・本書の規約】`prose` の中に `prose` を入れるときは、内側のルートの `--prose--space` を外側との間隔に使い、内側の間隔は内側の子に渡す。（`prose-nested-inner-space`）
   - 理由: ルートに渡した値は継承によって内側の子にも届き、外側との間隔と内側の間隔が同じ値になってしまうため。
@@ -109,9 +109,9 @@ https://t-arai-pnrm.github.io/recss-guideline/compositions/switcher/
   - 理由: 「100% ÷ 列数 − 列の間隔 ×（列数 − 1）」と書くと目安が小さくなりすぎ、`auto-fit` が指定より多くの列を作るため。
   - 補足: 例：列数4、列の最小幅200px、列の間隔24pxで要素の幅が1000pxのとき、正しい式では4列、誤った式では5列になります。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/compositions/switcher/#rule-switcher-preferred-width-formula
-- 【必須・仕様にもとづく制約】閾値などの `calc()` で長さと足し合わせる間隔のデフォルト値は、単位のない `0` ではなく `0px` と書く。（`switcher-gap-default-with-unit`）
+- 【必須・仕様にもとづく制約】閾値などの `calc()` で長さと足し合わせる間隔は、デフォルト値も使う側が渡す値も、単位のない `0` ではなく `0px` と書く。（`switcher-gap-default-with-unit`）
   - 理由: 単位のない `0` は数値として扱われ、「長さ＋数値」の式が無効になって、宣言全体が初期値に戻るため。
-  - 補足: `switcher` では、`grid-template-columns` が `none` に戻り、どの幅でも1列になります。
+  - 補足: `switcher` では、`grid-template-columns` が `none` に戻り、どの幅でも1列になります。`masonry` も列の幅の計算で間隔を使うので、同じように `0px` で渡します。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/compositions/switcher/#rule-switcher-gap-default-with-unit
 
 ## 12-6 sidebar：メインとサイドの2カラムにし、狭ければ縦に積む
@@ -130,8 +130,9 @@ https://t-arai-pnrm.github.io/recss-guideline/compositions/sidebar/
   - 理由: 横に並んでいる間、キーボードで移動する順番と読み上げの順番が、見た目の順番と食い違うため。
   - 補足: 本文の後に見る補助の内容（関連記事など）は本文の後に、先に知っておくと便利な内容（章の目次、絞り込みの条件など）は本文の前に書く。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/compositions/sidebar/#rule-sidebar-side-position-by-source-order
-- 【推奨・仕様にもとづく制約】`--sidebar--main-min-width` と `--sidebar--side-width` には、それぞれの子の中身の最小幅（長い単語、固定幅の画像、表など）より大きな値を渡す。（`sidebar-widths-above-min-content`）
-  - 理由: フレックスアイテムは中身の最小幅より狭くならず、折り返しの判定にも大きいほうが使われるので、指定より広い幅で折り返すようになるため。
+- 【推奨・仕様にもとづく制約】`--sidebar--main-min-width` と `--sidebar--side-width` には、それぞれの子の中身の最小幅（長い単語、幅の決まった表、`white-space: nowrap` の文字列など）より大きな値を渡す。（`sidebar-widths-above-min-content`）
+  - 理由: 本書のベーススタイル（`min-inline-size: 0`）のもとでは列は指定どおりの幅まで縮むが、縮まない中身は列からはみ出すため。
+  - 補足: ベーススタイルがない環境では、フレックスアイテムが中身の最小幅より狭くならず、折り返しの判定にも大きいほうが使われるので、指定より広い幅で折り返します。画像は kiso.css の `max-inline-size: 100%` で列の幅に縮みます。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/compositions/sidebar/#rule-sidebar-widths-above-min-content
 
 ## 12-7 grid：列の最小幅と最大数から列数を決める
@@ -209,7 +210,7 @@ https://t-arai-pnrm.github.io/recss-guideline/compositions/primary-layout/
   - 理由: 幅の段階とガターの値が `primary-layout` の1か所にまとまり、画面の幅で値を変えるときも子を直さずに済むため。
   - 補足: 画面の端まで広げる方法の比較は、第11章のルール `full-bleed-via-layout-first` を参照してください。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/compositions/primary-layout/#rule-primary-layout-width-by-line-names
-- 【必須・本書の規約】中央の列の最大幅は、コンテンツ幅の最大値から、その両側に足す列の上限を2本分引いて求める（`var(--_c--content-max-width) - var(--_c--narrow-reduction) * 2`）。（`primary-layout-center-column-subtract-both-sides`）
+- 【必須・仕様にもとづく制約】中央の列の最大幅は、コンテンツ幅の最大値から、その両側に足す列の上限を2本分引いて求める（`var(--_c--content-max-width) - var(--_c--narrow-reduction) * 2`）。（`primary-layout-center-column-subtract-both-sides`）
   - 理由: 片側の分しか引かないと、コンテンツ幅が指定した最大値より列1本分だけ広くなるため。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/compositions/primary-layout/#rule-primary-layout-center-column-subtract-both-sides
 - 【推奨・本書の規約】コンポジションの子に付けて置き場所を選ぶクラスは、`full-column` のように接頭辞を付けずに名付け、`& > .full-column` のように直下の子に限って効かせる。（`primary-layout-child-classes-unprefixed`）

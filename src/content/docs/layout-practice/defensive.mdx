@@ -101,25 +101,23 @@ CSSを書くときは、「テキストが2倍の長さになったら」「画�
 
 ```css title="🙆‍♂ Recommended: 縦横比が決まっている要素は、幅と aspect-ratio で大きさを決める"
 ._thumbnail {
+  /* stretch に未対応の環境のための値 */
   inline-size: -webkit-fill-available;
   inline-size: stretch;
   aspect-ratio: 16 / 9;
-  object-fit: cover;
 }
 
 ._more {
   &::after {
     content: "";
     display: inline flow-root;
-    mask-image: var(--chevron--rightward);
     inline-size: 1em;
     aspect-ratio: 1;
-    background-color: var(--background--current);
   }
 }
 ```
 
-`._thumbnail` の `object-fit: cover` は、違う比率の画像が入っても引き伸ばさずに枠を埋める指定です。マスクでアイコンを描く方法は「[16-3 アイコンとSVG](/decoration/icons-and-masks/)」で説明しています。
+`._thumbnail` に違う比率の画像が入っても、本書のベーススタイルが画像に指定している `object-fit: cover` によって、画像は引き伸ばされずに枠を埋めます（「[16-1 画像の配置と比率](/decoration/images/)」）。`._more` の擬似要素は幅と比率だけを決めた箱で、中にアイコンを描く方法は「[16-3 アイコンとSVG](/decoration/icons-and-masks/)」で説明しています。
 
 上限が要るときは、`max-block-size` で決めます。選択肢の一覧やモーダルの本文のように、中身が多いときにスクロールさせる領域では、上限を超えた分だけがスクロールし、中身が少なければ領域は中身の高さまで縮みます。
 
@@ -191,16 +189,19 @@ Gridで列を均等に分けるとき、`1fr` と書くことが多いと思い�
 
 ```css title="🙆‍♂ Recommended: ボタン全体を fit-content で守り、中のアイコンだけ縮ませない"
 ._search-form {
+  /* 入力欄を縮めてボタンと同じ行に収めるため、折り返さない */
   display: block flex;
 }
 
 ._submit-button {
   display: inline flex;
   gap: 8px;
+  align-items: start;
   min-inline-size: fit-content;
 
   & > ._icon {
     flex-shrink: 0;
+    margin-block: calc((1lh - 1em) / 2);
   }
 }
 
@@ -210,7 +211,7 @@ Gridで列を均等に分けるとき、`1fr` と書くことが多いと思い�
 }
 ```
 
-この例では、検索の入力欄とボタンが `._search-form` の中に並びます。ボタンは、フォームに余裕があるうちは中身の幅を保ち、入力欄のほうが縮みます。ボタンの中のラベルには、全称セレクタの `min-inline-size: 0`（「[8-2 ベーススタイルに書くもの](/reset/base-styles/)」）が指定されているので、ボタンが中身より狭くなったときは、アイコンの横の残りの幅で折り返します。
+この例では、検索の入力欄とボタンが `._search-form` の中に並びます。ボタンは、フォームに余裕があるうちは中身の幅を保ち、入力欄のほうが縮みます。ボタンの中のラベルには、全称セレクタの `min-inline-size: 0`（「[8-2 ベーススタイルに書くもの](/reset/base-styles/)」）が指定されているので、ボタンが中身より狭くなったときは、アイコンの横の残りの幅で折り返します。ラベルが2行になってもアイコンが1行目にそろうように、ボタンを `align-items: start` にし、アイコンの上下に1行の高さとアイコンの差の半分の `margin` を付けています（「[11-13 アイコンを配置する](/layout-practice/icon-alignment/)」）。
 
 アイコンのように、大きさが変わると困る要素には、`flex-shrink: 0` を指定します。縮ませないことが目的の要素と、折り返してもよいが縮みすぎては困る要素を、分けて考えます。同じ理由で、`white-space: nowrap` も明確な理由がない限り指定しません。折り返せない文字は、内容が長くなったときや画面が狭いときに、はみ出す原因になります。
 

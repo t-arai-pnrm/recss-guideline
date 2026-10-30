@@ -1,5 +1,5 @@
 @layer base {
-  /* キーワードで決まる大きさ（auto）へのトランジションを有効にする（第6章のベーススタイル） */
+  /* キーワードで決まる大きさ（auto）へのトランジションを有効にする（8-2 のベーススタイル） */
   :root {
     @media (prefers-reduced-motion: no-preference) {
       interpolate-size: allow-keywords;
@@ -61,7 +61,7 @@
         @media (prefers-reduced-motion: no-preference) {
           transition-duration: var(--duration--slow);
           transition-property: rotate;
-          transition-timing-function: var(--ease--out-quint);
+          transition-timing-function: var(--ease--in-out-quint);
         }
       }
 

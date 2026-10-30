@@ -10,12 +10,11 @@
       border: 1px solid var(--border--base);
       border-radius: var(--rounded--md);
 
-      /* 3つに共通の、四角を描くための指定 */
       &::before {
         inline-size: 1em;
         aspect-ratio: 1;
         margin-inline-end: 8px;
-        background-color: var(--background--accent);
+        background-color: var(--background--inverse);
         vertical-align: -0.125em;
       }
 

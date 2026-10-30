@@ -71,12 +71,12 @@ import propsCss from '../../../demos/components/public-properties/style.css?raw'
  * 情報カード。
  *
  * @prop {color}  --info-card--accent [var(--foreground--muted)]   - 枠線と見出しの色
- * @prop {length} --info-card--radius [8px]                         - 角丸の半径
+ * @prop {length} --info-card--radius [var(--rounded--md)]          - 角丸の半径
  */
 @scope (.scoped.info-card) to (.scoped) {
   :scope {
     --_accent: var(--info-card--accent, var(--foreground--muted));
-    --_radius: var(--info-card--radius, 8px);
+    --_radius: var(--info-card--radius, var(--rounded--md));
 
     border: 2px solid var(--_accent);
     border-radius: var(--_radius);
@@ -90,7 +90,7 @@ import propsCss from '../../../demos/components/public-properties/style.css?raw'
 
 `:scope` の先頭に受けておくと、そのコンポーネントが外から受け取る値の一覧が1か所で読めます。公開プロパティの長い名前は受け取る1行にしか出てこず、中のスタイルは短い内部プロパティで書けます。角丸の内側の半径のように、受け取った値から計算する値も、`--_inner-radius: calc(var(--_radius) - var(--_padding))` のように内部プロパティにすれば、数値の意味を名前で説明できます。ファイルの先頭には、JSDocの `@prop` で公開プロパティの一覧を書いておきます。
 
-内部プロパティも継承されることには注意が必要です。内側に置いた別のコンポーネントが、自分では定義していない `--_accent` を参照すると、外側のカードの値を継承して使ってしまいます。内部プロパティは、参照するコンポーネント自身の `:scope` で必ず定義します。
+内部プロパティも継承されることには注意が必要です。内側に置いた別のコンポーネントが、自分では定義していない `--_accent` を参照すると、外側のカードの値を継承して使ってしまいます。内部プロパティは、参照するコンポーネント自身の中で必ず定義します。ふつうは `:scope` に置き、コンテナサイズクエリで切り替えるフラグは、クエリを書く要素に置きます（「[10-6 スタイルクエリで状態を伝える](/components/style-queries/)」）。
 
 ## 名前で役割を分ける
 
@@ -101,7 +101,7 @@ import propsCss from '../../../demos/components/public-properties/style.css?raw'
 | トークン | `--<分類>--<名前>` | `--spacing--md` | `:root` |
 | セマンティクスのトークン | `--<役割>--<バリエーション>` | `--foreground--muted` | `:root` |
 | 公開プロパティ | `--<コンポーネント>--<プロパティ>` | `--card--radius` | 呼び出し側（`style` 属性など） |
-| 内部プロパティ | `--_<プロパティ>` | `--_background--hocus` | コンポーネントの `:scope` |
+| 内部プロパティ | `--_<プロパティ>` | `--_background--hocus` | コンポーネントの `:scope`（サイズクエリで切り替えるフラグは、クエリを書く要素） |
 | コンポジションなどの内部プロパティ | `--_c--`、`--_p--`、`--_u--`、`--_b--` で始める | `--_c--threshold` | コンポジション、パターン、ユーティリティ、ベースのスタイル |
 
 公開プロパティの名前には、必ずコンポーネントの名前を付けます。`--foreground` のような汎用的な名前にすると、1つの要素に複数のコンポーネントの公開プロパティが渡されたとき、どれがどのコンポーネントのものかが分からなくなります。トークンの命名は「[10-4 デザイントークン](/components/design-tokens/)」で説明しています。
@@ -115,15 +115,15 @@ import propsCss from '../../../demos/components/public-properties/style.css?raw'
 ```css title="🙆‍♂ Recommended: 状態ごとの値を :scope にまとめ、状態のセレクタでは参照だけする"
 @scope (.scoped.toggle-button) to (.scoped) {
   :scope {
-    --_background: var(--background--base);
-    --_background--hocus: var(--background--surface);
-    --_background--selected: var(--background--active);
-    --_foreground: var(--foreground--base);
+    --_background: transparent;
+    --_background--hocus: var(--background--hover);
+    --_border-color: var(--border--base);
+    --_border-color--selected: var(--foreground--accent);
   }
 
   button {
+    border: 2px solid var(--_border-color);
     background-color: var(--_background);
-    color: var(--_foreground);
 
     &:enabled:hover {
       @media (any-hover) {
@@ -136,21 +136,23 @@ import propsCss from '../../../demos/components/public-properties/style.css?raw'
     }
 
     &[aria-pressed="true"] {
-      background-color: var(--_background--selected);
+      border-color: var(--_border-color--selected);
     }
   }
 }
 ```
 
-状態ごとの値は、すべて `:scope` の先頭に並べます。状態のセレクタの中では、どの内部プロパティを使うかを切り替えるだけにします。こうしておくと、そのコンポーネントがどんな状態を持ち、それぞれで何色になるのかを、先頭の数行で確認できます。配色を変えるときも、直すのは先頭の値だけです。ホバーの書き方は「[17-1 ホバーとフォーカスを表す](/interaction/states-and-focus/)」で、状態の表し方は「[17-3 状態を属性で表す](/interaction/state-attributes/)」で説明します。
+状態ごとの値は、すべて `:scope` の先頭に並べます。状態のセレクタの中では、どの内部プロパティを使うかを切り替えるだけにします。こうしておくと、そのコンポーネントがどんな状態を持ち、それぞれで何色になるのかを、先頭の数行で確認できます。配色を変えるときも、直すのは先頭の値だけです。
 
-公開プロパティにも、同じ形の接尾辞を使います。たとえば、置かれた場所の幅に応じてコンテナサイズクエリで隙間を変えるコンポーネントなら、広いときの値を `--media-card--gap--wide` のように接尾辞を付けた別の公開プロパティとして受け取ります。デフォルトの値を受け取る `--media-card--gap` には、接尾辞を付けません。
+この例では、押した状態を枠線で、ホバーとフォーカスを背景で表し、変えるプロパティを分けています。押した状態でも背景を変えると、詳細度の高い `&:enabled:hover`（`0.2.1`）が `&[aria-pressed="true"]`（`0.1.1`）に勝ち、押した直後にポインターが残っているボタンは押していない見た目になります。ホバーの書き方は「[17-1 ホバーとフォーカスを表す](/interaction/states-and-focus/)」で、状態の表し方は「[17-3 状態を属性で表す](/interaction/state-attributes/)」で説明します。
+
+公開プロパティにも、同じ形の接尾辞を使います。たとえば、置かれた場所の幅に応じてコンテナサイズクエリで隙間を変えるコンポーネントなら、広いときの値を `--media-card--gap--spacious` のように接尾辞を付けた別の公開プロパティとして受け取ります。デフォルトの値を受け取る `--media-card--gap` には、接尾辞を付けません。接尾辞の名前は、幅で立てるフラグの値（「[10-6 スタイルクエリで状態を伝える](/components/style-queries/)」の `--compact` と `--spacious`）にそろえます。
 
 ```css title="🙆‍♂ Recommended: 幅による値の違いを、接尾辞を付けた公開プロパティで受ける"
 @scope (.scoped.media-card) to (.scoped) {
   :scope {
     --_gap: var(--media-card--gap, 12px);
-    --_gap--wide: var(--media-card--gap--wide, 24px);
+    --_gap--spacious: var(--media-card--gap--spacious, 24px);
 
     container: --scoped / inline-size;
   }
@@ -160,7 +162,7 @@ import propsCss from '../../../demos/components/public-properties/style.css?raw'
     gap: var(--_gap);
 
     @container --scoped (inline-size >= calc(400 / 16 * 1rem)) {
-      gap: var(--_gap--wide);
+      gap: var(--_gap--spacious);
     }
   }
 }
@@ -184,16 +186,23 @@ import propsCss from '../../../demos/components/public-properties/style.css?raw'
 - メディアクエリやコンテナサイズクエリで、値を切り替えたい場合
 - `:hover` や `:has()` のように、状態によって値を変えたい場合
 
-最後の場合の例として、親のヘッダーが、自分の状態に合わせて子のナビゲーションの色を変えるコードを示します。親は自分の内部プロパティを、子の公開プロパティにつないでいるだけで、子のナビゲーションはヘッダーの中に置かれていることに依存しません。
+最後の場合の例として、親のヘッダーが、メニューを開いた状態に合わせて子のナビゲーションの色を変えるコードを示します。状態ごとの値は先頭に並べ、状態のセレクタでは、子の公開プロパティにつなぐ内部プロパティを切り替えるだけです。親は自分の内部プロパティを、子の公開プロパティにつないでいるだけで、子のナビゲーションはヘッダーの中に置かれていることに依存しません。
 
 ```css title="🙆‍♂ Recommended: 親の内部プロパティを、子の公開プロパティにつなぐ"
 @scope (.scoped.site-header) to (.scoped) {
   :scope {
+    --_background: var(--background--surface);
+    --_background--expanded: var(--background--inverse);
     --_foreground: var(--foreground--base);
+    --_foreground--expanded: var(--foreground--inverse);
     --global-nav--foreground: var(--_foreground);
 
-    &[data-appearance="dark"] {
-      --_foreground: var(--foreground--on-accent);
+    background-color: var(--_background);
+
+    &:has([aria-expanded="true"]) {
+      --global-nav--foreground: var(--_foreground--expanded);
+
+      background-color: var(--_background--expanded);
     }
   }
 }
@@ -207,7 +216,7 @@ import propsCss from '../../../demos/components/public-properties/style.css?raw'
 
 ## 公開プロパティに無効な値を渡したときのフォールバック
 
-`var()` のフォールバックが使われるのは、参照したカスタムプロパティが定義されていないときだけです。公開プロパティに、プロパティに合わない値が渡されたときには使われません。たとえば `style="--info-card--radius: large"` と渡すと、`var(--info-card--radius, 8px)` は `large` に置き換わります。`border-radius: large` という合わない値になり、`8px` は使われません。
+`var()` のフォールバックが使われるのは、参照したカスタムプロパティが定義されていないときだけです。公開プロパティに、プロパティに合わない値が渡されたときには使われません。たとえば `style="--info-card--radius: large"` と渡すと、`var(--info-card--radius, var(--rounded--md))` は `large` に置き換わります。`border-radius: large` という合わない値になり、`var(--rounded--md)` は使われません。
 
 このとき宣言は「計算値の時点で無効」になり、`border-radius` は初期値の `0` になります。`var()` を含む宣言は、前に書いた同じプロパティの宣言にも戻りません。この仕組みは「[4-6 カスタムプロパティの基礎](/cascade/custom-properties-basics/)」で説明しています。
 

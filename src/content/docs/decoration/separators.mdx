@@ -24,18 +24,20 @@ import gridCss from '../../../demos/decoration/bordered-grid/style.css?raw';
 
 メニューの項目の間に縦線を入れるとき、各項目に `border-inline-end` を付け、最後の項目だけ `:last-child` で打ち消す書き方がよく使われます。1行に収まるあいだは、この書き方で項目の間にだけ線が引かれます。
 
-```css title="🙅‍♂ Not Recommended: 各項目の枠線を付け、最後の項目だけ打ち消す" issue="convention"
+```css title="🙅‍♂ Not Recommended: 各項目の枠線を付け、最後の項目だけ打ち消す" issue="behavior"
 /* 🙅‍♂ Not Recommended */
-.menu {
-  display: block flex;
-  flex-wrap: wrap;
+@scope (.scoped.global-nav) to (.scoped) {
+  ul {
+    display: block flex;
+    flex-wrap: wrap;
+  }
 
-  & > li {
+  li {
     padding-inline: 24px;
-    border-inline-end: 1px solid oklch(70% 0 0deg);
+    border-inline-end: 1px solid var(--border--strong);
 
     &:last-child {
-      border-inline-end: none;
+      border-inline-end: unset;
     }
   }
 }
@@ -46,6 +48,8 @@ import gridCss from '../../../demos/decoration/bordered-grid/style.css?raw';
 グリッドでは、さらに問題が増えます。各セルに `border` を付けると、隣り合うセルの線が重なって、セルの間だけ線が2倍の太さになります。重なりを避けるために右と下の線だけを付け、行の末尾の列と最後の行で打ち消そうとしても、`auto-fill` で列の数が変わるグリッドでは、どのセルが末尾の列にあるのかが決まりません。表の `border-collapse` のように線を共有する仕組みは、表のレイアウトにしかありません（「[11-15 表を組む](/layout-practice/tables/)」）。
 
 どちらの問題も、2つの要素の間にある線を、片方の要素に持たせたことから起きています。要素の間の領域は `gap` なので、線も `gap` に描けば、行の端や空いたセルの扱いを要素ごとに考える必要がなくなります。
+
+本文とサイドバーのように、折り返さず並びの変わらない2つの区画の境界は、この問題が起きません。行の端に来る区画が変わらないので、片方の区画の `border` に線を描いてかまいません。
 
 ## gap decorations で gap に線を描く
 

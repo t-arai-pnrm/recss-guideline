@@ -10,7 +10,7 @@
 
     ._grid {
       display: block grid;
-      grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 200 / 16 * 1rem), 1fr));
       gap: 16px;
     }
 
@@ -19,13 +19,13 @@
       flex-wrap: wrap;
       gap: 16px;
 
-      & > ._card {
+      & > li {
         flex-grow: 1;
-        flex-basis: 200px;
+        flex-basis: calc(200 / 16 * 1rem);
       }
     }
 
-    ._card {
+    li {
       padding: 16px;
       border-radius: var(--rounded--md);
       box-shadow: var(--shadow--xs);

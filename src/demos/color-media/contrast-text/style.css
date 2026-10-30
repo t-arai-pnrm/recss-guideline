@@ -1,7 +1,7 @@
 /**
  * 背景色から、文字色を黒か白に決める色見本。
  *
- * @prop {color} --swatch-chip--background [oklch(50% 0 0deg)] - 背景色
+ * @prop {color} --swatch-chip--background [oklch(50% 0 none)] - 背景色
  */
 @layer pages {
   @scope (.scoped.contrast-demo) to (.scoped) {
@@ -9,7 +9,7 @@
       display: block grid;
       gap: 8px;
 
-      & > ._row + ._label {
+      & > ._swatches + ._label {
         margin-block-start: 16px;
       }
     }
@@ -18,7 +18,7 @@
       font-weight: var(--font-weight--bold);
     }
 
-    ._row {
+    ._swatches {
       display: block grid;
       grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(120 / 16 * 1rem)), 1fr));
       gap: 8px;
@@ -29,7 +29,7 @@
 @layer components {
   @scope (.scoped.swatch-chip) to (.scoped) {
     :scope {
-      --_background: var(--swatch-chip--background, oklch(50% 0 0deg));
+      --_background: var(--swatch-chip--background, oklch(50% 0 none));
 
       display: block grid;
       place-content: center;
@@ -38,13 +38,13 @@
       border-radius: var(--rounded--md);
       background-color: var(--_background);
 
-      /* ブラウザが背景色に対して黒か白を選ぶ（Safari 26以上） */
+      /* Safari 26より前の環境では宣言が無効になり、親から継承した文字色が残る */
       color: contrast-color(var(--_background));
       font-weight: var(--font-weight--bold);
       text-align: center;
 
       &[data-method="tint"] {
-        /* 黒か白に、背景色を15%混ぜて色味を加える */
+        /* 真っ黒と真っ白では背景から浮くので、背景色を15%混ぜてなじませる */
         color: color-mix(in oklab, contrast-color(var(--_background)) 85%, var(--_background));
       }
 

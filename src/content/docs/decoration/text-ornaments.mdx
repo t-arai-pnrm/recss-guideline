@@ -30,7 +30,7 @@ import cushionFrame from '../../../demos/decoration/text-cushion/frame.css?raw';
 ```css title="🙆‍♂ Recommended: マーカーの色を ::marker で変える" from="decoration/list-marker"
 ._step {
   &::marker {
-    color: var(--foreground--accent);
+    color: var(--foreground--muted);
   }
 }
 ```
@@ -39,7 +39,7 @@ import cushionFrame from '../../../demos/decoration/text-cushion/frame.css?raw';
 
 <Demo title="::marker で番号の色を変えたリストと、::before で番号を円で囲んだリスト" html={markerHtml} css={markerCss} frame={markerFrame} />
 
-デモの1つ目は `::marker` で番号を青にしたリスト、2つ目は `::before` で番号を青い円で囲んだリストです。
+デモの1つ目は `::marker` で番号を補足の文字色にしたリスト、2つ目は `::before` で番号を文字色の円で囲んだリストです。項目が2行に折り返しても、円は1行目の中央に置かれます。円の上下の `margin` を `calc((1lh - 1.75em) / 2)` にして、1行目の高さの中で中央に置いているからです（「[11-13 アイコンを配置する](/layout-practice/icon-alignment/)」）。擬似要素の文字の大きさは項目と同じにしているので、`1lh` と `1.75em` は項目の1行目の高さと円の大きさを表します。
 
 kiso.cssは、リストのマーカーを `list-style-type: ""` で空にしています。`::marker` で装飾するリストでは、`list-style-type: revert` でブラウザのデフォルトの番号に戻し、マーカーを置く余白を `padding-inline-start` で確保します。円で囲むリストでは、空のマーカーをそのまま使い、`counter-reset` と `counter-increment` で数えた番号を描きます。
 
@@ -48,11 +48,11 @@ kiso.cssは、リストのマーカーを `list-style-type: ""` で空にして�
 入れ子にした番号付きリストで、「1.2.3」のように親の番号をつないで見せるときは、`counter()` の代わりに `counters()` を使います。`counter()` はいちばん内側のカウンターの値だけを返し、`counters()` は同じ名前のカウンターを外側から順にすべて並べて、2つ目の引数の文字列で区切ります。区切りの文字列は番号の間にだけ入るので、末尾の「.」は `content` の後ろに足します。`::marker` の `content` はSafariに反映されないので、この番号も `::before` に描きます。
 
 ```css title="🙆‍♂ Recommended: 各リストでカウンターを作り直し、counters() で親の番号をつなぐ"
-._list {
+._outline {
   counter-reset: --item;
 }
 
-._item {
+._outline-item {
   counter-increment: --item;
 
   &::before {

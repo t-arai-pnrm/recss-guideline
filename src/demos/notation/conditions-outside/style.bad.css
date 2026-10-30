@@ -2,12 +2,14 @@
   @scope (.scoped.site-header) to (.scoped) {
     /* Stylelint の order/order に従うと、条件のブロックがスコープの先頭に並ぶ */
     @media (width >= calc(640 / 16 * 1rem)) {
-      ul {
-        display: block flex;
+      p {
+        font-size: calc(var(--text--title--font-size) / 16 * 1rem);
+        line-height: var(--text--title--leading);
       }
 
-      button {
-        display: none;
+      ul {
+        display: block flex;
+        flex-wrap: wrap;
       }
     }
 
@@ -29,14 +31,8 @@
     }
 
     ul {
-      display: none;
-      gap: 16px;
-    }
-
-    button {
-      padding-block: 4px;
-      padding-inline: 12px;
-      border-radius: var(--rounded--sm);
+      display: block grid;
+      gap: 8px 16px;
     }
   }
 }

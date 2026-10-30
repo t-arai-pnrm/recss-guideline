@@ -6,6 +6,17 @@
       /* カードを一覧で繰り返しても、タグがほかのカードの画像を基準にしないようにする */
       anchor-scope: --thumbnail;
       container: --scoped / inline-size;
+
+      & ._tag {
+        /* 未対応の環境では、見出しの前の通常の位置に表示する */
+        @supports (anchor-scope: --thumbnail) {
+          position: absolute;
+          inset-block-start: anchor(start);
+          inset-inline-end: anchor(end);
+          position-anchor: --thumbnail;
+          margin: 8px;
+        }
+      }
     }
 
     ._body {
@@ -18,8 +29,8 @@
       border: 1px solid var(--border--base);
       border-radius: var(--rounded--md);
 
-      /* 画像 160px 相当・隙間 16px・本文の最小幅 240px 相当・左右の padding 32px が並ぶ幅 */
-      @container --scoped (inline-size >= calc(160 / 16 * 1rem + 16px + 240 / 16 * 1rem + 32px)) {
+      /* 画像 160px 相当・隙間 16px・本文の最小幅 240px 相当・左右の padding 32px・左右の枠線 2px が並ぶ幅 */
+      @container --scoped (inline-size >= calc(160 / 16 * 1rem + 16px + 240 / 16 * 1rem + 32px + 2px)) {
         --_density: --spacious;
 
         grid-template-columns: calc(160 / 16 * 1rem) 1fr;
@@ -43,17 +54,6 @@
       display: block grid;
       gap: 8px;
       justify-items: start;
-
-      & > ._tag {
-        /* 未対応の環境では、見出しの前の通常の位置に表示する */
-        @supports (anchor-scope: --thumbnail) {
-          position: absolute;
-          inset-block-start: anchor(start);
-          inset-inline-end: anchor(end);
-          position-anchor: --thumbnail;
-          margin: 8px;
-        }
-      }
     }
 
     ._tag {
@@ -67,7 +67,8 @@
     }
 
     ._title {
-      font-size: calc(18 / 16 * 1rem);
+      font-size: calc(var(--text--subtitle--font-size) / 16 * 1rem);
+      line-height: var(--text--subtitle--leading);
     }
 
     ._lead {

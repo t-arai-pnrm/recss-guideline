@@ -11,7 +11,8 @@
       padding-block: 12px;
       padding-block: if(style(--_density: --spacious): 24px; else: 12px);
       padding-inline: 16px;
-      background-color: var(--background--active);
+      border: 1px solid var(--border--base);
+      background-color: var(--background--surface);
 
       @media (width >= calc(768 / 16 * 1rem)) {
         --_density: --spacious;

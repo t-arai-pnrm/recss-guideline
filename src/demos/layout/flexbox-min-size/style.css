@@ -1,31 +1,19 @@
 @layer components {
   @scope (.scoped.flexbox-min-size) to (.scoped) {
-    :scope {
-      display: block grid;
-      gap: 16px;
-    }
-
-    section {
-      display: block grid;
-      gap: 8px;
-    }
-
-    h3 {
-      font-size: calc(14 / 16 * 1rem);
-    }
-
     ._card {
       display: block flex;
       gap: 12px;
-      align-items: center;
+      align-items: start;
 
       /* はみ出しを見せるため、コンテナの幅を狭める */
       max-inline-size: 280px;
       padding: 12px;
       border: 1px dashed oklch(60% 0 0deg);
 
+      /* URL が折り返しても、アイコンを1行目の中央に置く */
       & > ._icon {
         flex-shrink: 0;
+        margin-block: calc((1lh - 24px) / 2);
       }
     }
 

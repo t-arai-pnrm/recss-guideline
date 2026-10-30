@@ -1,0 +1,18 @@
+@layer components {
+  /* base="none" では共通の足場が読み込まれないので、2つの段を縦に並べる */
+  @scope (.scoped.flexbox-min-size) to (.scoped) {
+    :scope {
+      display: block grid;
+      gap: 16px;
+    }
+
+    section {
+      display: block grid;
+      gap: 8px;
+    }
+
+    h3 {
+      font-size: calc(14 / 16 * 1rem);
+    }
+  }
+}

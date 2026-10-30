@@ -11,32 +11,32 @@
       border: 1px solid var(--border--base);
       border-radius: var(--rounded--lg);
 
-      /* 子要素の間に、同じ大きさの余白を入れる */
       & > * + * {
-        margin-block-start: 16px;
+        margin-block-start: calc(var(--spacing--sm) / 16 * 1rem);
       }
 
       /* 🙅‍♂ 上下のマージンまで 0 にするので、上の余白の指定を打ち消してしまう */
-      & > ._figure-shorthand {
+      &[data-margin="shorthand"] > ._figure {
         margin: 0 auto;
       }
 
       /* 🙆‍♂ 左右のマージンだけを auto にするので、上下の余白は残る */
-      & > ._figure-logical {
+      &[data-margin="logical"] > ._figure {
         margin-inline: auto;
       }
     }
 
     h2 {
-      font-size: calc(18 / 16 * 1rem);
+      font-size: calc(var(--text--title--font-size) / 16 * 1rem);
+      line-height: var(--text--title--leading);
     }
 
-    ._figure-shorthand,
-    ._figure-logical {
+    ._figure {
       inline-size: min(100%, calc(160 / 16 * 1rem));
       aspect-ratio: 16 / 9;
+      border: 1px solid var(--border--strong);
       border-radius: var(--rounded--md);
-      background-image: linear-gradient(135deg, oklch(82% 0.08 250deg), oklch(72% 0.12 300deg));
+      background-color: var(--background--surface);
     }
   }
 }

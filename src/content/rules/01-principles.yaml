@@ -62,7 +62,7 @@
   kind: judgment
   rule: 対象のブラウザの一部しか対応していない機能は、未対応の環境でも内容を読めて操作できる場合に限って、プログレッシブ・エンハンスメントとして使う。
   reason: 対応した環境の体験を良くしつつ、未対応の環境のユーザーを切り捨てないため。
-  note: '`text-wrap: pretty`、`word-break: auto-phrase`、`field-sizing`、`text-box`、ドキュメント間のビュートランジションが使いやすい例です。'
+  note: '`text-wrap: pretty`（英文の段落。和文には `no-text-wrap-pretty-for-japanese`）、`word-break: auto-phrase`、`field-sizing`、`text-box`、ドキュメント間のビュートランジションが使いやすい例です。'
   page: principles/browser-support
   since: 0.1.0
 
@@ -134,7 +134,7 @@
   level: 禁止
   kind: spec
   rule: ブロックレイアウトの要素に、`justify-self` や `justify-items` を指定しない。
-  reason: 対応しているのは Chrome だけで、Safari と Firefox では無視されるため。
+  reason: 対応しているのは Chrome と Edge だけで、Safari と Firefox では無視されるため。
   note: 'ブロックの中央寄せには `margin-inline: auto` を使います。`display` を grid からブロックに戻すときは、指定が残っていないかを確かめます。'
   aiProne: true
   page: principles/browser-support

@@ -48,7 +48,7 @@
     }
 
     ._label {
-      /* 狭いときは、ラベルを視覚的に隠す */
+      /* アイコンは読み上げの対象から外しているので、ラベルは消さずにリンクの名前として残す */
       @container style(--_density: --compact) {
         position: absolute;
         overflow: clip;

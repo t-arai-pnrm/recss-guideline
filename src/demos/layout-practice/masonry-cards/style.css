@@ -5,7 +5,7 @@
       grid-template-columns: repeat(auto-fill, minmax(min(100%, calc(160 / 16 * 1rem)), 1fr));
       gap: 16px;
 
-      /* 対応している環境だけ、項目を短い列へ詰める */
+      /* 未対応の環境では、行ごとに高さのそろった Grid として読めるようにするため */
       @supports (display: block grid-lanes) {
         display: block grid-lanes;
       }
@@ -21,7 +21,7 @@
     }
 
     ._number {
-      color: var(--foreground--accent);
+      color: var(--foreground--muted);
       font-size: calc(var(--text--title--font-size) / 16 * 1rem);
       font-weight: var(--font-weight--bold);
       line-height: var(--text--title--leading);

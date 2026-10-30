@@ -27,7 +27,8 @@
       display: block grid;
       place-items: center;
       aspect-ratio: 16 / 9;
-      background-color: var(--background--active);
+      border: 1px dashed var(--border--strong);
+      background-color: var(--background--surface);
       font-size: calc(var(--text--body-compact--font-size) / 16 * 1rem);
       line-height: var(--text--body-compact--leading);
     }

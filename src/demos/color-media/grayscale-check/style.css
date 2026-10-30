@@ -1,7 +1,7 @@
 @layer components {
   @scope (.scoped.grayscale-demo) to (.scoped) {
     :scope {
-      --_foreground: oklch(30% 0 0deg);
+      --_foreground: oklch(30% 0 none);
       --_link: oklch(38% 0.12 150deg);
       --_danger: oklch(52% 0.2 25deg);
 
@@ -57,7 +57,7 @@
 
     ._email-input {
       padding: 8px;
-      border-color: oklch(60% 0 0deg);
+      border-color: oklch(60% 0 none);
       border-radius: var(--rounded--sm);
 
       &[aria-invalid="true"] {

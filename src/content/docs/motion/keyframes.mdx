@@ -21,7 +21,7 @@ import toastFrame from '../../../demos/motion/keyframes-toast/frame.css?raw';
 
 `@keyframes` でよく見かけるのは、`fadeInUp` のような名前で、不透明度と移動を1つにまとめ、始まりと終わりの値を両方書き込んだものです。この形では、フェードだけが欲しい場面で使い回せず、終わりの値が要素の本来の値と食い違うと、動きの最後で値が飛びます。
 
-```css title="🙅‍♂ Not Recommended: 複数のプロパティを持ち、終わりの値を書き込んだ @keyframes" issue="convention"
+```css title="🙅‍♂ Not Recommended: 複数のプロパティを持ち、終わりの値を書き込んだ @keyframes" issue="behavior"
 /* 🙅‍♂ Not Recommended */
 @keyframes fadeInUp {
   from {
@@ -81,11 +81,14 @@ import toastFrame from '../../../demos/motion/keyframes-toast/frame.css?raw';
   :scope {
     --translate-from--y-value: 100%;
 
+    animation-name: --fade-in;
+    animation-duration: var(--duration--base);
+    animation-timing-function: var(--ease--out-quint);
+    animation-fill-mode: both;
+
     @media (prefers-reduced-motion: no-preference) {
       animation-name: --fade-in, --translate-from;
       animation-duration: var(--duration--base), var(--duration--slow);
-      animation-timing-function: var(--ease--out-quint);
-      animation-fill-mode: both;
     }
 
     &[data-position="top"] {
@@ -97,7 +100,7 @@ import toastFrame from '../../../demos/motion/keyframes-toast/frame.css?raw';
 
 起点や方向は、`@keyframes` の中で参照しているカスタムプロパティに、使う側から値を渡して変えます。このカスタムプロパティは `@keyframes` の引数のようなものなので、本書では「API的なカスタムプロパティ」と呼びます。名前は `--<keyframes の名前>--<値の名前>` の形にします。先頭に `@keyframes` の名前が入っていて、コンポーネントの公開用や内部用のカスタムプロパティとは区別できるので、内部用の `--_` は付けません。
 
-次のデモでは、同じ `--fade-in` と `--translate-from` を使い、下に出す通知は下から、上に出す通知は上から現れます。「下に通知を出す」と「上に通知を出す」のボタンで、それぞれの通知を開けます。2つの通知で違うのは、`--translate-from--y-value` の値と配置だけです。通知は `popover` 属性で表示しているので、開くたびに `display: none` から表示され、アニメーションも最初から再生されます。
+次のデモでは、同じ `--fade-in` と `--translate-from` を使い、下に出す通知は下から、上に出す通知は上から現れます。「下に通知を出す」と「上に通知を出す」のボタンで、それぞれの通知を開けます。2つの通知で違うのは、`--translate-from--y-value` の値と配置だけです。フェードは条件の外に書き、移動だけを `no-preference` の中で足しているので、動きを減らす設定ではその場でフェードして現れます（「[18-2 動きを減らす設定に対応する](/motion/reduced-motion/)」）。通知は `popover` 属性で表示しているので、開くたびに `display: none` から表示され、アニメーションも最初から再生されます。
 
 <Demo title="同じ @keyframes に起点だけを渡し、通知を下からと上から出す" html={toastHtml} css={toastCss} frame={toastFrame} height="12rem" />
 
@@ -162,17 +165,17 @@ import toastFrame from '../../../demos/motion/keyframes-toast/frame.css?raw';
 
 `both` は、自明なフレームを省略した `@keyframes` と組み合わせると安全です。`to` を省いた出現の動きでは、最後のフレームが要素本来の値なので、終わったあとに保っても見た目は変わりません。`forwards` で、書き込んだ終了値を保つと、要素本来の値が上書きされたままになり、あとから状態を変えても反映されません。
 
-`both` には、`animation-play-state: paused` の間も最初のフレームを当てる働きがあります。画面に入るまで止めておき、入ったら再生する演出では、この働きで初期の見えない状態を `@keyframes` の `from` だけで表せます。この使い方は「[18-9 スクロールに合わせて動かす](/motion/scroll-driven/)」で説明しています。
+遅延のないアニメーションは、`animation-play-state: paused` で止めている間も、時刻0の最初のフレームが当たります。これは `animation-fill-mode` によらない振る舞いで、`both` が要るのは、遅延の間（順に出すスタッガー）と、再生を終えたあとに値を保つためです。画面に入るまで止めておき、入ったら再生する演出では、この振る舞いで初期の見えない状態を `@keyframes` の `from` だけで表せます。{/* 要検証: ブラウザ。遅延のない一時停止中のアニメーションに、animation-fill-mode: none でも最初のフレームが当たること */}この使い方は「[18-9 スクロールに合わせて動かす](/motion/scroll-driven/)」で説明しています。
 
 ## `@keyframes` の再生をJavaScriptで制御する
 
 `@keyframes` のアニメーションは、適用が外れた瞬間に要素本来の値へ切り替わり、トランジションのように途中から逆向きに戻りません。そのため、途中で取り消されることがある動きは、トランジションで作るのが基本です（「[18-4 トランジションの基本と中断](/motion/transitions-and-keyframes/#途中で取り消される動き)」）。
 
-`@keyframes` を使う場面で取り消しに対応するときは、Web Animations APIを使います。CSSで定義したアニメーションも、`element.getAnimations()` で `Animation` オブジェクトとして取り出せます。`reverse()` は今の位置から逆向きに再生し、`cancel()` はアニメーションを外して要素本来の値に戻します。次の例は、出現の途中でも、出現し終えたあとでも、同じ動きを逆向きに再生してから閉じるものです。
+`@keyframes` を使う場面で取り消しに対応するときは、Web Animations APIを使います。CSSで定義したアニメーションも、`element.getAnimations()` で `Animation` オブジェクトとして取り出せます。`reverse()` は今の位置から逆向きに再生し、`cancel()` はアニメーションを外して要素本来の値に戻します。次の例は、出現の途中でも、出現し終えたあとでも、同じ動きを逆向きに再生してから閉じるものです。`{ subtree: true }` を渡すのは、背景の `::backdrop` のような擬似要素のアニメーションも含めて逆向きに再生するためです。渡さないと、要素自身のアニメーションだけが返り、背景は閉じた瞬間に消えます。
 
 ```js title="再生中の @keyframes を逆向きに戻してから閉じる JavaScript の例"
 const close = async (dialog) => {
-  const animations = dialog.getAnimations();
+  const animations = dialog.getAnimations({ subtree: true });
   animations.forEach((animation) => animation.reverse());
   await Promise.all(animations.map((animation) => animation.finished));
   dialog.close();

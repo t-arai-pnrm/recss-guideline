@@ -68,11 +68,16 @@
 
     ._bar {
       position: fixed;
+
+      /* セーフエリアは画面の物理的な下端にあるので、物理プロパティで書く */
+      /* stylelint-disable-next-line logical-css/require-logical-properties */
+      bottom: 0;
       inset-inline: 0;
-      inset-block-end: 0;
       display: block flex;
       justify-content: center;
-      padding-block: 12px max(12px, var(--_inset-bottom));
+      /* stylelint-disable-next-line logical-css/require-logical-properties */
+      padding-bottom: max(12px, var(--_inset-bottom));
+      padding-block-start: 12px;
       border-block-start: 1px solid var(--border--base);
       background-color: var(--background--surface);
     }
@@ -114,8 +119,9 @@
     }
 
     ._unsafe-bottom {
+      /* stylelint-disable-next-line logical-css/require-logical-properties */
+      bottom: 0;
       inset-inline: 0;
-      inset-block-end: 0;
       block-size: var(--_inset-bottom);
     }
   }

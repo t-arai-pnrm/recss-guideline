@@ -67,18 +67,24 @@ import sectionAdjacentCss from '../../../demos/layout-practice/section-adjacent-
 FlexboxやGridで並べた要素の間隔は、親の `gap` で作ります。`gap` は要素と要素の間にだけ空くので、最初や最後の要素の余白を打ち消す必要がありません。
 
 ```css title="🙆‍♂ Recommended: 間隔は親の gap で作る"
-._news-list {
-  display: block grid;
-  gap: 24px;
+@scope (.scoped.news-section) to (.scoped) {
+  :scope {
+    container: --scoped / inline-size;
+  }
 
-  @media (width >= calc(768 / 16 * 1rem)) {
-    grid-template-columns: repeat(2, 1fr);
-    column-gap: 32px;
+  ._news-list {
+    display: block grid;
+    gap: 24px;
+
+    @container --scoped (inline-size >= calc(320 / 16 * 1rem + 320 / 16 * 1rem + 32px)) {
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: 32px;
+    }
   }
 }
 ```
 
-列の数を変えても、子要素の側には何も書き足す必要がありません。行と列の間隔は `row-gap` と `column-gap` で別々に決められ、要素が折り返したときも、行の頭に余計な余白が残りません。間隔を決める情報が親の1か所にあるので、「この一覧の間隔は何pxか」という問いには、親のルールを見るだけで答えられます。
+2列にする閾値は、1列の最小幅320px相当を2つと、列の間隔32pxを足した幅です。列の数を変えても、子要素の側には何も書き足す必要がありません。行と列の間隔は `row-gap` と `column-gap` で別々に決められ、要素が折り返したときも、行の頭に余計な余白が残りません。間隔を決める情報が親の1か所にあるので、「この一覧の間隔は何pxか」という問いには、親のルールを見るだけで答えられます。
 
 `gap` はFlexboxでも使えます。要素を横に並べて折り返す `cluster` や、縦に積む `stack` のようなコンポジションは、どれも `gap` で間隔を作っています。コンポジションの間隔のデフォルト値を0にして、使う側で指定する理由は「[10-3 コンポジションとユーティリティ](/components/compositions-and-utilities/)」で説明しています。
 
@@ -130,7 +136,7 @@ FlexboxやGridで並べた要素の間隔は、親の `gap` で作ります。`g
 
 `grid-template` の各行は、エリアの名前と行の高さの組です。高さを省略した行は `auto` になり、要素の大きさに合わせて決まります。余白の行だけに高さを書いておけば、上から順に「見出し、24pxの余白、本文、16pxの余白、ボタン」と読めます。
 
-次のデモでは、置かれた場所の幅が560px相当以上になると、余白の行の高さが2倍に変わります。クエリの中で書き換えているのは `grid-template` だけで、子要素のCSSには余白の指定がありません。幅を320pxや480pxにすると、見出しの下は24px、本文の下は16pxで、768px以上を選ぶと、それぞれ48pxと32pxに広がります。
+次のデモでは、置かれた場所の幅が560px相当以上になると、余白の行の高さが2倍に変わります。クエリの中で書き換えているのは、`._layout` の `grid-template` と外側の `padding` だけで、子要素のCSSには余白の指定がありません。幅を320pxや480pxにすると、見出しの下は24px、本文の下は16pxで、768px以上を選ぶと、それぞれ48pxと32pxに広がります。
 
 <Demo title="空のグリッドセルの行で、見出しの下と本文の下に違う大きさの余白を作る" html={emptyCellsHtml} css={emptyCellsCss} />
 
@@ -167,7 +173,7 @@ FlexboxやGridで並べた要素の間隔は、親の `gap` で作ります。`g
 ```css title="🙆‍♂ Recommended: 左右に余白の列を置き、中央の列にコンテンツを置く"
 @scope (.scoped.page-section) to (.scoped) {
   ._layout {
-    --_gutter: 16px;
+    --_gutter: calc(var(--spacing--sm) * 1px);
     --_content-max-width: calc(1140 / 16 * 1rem);
 
     display: block grid;
@@ -188,7 +194,7 @@ FlexboxやGridで並べた要素の間隔は、親の `gap` で作ります。`g
 }
 ```
 
-中央の列は、最大で1140px相当の幅になり、画面が狭いときも左右にガターの分だけ余白が残ります。子要素は、デフォルトでは中央の列に置かれ、`._banner` だけが左右の余白の列まで広がって、画面幅いっぱいに表示されます。列の境界の線にも `--full-start` のように名前を付けておくと、子要素の側は `--content` や `--full` という名前だけで置き場所を選べます。
+中央の列は、最大で1140px相当の幅になり、画面が狭いときも左右にガターの分だけ余白が残ります。ガターの値は区画ごとに決めず、サイト全体で同じトークンを参照します（「[9-3 名前に使う語](/notation/terminology/#rule-gutter-vs-gap)」）。子要素は、デフォルトでは中央の列に置かれ、`._banner` だけが左右の余白の列まで広がって、画面幅いっぱいに表示されます。列の境界の線にも `--full-start` のように名前を付けておくと、子要素の側は `--content` や `--full` という名前だけで置き場所を選べます。
 
 最大幅と左右の `padding` で同じことをしようとすると、`box-sizing: border-box` の環境では、最大幅から `padding` の分だけコンテンツが狭くなります。そこで「最大幅に左右の `padding` を足す」という計算をしがちですが、余白の列を使えば、中央の列の最大幅がそのままコンテンツの幅になります。画面幅いっぱいに広げる子要素がない1つの要素なら、その要素だけ `box-sizing: unset` で `content-box` に戻せば、`padding` で書いても足し算は要りません（「[7-3 ボックスモデルの基礎](/layout/box-model/#rule-unset-box-sizing-for-content-max-width)」）。
 
@@ -214,11 +220,11 @@ FlexboxやGridで並べた要素の間隔は、親の `gap` で作ります。`g
 }
 ```
 
-この例では、お知らせのセクションの上下に、ページの背景が48pxずつ見えます。さらに、セクションの中に `padding` がないので、見出しは色の付いた領域の上端に接します。背景の上端から見出しまでの余白と、セクションどうしの間隔は、どちらもセクションの上下の余白です。それを親とセクションのどちらに書くかで迷うと、この例のように、片方に足りない余白が生まれます。
+この例では、お知らせのセクションとほかのセクションの間に、ページの背景が48pxの帯になって見えます。さらに、セクションの中に `padding` がないので、見出しは色の付いた領域の上端に接します。背景の上端から見出しまでの余白と、セクションどうしの間隔は、どちらもセクションの上下の余白です。それを親とセクションのどちらに書くかで迷うと、この例のように、片方に足りない余白が生まれます。
 
 そこで、セクションの上下の余白は、各セクションのルートの `padding-block` で作ります。ページの側は、セクションを間隔なしで縦に積むだけにします。`padding` の領域には背景が描かれるので、背景はセクションの端から端まで途切れず、中身と背景の端の間にも余白が確保されます。
 
-```css title="🙆‍♂ Recommended: 上下の余白を、セクション自身の padding-block で作る"
+```css title="🙆‍♂ Recommended: 上下の余白を、セクション自身の padding-block で作る" from="layout-practice/section-spacing"
 @scope (.scoped.news-section) to (.scoped) {
   :scope {
     padding-block: 48px;
@@ -227,7 +233,7 @@ FlexboxやGridで並べた要素の間隔は、親の `gap` で作ります。`g
 }
 ```
 
-次の2つのデモは、同じHTMLに2通りのCSSを当てたものです。1つ目では、色の付いた2つのセクションの間と上下に、ページの背景が帯になって見え、見出しも背景の上端に接しています。2つ目では、各セクションが自分の `padding-block` で上下の余白を持つので、背景が隙間なく続き、中身の上下にも余白が空いています。
+次の2つのデモは、同じHTMLに2通りのCSSを当てたものです。1つ目では、セクションとセクションの間に、ページの背景が帯になって見え、見出しも背景の上端に接しています。2つ目では、各セクションが自分の `padding-block` で上下の余白を持つので、背景が隙間なく続き、中身の上下にも余白が空いています。
 
 <Demo title="セクションの間をページの gap で空けると、間にページの背景が帯になって見える" html={sectionSpacingHtml} css={sectionSpacingBadCss} variant="not-recommended" />
 
@@ -245,7 +251,7 @@ FlexboxやGridで並べた要素の間隔は、親の `gap` で作ります。`g
 
 ただし、ページのCSSからは、セクションのルートを選べません。`@scope (.scoped.page-home) to (.scoped)` の範囲は、内側のコンポーネントのルートで打ち切られるからです。そこで、ページは各セクションをOuterの要素（親が子のコンポーネントを包む要素）で包み、Outerどうしの並びを次兄弟結合子で調べます。詰める値は、セクションが公開する上の余白の公開プロパティに渡し、継承でセクションのルートに届けます。
 
-```css title="🙆‍♂ Recommended: 同じ背景が続く境目は、ページの側で後ろのセクションの上の余白を詰める"
+```css title="🙆‍♂ Recommended: 同じ背景が続く境目は、ページの側で後ろのセクションの上の余白を詰める" from="layout-practice/section-adjacent-spacing"
 @scope (.scoped.page-home) to (.scoped) {
   main {
     & > ._news-outer + ._campaign-outer {
@@ -303,18 +309,16 @@ FlexboxやGridで並べた要素の間隔は、親の `gap` で作ります。`g
 
 ```css title="🙆‍♂ Recommended: CMSが出力する背景の設定で、同じ背景が続く境目を選ぶ"
 @scope (.scoped.page-landing) to (.scoped) {
-  main {
-    & > [data-surface] {
-      padding-block: 48px;
-    }
+  [data-surface] {
+    padding-block: 48px;
+  }
 
-    & > [data-surface="muted"] {
-      background-color: var(--background--surface);
-    }
+  [data-surface="muted"] {
+    background-color: var(--background--surface);
+  }
 
-    & > [data-surface="muted"] + [data-surface="muted"] {
-      padding-block-start: 0;
-    }
+  [data-surface="muted"] + [data-surface="muted"] {
+    padding-block-start: 0;
   }
 }
 ```
@@ -329,7 +333,7 @@ FlexboxやGridで並べた要素の間隔は、親の `gap` で作ります。`g
 
 要素そのものに余白を付けると、この関係がコードから抜け落ちます。次の例は、見出しに下の余白を無条件に付け、段落にも下の余白を付けて、最後の段落だけ打ち消したものです。
 
-```css title="🙅‍♂ Not Recommended: 要素そのものに下の余白を付け、最後の子で打ち消す" issue="convention"
+```css title="🙅‍♂ Not Recommended: 要素そのものに下の余白を付け、最後の子で打ち消す" issue="behavior"
 /* 🙅‍♂ Not Recommended */
 ._body {
   & > :is(:heading, h1, h2, h3, h4, h5, h6) {
@@ -411,7 +415,18 @@ FlexboxやGridで並べた要素の間隔は、親の `gap` で作ります。`g
 
 `margin-block-start` は子要素に指定されるので、`var(--prose--space)` も子要素の側で値が決まります。そのため、見出しの前だけ間隔を広げたいときは、その見出しに `style="--prose--space: …"` のように値を渡せば、その要素の間隔だけを変えられます。
 
-本文の領域を、FlexboxやGridにして `gap` で間隔を作ることはしません。1つ目の理由は、`float` による回り込みを使えなくなることです。フレックスアイテムやグリッドアイテムでは、`float` が無視されます。2つ目の理由は、`margin` の相殺を活かせなくなることです。通常フローなら、図の下の `margin` のように要素が自分で持っている余白と、流れの間隔が隣り合っても、足し算にはならず大きいほうだけが残ります。`gap` の中では `margin` が相殺されず、`gap` に足されるので、要素ごとの余白を調整しにくくなります。
+本文の領域を、FlexboxやGridにして `gap` で間隔を作ることはしません。
+
+```css title="🙅‍♂ Not Recommended: 記事の本文を Flexbox にして gap で間隔を作る" issue="behavior"
+/* 🙅‍♂ Not Recommended */
+._content {
+  display: block flex;
+  flex-direction: column;
+  gap: 16px;
+}
+```
+
+1つ目の理由は、`float` による回り込みを使えなくなることです。フレックスアイテムやグリッドアイテムでは、`float` が無視されます。2つ目の理由は、`margin` の相殺を活かせなくなることです。通常フローなら、図の下の `margin` のように要素が自分で持っている余白と、流れの間隔が隣り合っても、足し算にはならず大きいほうだけが残ります。`gap` の中では `margin` が相殺されず、`gap` に足されるので、要素ごとの余白を調整しにくくなります。
 
 ## ガイドライン
 

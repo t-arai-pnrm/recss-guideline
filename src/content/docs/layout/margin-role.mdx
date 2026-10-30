@@ -51,18 +51,18 @@ HTMLは、もともと論文のような縦に長い文書を書くための言�
 
 かつてのCSSにはレイアウトの機能がなく、ボックスを並べるにも `margin` と `padding`、それに `<table>` や `float` を使うしかありませんでした。そうした使い方では、`margin` に、合計で決まる間隔や、背景の内側の余白という、最低限の距離とは別の意味を持たせます。大きいほうを採る規則がその意図と合わないので、相殺が不具合のように見えていました。前の節の2つの場面も、この使い方の名残です。
 
-今は、FlexboxとGridがレイアウトを受け持ちます。本書は、ボックスを並べる間隔をFlexboxやGridの `gap` に任せ、`margin` は文章の要素の間の余白という本来の用途に使います。段落、図、区切り線のように自分で余白を持つ要素が続く本文では、相殺のおかげで大きいほうの余白だけが残り、余白が重なって広がりすぎることがありません。CMSで入力される本文も、通常フローのまま `margin` で間隔を作ります（ルール「[`prose-in-normal-flow`](/layout-practice/spacing/#rule-prose-in-normal-flow)」）。
+今は、FlexboxとGridがレイアウトを受け持ちます。本書は、ボックスを並べる間隔をFlexboxやGridの `gap` に任せ、`margin` は文章の要素の間の余白という本来の用途に使います。段落、図、区切り線のように自分で余白を持つ要素が続く本文では、相殺のおかげで大きいほうの余白だけが残り、余白が重なって広がりすぎることがありません。CMSで入力される本文も、通常フローのまま `margin` で間隔を作ります（ルール「[`normal-flow-for-conditional-spacing`](/layout-practice/choosing/#rule-normal-flow-for-conditional-spacing)」）。
 
-次の例では、本文の要素の間に16px、区切り線の前後に40pxの `margin` を付けています。区切り線の下の40pxと、次の段落の上の16pxは相殺するので、線の下の間隔は56pxではなく40pxです。
+次の例では、本文の要素の間に16px相当、区切り線の前後に40px相当の `margin` を付けています。区切り線の下の40px相当と、次の段落の上の16px相当は相殺するので、線の下の間隔は56px相当ではなく40px相当です。段落の間の余白は、文字を大きくしたときに広がるようremで書きます（「[6-1 pxとremを使い分ける](/values/px-and-rem/)」）。
 
 ```css title="🙆‍♂ Recommended: 本文の要素の間と、区切り線の前後に求める距離を margin で書く"
 ._body {
   & > * + * {
-    margin-block-start: 16px;
+    margin-block-start: calc(16 / 16 * 1rem);
   }
 
   & > hr {
-    margin-block: 40px;
+    margin-block: calc(40 / 16 * 1rem);
   }
 }
 ```
@@ -92,16 +92,16 @@ HTMLは、もともと論文のような縦に長い文書を書くための言�
 }
 ```
 
-文章の要素の間の余白は、通常フローのまま `margin` で作ります。そのときは、次兄弟結合子で前の要素を条件にして選んだ後ろの要素の `margin-block-start` に付けます（ルール「[`block-margin-with-sibling-combinator`](/layout-practice/spacing/#rule-block-margin-with-sibling-combinator)」）。余白は要素そのものの性質ではなく、隣り合う2つの要素の関係から生まれるからです。前に要素があるときだけ余白が付くので、要素が欠けたり並びが変わったりしても、余計な余白が残りません。
+文章の要素の間の余白は、通常フローのまま `margin` で作ります。そのときは、次兄弟結合子で前の要素を条件にして選んだ後ろの要素の `margin-block-start` に付けます（ルール「[`block-margin-with-sibling-combinator`](/layout-practice/spacing/#rule-block-margin-with-sibling-combinator)」）。余白は要素そのものの性質ではなく、隣り合う2つの要素の関係から生まれるからです。前に要素があるときだけ余白が付くので、要素が欠けたり並びが変わったりしても、余計な余白が残りません。ただし、`hidden` 属性で隠した要素も前の要素として数えられます。先頭の要素を隠すと、2つ目の要素の上に余白が残るので、先頭の要素を出し分ける並びでは、`& > :not([hidden]) ~ :not([hidden])` のように隠した要素を条件から外します。
 
 ```css title="🙆‍♂ Recommended: 文章の要素の間は、後ろの要素の margin-block-start で作る" from="layout/margin-role"
 ._body {
   & > * + * {
-    margin-block-start: 16px;
+    margin-block-start: calc(16 / 16 * 1rem);
   }
 
   & > :is(:heading, h1, h2, h3, h4, h5, h6) + * {
-    margin-block-start: 8px;
+    margin-block-start: calc(8 / 16 * 1rem);
   }
 }
 ```
@@ -125,14 +125,14 @@ HTMLは、もともと論文のような縦に長い文書を書くための言�
 
 背景や枠線の内側の余白は、親の `padding` で作ります。最初の子の `margin-block-start` や最後の子の `margin-block-end` で作ると、親に `padding` や `border` がない限り、相殺で余白が親の外へ出るからです。
 
-```css title="🙆‍♂ Recommended: 背景の内側の余白は親の padding で作る"
+```css title="🙆‍♂ Recommended: 背景の内側の余白は親の padding で作る" from="layout/margin-role"
 ._card {
   padding: 24px;
-  background-color: oklch(96% 0.02 250deg);
+  background-color: var(--background--surface);
 }
 ```
 
-次のデモは、お知らせの記事をカードにしたものです。カードの背景の内側の余白は `padding: 24px` で、見出し、本文、フッターの間隔はカードの `gap: 24px` で作っています。本文の領域だけは通常フローのままにし、`& > * + *` で2つ目以降の要素に16px、見出しの前に32px、見出しの直後に8pxの `margin-block-start` を付けています。
+次のデモは、お知らせの記事をカードにしたものです。カードの背景の内側の余白は `padding: 24px` で、見出し、本文、フッターの間隔はカードの `gap: 24px` で作っています。本文の領域だけは通常フローのままにし、`& > * + *` で2つ目以降の要素に16px相当、見出しの前に32px相当、見出しの直後に8px相当の `margin-block-start` を付けています。部品の間隔の `gap` はpxのまま、文字と一緒に広げたい段落の間だけをremで書いています。
 
 <Demo title="背景の内側は padding、ブロックの間隔は gap、本文の要素の間は後ろの要素の margin-block-start で作る" html={cardHtml} css={cardCss} variant="recommended" />
 

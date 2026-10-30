@@ -30,7 +30,7 @@
       }
 
       & > ._title + ._lead {
-        margin-block-start: 12px;
+        margin-block-start: calc(12 / 16 * 1rem);
       }
     }
 
@@ -45,7 +45,7 @@
         var(--_slope) * 100svi + var(--_intercept) / 16 * 1rem,
         var(--_max-size) / 16 * 1rem
       );
-      line-height: var(--leading--snug);
+      line-height: var(--text--title--leading);
     }
   }
 }

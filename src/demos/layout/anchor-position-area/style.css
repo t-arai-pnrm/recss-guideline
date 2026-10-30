@@ -55,7 +55,7 @@
       /* アンカーの列と行を破線で示し、9マスを見えるようにする */
       &::before,
       &::after {
-        @supports (anchor-name: --area-picker) {
+        @supports (inset-block: anchor(start) anchor(end)) {
           content: "";
           position: absolute;
           position-anchor: --area-picker;
@@ -64,7 +64,7 @@
       }
 
       &::before {
-        @supports (anchor-name: --area-picker) {
+        @supports (inset-block: anchor(start) anchor(end)) {
           inset-block: 0;
           inset-inline: anchor(start) anchor(end);
           border-inline-width: 1px;
@@ -72,7 +72,7 @@
       }
 
       &::after {
-        @supports (anchor-name: --area-picker) {
+        @supports (inset-block: anchor(start) anchor(end)) {
           inset-block: anchor(start) anchor(end);
           inset-inline: 0;
           border-block-width: 1px;

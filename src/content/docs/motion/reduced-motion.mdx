@@ -40,9 +40,15 @@ WCAG 2.2の達成基準2.3.3「インタラクションによるアニメーシ�
 
 また、達成基準は、どの大きさや再生時間から動きを無効にすべきかを数値で定めていません。後の「動きごとに4段階で対応を決める」で挙げる数値は、本書が対応を決めるために置いた目安です。
 
+## 自動で動き続ける表示にはWCAG 2.2.2も関わる
+
+操作をきっかけにせず、自動で始まる動きには、別の達成基準も関わります。WCAG 2.2の達成基準2.2.2「一時停止、停止、非表示」は、自動で始まって5秒を超えて続き、ほかの内容と並んで表示される動きに対して、一時停止や停止の手段を求めています。この達成基準はレベルAです。`prefers-reduced-motion` は設定をしているユーザーにしか働かないので、この達成基準を満たす手段にはなりません。
+
+本書では、自動で始まる装飾的な動きは5秒以内に終わらせます。マーキーや自動で回るカルーセルのように5秒を超えて動き続けるものには、止めるボタンを置きます（「[17-8 CSSでカルーセルを作る](/interaction/carousel/)」）。読み込み中のスピナーやスケルトンのように、処理の間だけ動いて終われば止まる表示は、達成基準の解説が本質的な動きとして認める場合があるので、扱いを分けます。
+
 ## 全称セレクタで全体の動きを止める書き方の問題
 
-動きを減らす設定への対応として、全称セレクタと `!important` で、すべての要素の動きを止める書き方がよく使われています。以前の私も、この書き方をしていました。再生時間を0ではなく `1ms` にするのは、JavaScriptの `transitionend` や `animationend` のイベントを発火させるための工夫です。
+動きを減らす設定への対応として、全称セレクタと `!important` で、すべての要素の動きを止める書き方がよく使われています。以前の私も、この書き方をしていました。再生時間を0ではなく `1ms` にするのは、JavaScriptの `transitionend` のイベントを発火させるための工夫です。トランジションは再生時間と遅延が0だと始まらず、`transitionend` も発火しないからです（`animationend` は、`animation-duration` が `0s` でも発火します）。
 
 ```css title="🙅‍♂ Not Recommended: 全称セレクタと !important で、すべての動きを止める" issue="behavior"
 /* 🙅‍♂ Not Recommended */
@@ -88,7 +94,7 @@ WCAG 2.2の達成基準2.3.3「インタラクションによるアニメーシ�
 
 ### 無効化：no-preferenceの中だけで定義する
 
-ヒーローの背景画像をゆっくり拡大し続ける演出は、装飾的で、画面の大部分を占める要素の大きさが変わります。こうした動きは、アニメーションの指定をすべて `no-preference` の中に書きます。
+ヒーローの背景画像を、ページを開いたときにゆっくり拡大する演出は、装飾的で、画面の大部分を占める要素の大きさが変わります。こうした動きは、アニメーションの指定をすべて `no-preference` の中に書きます。自動で始まる動きなので、再生時間はWCAG 2.2.2の5秒以内に収めます。
 
 ```css title="🙆‍♂ Recommended: 装飾的な動きは、no-preference の中だけで定義する"
 @keyframes --hero--zoom {
@@ -101,7 +107,7 @@ WCAG 2.2の達成基準2.3.3「インタラクションによるアニメーシ�
   ._image {
     @media (prefers-reduced-motion: no-preference) {
       animation-name: --hero--zoom;
-      animation-duration: 12s;
+      animation-duration: 5s;
       animation-timing-function: var(--ease--out-quad);
       animation-fill-mode: both;
     }
@@ -123,7 +129,7 @@ WCAG 2.2の達成基準2.3.3「インタラクションによるアニメーシ�
     z-index: var(--z--top);
     transition-duration: var(--duration--slow);
     transition-property: display, overlay, opacity, translate;
-    transition-timing-function: var(--ease--out-quint);
+    transition-timing-function: var(--ease--out-drawer);
     transition-behavior: allow-discrete;
 
     @media (prefers-reduced-motion: no-preference) {
@@ -145,7 +151,7 @@ WCAG 2.2の達成基準2.3.3「インタラクションによるアニメーシ�
 }
 ```
 
-この例では、移動の起点だけを内部用のカスタムプロパティにし、`no-preference` の中で値を変えています。動きを減らす設定のときは、起点が `0` のままなので位置は変わらず、`opacity` のトランジションだけが残ります。トランジションの指定を1つにまとめたまま、残す動きと止める動きを分けられます。`@starting-style` を使った出現と退場の書き方は「[18-7 出現と退場](/motion/entry-and-exit/)」で説明しています。
+この例では、移動の起点だけを内部用のカスタムプロパティにし、`no-preference` の中で値を変えています。動きを減らす設定のときは、起点が `0` のままなので位置は変わらず、`opacity` のトランジションだけが残ります。トランジションの指定を1つにまとめたまま、残す動きと止める動きを分けられます。`@starting-style` を使った出現と退場の書き方は「[18-7 出現と退場](/motion/entry-and-exit/)」で説明しています。デモのCSSでは、18-7のダイアログと同じく、背景の `::backdrop` もドロワーと同時にフェードさせ、Safariのために `position: fixed` と `inset: 0` を明示しています。グリッドの並びは開いた状態ではなく基本のルールに書き、閉じる途中で中身の位置が変わらないようにしています。
 
 次のデモでは、ボタンでドロワーを開きます。ふだんの設定では右端から滑り込み、動きを減らす設定ではその場でフェードします。開発者ツールで設定を切り替えると、2つの動きを比べられます（後述の「設定を再現して確かめる」）。デモでは、ダイアログを開く処理をJavaScriptで書かずに済むよう、ボタンに `command` 属性を指定しています。`command` 属性に対応していないブラウザのためにだけ、ポリフィルを読み込みます（「[17-6 開閉するUI](/interaction/disclosure/)」）。
 
@@ -161,7 +167,7 @@ WCAG 2.2の達成基準2.3.3「インタラクションによるアニメーシ�
 @scope (.scoped.tooltip) to (.scoped) {
   :scope {
     z-index: var(--z--top);
-    transition-duration: var(--duration--fast);
+    transition-duration: var(--duration--base);
     transition-property: display, overlay, opacity;
     transition-timing-function: var(--ease--out-quad);
     transition-behavior: allow-discrete;
@@ -183,7 +189,7 @@ WCAG 2.2の達成基準2.3.3「インタラクションによるアニメーシ�
 }
 ```
 
-短縮は、WCAG 2.3.3の対象外の変化（不透明度）を、止めずに目立たなくする方法です。50msのフェードは、ほとんど一瞬の表示に見えますが、表示と非表示の切り替わりは急に見えにくくなります。本書では、短縮を選ぶのは、このように位置と大きさが変わらない動きに限ります。大きな変動にあたらない移動や拡大を短くして残す方法もありますが、動きは残るので、選べるのはAAAを目標にしないサイトだけです。値は、50msの `--duration--instant` のトークンで指定します（「[10-4 デザイントークン](/components/design-tokens/)」）。
+短縮は、WCAG 2.3.3の対象外の変化（不透明度）を、止めずに目立たなくする方法です。160msのフェードが50msになると、ほとんど一瞬の表示に見えますが、表示と非表示の切り替わりは急に見えにくくなります。本書では、短縮を選ぶのは、このように位置と大きさが変わらない動きに限ります。大きな変動にあたらない移動や拡大を短くして残す方法もありますが、動きは残るので、選べるのはAAAを目標にしないサイトだけです。値は、50msの `--duration--instant` のトークンで指定します（「[10-4 デザイントークン](/components/design-tokens/)」）。
 
 ### 維持：スピナー、プログレスバー、フォーカスリング
 
@@ -232,4 +238,5 @@ View Transitionsでも、独自の動きと要素ごとの名前は `no-preferen
 
 - [prefers-reduced-motion - CSS | MDN](https://developer.mozilla.org/ja/docs/Web/CSS/@media/prefers-reduced-motion)
 - [Understanding Success Criterion 2.3.3: Animation from Interactions | W3C](https://www.w3.org/WAI/WCAG22/Understanding/animation-from-interactions.html)
+- [Understanding Success Criterion 2.2.2: Pause, Stop, Hide | W3C](https://www.w3.org/WAI/WCAG22/Understanding/pause-stop-hide.html)
 - [Emulate CSS media features | Chrome DevTools](https://developer.chrome.com/docs/devtools/rendering/emulate-css)

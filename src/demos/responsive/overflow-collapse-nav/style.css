@@ -19,7 +19,9 @@
       border: 1px solid var(--border--base);
       border-radius: var(--rounded--lg);
       background-color: var(--background--surface);
-      animation: --site-header--detect-overflow linear both;
+      animation-name: --site-header--detect-overflow;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
       animation-timeline: --nav-list;
 
       /* 子孫の ._nav-list が作るスクロールタイムラインを、ルートから参照できるようにする */
@@ -55,7 +57,7 @@
       font-size: calc(var(--text--body-compact--font-size) / 16 * 1rem);
       font-weight: var(--font-weight--bold);
       line-height: var(--text--body-compact--leading);
-      text-decoration-line: none;
+      text-decoration-line: unset;
 
       &:focus-visible {
         background-color: var(--background--hover);
@@ -87,7 +89,7 @@
       font-size: calc(var(--text--body-compact--font-size) / 16 * 1rem);
       font-weight: var(--font-weight--bold);
       line-height: var(--text--body-compact--leading);
-      text-decoration-line: none;
+      text-decoration-line: unset;
 
       @container style(--_overflowing: --true) {
         visibility: hidden;

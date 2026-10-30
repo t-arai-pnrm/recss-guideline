@@ -9,15 +9,15 @@
       padding: 16px;
       border: 1px solid var(--border--base);
       border-radius: var(--rounded--md);
+
+      & > :last-child {
+        align-self: end;
+      }
     }
 
     ._item {
       /* 項目ごとに同じ名前のアンカーを置くので、名前が届く範囲を項目の中に限る */
       anchor-scope: --tip-stage;
-
-      &:last-child {
-        align-self: end;
-      }
 
       & > ._tip {
         @supports (position-area: block-end span-inline-end) {
@@ -41,7 +41,7 @@
     }
 
     ._tip {
-      display: block flow-root;
+      display: block flow;
       inline-size: fit-content;
       padding-block: 4px;
       padding-inline: 8px;
