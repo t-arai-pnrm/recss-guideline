@@ -1,6 +1,0 @@
-@layer pages {
-  /* 誤り4：ページの CSS から、ほかのコンポーネントの内部を !important で上書きしている */
-  .page-top .notice-card h3 {
-    font-size: calc(15 / 16 * 1rem) !important;
-  }
-}

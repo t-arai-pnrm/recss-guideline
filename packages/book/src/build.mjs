@@ -195,7 +195,7 @@ ${await cheatSheet()}
 <p>同じ巻への参照は節の名前とページ番号、別の巻は巻番号を示します。「補足サイト」とある付録は紙面には採録していません。デモ番号は、補足サイトの一覧と同じ番号です。</p>
 <h2>サンプルと補足</h2>
 <p class="support-url"><a href="${pageUrl('book-support')}">${pageUrl('book-support')}</a></p>
-<p>v${version}のZIPを選び、README.mdの手順に従ってください。デモはHTMLにCSSと必要なJavaScriptを含めています。第21章には開始版、中間版、完成版、第20章には設定の全文があります。</p>
+<p>v${version}のZIPを選び、README.mdの手順に従ってください。デモはHTMLにCSSと必要なJavaScriptを含めています。手を動かす課題の答えは <code>tasks/</code> に、第20章の設定の全文は <code>ai-coding/</code> にあります。</p>
 <img class="support-qr" src="assets/book-support-qr.svg" alt="補足サイトのURLを表すQRコード">
 <h2>環境とライセンス</h2>
 <p>実務配信の例：Node.js 22.12以降、Vite ${sampleManifest.dependencies.vite}。リセット：kiso.css ${sampleManifest.dependencies.kiso}。対応データ：web-features ${sampleManifest.dependencies.webFeatures}。ファイルのSHA-256と依存関係はmanifest.jsonに記録しています。</p>

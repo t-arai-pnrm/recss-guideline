@@ -1,6 +1,6 @@
 /**
  * 節の読み方の区別（frontmatter の `reading`）。節の冒頭、サイドバー、紙版の目次と節の冒頭、AI 向けの配布物で共通に使う。
- * 第1〜20章の節（章の概要を除く）には必ず付ける。「はじめに」、付録、第21章には付けない。
+ * 第1〜20章の節（章の概要を除く）には必ず付ける。「はじめに」と付録には付けない。
  */
 export const READINGS = {
   basic: { label: '基本', text: '初めて読むときに読む節です。' },
@@ -9,7 +9,7 @@ export const READINGS = {
 };
 
 /** 区別を付けない章のディレクトリ */
-const EXCLUDED_DIRS = new Set(['introduction', 'appendix', 'exercise']);
+const EXCLUDED_DIRS = new Set(['introduction', 'appendix']);
 
 /** ページ ID（例: `values/if-and-attr`）が、区別を付ける節かどうか */
 export const needsReading = (id) => {

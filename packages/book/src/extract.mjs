@@ -240,8 +240,8 @@ export const extractPage = async (page, ctx) => {
     rule.append(tag);
   }
 
-  // 予想を問う問題の解答は、節の本文と離して後方に置く。
-  if (page.dir === 'exercise' || page.slug === 'index') {
+  // 章の概要の判断の問いと手を動かす課題の答えは、本文と離して後方に置く。
+  if (page.slug === 'index') {
     const answers = [...content.querySelectorAll('details')].filter((item) => /答え|解説/.test(item.querySelector('summary')?.textContent ?? ''));
     if (answers.length) {
       const appendix = doc.createElement('aside');

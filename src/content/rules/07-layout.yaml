@@ -26,7 +26,7 @@
   kind: judgment
   rule: '`gap`、`align-items`、`justify-content` のように Flexbox や Grid でだけ働くプロパティを、`display` が `flex` でも `grid` でもない通常フローの要素に書かない。'
   reason: 通常フローのブロックコンテナではこれらのプロパティは何も変えず、書いてあると間隔や配置がそこで決まっていると読まれて、実際の指定（子の `margin` など）を見誤らせるため。
-  note: '`align-content` は、ブロックコンテナでも中身をブロック方向にそろえるので、この対象から外れます。`gap` は段組み（`column-count` など）でも働きます。'
+  note: '`align-content` は、ブロックコンテナでも中身をブロック方向にそろえるので、この対象から外れます。`justify-items` と `justify-self` も、仕様ではブロックコンテナで働きますが、対応しているのは Chrome と Edge だけなので、Baseline になるまではこの対象に含めます（ルール `no-justify-self-in-block-layout`）。`gap` は段組み（`column-count` など）でも働きます。'
   aiProne: true
   page: layout/normal-flow
   since: 0.12.0

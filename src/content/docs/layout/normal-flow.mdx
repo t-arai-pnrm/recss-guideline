@@ -232,6 +232,10 @@ AIが生成するコードにも、この誤解が表れます。ブロックの
 }
 ```
 
+`justify-items` と `justify-self` も、仕様ではブロックコンテナで働くように広がりました。Chromeで親に `justify-items: center` を指定すると、子は左右の中央に寄り、幅を指定していない子は中身の幅まで縮みます。ただし、対応しているのはChromeとEdgeだけで、SafariとFirefoxでは指定が無視されます。この2つは、`align-content` と違って通常フローの要素には書きません（[`no-justify-self-in-block-layout`](/principles/browser-support/#rule-no-justify-self-in-block-layout)）。左右の中央寄せは、どのブラウザでも同じ結果になる `margin-inline: auto` で書きます。
+
+<Baseline id="justify-self-block" name="ブロックレイアウトの justify-self" />
+
 `z-index` も、通常フローの要素では働きません。`position` が `static` のブロックに `z-index` を指定しても、重なり順は変わりません。一方、フレックスアイテムとグリッドアイテムは、`position` を指定しなくても `z-index` が働きます。
 
 ## 同じプロパティでも方式で意味が変わる

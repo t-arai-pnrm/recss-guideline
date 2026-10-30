@@ -153,10 +153,6 @@ export const PARTS = [
       },
     ],
   },
-  {
-    label: '第VI部 演習編',
-    chapters: [{ number: 21, dir: 'exercise', title: 'コーポレートサイトを作る' }],
-  },
 ];
 
 export const CHAPTERS = PARTS.flatMap((part) => part.chapters);

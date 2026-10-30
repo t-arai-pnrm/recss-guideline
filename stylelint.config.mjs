@@ -13,7 +13,8 @@
  */
 export default {
   // `*.bad.css` は 🙅‍♂ Not Recommended のデモなので検証しない
-  ignoreFiles: ['dist/**', 'node_modules/**', 'src/demos/**/*.bad.css'],
+  // 第20章のテストページの `base.css` は、kiso.css と共通トークンをそのまま1つにまとめたものなので検証しない
+  ignoreFiles: ['dist/**', 'node_modules/**', 'src/demos/**/*.bad.css', 'src/kits/ai-coding/tests/pages/article-cards/base.css'],
   overrides: [
     {
       files: ['**/*.astro'],

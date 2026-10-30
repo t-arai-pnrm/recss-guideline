@@ -20,7 +20,7 @@
   <text class="_text-muted" x="22" y="275" font-size="12">複数の子に条件を伝えるときは、フラグを使う（10-6）</text>
   <path class="_arrow" d="M240 286 V306"/><polygon class="_arrowhead" points="240,312 236,304 244,304"/>
   <rect class="_box -accent" x="8" y="314" width="464" height="68" rx="6"/>
-  <text class="_text-accent" x="22" y="337" font-size="13" font-weight="700">確かめて直す（第19・21章）</text>
+  <text class="_text-accent" x="22" y="337" font-size="13" font-weight="700">確かめて直す（第19章）</text>
   <text class="_text-muted" x="22" y="358" font-size="12">長い見出し、画像なし、狭い置き場所、操作の状態を試す</text>
   <text class="_text-muted" x="22" y="376" font-size="12">変えた要件を受け持つ場所だけを直す</text>
 </svg>

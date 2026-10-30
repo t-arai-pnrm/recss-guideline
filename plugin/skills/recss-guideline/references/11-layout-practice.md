@@ -1,6 +1,6 @@
 # 第11章 レイアウトを組む：ルール
 
-- ガイドラインのバージョン: 0.81.0（2026-10-29 生成）
+- ガイドラインのバージョン: 0.82.0（2026-10-30 生成）
 - ルールの数: 62
 - 本文: 約27万字
 - 読む条件: 余白の設計、内容の変化への耐性、はみ出しとスクロール、重なり、z-index、アンカーポジショニング、表
@@ -19,7 +19,7 @@
 - `layout-practice/overflow` 11-4 はみ出しとスクロール（約2.3万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/overflow/
 - `layout-practice/quantity-layouts` 11-5 件数で配置を組み替える（約1.8万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/quantity-layouts/
 - `layout-practice/layering` 11-6 重なりと全幅（約1.3万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/layering/
-- `layout-practice/sticky-header` 11-7 固定ヘッダー（約9,500字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/sticky-header/
+- `layout-practice/sticky-header` 11-7 固定ヘッダー（約9,400字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/sticky-header/
 - `layout-practice/anchor-positioning` 11-8 アンカーポジショニング（約2万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/anchor-positioning/
 - `layout-practice/overlap-detection` 11-9 要素どうしの重なりを検出する（約1.1万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/overlap-detection/
 - `layout-practice/root-scroller` 11-10 ページのスクロールとルートスクローラー（約1.4万字）https://t-arai-pnrm.github.io/recss-guideline/layout-practice/root-scroller/
@@ -185,7 +185,7 @@ https://t-arai-pnrm.github.io/recss-guideline/layout-practice/sticky-header/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout-practice/sticky-header/#rule-sticky-header-height-query
 - 【推奨・実装上の判断】固定ヘッダーの高さは CSS に数値で書かず、`ResizeObserver` で測って、ルート要素のカスタムプロパティ（`--site-header--block-size` など）に渡す。（`measure-sticky-header-block-size`）
   - 理由: ヘッダーの高さは文言、文字サイズ、折り返しで変わり、数値で書くと、ヘッダーとルートの `scroll-padding-block-start` の2か所をそろえ直すことになるため。`ResizeObserver` は大きさが変わったときだけ呼ばれるので、`scroll` や `resize` のイベントで測り続ける処理が要らない。
-  - 補足: 値は `borderBoxSize[0].blockSize` を `Math.ceil` で切り上げて渡します。スクリプトが動かない環境のために、参照する側に代替値（`var(--site-header--block-size, 4rlh)`）を書きます。ヘッダーの高さを CSS で固定したデザインでは、同じ値を書いてもかまいません（「21-6 固定ヘッダーを作る」）。
+  - 補足: 値は `borderBoxSize[0].blockSize` を `Math.ceil` で切り上げて渡します。スクリプトが動かない環境のために、参照する側に代替値（`var(--site-header--block-size, 4rlh)`）を書きます。ヘッダーの高さを CSS で固定したデザインでは、同じ値を書いてもかまいません。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout-practice/sticky-header/#rule-measure-sticky-header-block-size
 - 【推奨・実装上の判断】`sticky` の要素が留まっている間だけ見た目を変えるときは、`scroll` イベントではなく `container-type: scroll-state` と `@container scroll-state(stuck: …)` を使い、変える内容は見えなくても操作に困らない装飾に限る。（`scroll-state-for-sticky-styles`）
   - 理由: スクロールのたびに JavaScript で位置を調べる処理が要らなくなり、クエリに対応していない環境でも装飾が付かないだけで済むため。

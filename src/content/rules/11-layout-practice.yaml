@@ -307,7 +307,7 @@
   kind: judgment
   rule: '固定ヘッダーの高さは CSS に数値で書かず、`ResizeObserver` で測って、ルート要素のカスタムプロパティ（`--site-header--block-size` など）に渡す。'
   reason: 'ヘッダーの高さは文言、文字サイズ、折り返しで変わり、数値で書くと、ヘッダーとルートの `scroll-padding-block-start` の2か所をそろえ直すことになるため。`ResizeObserver` は大きさが変わったときだけ呼ばれるので、`scroll` や `resize` のイベントで測り続ける処理が要らない。'
-  note: '値は `borderBoxSize[0].blockSize` を `Math.ceil` で切り上げて渡します。スクリプトが動かない環境のために、参照する側に代替値（`var(--site-header--block-size, 4rlh)`）を書きます。ヘッダーの高さを CSS で固定したデザインでは、同じ値を書いてもかまいません（「21-6 固定ヘッダーを作る」）。'
+  note: '値は `borderBoxSize[0].blockSize` を `Math.ceil` で切り上げて渡します。スクリプトが動かない環境のために、参照する側に代替値（`var(--site-header--block-size, 4rlh)`）を書きます。ヘッダーの高さを CSS で固定したデザインでは、同じ値を書いてもかまいません。'
   aiProne: true
   page: layout-practice/sticky-header
   since: 0.80.0

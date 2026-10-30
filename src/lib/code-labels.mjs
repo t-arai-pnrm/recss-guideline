@@ -4,7 +4,7 @@
  *
  * - `use`：🙆‍♂ Recommended の利用単位。省略すると `excerpt`（仕組みの抜粋）
  * - `from`：全体のあるファイル。デモのディレクトリ（`src/demos/` からのパス、例：`values/hanging-label`）か、
- *   配布ファイル（`exercise-files/…`、`tasks/…`。`public/` と `src/kits/` からのパス）
+ *   配布ファイル（`tasks/…`。`src/kits/` からのパス）
  * - `issue`：🙅‍♂ Not Recommended の理由の種類
  */
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
@@ -33,12 +33,12 @@ export const parseCodeMeta = (meta) => {
 };
 
 /** `from` が配布ファイルを指すか（デモでなければ配布ファイル） */
-export const isDistributedFile = (from) => /^(exercise-files|tasks)\//.test(from);
+export const isDistributedFile = (from) => /^tasks\//.test(from);
 
 /** `from` の指す先があるか */
 export const fromExists = (from) =>
   isDistributedFile(from)
-    ? existsSync(join(ROOT, from.startsWith('tasks/') ? 'src/kits' : 'public', from))
+    ? existsSync(join(ROOT, 'src/kits', from))
     : existsSync(join(ROOT, 'src/demos', from, 'index.html'));
 
 /** デモのページ内の id。Demo.astro が付け、コード例の「全体」から張るリンクの先になる */

@@ -1,8 +1,8 @@
 # 第7章 レイアウトの仕組み：ルール
 
-- ガイドラインのバージョン: 0.81.0（2026-10-29 生成）
+- ガイドラインのバージョン: 0.82.0（2026-10-30 生成）
 - ルールの数: 41
-- 本文: 約26.9万字
+- 本文: 約27万字
 - 読む条件: display、Flexbox、Grid、position、margin、ボックスモデル、幅と高さ
 
 このファイルは「RECSSガイドライン」のルールから自動生成しています。直接編集しないでください。
@@ -14,7 +14,7 @@
 
 - `layout` 第7章 レイアウトの仕組み（約7,100字）https://t-arai-pnrm.github.io/recss-guideline/layout/
 - `layout/fundamentals` 7-1 レイアウトの基礎（約1.9万字）https://t-arai-pnrm.github.io/recss-guideline/layout/fundamentals/
-- `layout/normal-flow` 7-2 通常フローの基礎（約2.2万字）https://t-arai-pnrm.github.io/recss-guideline/layout/normal-flow/
+- `layout/normal-flow` 7-2 通常フローの基礎（約2.3万字）https://t-arai-pnrm.github.io/recss-guideline/layout/normal-flow/
 - `layout/box-model` 7-3 ボックスモデルの基礎（約1.8万字）https://t-arai-pnrm.github.io/recss-guideline/layout/box-model/
 - `layout/sizing` 7-4 大きさの決まり方（約1.2万字）https://t-arai-pnrm.github.io/recss-guideline/layout/sizing/
 - `layout/margin-role` 7-5 marginの役割（約1.4万字）https://t-arai-pnrm.github.io/recss-guideline/layout/margin-role/
@@ -44,7 +44,7 @@ https://t-arai-pnrm.github.io/recss-guideline/layout/normal-flow/
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout/normal-flow/#rule-no-inline-block-for-rows
 - 【非推奨・実装上の判断】`gap`、`align-items`、`justify-content` のように Flexbox や Grid でだけ働くプロパティを、`display` が `flex` でも `grid` でもない通常フローの要素に書かない。（`no-flex-grid-props-in-flow`）
   - 理由: 通常フローのブロックコンテナではこれらのプロパティは何も変えず、書いてあると間隔や配置がそこで決まっていると読まれて、実際の指定（子の `margin` など）を見誤らせるため。
-  - 補足: `align-content` は、ブロックコンテナでも中身をブロック方向にそろえるので、この対象から外れます。`gap` は段組み（`column-count` など）でも働きます。
+  - 補足: `align-content` は、ブロックコンテナでも中身をブロック方向にそろえるので、この対象から外れます。`justify-items` と `justify-self` も、仕様ではブロックコンテナで働きますが、対応しているのは Chrome と Edge だけなので、Baseline になるまではこの対象に含めます（ルール `no-justify-self-in-block-layout`）。`gap` は段組み（`column-count` など）でも働きます。
   - 詳細: https://t-arai-pnrm.github.io/recss-guideline/layout/normal-flow/#rule-no-flex-grid-props-in-flow
 
 ## 7-3 ボックスモデルの基礎
